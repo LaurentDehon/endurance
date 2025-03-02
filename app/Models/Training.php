@@ -12,7 +12,7 @@ class Training extends Model
     protected $fillable = [
         'date',
         'distance',
-        'duration',
+        'duration', // in seconds
         'elevation',
         'notes',
         'training_type_id',
@@ -43,4 +43,16 @@ class Training extends Model
     {
         return $query->whereBetween('date', [$start, $end]);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($training) {
+            if (!is_null($training->duration)) {
+                $training->duration = $training->duration * 60;
+            }
+        });
+    }
+
 }

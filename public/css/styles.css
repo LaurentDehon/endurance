@@ -17,7 +17,7 @@ html {
 } 
 
 .tooltip {
-transition: transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .tooltip:hover {
@@ -36,7 +36,7 @@ transition: transform 0.2s ease;
 }
 
 .active-menu {
-    background-color: rgb(59 130 246 / 0.1);
+    background-color: rgb(157 192 250 / 0.1);
     border-right: 4px solid #3b82f6;
     color: #b1cdfb !important;
 }

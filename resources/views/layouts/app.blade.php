@@ -19,46 +19,52 @@
     <body class="h-full">
         @auth
             <!-- Sidebar -->
-            <aside class="sidebar fixed h-full w-52 bg-gray-900/80 text-white">
+            <aside class="sidebar fixed h-full w-52 bg-gray-900/80 text-white transition-all duration-300 z-50">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-person-running text-blue-500 text-2xl"></i>
-                        <span class="text-xl font-bold">Endurance</span>
+                        <span class="text-xl font-bold" x-show="expanded" x-cloak>Endurance</span>
                     </div>
                 </div>
 
-                <nav class="p-4 space-y-2">
+                <nav class="p-4 space-y-1">
                     <a href="{{ route('main.dashboard') }}" 
-                    class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('main.dashboard') ? 'active-menu' : '' }}">
-                        <i class="fas fa-house text-blue-500 w-6"></i>
-                        <span>Home</span>
+                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('main.dashboard') ? 'active-menu' : '' }}">
+                        <i class="fas fa-house text-blue-500 text-lg w-6"></i>
+                        <span x-show="expanded" x-cloak>Home</span>
                     </a>
                     
-                    <a href="{{ route('calendar.yearly') }}" 
-                    class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('calendar.yearly') ? 'active-menu' : '' }}">
-                        <i class="fas fa-calendar-week text-green-500 w-6"></i>
-                        <span>Calendar</span>
+                    <a href="{{ route('calendar.index') }}" 
+                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('calendar.index') ? 'active-menu' : '' }}">
+                        <i class="fas fa-calendar-week text-green-500 text-lg w-6"></i>
+                        <span x-show="expanded" x-cloak>Calendar</span>
+                    </a>
+
+                    <a href="{{ route('activities.index') }}" 
+                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('activities.index') ? 'active-menu' : '' }}">
+                        <i class="fas fa-list text-orange-500 text-lg w-6"></i>
+                        <span x-show="expanded" x-cloak>Activities</span>
                     </a>
                 </nav>
 
                 <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
-                    <div class="space-y-2">
+                    <div class="space-y-1">
                         <a href="{{ route('profile.edit') }}" 
-                        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('profile.edit') ? 'active-menu' : '' }}">
-                            <i class="fas fa-user text-yellow-500 w-6"></i>
-                            <span>Profile</span>
+                        class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('profile.edit') ? 'active-menu' : '' }}">
+                            <i class="fas fa-user text-yellow-500 text-lg w-6"></i>
+                            <span x-show="expanded" x-cloak>Profile</span>
                         </a>
                         
-                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors">
-                            <i class="fas fa-gear text-gray-400 w-6"></i>
-                            <span>Settings</span>
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                            <i class="fas fa-gear text-gray-400 text-lg w-6"></i>
+                            <span x-show="expanded" x-cloak>Settings</span>
                         </a>
                         
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors">
-                                <i class="fas fa-sign-out-alt text-red-500 w-6"></i>
-                                <span>Logout</span>
+                            <button type="submit" class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                                <i class="fas fa-sign-out-alt text-red-500 text-lg w-6"></i>
+                                <span x-show="expanded" x-cloak>Logout</span>
                             </button>
                         </form>
                     </div>
@@ -67,12 +73,12 @@
         @endauth
 
         <!-- Main content -->
-        <main class="min-h-screen pt-16 md:pt-0 ml-52">
+        <main class="min-h-screen pt-16 md:pt-0 ml-20">
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <!-- Success notification -->
                 @if (session('success'))
                     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-                        class="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+                        class="fixed bottom-4 left-24 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-20">
                         <i class="fas fa-check-circle"></i>
                         <span>{{ session('success') }}</span>
                     </div>
@@ -81,7 +87,7 @@
                 <!-- Error notification -->
                 @if ($errors->any())
                     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition
-                        class="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg w-80">
+                        class="fixed bottom-4 left-24 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg w-80 z-20">
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-exclamation-triangle mt-1"></i>
                             <div>
@@ -102,36 +108,43 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t mt-auto">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div>
-                        <h5 class="text-lg font-semibold mb-4">Endurance</h5>
-                        <p class="text-gray-600 text-sm">
+        <footer class="bg-white border-t border-gray-100 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="flex flex-col md:flex-row justify-between gap-8">
+                    <!-- Brand Section -->
+                    <div class="space-y-2 max-w-xs">
+                        <span class="text-gray-900 font-medium tracking-tight">Endurance</span>
+                        <p class="text-gray-400 text-sm leading-relaxed">
                             Training plan creation and tracking solution
                         </p>
                     </div>
-                    
-                    <div>
-                        <h5 class="text-lg font-semibold mb-4">Legal</h5>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Terms of Use</a></li>
-                            <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h5 class="text-lg font-semibold mb-4">Support</h5>
-                        <ul class="space-y-2">
-                            <li><a href="mailto:support@endurance.fr" class="text-gray-600 hover:text-gray-900 text-sm">Technical Support</a></li>
-                            <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Documentation</a></li>
-                        </ul>
+        
+                    <!-- Links Container -->
+                    <div class="flex flex-col sm:flex-row gap-12">
+                        <!-- Legal Links -->
+                        <div class="space-y-3">
+                            <h5 class="text-gray-500 text-sm font-medium">Legal</h5>
+                            <ul class="space-y-2.5">
+                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Terms of Use</a></li>
+                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+        
+                        <!-- Support Links -->
+                        <div class="space-y-3">
+                            <h5 class="text-gray-500 text-sm font-medium">Support</h5>
+                            <ul class="space-y-2.5">
+                                <li><a href="mailto:support@endurance.fr" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Technical Support</a></li>
+                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Documentation</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="border-t mt-8 pt-6 text-center">
-                    <p class="text-gray-600 text-sm">
-                        © {{ date('Y') }} Endurance - All rights reserved
+        
+                <!-- Copyright -->
+                <div class="border-t border-gray-100 mt-12 pt-6">
+                    <p class="text-gray-400 text-xs text-center">
+                        © {{ date('Y') }} Endurance. All rights reserved
                     </p>
                 </div>
             </div>

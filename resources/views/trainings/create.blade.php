@@ -45,10 +45,8 @@
                     <i class="fas fa-route mr-2 text-blue-600"></i>
                     Distance (km)
                 </label>
-                <input type="number" step="0.1" name="distance" id="distance" 
-                    value="{{ old('distance', 10) }}"
-                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500"
-                    placeholder="0.0">
+                <input type="number" step="0.1" name="distance" id="distance" placeholder="0.0" value="{{ old('distance', 10.0) }}"
+                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500">
             </div>
 
             <!-- Duration Target -->
@@ -59,20 +57,14 @@
                 </label>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="relative">
-                        <input type="number" name="hours" 
-                            value="{{ old('hours', 1) }}"
-                            min="0" 
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl pr-12"
-                            placeholder=0>
-                        <span class="absolute right-4 top-4 text-gray-400">hrs</span>
+                        <input type="number" name="hours" value="{{ old('hours', 1) }}" min="0" placeholder=0                            
+                            class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl pr-12">
+                        <span class="absolute right-6 top-4 text-gray-400">h</span>
                     </div>
                     <div class="relative">
-                        <input type="number" name="minutes" 
-                            value="{{ old('minutes', 0) }}"
-                            min="0" max="59"
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl pr-12"
-                            placeholder=0>
-                        <span class="absolute right-4 top-4 text-gray-400">mins</span>
+                        <input type="number" name="minutes" value="{{ old('minutes', 0) }}" min="0" max="59" placeholder=0
+                            class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl pr-12">
+                        <span class="absolute right-6 top-4 text-gray-400">m</span>
                     </div>
                 </div>
             </div>
@@ -83,10 +75,8 @@
                     <i class="fas fa-mountain mr-2 text-blue-600"></i>
                     Elevation Gain (m)
                 </label>
-                <input type="number" name="elevation" id="elevation" 
-                    value="{{ old('elevation') }}"
-                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500"
-                    placeholder=0>
+                <input type="number" name="elevation" id="elevation" value="{{ old('elevation') }}" placeholder=0
+                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500">
             </div>
 
             <!-- Notes -->
@@ -95,9 +85,9 @@
                     <i class="fas fa-sticky-note mr-2 text-blue-600"></i>
                     Notes
                 </label>
-                <textarea name="notes" id="notes" 
-                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500"
-                    placeholder="Add any additional notes here" rows="4">{{ old('notes') }}</textarea>
+                <textarea name="notes" id="notes" placeholder="Add any additional notes here" rows="4"
+                    class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500">{{ old('notes') }}
+                </textarea>
             </div>
         </div>
 
@@ -108,7 +98,7 @@
                 Cancel
             </button>
             <button type="submit" class="px-6 py-3.5 h-[48px] bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-lg shadow-blue-100 hover:shadow-md flex items-center justify-center">
-                Save Training
+                Save
             </button>
         </div>
     </form>

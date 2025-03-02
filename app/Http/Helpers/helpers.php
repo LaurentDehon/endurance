@@ -3,14 +3,16 @@
 use Carbon\Carbon;
 use App\Models\Training;
 
-function formatTime(int $minutes): string
+function formatTime(int $seconds): string
 {
-    $hours = floor($minutes / 60);
-    $remainingMinutes = $minutes % 60;
+    $totalMinutes = floor($seconds / 60);
+    $hours = floor($totalMinutes / 60);
+    $remainingMinutes = $totalMinutes % 60;
 
-    if ($remainingMinutes === 0)
+    if ($remainingMinutes === 0) {
         return $hours . 'h';
-    
+    }
+
     return $hours . 'h' . str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
 }
 

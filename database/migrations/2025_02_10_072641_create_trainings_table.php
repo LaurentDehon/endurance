@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('trainings', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->decimal('distance', 8, 2)->nullable();
+            $table->decimal('distance', 8, 1)->nullable();
             $table->unsignedInteger('duration')->nullable();
             $table->Integer('elevation')->nullable();
             $table->string('notes')->nullable();

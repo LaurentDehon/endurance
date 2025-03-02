@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Toast message
 function showToast(message, type, timeout) {
     const toast = document.createElement('div');
-    toast.className = `fixed bottom-4 right-4 border px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 
+    toast.className = `fixed bottom-4 left-24 border px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-20
                     ${type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'}`;
     toast.innerHTML = `
         <div class="flex items-center">
@@ -30,4 +30,4 @@ function showToast(message, type, timeout) {
     setTimeout(() => {
         setTimeout(() => toast.remove(), 300);
     }, timeout);
-}    
+}

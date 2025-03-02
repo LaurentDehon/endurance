@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,6 +16,9 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(false);            
             $table->timestamp('last_login_at')->nullable();
+            $table->string('strava_token')->nullable();
+            $table->string('strava_refresh_token')->nullable();
+            $table->integer('strava_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

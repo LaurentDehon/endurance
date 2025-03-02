@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use DateInterval;
 use Carbon\Carbon;
 use App\Models\Training;
-use Carbon\CarbonPeriod;
 use App\Models\TrainingType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +13,9 @@ class TrainingController extends Controller
     public function show($id)
     {
         $training = Training::with('trainingType')->findOrFail($id);
+        $trainingTypes = TrainingType::all();
 
-        return view('trainings.show', compact('training'));
+        return view('trainings.show', compact('training', 'trainingTypes'));
     }
 
     public function create(string $date)
@@ -51,7 +50,58 @@ class TrainingController extends Controller
             'training_type_id' => $validated['type'],
         ]);
 
-        return redirect()->route('calendar.yearly')->with('success', 'Training successfully added');
+        return redirect()->route('calendar.index')->with('success', 'Training successfully added');
+    }
+
+    public function update(Request $request, Training $training)
+    {
+        $validated = $request->validate([
+            'date' => 'sometimes|date',
+            'distance' => 'sometimes|nullable|numeric|min:0',
+            'hours' => 'sometimes|nullable|integer|min:0',
+            'minutes' => 'sometimes|nullable|integer|min:0|max:59',
+            'elevation' => 'sometimes|nullable|integer|min:0',
+            'notes' => 'sometimes|nullable|string',
+            'training_type_id' => 'sometimes|exists:training_types,id',
+        ]);
+
+        if (isset($validated['hours']) || isset($validated['minutes'])) {
+            $validated['duration'] = ($validated['hours'] ?? 0) * 60 + ($validated['minutes'] ?? 0);
+        }
+
+        unset($validated['hours'], $validated['minutes']);
+
+        $training->update($validated);
+
+        return redirect()->route('calendar.index')->with('success', 'Training updated successfully');
+    }
+
+    public function updateDate(Request $request, Training $training)
+    {
+        try {
+            $validated = $request->validate([
+                'date' => 'required|date'
+            ]);
+
+            $training->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Date updated successfully'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function createRoutine()
@@ -103,7 +153,7 @@ class TrainingController extends Controller
             ]);
         }
 
-        return redirect()->route('calendar.yearly')->with('success', count($dates) . ' training sessions created');
+        return redirect()->route('calendar.index')->with('success', count($dates) . ' training sessions created');
     }
 
     private function generateRecurringDates(Carbon $start, ?Carbon $end, string $type, int $interval, array $days = []): array
@@ -154,7 +204,7 @@ class TrainingController extends Controller
         $training = Training::findOrFail($id);
         $training->delete();
 
-        return redirect()->route('calendar.yearly')->with('success', 'Training successfully deleted');
+        return redirect()->route('calendar.index')->with('success', 'Training successfully deleted');
     }
 
     public function destroyAll()

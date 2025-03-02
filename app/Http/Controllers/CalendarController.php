@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Week;
+use App\Models\Activity;
 use App\Models\Training;
 use App\Models\WeekType;
 use Illuminate\Http\Request;
@@ -15,28 +16,50 @@ class CalendarController extends Controller
     public function index($year = null)
     {
         $year = $year ?: now()->year;
-        $weeks = $this->getWeeks($year);
-        $weekTypes = WeekType::all();    
+        $user = Auth::user();
 
-        return view('calendar.yearly', [
+        // Chargement des données
+        $activities = Activity::whereYear('start_date', $year)
+            ->where('user_id', $user->id)
+            ->get();
+        
+        $trainings = Training::with('trainingType')
+            ->whereYear('date', $year)
+            ->where('user_id', $user->id)
+            ->get();
+
+        // Génération des semaines avec stats
+        $weeks = $this->getWeeks($year, $activities, $trainings);
+
+        return view('calendar.index', [
             'year' => $year,
             'months' => $this->groupWeeksByMonth($weeks),
             'monthStats' => $this->calculateMonthStats($weeks),
-            'yearStats' => $this->calculateYearStats($year),
-            'weekTypes' => $weekTypes
+            'yearStats' => $this->calculateYearStats($weeks),
+            'weekTypes' => WeekType::all(),
+            'activities' => $activities,
+            'trainings' => $trainings,
+            'statIcons' => [
+                'distance' => 'route',
+                'elevation' => 'mountain', 
+                'time' => 'stopwatch'
+            ],
+            'statColors' => [
+                'distance' => 'blue',
+                'elevation' => 'red',
+                'time' => 'green'
+            ]
         ]);
     }
 
-    private function getWeeks(int $year): Collection
+    private function getWeeks(int $year, Collection $activities, Collection $trainings): Collection
     {
         $weeks = collect();
 
         for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
             $start = Carbon::now()->setISODate($year, $weekNumber, 1)->startOfWeek();
             
-            if ($start->year > $year) {
-                break;
-            }
+            if ($start->year > $year) break;
 
             $end = $start->clone()->endOfWeek();
 
@@ -45,10 +68,14 @@ class CalendarController extends Controller
                 ['week_type_id' => null]
             );
 
+            // Calcul des stats
+            $weekStats = $this->calculateWeekStats($start, $end, $activities, $trainings);
+
             $week->start = $start->format('d M');
             $week->end = $end->format('d M');
             $week->month = $start->format('Y-m');
-            $week->training_stats = $this->calculateWeekStats($start, $end);
+            $week->actual_stats = $weekStats['actual'];
+            $week->planned_stats = $weekStats['planned'];
             $week->days = $this->generateWeekDays($start);
 
             $weeks->push($week);
@@ -57,58 +84,79 @@ class CalendarController extends Controller
         return $weeks;
     }
 
+    private function calculateWeekStats(Carbon $start, Carbon $end, Collection $activities, Collection $trainings): array
+    {
+        // Activités réelles
+        $actualActivities = $activities->filter(function ($activity) use ($start, $end) {
+            $date = Carbon::parse($activity->start_date);
+            return $date->between($start, $end);
+        });
+
+        // Entraînements planifiés
+        $plannedTrainings = $trainings->filter(function ($training) use ($start, $end) {
+            $date = Carbon::parse($training->date);
+            return $date->between($start, $end);
+        });
+
+        return [
+            'actual' => [
+                'distance' => round($actualActivities->sum('distance') / 1000, 1),
+                'elevation' => $actualActivities->sum('total_elevation_gain'),
+                'time' => $actualActivities->sum('moving_time')
+            ],
+            'planned' => [
+                'distance' => $plannedTrainings->sum('distance'),
+                'elevation' => $plannedTrainings->sum('elevation'),
+                'time' => $plannedTrainings->sum('duration')
+            ]
+        ];
+    }
+
+    private function calculateMonthStats(Collection $weeks): array
+    {
+        $monthStats = [];
+
+        foreach ($weeks as $week) {
+            $monthKey = $week->month;
+
+            if (!isset($monthStats[$monthKey])) {
+                $monthStats[$monthKey] = [
+                    'actual' => ['distance' => 0, 'elevation' => 0, 'time' => 0],
+                    'planned' => ['distance' => 0, 'elevation' => 0, 'time' => 0]
+                ];
+            }
+
+            foreach (['actual', 'planned'] as $type) {
+                foreach (['distance', 'elevation', 'time'] as $metric) {
+                    $monthStats[$monthKey][$type][$metric] += $week->{$type . '_stats'}[$metric];
+                }
+            }
+        }
+
+        return $monthStats;
+    }
+
+    private function calculateYearStats(Collection $weeks): array
+    {
+        $yearStats = [
+            'actual' => ['distance' => 0, 'elevation' => 0, 'time' => 0],
+            'planned' => ['distance' => 0, 'elevation' => 0, 'time' => 0]
+        ];
+
+        foreach ($weeks as $week) {
+            foreach (['actual', 'planned'] as $type) {
+                foreach (['distance', 'elevation', 'time'] as $metric) {
+                    $yearStats[$type][$metric] += $week->{$type . '_stats'}[$metric];
+                }
+            }
+        }
+
+        return $yearStats;
+    }
+
     private function groupWeeksByMonth(Collection $weeks): Collection
     {
         return $weeks->groupBy('month');        
-    }  
-
-    private function calculateWeekStats(Carbon $start, Carbon $end): array
-    {
-        $trainings = Training::whereBetween('date', [$start, $end])
-            ->where('user_id', Auth::id())
-            ->get();
-
-        return [
-            'distance' => $trainings->sum('distance'),
-            'time' => $trainings->sum('duration'),
-            'elevation' => $trainings->sum('elevation')
-        ];
-    }
-
-    private function calculateMonthStats(Collection $weeks): Collection
-    {
-        $months = $weeks->pluck('month')->unique();
-
-        return $months->mapWithKeys(function ($month) {
-            $start = Carbon::parse($month)->startOfMonth();
-            $end = Carbon::parse($month)->endOfMonth();
-
-            $trainings = Training::whereBetween('date', [$start, $end])
-                ->where('user_id', Auth::id())
-                ->get();
-
-            return [$month => [
-                'distance' => $trainings->sum('distance'),
-                'time' => $trainings->sum('duration'),
-                'elevation' => $trainings->sum('elevation')
-            ]];
-        });
-    }
-
-    private function calculateYearStats(int $year): array
-    {
-        $start = Carbon::createFromDate($year, 1, 1)->startOfYear();
-        $end = Carbon::createFromDate($year, 12, 31)->endOfYear();
-
-        $trainings = Training::whereBetween('date', [$start, $end])
-            ->where('user_id', Auth::id())
-            ->get();
-
-        return [
-            'distance' => $trainings->sum('distance'),
-            'time' => $trainings->sum('duration'),
-            'elevation' => $trainings->sum('elevation')
-        ];
     }
 
     private function generateWeekDays(Carbon $start): array
@@ -116,27 +164,27 @@ class CalendarController extends Controller
         return collect(range(0, 6))->map(function ($day) use ($start) {
             $date = $start->clone()->addDays($day);
             
-            $trainings = Training::whereDate('date', $date)
-                ->where('user_id', Auth::id())
-                ->get()
-                ->map(function ($training) {
-                    return [
-                        'id' => $training->id,
-                        'type' => $training->training_type_id,
-                        'distance' => $training->distance,
-                        'duration' => $training->duration,
-                        'type_color' => $training->trainingType->color,
-                        'type_icon' => $training->trainingType->icon,
-                        'type_name' => $training->trainingType->name,
-                    ];
-                });
+            // $trainings = Training::whereDate('date', $date)
+            //     ->where('user_id', Auth::id())
+            //     ->get()
+            //     ->map(function ($training) {
+            //         return [
+            //             'id' => $training->id,
+            //             'type' => $training->training_type_id,
+            //             'distance' => $training->distance,
+            //             'duration' => $training->duration,
+            //             'type_color' => $training->trainingType->color,
+            //             'type_icon' => $training->trainingType->icon,
+            //             'type_name' => $training->trainingType->name,
+            //         ];
+            //     });
 
             return [
                 'name' => $date->isoFormat('ddd'),
                 'number' => $date->day,
                 'date' => $date,
                 'is_today' => $date->isToday(),
-                'trainings' => $trainings
+                // 'trainings' => $trainings
             ];
         })->toArray();
     }         
