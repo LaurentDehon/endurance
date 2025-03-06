@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,71 +14,89 @@
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         
         <title>Endurance</title>
+        @livewireStyles
     </head>
 
     <body class="h-full">
         @auth
-            <!-- Sidebar -->
-            <aside class="sidebar fixed h-full w-52 bg-gray-900/80 text-white transition-all duration-300 z-50">
-                <div class="p-6 border-b border-gray-700">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-person-running text-blue-500 text-2xl"></i>
-                        <span class="text-xl font-bold" x-show="expanded" x-cloak>Endurance</span>
-                    </div>
-                </div>
+            <!-- Barre de navigation supérieure -->
+            <nav class="fixed top-0 w-full bg-white shadow-sm z-50">
+                <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16">
+                        <!-- Partie gauche -->
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 flex items-center">
+                                <i class="fas fa-person-running text-blue-500 text-2xl"></i>
+                                <span class="ml-2 text-xl font-bold hidden md:block">Endurance</span>
+                            </div>
+                            
+                            <!-- Navigation principale -->
+                            <div class="hidden md:ml-6 md:flex md:space-x-4">
+                                <a href="{{ route('main.dashboard') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('main.dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-house mr-2"></i>
+                                    Home
+                                </a>
+                                
+                                <a href="{{ route('calendar.index') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar.index') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-calendar-week mr-2"></i>
+                                    Calendar
+                                </a>
+                                
+                                <a href="{{ route('activities.index') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities.index') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-list mr-2"></i>
+                                    Activities
+                                </a>
+                            </div>
+                        </div>
 
-                <nav class="p-4 space-y-1">
-                    <a href="{{ route('main.dashboard') }}" 
-                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('main.dashboard') ? 'active-menu' : '' }}">
-                        <i class="fas fa-house text-blue-500 text-lg w-6"></i>
-                        <span x-show="expanded" x-cloak>Home</span>
-                    </a>
-                    
-                    <a href="{{ route('calendar.index') }}" 
-                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('calendar.index') ? 'active-menu' : '' }}">
-                        <i class="fas fa-calendar-week text-green-500 text-lg w-6"></i>
-                        <span x-show="expanded" x-cloak>Calendar</span>
-                    </a>
-
-                    <a href="{{ route('activities.index') }}" 
-                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('activities.index') ? 'active-menu' : '' }}">
-                        <i class="fas fa-list text-orange-500 text-lg w-6"></i>
-                        <span x-show="expanded" x-cloak>Activities</span>
-                    </a>
-                </nav>
-
-                <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
-                    <div class="space-y-1">
-                        <a href="{{ route('profile.edit') }}" 
-                        class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors {{ request()->routeIs('profile.edit') ? 'active-menu' : '' }}">
-                            <i class="fas fa-user text-yellow-500 text-lg w-6"></i>
-                            <span x-show="expanded" x-cloak>Profile</span>
-                        </a>
-                        
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
-                            <i class="fas fa-gear text-gray-400 text-lg w-6"></i>
-                            <span x-show="expanded" x-cloak>Settings</span>
-                        </a>
-                        
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
-                                <i class="fas fa-sign-out-alt text-red-500 text-lg w-6"></i>
-                                <span x-show="expanded" x-cloak>Logout</span>
+                        <!-- Partie droite (menu utilisateur) -->
+                        <div class="flex items-center" x-data="{ open: false }">
+                            <button @click="open = !open" 
+                                    class="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none">
+                                <i class="fas fa-user-circle text-xl"></i>
+                                <span class="hidden md:block">{{ Auth::user()->name }}</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
                             </button>
-                        </form>
+
+                            <!-- Menu déroulant -->
+                            <div x-show="open" 
+                                 @click.away="open = false"
+                                 class="origin-top-right absolute right-4 mt-36 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                 x-cloak>
+                                <div class="py-1">
+                                    <a href="{{ route('profile.edit') }}" 
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user mr-2 text-yellow-500"></i>Profile
+                                    </a>
+                                    <a href="#" 
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-gear mr-2 text-gray-400"></i>Settings
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-sign-out-alt mr-2 text-red-500"></i>Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </aside>
+            </nav>
         @endauth
 
         <!-- Main content -->
-        <main class="min-h-screen pt-16 md:pt-0 ml-20">
+        <main class="min-h-screen pt-16">
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <!-- Success notification -->
                 @if (session('success'))
                     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-                        class="fixed bottom-4 left-24 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-20">
+                        class="fixed top-20 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-20">
                         <i class="fas fa-check-circle"></i>
                         <span>{{ session('success') }}</span>
                     </div>
@@ -87,7 +105,7 @@
                 <!-- Error notification -->
                 @if ($errors->any())
                     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition
-                        class="fixed bottom-4 left-24 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg w-80 z-20">
+                        class="fixed top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg w-80 z-20">
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-exclamation-triangle mt-1"></i>
                             <div>
@@ -155,5 +173,6 @@
                 <div id="modal-body"></div>
             </div>
         </div>
+        @livewireScripts
     </body>
 </html>

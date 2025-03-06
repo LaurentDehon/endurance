@@ -1,37 +1,24 @@
-<script src="https://cdn.tailwindcss.com"></script>
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <form class="bg-white p-8 rounded-lg shadow-md max-w-md w-full" method="POST" action="{{ route('login') }}">
-        @csrf
-        <div class="space-y-6">
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg">
-                @error('email')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-                <input type="password" id="password" name="password" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg">
-                @error('password')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/@popperjs/core@2"></script>
+        <script src="https://unpkg.com/tippy.js@6"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="{{ asset('js/script.js') }}" defer></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">        
 
-            <button type="submit" 
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Se connecter
-            </button>
+        <title>Endurance</title>
+    </head>
 
-            <p class="mt-4 text-center text-sm text-gray-600">
-                Pas encore inscrit ?
-                <a href="{{ route('register') }}" class="ml-2 text-blue-600 hover:text-blue-700">
-                    Créez un compte
-                </a>
-            </p>
+    <body class="bg-gray-50 test-bg">
+        <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-0">
+            @yield('content')
         </div>
-    </form>
-</div>
+    </body>
+</html>

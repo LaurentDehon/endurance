@@ -6,14 +6,11 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\StravaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\TrainingController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [MainController::class, 'index'])->name('main.dashboard');
-
-    Route::get('/calendar/{year?}', [CalendarController::class, 'index'])->middleware(['strava.token'])->name('calendar.index');
-    Route::patch('/update-week-type/{week_id}', [CalendarController::class, 'updateWeekType'])->name('calendar.update-week-type');
+    Route::get('/calendar/{year?}', function() { return view('calendar-wrapper'); })->middleware(['strava.token'])->name('calendar.index');
 
     Route::get('/trainings/routine', [TrainingController::class, 'createRoutine'])->name('trainings.create-routine');
     Route::post('/trainings/routine', [TrainingController::class, 'storeRoutine'])->name('trainings.store-routine');

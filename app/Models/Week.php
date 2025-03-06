@@ -9,7 +9,7 @@ class Week extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year', 'week_number', 'type', 'user_id'];
+    protected $fillable = ['year', 'week_number', 'week_type_id', 'user_id'];
 
     public function user()
     {
@@ -23,6 +23,6 @@ class Week extends Model
 
     public static function getWeekType($year, $week)
     {
-        return self::where('year', $year)->where('week_number', $week)->value('type') ?? null;
+        return self::where('year', $year)->where('week_number', $week)->value('week_type_id') ?? null;
     }
 }
