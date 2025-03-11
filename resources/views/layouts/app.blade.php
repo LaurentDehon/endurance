@@ -5,16 +5,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        <script src="https://cdn.tailwindcss.com"></script>
+        {{-- <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
         <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-        <script src="{{ asset('js/script.js') }}" defer></script>
+        <script src="{{ asset('js/script.js') }}" defer></script> --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        {{-- <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> --}}
         
         <title>Endurance</title>
-        @livewireStyles
+        <wireui:scripts />
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles 
+        
+        {{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
     </head>
 
     <body class="h-full">
@@ -93,33 +97,6 @@
         <!-- Main content -->
         <main class="min-h-screen pt-16">
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <!-- Success notification -->
-                @if (session('success'))
-                    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-                        class="fixed top-20 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-20">
-                        <i class="fas fa-check-circle"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                @endif
-
-                <!-- Error notification -->
-                @if ($errors->any())
-                    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition
-                        class="fixed top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg w-80 z-20">
-                        <div class="flex items-start space-x-2">
-                            <i class="fas fa-exclamation-triangle mt-1"></i>
-                            <div>
-                                <h5 class="font-bold">Errors</h5>
-                                <ul class="list-disc pl-5 text-sm mt-1">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 <!-- Page Content -->
                 @yield('content')
             </div>
@@ -173,6 +150,46 @@
                 <div id="modal-body"></div>
             </div>
         </div>
+        
+        <x-notifications z-index="z-50" />
+        <x-notifications position="top-end" />
+        @livewire('wire-elements-modal')
         @livewireScripts
     </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if (session('wireui_notify'))
+            $wireui.notify({
+                title: "{{ session('wireui_notify.title') }}",
+                description: "{{ session('wireui_notify.description') }}",
+                icon: "{{ session('wireui_notify.icon') }}"
+            });
+        @endif
+    });
+
+    function onDragStart(e, trainingId) {
+    e.dataTransfer.setData('text/plain', trainingId);
+    e.currentTarget.classList.add('opacity-50');
+    }
+
+    function onDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('bg-blue-50', 'border-blue-300');
+    }
+
+    function onDragLeave(e) {
+        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
+    }
+
+    function onDrop(e, newDate) {
+        e.preventDefault();
+        const trainingId = e.dataTransfer.getData('text/plain');
+        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
+        
+        Livewire.dispatch('training-dropped', {
+            trainingId: parseInt(trainingId),
+            newDate: newDate
+        });
+    }
+</script>

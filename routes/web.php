@@ -11,6 +11,7 @@ use App\Http\Controllers\TrainingController;
 Route::middleware('auth')->group(function () {
     Route::get('/', [MainController::class, 'index'])->name('main.dashboard');
     Route::get('/calendar/{year?}', function() { return view('calendar-wrapper'); })->middleware(['strava.token'])->name('calendar.index');
+    Route::get('/test', function() { return view('test'); });
 
     Route::get('/trainings/routine', [TrainingController::class, 'createRoutine'])->name('trainings.create-routine');
     Route::post('/trainings/routine', [TrainingController::class, 'storeRoutine'])->name('trainings.store-routine');

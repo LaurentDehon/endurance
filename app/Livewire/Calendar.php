@@ -8,18 +8,29 @@ use Livewire\Component;
 use App\Models\Activity;
 use App\Models\Training;
 use App\Models\WeekType;
+use Livewire\Attributes\On;
+use WireUi\Traits\WireUiActions;
 use Illuminate\Support\Collection;
+use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {
+    use WireUiActions;
+
     public $year;
+    public $activities;
+    public $trainings;
+    public $weeks;
+    public $months;
+    public $monthStats;
+    public $yearStats;
+
     public $statIcons = [
         'distance' => 'route',
         'elevation' => 'mountain', 
         'time' => 'stopwatch'
-    ];
-    
+    ];    
     public $statColors = [
         'distance' => 'blue',
         'elevation' => 'red',
@@ -35,37 +46,48 @@ class Calendar extends Component
 
     public function render()
     {
-        $activities = Activity::whereYear('start_date', $this->year)
-            ->where('user_id', Auth::id())
-            ->get();
-        
-        $trainings = Training::with('trainingType')
-            ->whereYear('date', $this->year)
-            ->where('user_id', Auth::id())
-            ->get();
+        $this->activities = $this->getActivities();
+        $this->trainings = $this->getTrainings();
 
-        $weeks = $this->getWeeks($activities, $trainings);
+        $this->weeks = $this->getWeeks($this->activities, $this->trainings);
+        $this->months = $this->groupWeeksByMonth($this->weeks);
+        $this->monthStats = $this->calculateMonthStats($this->weeks);
+        $this->yearStats = $this->calculateYearStats($this->weeks);
         
         return view('livewire.calendar', [
-            'months' => $this->groupWeeksByMonth($weeks),
-            'monthStats' => $this->calculateMonthStats($weeks),
-            'yearStats' => $this->calculateYearStats($weeks),
+            'months' => $this->months,
+            'monthStats' => $this->monthStats,
+            'yearStats' => $this->yearStats,
             'weekTypes' => WeekType::all(),
-            'activities' => $activities,
-            'trainings' => $trainings,
+            'activities' => $this->activities,
+            'trainings' => $this->trainings,
+            'year' => $this->year
         ]);
     }
 
     public function nextYear()
     {
         $this->year++;
-        $this->dispatch('refresh');
     }
 
     public function previousYear()
     {
         $this->year--;
-        $this->dispatch('refresh');
+    }
+
+    public function getActivities()
+    {
+        return Activity::whereYear('start_date', $this->year)
+            ->where('user_id', Auth::id())
+            ->get();
+    }
+
+    public function getTrainings()
+    {
+        return Training::with('trainingType')
+            ->whereYear('date', $this->year)
+            ->where('user_id', Auth::id())
+            ->get();
     }
 
     private function getWeeks(Collection $activities, Collection $trainings): Collection
@@ -81,6 +103,9 @@ class Calendar extends Component
 
             $end = $start->copy()->endOfWeek();
 
+            // Determine the Thursday of the week for correct month assignment
+            $thursday = $start->copy()->addDays(3);
+
             $week = Week::firstOrCreate(
                 ['year' => $this->year, 'week_number' => $weekNumber, 'user_id' => Auth::id()],
                 ['week_type_id' => null]
@@ -91,7 +116,7 @@ class Calendar extends Component
 
             $week->start = $start->format('d M');
             $week->end = $end->format('d M');
-            $week->month = $start->format('Y-m');
+            $week->month = $thursday->format('Y-m'); // Use Thursday's month
             $week->actual_stats = $weekStats['actual'];
             $week->planned_stats = $weekStats['planned'];
             $week->days = $this->generateWeekDays($start);
@@ -188,7 +213,9 @@ class Calendar extends Component
 
     private function groupWeeksByMonth(Collection $weeks): Collection
     {
-        return $weeks->groupBy('month');        
+        return $weeks->filter(function ($week) {
+            return Carbon::createFromFormat('Y-m', $week->month)->year == $this->year;
+        })->groupBy('month');    
     }
     
     public function updateWeekType($weekId, $weekTypeId = null)
@@ -199,9 +226,65 @@ class Calendar extends Component
             'week_type_id' => $weekTypeId ?: null
         ]);
         
-        $this->dispatch('notify', [
-            'type' => 'success',
-            'message' => 'Week type updated successfully'
+        $this->notification()->send([
+            'icon' => 'success',        
+            'title' => 'Success',        
+            'description' => 'Week type updated successfully',
         ]);
-    }    
+    }  
+
+    #[On('training-dropped')]
+    public function updateTrainingDate($trainingId, $newDate)
+    {
+        $training = Training::findOrFail($trainingId);
+
+        $training->update([
+            'date' => Carbon::parse($newDate)
+        ]);
+        
+        $this->refreshCalendar();
+
+        $this->notification()->send([
+            'icon' => 'success',        
+            'title' => 'Success',        
+            'description' => 'Training moved to ' . Carbon::parse($newDate)->format('M d, Y'),
+        ]);
+    }
+
+    #[On('training-created')]
+    public function refreshCalendar()
+    {
+        $this->trainings = $this->getTrainings();
+    }
+    
+    public function startSync(StravaSyncService $syncService)
+    {
+        try {
+            $result = $syncService->sync(Auth::user());
+            
+            if ($result['success']) {
+                $this->notification()->send([
+                    'icon' => 'success',        
+                    'title' => 'Success',        
+                    'description' => $result['message'],        
+                ]);
+            } else {
+                $this->notification()->send([
+                    'icon' => 'error',        
+                    'title' => 'Error',        
+                    'description' => $result['message'],        
+                ]);
+            }
+
+        } catch (\Exception) {
+            $this->notification()->send([
+                'icon' => 'error',        
+                'title' => 'Error',        
+                'description' => 'An error occurred during synchronization',
+    
+            ]);
+        }
+
+        $this->dispatch('refresh');
+    }
 }

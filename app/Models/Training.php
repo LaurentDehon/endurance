@@ -12,7 +12,7 @@ class Training extends Model
     protected $fillable = [
         'date',
         'distance',
-        'duration', // in seconds
+        'duration',
         'elevation',
         'notes',
         'training_type_id',

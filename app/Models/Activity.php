@@ -28,6 +28,10 @@ class Activity extends Model
         'sync_date',
     ];
 
+    protected $casts = [
+        'start_date' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

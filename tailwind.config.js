@@ -1,21 +1,33 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
-
-/** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
     content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-    ],
+        // Laravel Blade views
+        './resources/**/*.blade.php',
+        
+        // Livewire views
+        './resources/**/*.livewire.php',
+        
+        // Alpine.js components
+        './resources/**/*.js',
+        './resources/**/*.vue',
 
+        // WireUI views and components
+        './vendor/wireui/wireui/src/*.php',
+        './vendor/wireui/wireui/ts/**/*.ts',
+        './vendor/wireui/wireui/src/WireUi/**/*.php',
+        './vendor/wireui/wireui/src/Components/**/*.php',
+    ],
+    presets: [
+        // Import WireUI's Tailwind configuration
+        require("./vendor/wireui/wireui/tailwind.config.js")
+    ],
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+            // Tu peux étendre les couleurs, typographies, espacements, etc.
         },
     },
-
-    plugins: [forms],
-};
+    plugins: [
+        // Ajouter des plugins si nécessaire
+        require('@tailwindcss/forms'),  // Exemples de plugins supplémentaires
+        require('@tailwindcss/typography'),
+    ],
+}

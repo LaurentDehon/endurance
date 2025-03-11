@@ -74,9 +74,13 @@
                         <a href="{{ route('strava.redirect') }}" class="tooltip cursor-pointer py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors" data-tooltip="Connect to Strava">
                             <i class="fas fa-link text-orange-600 text-2xl"></i></a>
                         <!-- Sync with Strava -->
-                        <a href="#" onclick="sync(event)" class="tooltip cursor-pointer py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors" data-tooltip="Synchronize with Strava">
-                            <i class="fas fa-sync text-orange-600 text-2xl"></i></a>
-                    </div>                        
+                        <a href="#" wire:click.prevent="startSync" class="tooltip cursor-pointer py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors relative" data-tooltip="Synchronize with Strava">
+                            <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin"></i>
+                            <div wire:loading wire:target="startSync" class="absolute -bottom-12 right-0 bg-orange-100 p-3 rounded shadow-lg text-sm whitespace-nowrap">
+                                Synchronizing...
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -207,16 +211,16 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
                                         @php
-                                            $dayDate = $day['date']->toDateString();
-                                            $dayTrainings = $trainings->where('date', $day['date']);
-                                            $dayActivities = $activities->where(function ($activity) use ($dayDate) {
-                                                return Carbon::parse($activity->start_date)->toDateString() === $dayDate;
-                                            });
+                                        $dayDate = $day['date'];
                                         @endphp
-                                        <div onclick="handleClick(event, '{{ route('trainings.create', ['date' => $dayDate]) }}')"
-                                        class="relative block p-2 rounded-lg border min-h-24" ondragover="onDragOver(event)" ondrop="onDrop(event, '{{ $dayDate }}')" ondragleave="onDragLeave(event)"
+                                        <div wire:key="day-{{ $dayDate->format('Y-m-d') }}"
+                                            ondragover="onDragOver(event)" 
+                                            ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
+                                            ondragleave="onDragLeave(event)" wire:click="$dispatch('openModal', { component: 'create-training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})"
+                                        class="relative block p-2 rounded-lg border min-h-24"
                                                     {{ $day['is_today'] ? 'border-2 border-blue-300 bg-blue-50' : 'hover:border-blue-200' }}
-                                                    {{ $dayTrainings->count() == 0 ? 'bg-gray-200' : '' }}" style="cursor: pointer">
+                                                    {{-- {{ $dayTrainings->count() == 0 ? 'bg-gray-200' : '' }}" style="cursor: pointer">
+                                                    {{$dayTrainings->count()}} / {{$trainings->count()}} --}}
                                             <!-- Day header -->
                                             <div class="flex justify-between items-center mb-2">
                                                 <div>
@@ -226,29 +230,47 @@
                                             </div>
 
                                             <!-- Activities badges -->
+                                            @php 
+                                            $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
+                                                return $activity->start_date->isSameDay($dayDate);
+                                            });
+                                            @endphp
                                             @if($dayActivities->isNotEmpty())
                                                 <div class="absolute top-2 right-2 flex flex-wrap gap-1">
                                                     @foreach($dayActivities as $activity)
-                                                        <a class="tooltip" data-tooltip="{{ $activity->name }}">
-                                                            <div class="w-6 h-6 rounded-full flex items-center justify-center 
-                                                                    bg-orange-500 text-white text-sm">
+                                                    <div class="relative group">
+                                                        <a href="#" class="tooltip">
+                                                            <div class="w-6 h-6 rounded-full flex items-center justify-center bg-orange-500 text-white text-sm">
                                                                 <i class="fas fa-running"></i>
                                                             </div>
-                                                        </a>
+                                                        </a>                                                        
+                                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            {{ $activity->name }}
+                                                        </div>
+                                                    </div>
                                                     @endforeach
                                                 </div>
                                             @endif
 
                                             <!-- Training badges -->
-                                            @if($dayTrainings->count() > 0)
+                                            @php 
+                                            $dayTrainings = $trainings->filter(function ($training) use ($dayDate){
+                                                return $training->date->isSameDay($dayDate);
+                                            }); 
+                                            @endphp
+                                            @if($dayTrainings->isNotEmpty())
                                                 <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
                                                     @foreach($dayTrainings as $training)
-                                                        <a class="tooltip" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->trainingType->name }}">
-                                                            <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->trainingType->color }} text-white text-sm"
-                                                                onclick="handleClick(event, '{{ route('trainings.show', $training->id) }}')">
-                                                                <i class="fas fa-{{ $training->trainingType->icon }}"></i>
-                                                            </div>
-                                                        </a>
+                                                    <a class="relative group" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->trainingType->name }}">
+                                                        <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->trainingType->color }} text-white text-sm"
+                                                             onclick="handleClick(event, '{{ route('trainings.show', $training->id) }}')">
+                                                            <i class="fas fa-{{ $training->trainingType->icon }}"></i>
+                                                        </div>                                                        
+                                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            {{ $training->trainingType->name }}
+                                                        </div>
+                                                    </a>
+                                                    
                                                     @endforeach
                                                 </div>
                                             @endif
@@ -286,6 +308,9 @@
                 <nav class="space-y-2">
                     @foreach ($months as $monthKey => $weeksInMonth)
                         @php
+                            if(substr($monthKey, 0, 4) != $year) {
+                                continue;
+                            }
                             $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
                             $monthName = $monthDate->format('F Y');
                         @endphp
@@ -300,248 +325,3 @@
         </div>
     </div>
 </div>
-
-{{-- <style>
-#training-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-}
-
-.modal-content {
-    position: relative;
-    background: white;
-    margin: 2rem auto;
-    padding: 20px;
-    max-width: 500px;
-    border-radius: 8px;
-}    
-</style>
-
-<script>
-// Restoring scroll position
-document.addEventListener('DOMContentLoaded', function() {
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
-
-    const savedScrollY = sessionStorage.getItem('scrollY');
-
-    if (savedScrollY !== null) {
-        window.scrollTo({ top: parseInt(savedScrollY), left: 0, behavior: 'instant' });
-        setTimeout(() => {
-            sessionStorage.removeItem('scrollY');
-        }, 50);
-    }
-});
-
-// Week type update
-function updateWeekType(select) {
-    const form = select.closest('form');
-    const formData = new FormData(form);
-    
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Erreur réseau');
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            const header = form.closest('.week-header');              
-            if (header && data.week_type_color)
-                header.className = header.className.replace(/bg-\S+/g, `bg-${data.week_type_color}`);                
-            else header.className = header.className.replace(/bg-\S+/g, `bg-gray-500`);
-
-            showToast('Week type updated successfully', 'success', 3000);
-        } else showToast('Failed to update week type', 'error', 5000);
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        showToast('Failed to update week type', 'error', 5000);
-    });
-}    
-
-// Training modal
-function handleClick(event, url) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    scrollPosition = window.scrollY;
-    sessionStorage.setItem('scrollY', window.scrollY);
-    
-    openModal(url);
-}
-
-// Modal opening
-function openModal(url) {
-    const modal = document.getElementById('training-modal');
-    const body = document.body;
-    
-    // Sauvegarde la position actuelle de manière non intrusive
-    const scrollY = window.scrollY || window.pageYOffset;
-    body.dataset.scrollY = scrollY;
-    
-    // Désactive le défilement avec CSS uniquement
-    body.classList.add('overflow-hidden');
-    
-    // Ouvre la modal
-    modal.style.display = 'block';
-    
-    fetch(url + '?modal=1')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('modal-body').innerHTML = html;
-        });
-}
-
-// close Modal
-function closeModal() {
-    const modal = document.getElementById('training-modal');
-    const body = document.body;
-    const scrollY = parseInt(body.dataset.scrollY) || 0;
-    
-    // Réactive le défilement
-    body.classList.remove('overflow-hidden');
-    
-    // Restaure la position sans animation
-    requestAnimationFrame(() => {
-        window.scrollTo({
-            top: scrollY,
-            behavior: 'instant'
-        });
-    });
-    
-    modal.style.display = 'none';
-}
-
-// Progress bar
-function sync(event) {
-    event.preventDefault();
-    showProgressBar();
-
-    fetch('/strava/sync', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-    })
-    .then(response => response.json())    
-    .then(data => {
-        hideProgressBar();
-        if (data.success) {
-            showToast(data.message, 'success', 3000);
-            window.location.reload();
-        } else {
-            showToast(data.message, 'error', 5000);
-        }
-    })
-    .catch(error => {
-        hideProgressBar()
-        showToast(error.message || 'An error occurred', 'error', 5000);
-    });
-}
-
-function showProgressBar() {
-    document.getElementById('sync-progress').classList.remove('hidden');
-}
-
-function hideProgressBar() {
-    document.getElementById('sync-progress').classList.add('hidden');
-}
-
-// Drag and drop
-let isDragging = false;
-let scrollPosition = 0;
-
-// Drag start handler for training badges
-function onDragStart(event, trainingId) {
-    event.dataTransfer.setData('trainingId', trainingId);
-    event.dataTransfer.effectAllowed = "move";
-    scrollPosition = window.scrollY;
-}
-
-// Drag over handler for day cells
-function onDragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-    event.currentTarget.classList.add('bg-blue-50', 'border-blue-300');
-}
-
-// Drag leave handler
-function onDragLeave(event) {
-    event.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
-}
-
-// Drop handler for day cells
-async function onDrop(event, targetDate) {
-    event.preventDefault();
-    event.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
-
-    try {
-        const trainingId = event.dataTransfer.getData('trainingId');
-        
-        const response = await fetch(`/trainings/${trainingId}/update-date`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ date: targetDate })
-        });
-
-        const contentType = response.headers.get('content-type');
-        let data;
-
-        if (contentType && contentType.includes('application/json')) {
-            data = await response.json();
-        } else {
-            throw new Error('Réponse non-JSON du serveur');
-        }
-
-        if (!response.ok || !data.success) {
-            throw new Error(data.message || 'Erreur pendant la mise à jour');
-        }
-
-        // Rafraîchir seulement la partie nécessaire
-        sessionStorage.setItem('scrollY', window.scrollY);
-        window.location.reload();
-
-    } catch (error) {
-        console.error('Erreur:', error);
-        showToast(error.message || 'Erreur pendant le déplacement', 'error', 5000);
-    }
-}
-
-// Modify click handler to ignore drag events
-function handleClick(event, url) {
-    if (isDragging) {
-        isDragging = false;
-        return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    
-    sessionStorage.setItem('scrollY', window.scrollY);
-    openModal(url);
-}
-
-// Reset dragging state on drag end
-document.addEventListener('dragend', () => {
-    isDragging = false;
-});
-</script> --}}
