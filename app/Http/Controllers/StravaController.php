@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Services\StravaAuthService;
 use Illuminate\Http\Request;
+use TallStackUi\Traits\Interactions;
 
 class StravaController extends Controller
 {
-    public function __construct(
-        protected StravaAuthService $authService
-    ) {}
+    use Interactions; 
+
+    public function __construct(protected StravaAuthService $authService) {}
 
     public function redirect()
     {
@@ -19,23 +20,14 @@ class StravaController extends Controller
     public function handleCallback(Request $request)
     {
         try {
-        $this->authService->handleAuthorizationCode($request->code);
+            $this->authService->handleAuthorizationCode($request->code);
+            $this->toast()->success('Strava connected')->send();
 
-        session()->flash('wireui_notify', [
-            'title' => 'Success',
-            'description' => 'Strava connected',
-            'icon' => 'success',
-        ]);
+        } catch (\Exception $e) {
+            $this->toast()->error('Connection failed : ' . $e->getMessage())->send();
+        }
 
-    } catch (\Exception $e) {
-        session()->flash('wireui_notify', [
-            'title' => 'Error',
-            'description' => 'Connection failed',
-            'icon' => 'error',
-        ]);
-    }
-
-    return redirect()->route('calendar.index');
+        return redirect()->route('calendar.index');
     }
 
     public function showConnect()

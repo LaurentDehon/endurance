@@ -9,14 +9,14 @@ use App\Models\Activity;
 use App\Models\Training;
 use App\Models\WeekType;
 use Livewire\Attributes\On;
-use WireUi\Traits\WireUiActions;
+use TallStackUi\Traits\Interactions; 
 use Illuminate\Support\Collection;
 use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {
-    use WireUiActions;
+    use Interactions; 
 
     public $year;
     public $activities;
@@ -77,16 +77,26 @@ class Calendar extends Component
 
     public function getActivities()
     {
-        return Activity::whereYear('start_date', $this->year)
-            ->where('user_id', Auth::id())
+        $year = $this->year;
+        
+        $startDate = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        $endDate = Carbon::createFromDate($year, 12, 31)->endOfWeek(Carbon::SUNDAY);
+
+        return Activity::where('user_id', Auth::id())
+            ->whereBetween('start_date', [$startDate, $endDate])
             ->get();
     }
 
     public function getTrainings()
     {
-        return Training::with('trainingType')
-            ->whereYear('date', $this->year)
+        $year = $this->year;
+        
+        $startDate = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        $endDate = Carbon::createFromDate($year, 12, 31)->endOfWeek(Carbon::SUNDAY);
+
+        return Training::with('type')
             ->where('user_id', Auth::id())
+            ->whereBetween('date', [$startDate, $endDate])
             ->get();
     }
 
@@ -106,7 +116,7 @@ class Calendar extends Component
             // Determine the Thursday of the week for correct month assignment
             $thursday = $start->copy()->addDays(3);
 
-            $week = Week::firstOrCreate(
+            $week = Week::with('type')->firstOrCreate(
                 ['year' => $this->year, 'week_number' => $weekNumber, 'user_id' => Auth::id()],
                 ['week_type_id' => null]
             );
@@ -150,7 +160,7 @@ class Calendar extends Component
             'planned' => [
                 'distance' => $plannedTrainings->sum('distance'),
                 'elevation' => $plannedTrainings->sum('elevation'),
-                'time' => $plannedTrainings->sum('duration')
+                'time' => $plannedTrainings->sum('duration') * 60
             ]
         ];
     }
@@ -221,34 +231,26 @@ class Calendar extends Component
     public function updateWeekType($weekId, $weekTypeId = null)
     {
         $week = Week::findOrFail($weekId);
+        $weekTypeId = $weekTypeId === '' ? null : $weekTypeId;
         
         $week->update([
-            'week_type_id' => $weekTypeId ?: null
+            'week_type_id' => $weekTypeId
         ]);
         
-        $this->notification()->send([
-            'icon' => 'success',        
-            'title' => 'Success',        
-            'description' => 'Week type updated successfully',
-        ]);
+        $this->toast()->success('Week type updated successfully')->send();
     }  
 
     #[On('training-dropped')]
     public function updateTrainingDate($trainingId, $newDate)
     {
-        $training = Training::findOrFail($trainingId);
+        $training = Training::with('type')->findOrFail($trainingId);
 
         $training->update([
             'date' => Carbon::parse($newDate)
         ]);
         
         $this->refreshCalendar();
-
-        $this->notification()->send([
-            'icon' => 'success',        
-            'title' => 'Success',        
-            'description' => 'Training moved to ' . Carbon::parse($newDate)->format('M d, Y'),
-        ]);
+        $this->toast()->success($training->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'))->send();
     }
 
     #[On('training-created')]
@@ -263,26 +265,13 @@ class Calendar extends Component
             $result = $syncService->sync(Auth::user());
             
             if ($result['success']) {
-                $this->notification()->send([
-                    'icon' => 'success',        
-                    'title' => 'Success',        
-                    'description' => $result['message'],        
-                ]);
+                $this->toast()->success($result['message'])->send();
             } else {
-                $this->notification()->send([
-                    'icon' => 'error',        
-                    'title' => 'Error',        
-                    'description' => $result['message'],        
-                ]);
+                $this->toast()->error($result['message'])->send();
             }
 
-        } catch (\Exception) {
-            $this->notification()->send([
-                'icon' => 'error',        
-                'title' => 'Error',        
-                'description' => 'An error occurred during synchronization',
-    
-            ]);
+        } catch (\Exception $e) {
+            $this->toast()->error('An error occurred during synchronization : ' . $e->getMessage())->send();
         }
 
         $this->dispatch('refresh');

@@ -15,9 +15,4 @@ class TrainingType extends Model
         'icon',
         'description'
     ];
-
-    public function trainings()
-    {
-        return $this->hasMany(Training::class);
-    }
 }

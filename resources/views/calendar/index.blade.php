@@ -256,10 +256,10 @@
                                                 @if($dayTrainings->count() > 0)
                                                     <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
                                                         @foreach($dayTrainings as $training)
-                                                            <a class="tooltip" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->trainingType->name }}">
-                                                                <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->trainingType->color }} text-white text-sm"
+                                                            <a class="tooltip" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->type->name }}">
+                                                                <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->type->color }} text-white text-sm"
                                                                     onclick="handleClick(event, '{{ route('trainings.show', $training->id) }}')">
-                                                                    <i class="fas fa-{{ $training->trainingType->icon }}"></i>
+                                                                    <i class="fas fa-{{ $training->type->icon }}"></i>
                                                                 </div>
                                                             </a>
                                                         @endforeach

@@ -5,26 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        {{-- <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://unpkg.com/@popperjs/core@2"></script>
-        <script src="https://unpkg.com/tippy.js@6"></script>
-        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-        <script src="{{ asset('js/script.js') }}" defer></script> --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        {{-- <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> --}}
         
         <title>Endurance</title>
-        <wireui:scripts />
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <tallstackui:script />         
         @livewireStyles 
-        
-        {{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
     <body class="h-full">
         @auth
             <!-- Barre de navigation supérieure -->
-            <nav class="fixed top-0 w-full bg-white shadow-sm z-50">
+            <nav class="fixed top-0 w-full bg-white shadow-sm z-10">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <!-- Partie gauche -->
@@ -151,23 +144,14 @@
             </div>
         </div>
         
-        <x-notifications z-index="z-50" />
-        <x-notifications position="top-end" />
+        <x-ts-toast />  
+        <x-ts-dialog /> 
+        
         @livewire('wire-elements-modal')
-        @livewireScripts
+        @livewireScripts  
     </body>
 </html>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        @if (session('wireui_notify'))
-            $wireui.notify({
-                title: "{{ session('wireui_notify.title') }}",
-                description: "{{ session('wireui_notify.description') }}",
-                icon: "{{ session('wireui_notify.icon') }}"
-            });
-        @endif
-    });
-
     function onDragStart(e, trainingId) {
     e.dataTransfer.setData('text/plain', trainingId);
     e.currentTarget.classList.add('opacity-50');

@@ -21,7 +21,7 @@ class Training extends Model
 
     protected $casts = [
         'date' => 'date',
-        'distance' => 'decimal:2',
+        'distance' => 'decimal:1',
     ];
 
     public function user()
@@ -29,9 +29,9 @@ class Training extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function trainingType()
+    public function type()
     {
-        return $this->belongsTo(TrainingType::class);
+        return $this->belongsTo(TrainingType::class, 'training_type_id');
     }
 
     public function scopeForUser($query, User $user)
@@ -43,16 +43,4 @@ class Training extends Model
     {
         return $query->whereBetween('date', [$start, $end]);
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($training) {
-            if (!is_null($training->duration)) {
-                $training->duration = $training->duration * 60;
-            }
-        });
-    }
-
 }

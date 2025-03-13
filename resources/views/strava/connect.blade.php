@@ -14,11 +14,6 @@
                 Synchronisation avec Strava
             </h1>
             
-            <!-- Logo Strava officiel -->
-            <div class="mb-8 flex justify-center">
-                <img src="{{ asset('storage/images/strava-logo2.png') }}" alt="Logo Strava" class="h-24 w-24">
-            </div>
-            
             <p class="text-gray-600 mb-8 text-lg leading-relaxed">
                 Pour accéder à toutes les fonctionnalités de votre calendrier d'entraînement, veuillez connecter votre compte Strava.
             </p>
@@ -44,7 +39,6 @@
                class="inline-flex items-center justify-center px-8 py-4 border border-transparent 
                       text-lg font-medium rounded-md text-white bg-[#FC4C02]
                       transition-all duration-200 transform hover:scale-105 shadow-lg">
-                      <img src="{{ asset('storage/images/strava-logo.svg') }}" alt="Logo Strava" class="h-16 w-16">
                 <span class="font-bold">Connecter avec Strava</span>
             </a>
 

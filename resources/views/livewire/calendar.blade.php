@@ -17,7 +17,6 @@
         </button>
     </div>
 
-
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Main content -->
         <div class="flex-1">
@@ -25,7 +24,7 @@
             <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                 <div class="flex flex-wrap gap-8" >
                     @foreach(['distance', 'elevation', 'time'] as $stat)
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-4 w-1/6">
                             <div class="py-3 px-4 bg-{{ $statColors[$stat] }}-100 rounded-xl">
                                 <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-600 text-2xl"></i>
                             </div>
@@ -52,16 +51,6 @@
                                         @endif
                                     </p>
                                 </div>
-                                {{-- @if($yearStats['planned'][$stat] > 0)
-                                    @php 
-                                        $percentage = ($yearStats['actual'][$stat] / $yearStats['planned'][$stat]) * 100;
-                                        $percentage = min($percentage, 100);
-                                    @endphp
-                                    <div class="w-24 h-1 bg-gray-200 rounded-full mt-1">
-                                        <div class="h-1 bg-{{ $statColors[$stat] }}-500 rounded-full" 
-                                            style="width: {{ $percentage }}%"></div>
-                                    </div>
-                                @endif --}}
                             </div>
                         </div>
                     @endforeach
@@ -75,7 +64,7 @@
                             <i class="fas fa-link text-orange-600 text-2xl"></i></a>
                         <!-- Sync with Strava -->
                         <a href="#" wire:click.prevent="startSync" class="tooltip cursor-pointer py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors relative" data-tooltip="Synchronize with Strava">
-                            <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin"></i>
+                            <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
                             <div wire:loading wire:target="startSync" class="absolute -bottom-12 right-0 bg-orange-100 p-3 rounded shadow-lg text-sm whitespace-nowrap">
                                 Synchronizing...
                             </div>
@@ -96,7 +85,7 @@
                         {{ $monthName }}
                         <span class="text-gray-500 font-normal text-lg ml-2">
                             @foreach(['distance', 'elevation', 'time'] as $stat)
-                                <span class="mr-4">
+                                <span class="mr-4 inline-flex items-center min-w-[160px] gap-2 px-2 py-1">
                                     <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>
                                     <span class="text-{{ $statColors[$stat] }}-500">
                                         @if($stat === 'distance')
@@ -116,16 +105,6 @@
                                             @endif
                                         </span>
                                     @endif
-                                    {{-- @if($monthStats[$monthKey]['planned'][$stat] > 0)
-                                        @php 
-                                            $percentage = ($monthStats[$monthKey]['actual'][$stat] / $monthStats[$monthKey]['planned'][$stat]) * 100;
-                                            $percentage = min($percentage, 100);
-                                        @endphp
-                                        <span class="inline-block w-12 h-1 bg-gray-200 rounded-full ml-1 align-middle">
-                                            <span class="block h-1 bg-{{ $statColors[$stat] }}-500 rounded-full" 
-                                                style="width: {{ $percentage }}%"></span>
-                                        </span>
-                                    @endif --}}
                                 </span>
                             @endforeach
                         </span>
@@ -135,7 +114,7 @@
                     @foreach ($weeksInMonth as $week)
                         <div class="bg-white rounded-xl shadow-lg mb-2 overflow-hidden">
                             <!-- Week header -->
-                            <div class="week-header px-3 py-2 bg-{{ $week->type->color ?? 'gray-500' }} border-b flex items-center gap-4 flex-wrap">
+                            <div class="week-header px-3 py-2 {{ $week->type ? $week->type->color : 'bg-gray-500' }} border-b flex items-center gap-4 flex-wrap">
                                 <div class="flex flex-col gap-2">
                                     <div class="flex items-center gap-2">
                                         <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
@@ -149,7 +128,7 @@
                                     <div class="h-9">
                                         <div class="flex items-center gap-2">
                                             <div class="relative">
-                                                <select wire:change="updateWeekType({{ $week->id }}, $event.target.value)" class="bg-gray-100 appearance-none block pl-8 pr-10 py-1.5 text-sm rounded-md border focus:outline-none">
+                                                <select wire:change="updateWeekType({{ $week->id }}, $event.target.value)" class="bg-gray-100 appearance-none block pl-8 pr-10 py-1.5 text-sm rounded-md border focus:outline-none focus:ring-0 focus:border-gray-300">
                                                     <option value="">None</option>
                                                     @foreach ($weekTypes as $type)
                                                         <option value="{{ $type->id }}" data-color="{{ $type->color }}" {{ $week->week_type_id == $type->id ? 'selected' : '' }}>
@@ -168,7 +147,7 @@
                                 <!-- Week stats -->
                                 <div class="flex gap-6 ml-auto">
                                     @foreach(['distance', 'elevation', 'time'] as $stat)
-                                        <div class="text-center min-w-[90px]">
+                                        <div class="text-center min-w-[160px]">
                                             <p class="text-s text-gray-300 mb-1">
                                                 <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>{{ ucfirst($stat) }}
                                             </p>
@@ -196,8 +175,8 @@
                                                     $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
                                                     $percentage = min($percentage, 100);
                                                 @endphp
-                                                <div class="w-full h-1 bg-gray-200 rounded-full">
-                                                    <div class="h-1 bg-{{ $statColors[$stat] }}-300 rounded-full" 
+                                                <div class="w-full h-1.5 bg-gray-200 rounded-full">
+                                                    <div class="h-1.5 bg-{{ $statColors[$stat] }}-300 rounded-full" 
                                                         style="width: {{ $percentage }}%"></div>
                                                 </div>
                                             @endif
@@ -205,22 +184,20 @@
                                     @endforeach
                                 </div>
                             </div>
-
                             <!-- Days grid -->
                             <div class="p-2">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
                                         @php
-                                        $dayDate = $day['date'];
+                                            $dayDate = $day['date'];
                                         @endphp
                                         <div wire:key="day-{{ $dayDate->format('Y-m-d') }}"
                                             ondragover="onDragOver(event)" 
                                             ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
-                                            ondragleave="onDragLeave(event)" wire:click="$dispatch('openModal', { component: 'create-training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})"
-                                        class="relative block p-2 rounded-lg border min-h-24"
-                                                    {{ $day['is_today'] ? 'border-2 border-blue-300 bg-blue-50' : 'hover:border-blue-200' }}
-                                                    {{-- {{ $dayTrainings->count() == 0 ? 'bg-gray-200' : '' }}" style="cursor: pointer">
-                                                    {{$dayTrainings->count()}} / {{$trainings->count()}} --}}
+                                            ondragleave="onDragLeave(event)" 
+                                            wire:click="$dispatch('openModal', { component: 'training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})"
+                                            class="relative block p-2 rounded-lg border min-h-24 cursor-pointer"
+                                                    {{ $day['is_today'] ? 'border-2 border-blue-300 bg-blue-50' : 'hover:border-blue-200' }}>
                                             <!-- Day header -->
                                             <div class="flex justify-between items-center mb-2">
                                                 <div>
@@ -228,7 +205,7 @@
                                                     <span class="text-sm font-bold text-gray-700">{{ $day['number'] }}</span>
                                                 </div>
                                             </div>
-
+                                            
                                             <!-- Activities badges -->
                                             @php 
                                             $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
@@ -261,16 +238,15 @@
                                             @if($dayTrainings->isNotEmpty())
                                                 <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
                                                     @foreach($dayTrainings as $training)
-                                                    <a class="relative group" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->trainingType->name }}">
-                                                        <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->trainingType->color }} text-white text-sm"
-                                                             onclick="handleClick(event, '{{ route('trainings.show', $training->id) }}')">
-                                                            <i class="fas fa-{{ $training->trainingType->icon }}"></i>
-                                                        </div>                                                        
-                                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            {{ $training->trainingType->name }}
-                                                        </div>
-                                                    </a>
-                                                    
+                                                        <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', arguments: { id: '{{ $training->id }}' }})" class="relative group" draggable="true" ondragstart="onDragStart(event, {{ $training->id }})" data-tooltip="{{ $training->type->name }}">
+                                                            <div class="w-6 h-6 rounded-full flex items-center justify-center {{ $training->type->color }} text-white text-sm"
+                                                                onclick="handleClick(event, '{{ route('trainings.show', $training->id) }}')">
+                                                                <i class="fas fa-{{ $training->type->icon }}"></i>
+                                                            </div>                                                        
+                                                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                {{ $training->type->name }}
+                                                            </div>
+                                                        </a>                                                    
                                                     @endforeach
                                                 </div>
                                             @endif
@@ -302,7 +278,7 @@
 
         <!-- Side navigation -->
         <div class="lg:w-45">
-            <div class="bg-white rounded-xl shadow-lg p-4 sticky top-4">
+            <div class="bg-white rounded-xl shadow-lg p-4 sticky top-20">
                 <h3 class="font-bold text-gray-800 mb-3 mt-5"><i
                         class="fas fa-map-marker-alt mr-2 text-blue-500"></i>Navigation</h3>
                 <nav class="space-y-2">
@@ -323,5 +299,5 @@
                 </nav>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
