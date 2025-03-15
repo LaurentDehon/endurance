@@ -15,13 +15,16 @@ class TrainingModal extends ModalComponent
 
     public $trainingId;
     public $date;
-    public $distance = 10;
-    public $hours = 1;
-    public $minutes = 0;
-    public $elevation = 0;
+    public $distance;
+    public $hours;
+    public $minutes;
+    public $elevation;
     public $notes;
     public $trainingTypeId;
     public $trainingTypes;
+    public $isRecurring = false;
+    public $recurrenceInterval = 7;
+    public $recurrenceEndDate;
 
     protected $rules = [
         'date' => 'required|date',
@@ -31,6 +34,9 @@ class TrainingModal extends ModalComponent
         'elevation' => 'nullable|integer',
         'notes' => 'nullable|string',
         'trainingTypeId' => 'required|exists:training_types,id',
+        'isRecurring' => 'nullable|boolean',
+        'recurrenceInterval' => 'nullable|required_if:isRecurring,true|integer|min:1',
+        'recurrenceEndDate' => 'nullable|required_if:isRecurring,true|date|after:date',
     ]; 
 
     public function mount($id = null, $date = null)
@@ -61,31 +67,51 @@ class TrainingModal extends ModalComponent
     {
         $this->validate();
 
-        $data = [
-            'date' => Carbon::parse($this->date),
+        $this->distance = $this->validateNumeric($this->distance);
+        $this->elevation = $this->validateNumeric($this->elevation);
+
+        $baseData = [
             'distance' => $this->distance,
-            'duration' => ($this->hours ?? 0) * 60 + ($this->minutes ?? 0),
+            'duration' => (is_numeric($this->hours) ? $this->hours : 0) * 60 + (is_numeric($this->minutes) ? $this->minutes : 0),
             'elevation' => $this->elevation,
             'notes' => $this->notes,
             'training_type_id' => $this->trainingTypeId,
             'user_id' => Auth::id(),
         ];
 
-        // Update existing training
-        if ($this->trainingId) {
-            $training = Training::where('user_id', Auth::id())->findOrFail($this->trainingId);
-            $training->update($data);
-            $message = 'Training successfully updated';
-        } 
-        // Create new training
-        else {
-            Training::create($data);
-            $message = 'Training successfully created';
-        }
+        try {
+            if ($this->isRecurring) {
+                $startDate = Carbon::parse($this->date);
+                $endDate = Carbon::parse($this->recurrenceEndDate);
+                $interval = $this->recurrenceInterval;
 
-        $this->dispatch('training-created');
-        $this->toast()->success($message)->send();
-        $this->dispatch('closeModal', 'training-modal');
+                $currentDate = $startDate->copy();
+
+                while ($currentDate <= $endDate) {
+                    Training::create(array_merge($baseData, ['date' => $currentDate]));
+                    $currentDate = $currentDate->addDays((int)$interval);
+                }
+
+                $message = 'Recurring trainings created successfully';
+            } else {
+                if ($this->trainingId) {
+                    $training = Training::where('user_id', Auth::id())->findOrFail($this->trainingId);
+                    $training->update($baseData);
+                    $message = 'Training successfully updated';
+                } 
+                else {
+                    Training::create(array_merge($baseData, ['date' => Carbon::parse($this->date)]));
+                    $message = 'Training successfully created';
+                }
+            }
+
+            $this->dispatch('training-created');
+            $this->toast()->success($message)->send();
+            $this->dispatch('closeModal', 'training-modal');
+
+        } catch (\Exception $e) {
+            $this->toast()->error('Error saving training: ' . $e->getMessage())->send();
+        }
     }
 
     public function delete()
@@ -111,6 +137,11 @@ class TrainingModal extends ModalComponent
         } catch (\Exception $e) {
             $this->toast()->error('Error deleting training : ' . $e->getMessage())->send();
         }
+    }
+
+    private function validateNumeric($value)
+    {
+        return is_numeric($value) && !empty($value) ? $value : 0;
     }
 
     public function render()

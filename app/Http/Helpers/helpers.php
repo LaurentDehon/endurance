@@ -9,11 +9,11 @@ function formatTime(int $seconds): string
     $hours = floor($totalMinutes / 60);
     $remainingMinutes = $totalMinutes % 60;
 
-    if ($remainingMinutes === 0) {
-        return $hours . 'h';
+    if ($hours > 0) {
+        return $hours . 'h' . ($remainingMinutes > 0 ? str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT) : '');
     }
 
-    return $hours . 'h' . str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
+    return $remainingMinutes . 'm';
 }
 
 function formatDistance(float $distance): string

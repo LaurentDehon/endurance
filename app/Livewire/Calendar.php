@@ -240,7 +240,7 @@ class Calendar extends Component
         $this->toast()->success('Week type updated successfully')->send();
     }  
 
-    #[On('training-dropped')]
+    #[On('training-moved')]
     public function updateTrainingDate($trainingId, $newDate)
     {
         $training = Training::with('type')->findOrFail($trainingId);
@@ -251,6 +251,19 @@ class Calendar extends Component
         
         $this->refreshCalendar();
         $this->toast()->success($training->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'))->send();
+    }
+
+    #[On('training-copied')]
+    public function copyTraining($trainingId, $newDate)
+    {
+        $originalTraining = Training::with('type')->findOrFail($trainingId);
+        
+        $newTraining = $originalTraining->replicate();
+        $newTraining->date = Carbon::parse($newDate);
+        $newTraining->save();
+
+        $this->refreshCalendar();
+        $this->toast()->success($originalTraining->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'))->send();
     }
 
     #[On('training-created')]
@@ -275,5 +288,73 @@ class Calendar extends Component
         }
 
         $this->dispatch('refresh');
+    }
+
+    public function deleteAll()
+    {
+        $this->dialog()
+            ->question('Warning!', 'Are you sure?')
+            ->confirm(method: 'confirmDeleteAll')
+            ->send();
+    }
+
+    public function confirmDeleteAll()
+    {
+        $trainings = Training::where('user_id', Auth::id())
+            ->whereYear('date', $this->year);
+
+        $count = $trainings->count();
+        $trainings->delete(); 
+
+        $this->toast()->success($count . ' trainings deleted successfully')->send();
+    }
+
+    public function deleteMonth($monthKey)
+    {
+        $this->dialog()
+            ->question('Warning!', 'Are you sure?')
+            ->confirm(method: 'confirmDeleteMonth', params: [$monthKey])
+            ->send();
+    }
+
+    public function confirmDeleteMonth(array $params)
+    {
+        $monthKey = $params[0];
+        $month = Carbon::createFromFormat('Y-m', $monthKey);
+
+        $trainings = Training::where('user_id', Auth::id())
+            ->whereYear('date', $month->year)
+            ->whereMonth('date', $month->month);
+
+        $count = $trainings->count();
+        $trainings->delete(); 
+
+        $this->toast()->success($count . ' trainings deleted successfully')->send();
+    }
+
+    public function deleteWeek($weekId)
+    {
+        $this->dialog()
+            ->question('Warning!', 'Are you sure?')
+            ->confirm(method: 'confirmDeleteWeek', params: [$weekId])
+            ->send();
+    }
+
+    public function confirmDeleteWeek(array $params)
+    {
+        $weekId = $params[0];
+        $week = Week::findOrFail($weekId);
+
+        $date = Carbon::createFromDate($this->year, 1, 1)->startOfYear();
+        $start = $date->copy()->setISODate($this->year, $week->week_number, 1)->startOfWeek();
+        $end = $start->copy()->endOfWeek();
+
+        $trainings = Training::where('user_id', Auth::id())
+            ->whereBetween('date', [$start, $end]);
+            
+        $count = $trainings->count();
+        $trainings->delete(); 
+
+        $this->toast()->success($count . ' trainings deleted successfully')->send();
     }
 }

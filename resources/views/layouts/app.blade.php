@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
         
         <title>Endurance</title>
 
@@ -17,7 +18,7 @@
     <body class="h-full">
         @auth
             <!-- Barre de navigation supérieure -->
-            <nav class="fixed top-0 w-full bg-white shadow-sm z-10">
+            <nav class="top-0 w-full bg-white shadow-sm z-10">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <!-- Partie gauche -->
@@ -29,20 +30,20 @@
                             
                             <!-- Navigation principale -->
                             <div class="hidden md:ml-6 md:flex md:space-x-4">
-                                <a href="{{ route('main.dashboard') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('main.dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('dashboard') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-house mr-2"></i>
                                     Home
                                 </a>
                                 
-                                <a href="{{ route('calendar.index') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar.index') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('calendar') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-calendar-week mr-2"></i>
                                     Calendar
                                 </a>
                                 
-                                <a href="{{ route('activities.index') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities.index') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('activities') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-list mr-2"></i>
                                     Activities
                                 </a>
@@ -88,7 +89,7 @@
         @endauth
 
         <!-- Main content -->
-        <main class="min-h-screen pt-16">
+        <main class="min-h-screen">
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <!-- Page Content -->
                 @yield('content')
@@ -146,6 +147,7 @@
         
         <x-ts-toast />  
         <x-ts-dialog /> 
+        <x-ts-tooltip />
         
         @livewire('wire-elements-modal')
         @livewireScripts  
@@ -153,27 +155,45 @@
 </html>
 <script>
     function onDragStart(e, trainingId) {
-    e.dataTransfer.setData('text/plain', trainingId);
-    e.currentTarget.classList.add('opacity-50');
+        const isCopy = e.ctrlKey;
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            trainingId,
+            isCopy
+        }));
+        
+        if(isCopy) {
+            e.currentTarget.classList.add('dragging-copy');
+        } else {
+            e.currentTarget.classList.add('opacity-50');
+        }
     }
-
     function onDragOver(e) {
         e.preventDefault();
         e.currentTarget.classList.add('bg-blue-50', 'border-blue-300');
     }
 
     function onDragLeave(e) {
-        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
+        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
     }
 
     function onDrop(e, newDate) {
         e.preventDefault();
-        const trainingId = e.dataTransfer.getData('text/plain');
-        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300');
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const trainingId = data.trainingId;
+        const isCopy = data.isCopy;
         
-        Livewire.dispatch('training-dropped', {
-            trainingId: parseInt(trainingId),
-            newDate: newDate
-        });
+        e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
+        
+        if(isCopy) {
+            Livewire.dispatch('training-copied', {
+                trainingId: parseInt(trainingId),
+                newDate: newDate
+            });
+        } else {
+            Livewire.dispatch('training-moved', {
+                trainingId: parseInt(trainingId),
+                newDate: newDate
+            });
+        }
     }
 </script>

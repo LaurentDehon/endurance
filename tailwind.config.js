@@ -26,7 +26,9 @@ module.exports = {
     ],
     theme: {
         extend: {
-            // Tu peux étendre les couleurs, typographies, espacements, etc.
+            fontFamily: {
+                sans: ['Roboto', 'sans-serif'],
+              },
         },
     },
     plugins: [

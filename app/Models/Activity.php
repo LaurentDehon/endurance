@@ -29,7 +29,7 @@ class Activity extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'date',
+        'start_date' => 'datetime',
     ];
 
     public function user()
