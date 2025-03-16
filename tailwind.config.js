@@ -38,12 +38,15 @@ module.exports = {
     ],
     safelist: [
         {
-            pattern: /^bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/,
-            variants: ['hover', 'focus'] // optionnel
+            pattern: /^(bg|from|via|to)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+            variants: ['hover', 'focus']
+        },
+        {
+            pattern: /bg-gradient-to-(tr|br|tl|bl)/
         },
         {
             pattern: /max-w-(sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl)/,
             variants: ['sm', 'md', 'lg', 'xl', '2xl']
-        } 
-      ]
+        }
+    ]
 }

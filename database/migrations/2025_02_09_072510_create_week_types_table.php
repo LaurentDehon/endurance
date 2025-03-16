@@ -18,6 +18,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        Schema::table('weeks', function (Blueprint $table) {
+            $table->dropForeign(['week_type_id']);
+        });
+        
         Schema::dropIfExists('week_types');
     }
 };

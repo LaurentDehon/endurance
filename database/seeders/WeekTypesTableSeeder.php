@@ -10,10 +10,10 @@ class WeekTypesTableSeeder extends Seeder
     public function run()
     {
         $types = [
-            ['name' => 'Reduced', 'color' => 'bg-cyan-800'],
-            ['name' => 'Recovery', 'color' => 'bg-green-800'],
+            ['name' => 'Reduced', 'color' => 'bg-fuchsia-700'],
+            ['name' => 'Recovery', 'color' => 'bg-cyan-800'],
             ['name' => 'Development', 'color' => 'bg-blue-800'],
-            ['name' => 'Maintain', 'color' => 'bg-amber-800'],
+            ['name' => 'Maintain', 'color' => 'bg-lime-800'],
             ['name' => 'Taper', 'color' => 'bg-purple-800'],
             ['name' => 'Race', 'color' => 'bg-red-800'],
         ];

@@ -47,6 +47,11 @@
                                     <i class="fas fa-list mr-2"></i>
                                     Activities
                                 </a>
+                                <a href="{{ route('help') }}" 
+                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-circle-question mr-2"></i>
+                                    Help
+                                </a>
                             </div>
                         </div>
 

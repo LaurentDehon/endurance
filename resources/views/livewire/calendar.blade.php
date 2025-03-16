@@ -125,13 +125,21 @@
                     @foreach ($weeksInMonth as $week)
                         <div class="bg-white rounded-xl shadow-lg mb-2 overflow-hidden">
                             <!-- Week header -->
-                            <div class="week-header px-3 py-2 {{ $week->type ? $week->type->color : 'bg-gray-500' }} border-b flex items-center gap-4 flex-wrap">
+                            @php
+                                $baseColor = $week->type->color ?? 'bg-slate-500';
+                                $color = str_replace('bg-', '', $baseColor);
+                                $lighterColor = preg_replace_callback('/-(\d{3})$/', function ($matches) {
+                                    return '-' . max(50, $matches[1] - 150);
+                                }, $color);
+                                $direction = 'bl';
+                            @endphp
+                            <div class="week-header px-3 py-2 bg-gradient-to-{{ $direction }} from-{{ $color }} via-{{ $lighterColor }} to-{{ $color }} border-b flex items-center gap-4 flex-wrap">
                                 <div class="flex flex-col gap-2">
                                     <div class="flex items-center gap-2">
                                         <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
                                             Week {{ $week->week_number }}
                                         </span>                                        
-                                        <span class="text-sm text-gray-300">
+                                        <span class="text-sm text-gray-100">
                                             {{ $week->start }} - {{ $week->end }}
                                         </span>
                                     </div>
