@@ -50,6 +50,7 @@
 
         <!-- Advanced Stats -->
         <div class="space-y-4">
+            <!-- Average Speed -->
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-orange-100 rounded-lg">
                     <i class="fas fa-tachometer-alt text-orange-600 text-lg"></i>
@@ -58,6 +59,28 @@
                     <p class="text-sm text-gray-500">Average Speed</p>
                     <p class="font-semibold text-gray-800">
                         {{ number_format($activity->average_speed * 3.6, 1) }} km/h
+                    </p>
+                </div>
+            </div>
+
+            <!-- Average Pace -->
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                    <i class="fas fa-clock text-yellow-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Average Pace</p>
+                    <p class="font-semibold text-gray-800">
+                        @if($activity->average_speed > 0)
+                            @php
+                                $secondsPerKm = 1000 / $activity->average_speed;
+                                $minutes = floor($secondsPerKm / 60);
+                                $seconds = floor($secondsPerKm % 60);
+                            @endphp
+                            {{ $minutes }}:{{ str_pad($seconds, 2, '0', STR_PAD_LEFT) }} /km
+                        @else
+                            N/A
+                        @endif
                     </p>
                 </div>
             </div>
