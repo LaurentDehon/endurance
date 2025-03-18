@@ -13,12 +13,11 @@ class ActivityModal extends ModalComponent
 
     public function mount($id)
     {
-        $this->activity = Activity::where('user_id', Auth::id())
-            ->findOrFail($id);
+        $this->activity = Activity::where('user_id', Auth::id())->findOrFail($id);        
     }
 
     public function render()
-    {
+    {        
         return view('livewire.activity-modal');
     }
 }

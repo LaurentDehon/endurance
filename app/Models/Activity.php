@@ -26,11 +26,16 @@ class Activity extends Model
         'elev_high',
         'elev_low',
         'sync_date',
+        'kudos_count',
+        'description',
+        'calories',
+        'map_polyline'
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'sync_date' => 'datetime',
+        'map_polyline' => 'string',
     ];
 
     public function user()

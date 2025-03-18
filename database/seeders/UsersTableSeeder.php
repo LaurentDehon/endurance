@@ -14,6 +14,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'admin',
                 'email' => 'admin@endurance.be',
+                'email_verified_at' => now(),
                 'password' => Hash::make('3301'),
                 'is_admin' => true,
                 'created_at' => now(),
@@ -22,6 +23,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'laurent',
                 'email' => 'laurent.dehon@gmail.com',
+                'email_verified_at' => null,
                 'password' => Hash::make('3301'),
                 'is_admin' => false,
                 'created_at' => now(),

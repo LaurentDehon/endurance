@@ -33,19 +33,7 @@
                         {{ formatTime($activity->moving_time) }}
                     </p>
                 </div>
-            </div>
-
-            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div class="p-2 bg-teal-100 rounded-lg">
-                    <i class="fas fa-hourglass text-teal-600 text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Elapsed Time</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ formatTime($activity->elapsed_time) }}
-                    </p>
-                </div>
-            </div>
+            </div>            
 
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-purple-100 rounded-lg">
@@ -55,6 +43,18 @@
                     <p class="text-sm text-gray-500">Elevation Gain</p>
                     <p class="font-semibold text-gray-800">
                         {{ $activity->total_elevation_gain }} m
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="p-2 bg-teal-100 rounded-lg">
+                    <i class="fas fa-thumbs-up text-teal-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Kudos</p>
+                    <p class="font-semibold text-gray-800">
+                        {{ $activity->kudos_count }}
                     </p>
                 </div>
             </div>

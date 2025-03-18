@@ -89,8 +89,11 @@ class StravaSyncService
             'elev_low' => $activity['elev_low'] ?? 0,
             'user_id' => $user->id,
             'strava_id' => $activity['id'],
-            'sync_date' => Carbon::now()
-
+            'sync_date' => Carbon::now(),
+            'kudos_count' => $activity['kudos_count'],
+            'description' => $activity['description'] ?? '',
+            'calories' => $activity['calories'] ?? 0,
+            'map_polyline' => $activity['map']['summary_polyline'] ?? ''
         ];
     }
 

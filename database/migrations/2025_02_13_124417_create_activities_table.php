@@ -26,6 +26,10 @@ class CreateActivitiesTable extends Migration
             $table->float('elev_high');
             $table->float('elev_low');            
             $table->dateTime('sync_date')->default(now()); 
+            $table->integer('kudos_count')->default(0);
+            $table->text('description')->nullable();
+            $table->integer('calories')->nullable();
+            $table->text('map_polyline')->nullable();
             $table->timestamps();
         });
     }
