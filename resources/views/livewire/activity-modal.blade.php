@@ -36,6 +36,18 @@
             </div>
 
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="p-2 bg-teal-100 rounded-lg">
+                    <i class="fas fa-hourglass text-teal-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Elapsed Time</p>
+                    <p class="font-semibold text-gray-800">
+                        {{ formatTime($activity->elapsed_time) }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-purple-100 rounded-lg">
                     <i class="fas fa-mountain text-purple-600 text-lg"></i>
                 </div>

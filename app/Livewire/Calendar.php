@@ -84,6 +84,7 @@ class Calendar extends Component
 
         return Activity::where('user_id', Auth::id())
             ->whereBetween('start_date', [$startDate, $endDate])
+            ->orderBy('start_date')
             ->get();
     }
 

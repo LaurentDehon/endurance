@@ -223,7 +223,7 @@
                                             wire:click="$dispatch('openModal', { component: 'training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})" class="relative block p-2 rounded-lg border min-h-24 cursor-pointer
                                                     {{ $day['is_today'] ? 'border-2 border-blue-300 bg-blue-50' : 'hover:border-blue-200' }}">
                                             <!-- Day header -->
-                                            <div class="absolute top-2 right-3">
+                                            <div class="absolute top-2 left-2">
                                                 <div>
                                                     <span class="text-sm text-gray-500">{{ $day['name'] }}</span>
                                                     <span class="text-sm font-bold text-gray-700">{{ $day['number'] }}</span>
@@ -237,7 +237,7 @@
                                             });
                                             @endphp
                                             @if($dayActivities->isNotEmpty())
-                                                <div class="absolute top-2 left-2 flex flex-wrap gap-1">
+                                                <div class="absolute top-2 right-2 flex flex-wrap gap-1">
                                                     @foreach($dayActivities as $activity)
                                                     <div class="relative group">
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', arguments: { id: '{{ $activity->id }}' }})" 
@@ -246,7 +246,7 @@
                                                                  <i class="fas fa-running"></i>
                                                              </div>
                                                          </a>                                                      
-                                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div class="z-50 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                                                             {{ $activity->name }}
                                                         </div>
                                                     </div>
@@ -261,7 +261,7 @@
                                             }); 
                                             @endphp
                                             @if($dayTrainings->isNotEmpty())
-                                                <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
+                                                <div class="absolute bottom-2 right-2 flex flex-wrap gap-1">
                                                     @foreach($dayTrainings as $training)
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', arguments: { id: '{{ $training->id }}' }})" class="relative group" 
                                                             draggable="true" 
@@ -269,7 +269,7 @@
                                                             <div class="w-7 h-7 rounded-full flex items-center justify-center {{ $training->type->color }} text-white text-sm">
                                                                 <i class="fas fa-{{ $training->type->icon }}"></i>
                                                             </div>                                                        
-                                                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <div class="z-50 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 {{ $training->type->name }}
                                                                 @if($training->duration > 0)
                                                                     | {{ formatTime($training->duration * 60) }}
