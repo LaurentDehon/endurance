@@ -30,33 +30,53 @@
                             
                             <!-- Navigation principale -->
                             <div class="hidden md:ml-6 md:flex md:space-x-4">
-                                <a href="{{ route('dashboard') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('home') }}" 
+                                class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-pink-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-house mr-2"></i>
                                     Home
                                 </a>
+
+                                <a href="{{ route('dashboard') }}" 
+                                class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-house mr-2"></i>
+                                    Dashboard
+                                </a>
                                 
                                 <a href="{{ route('calendar') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-calendar-week mr-2"></i>
                                     Calendar
                                 </a>
                                 
                                 <a href="{{ route('activities') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-list mr-2"></i>
                                     Activities
-                                </a>
-                                <a href="{{ route('help') }}" 
-                                class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-circle-question mr-2"></i>
-                                    Help
-                                </a>
+                                </a>                                
+
+                                @if (auth()->user()->is_admin)
+                                    <a href="{{ route('admin') }}" 
+                                    class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('admin') ? 'bg-gray-100 text-red-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                        <i class="fas fa-unlock mr-2"></i>
+                                        Admin
+                                    </a>
+                                @endif                                                              
                             </div>
                         </div>
 
                         <!-- Partie droite (menu utilisateur) -->
                         <div class="flex items-center" x-data="{ open: false }">
+                            <a href="{{ route('help') }}" 
+                            class="mr-2 flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <i class="fas fa-circle-question mr-2"></i>
+                                Help
+                            </a>
+
+                            <a href="{{ route('contact.show') }}" 
+                            class="mr-6 flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <i class="fas fa-envelope-open mr-2"></i>
+                                Contact
+                            </a>  
                             <button @click="open = !open" 
                                     class="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none">
                                 <i class="fas fa-user-circle text-xl"></i>
@@ -128,8 +148,8 @@
                         <div class="space-y-3">
                             <h5 class="text-gray-500 text-sm font-medium">Support</h5>
                             <ul class="space-y-2.5">
-                                <li><a href="mailto:support@endurance.fr" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Technical Support</a></li>
-                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Documentation</a></li>
+                                <li><a href="{{ route('contact.show') }}" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Technical Support</a></li>
+                                <li><a href="{{ route('help') }}" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Documentation</a></li>
                             </ul>
                         </div>
                     </div>

@@ -22,12 +22,6 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        Mail::raw('Test envoi Brevo', function ($message) {
-            $message->to('laurent.dehon@gmail.com')
-                ->subject('Test Laravel Brevo')
-                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        });
-
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.

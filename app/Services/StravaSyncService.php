@@ -88,6 +88,9 @@ class StravaSyncService
             'elev_high' => $activity['elev_high'] ?? 0,
             'elev_low' => $activity['elev_low'] ?? 0,
             'user_id' => $user->id,
+            'strava_id' => $activity['id'],
+            'sync_date' => Carbon::now()
+
         ];
     }
 

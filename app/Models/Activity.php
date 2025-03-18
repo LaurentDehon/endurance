@@ -30,6 +30,7 @@ class Activity extends Model
 
     protected $casts = [
         'start_date' => 'datetime',
+        'sync_date' => 'datetime',
     ];
 
     public function user()

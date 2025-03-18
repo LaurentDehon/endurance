@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="mx-auto p-8 max-w-6xl">
+<div class="mx-auto p-8 max-w-5xl">
     <h1 class="text-4xl font-bold text-gray-800 mb-8">Help - Training Calendar Guide</h1>
 
     <div class="space-y-4">    
@@ -332,22 +332,36 @@
                     <!-- Pro Tips -->
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">💡 Pro Tips</h2>
-                        <div class="grid md:grid-cols-2 gap-4">                            
+                        <div class="grid gap-4">                            
                             <div class="bg-green-50 p-4 rounded-lg">
                                 <h3 class="font-semibold mb-2">Best Practices</h3>
                                 <ul class="space-y-2">
                                     <li>Sync with Strava after every run</li>
                                     <li>Use color-coded week types for training phases</li>
-                                    <li>Review weekly progress bars every Sunday</li>
-                                    <li>use reduced week once every 3 or 4 weeks</li>
+                                    <li>Build your training weeks by starting from your race goal and working backward</li>
+                                    <li>Use reduced week once every 3 or 4 weeks</li>
                                 </ul>
                             </div>
                             <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold mb-2">Keyboard Shortcuts</h3>
+                                <h3 class="font-semibold mb-2">Training types</h3>
                                 <ul class="space-y-2">
-                                    <li>→ : Next year</li>
-                                    <li>← : Previous year</li>
-                                    <li>Space : Jump to current month</li>
+                                    <li>Easy Run : A comfortable, low-intensity run to build aerobic endurance without excessive fatigue</li>
+                                    <li>Recovery Run : A very light run done after intense workouts to promote muscle recovery</li>
+                                    <li>Intervals : High-intensity bursts of running followed by rest or slow jogging to improve speed and cardiovascular fitness</li>
+                                    <li>Long Run : A sustained, moderate-paced run to build endurance and mental resilience</li>
+                                    <li>Fartlek : A mix of fast and slow running, incorporating spontaneous speed variations to improve adaptability</li>
+                                    <li>Tempo Run : A sustained, moderately hard effort (comfortably hard) to enhance lactate threshold and race performance</li>
+                                    <li>Hill Repeats : Short, intense uphill sprints followed by recovery jogs to develop strength and power</li>
+                                </ul>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-2">Week types</h3>
+                                <ul class="space-y-2">
+                                    <li>Reduced : A lower-volume week to prevent burnout and allow adaptation</li>
+                                    <li>Recovery : A light-intensity week focused on rest and active recovery after intense training or after a race</li>
+                                    <li>Development : A high-load week designed to improve endurance, speed, or strength</li>
+                                    <li>Maintain : A balanced week that sustains fitness without excessive stress</li>
+                                    <li>Taper : A gradual reduction in training volume before a race to maximize performance</li>
                                 </ul>
                             </div>
                         </div>
@@ -396,13 +410,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
-        <p class="text-sm text-gray-600">
-            Need more help? Contact support at 
-            <a href="mailto:support@trainingcalendar.com" class="text-blue-600">support@trainingcalendar.com</a>
-        </p>
     </div>
 </div>
 @endsection

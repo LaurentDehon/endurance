@@ -27,7 +27,7 @@ class StravaController extends Controller
             $this->toast()->error('Connection failed : ' . $e->getMessage())->send();
         }
 
-        return redirect()->route('calendar');
+        return redirect()->route('home');
     }
 
     public function showConnect()

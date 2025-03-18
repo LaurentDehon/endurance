@@ -69,11 +69,12 @@ class Activities extends Component
     public function render()
     {
         return view('livewire.activities', [
-            'activities' => Activity::when($this->search, function ($query) {
-                $query->where('user_id', Auth::id())->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate($this->perPage)
+            'activities' => Activity::where('user_id', Auth::id())
+                ->when($this->search, function ($query) {
+                    $query->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate($this->perPage)
         ]);
     }
 }

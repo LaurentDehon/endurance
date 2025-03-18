@@ -240,11 +240,12 @@
                                                 <div class="absolute top-2 left-2 flex flex-wrap gap-1">
                                                     @foreach($dayActivities as $activity)
                                                     <div class="relative group">
-                                                        <a href="#" class="tooltip">
-                                                            <div class="w-7 h-7 rounded-full flex items-center justify-center bg-orange-500 text-white text-sm">
-                                                                <i class="fas fa-running"></i>
-                                                            </div>
-                                                        </a>                                                        
+                                                        <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', arguments: { id: '{{ $activity->id }}' }})" 
+                                                            class="relative group cursor-pointer">
+                                                             <div class="w-7 h-7 rounded-full flex items-center justify-center bg-orange-500 text-white text-sm hover:bg-orange-600 transition-colors">
+                                                                 <i class="fas fa-running"></i>
+                                                             </div>
+                                                         </a>                                                      
                                                         <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                                                             {{ $activity->name }}
                                                         </div>

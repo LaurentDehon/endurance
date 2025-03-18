@@ -20,13 +20,13 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'user',
-                'email' => 'user@gmail.com',
+                'name' => 'laurent',
+                'email' => 'laurent.dehon@gmail.com',
                 'password' => Hash::make('3301'),
                 'is_admin' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }
