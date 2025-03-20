@@ -91,7 +91,7 @@
                             <!-- Menu déroulant -->
                             <div x-show="open" 
                                  @click.away="open = false"
-                                 class="origin-top-right absolute right-4 mt-36 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                 class="origin-top-right absolute right-4 mt-36 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                                  x-cloak>
                                 <div class="py-1">
                                     <a href="{{ route('profile.edit') }}" 
