@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-<div class="mx-auto p-8 max-w-5xl">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Help - Training Calendar Guide</h1>
+<div class="mx-auto p-4 md:p-8 max-w-5xl">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 md:mb-8">Help - Training Calendar Guide</h1>
 
-    <div class="space-y-4">    
+    <div class="space-y-3 md:space-y-4">    
         <div x-data="{ isOpen: false }" class="space-y-2">
             <button @click="isOpen = !isOpen" :aria-expanded="isOpen" aria-controls="collapse-content" class="flex items-center justify-between w-full px-4 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <span class="font-medium text-indigo-700">Overview</span>                
@@ -33,40 +33,6 @@
                             <li>Drag-and-drop training sessions</li>
                             <li>Progress tracking with visual indicators</li>
                         </ul>
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <div x-data="{ isOpen: false }" class="space-y-2">
-            <button @click="isOpen = !isOpen" :aria-expanded="isOpen" aria-controls="collapse-content" class="flex items-center justify-between w-full px-4 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <span class="font-medium text-indigo-700">Year Navigation</span>                
-                <svg class="w-5 h-5 text-indigo-600 transform transition-transform duration-300" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">                
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>        
-            <div id="collapse-content" x-show="isOpen" x-collapse
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform scale-y-0 -translate-y-2"
-                x-transition:enter-end="opacity-100 transform scale-y-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 transform scale-y-100"
-                x-transition:leave-end="opacity-0 transform scale-y-0" class="ml-4 pl-3 border-l-4 border-indigo-200 bg-white rounded-r-lg shadow-sm" :class="{ 'bg-indigo-50 border-indigo-400': isOpen }">
-                <div class="p-4 space-y-3">
-                    <!-- Navigation Section -->
-                    <section>
-                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">🗓️ Year Navigation</h2>
-                        <div class="flex items-center gap-4 mb-4">
-                            <button class="btn btn-primary px-6 py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center">
-                                <i class="fas fa-chevron-left mr-5"></i>2024
-                            </button>
-                            <button class="btn btn-primary px-6 py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center">
-                                2026<i class="fas fa-chevron-right ml-5"></i>
-                            </button>
-                        </div>
-                        <p class="text-gray-600">
-                            Use the arrow buttons to navigate between years.
-                        </p>
                     </section>
                 </div>
             </div>
@@ -212,9 +178,9 @@
                                     </div>                                                      
     
                                     <!-- Week stats -->
-                                    <div class="flex gap-6 ml-auto">
+                                    <div class="flex flex-col md:flex-row gap-4 md:gap-6 mt-4 md:ml-auto">
                                         @foreach(['distance', 'elevation', 'time'] as $stat)
-                                            <div class="text-center min-w-[160px]">
+                                            <div class="text-center min-w-[120px] md:min-w-[160px]">
                                                 @php
                                                     $icon = match($stat) {
                                                         'distance' => 'route',
@@ -286,7 +252,7 @@
                     <!-- Visual Indicators -->
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-6">🎨 Visual Guide</h2>
-                        <div class="grid gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <div class="flex gap-2">
                                 <div class="w-6 h-6 bg-orange-500 rounded-full"></div>
                                 <span>Recorded Strava activity</span>
@@ -332,8 +298,8 @@
                     <!-- Pro Tips -->
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">💡 Pro Tips</h2>
-                        <div class="grid gap-4">                            
-                            <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">                            
+                            <div class="bg-green-50 p-3 md:p-4 rounded-lg">
                                 <h3 class="font-semibold mb-2">Best Practices</h3>
                                 <ul class="space-y-2">
                                     <li>Sync with Strava after every run</li>
@@ -342,7 +308,7 @@
                                     <li>Use reduced week once every 3 or 4 weeks</li>
                                 </ul>
                             </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="bg-blue-50 p-3 md:p-4 rounded-lg md:col-span-2 lg:col-span-1">
                                 <h3 class="font-semibold mb-2">Training types</h3>
                                 <ul class="space-y-2">
                                     <li>Easy Run : A comfortable, low-intensity run to build aerobic endurance without excessive fatigue</li>
@@ -354,7 +320,7 @@
                                     <li>Hill Repeats : Short, intense uphill sprints followed by recovery jogs to develop strength and power</li>
                                 </ul>
                             </div>
-                            <div class="bg-red-50 p-4 rounded-lg">
+                            <div class="bg-red-50 p-3 md:p-4 rounded-lg">
                                 <h3 class="font-semibold mb-2">Week types</h3>
                                 <ul class="space-y-2">
                                     <li>Reduced : A lower-volume week to prevent burnout and allow adaptation</li>
