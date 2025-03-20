@@ -9,7 +9,7 @@
     </div>
 
     <form wire:submit.prevent="save" class="space-y-4 md:space-y-6">
-        <div class="grid grid-cols-1 gap-3 md:gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <!-- Date -->
             <div class="space-y-1">
                 <label for="date" class="text-sm font-medium text-gray-700">Date</label>
