@@ -1,24 +1,23 @@
-@extends('layouts.guest')
-
+@extends('layouts.app')
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg">
-        <!-- En-tête -->
+        <!-- Header -->
         <div class="text-center">
             <h1 class="text-3xl font-bold text-gray-900">
                 <i class="fas fa-user-cog mr-2"></i>
-                Paramètres du compte
+                Account Settings
             </h1>
         </div>
 
-        <!-- Contenu principal -->
+        <!-- Main Content -->
         <div class="space-y-8">
-            <!-- Informations personnelles -->
+            <!-- Personal Information -->
             <div class="space-y-6">
                 <div class="border-b border-gray-200 pb-4">
                     <h2 class="text-xl font-semibold text-gray-900">
                         <i class="fas fa-id-card mr-2"></i>
-                        Informations personnelles
+                        Personal Information
                     </h2>
                 </div>
 
@@ -27,10 +26,10 @@
                     @method('PATCH')
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Nom complet -->
+                        <!-- Full Name -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Nom complet
+                                Full Name
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -50,7 +49,7 @@
                         <!-- Email -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Adresse email
+                                Email Address
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -68,22 +67,22 @@
                         </div>
                     </div>
 
-                    <!-- Bouton de mise à jour -->
+                    <!-- Update Button -->
                     <div class="flex justify-end mt-6">
                         <button type="submit" 
                             class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm">
-                            <i class="fas fa-save mr-2"></i>Mettre à jour
+                            <i class="fas fa-save mr-2"></i>Update
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Sécurité -->
+            <!-- Security -->
             <div class="space-y-6">
                 <div class="border-b border-gray-200 pb-4">
                     <h2 class="text-xl font-semibold text-gray-900">
                         <i class="fas fa-lock mr-2"></i>
-                        Sécurité
+                        Security
                     </h2>
                 </div>
 
@@ -92,10 +91,10 @@
                     @method('PUT')
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Mot de passe actuel -->
+                        <!-- Current Password -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Mot de passe actuel
+                                Current Password
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -111,10 +110,10 @@
                             @enderror
                         </div>
 
-                        <!-- Nouveau mot de passe -->
+                        <!-- New Password -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Nouveau mot de passe
+                                New Password
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -133,7 +132,7 @@
                         <!-- Confirmation -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Confirmation
+                                Confirm Password
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -147,22 +146,22 @@
                         </div>
                     </div>
 
-                    <!-- Bouton de changement -->
+                    <!-- Change Button -->
                     <div class="flex justify-end mt-6">
                         <button type="submit" 
                             class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200 font-medium shadow-sm">
-                            <i class="fas fa-sync-alt mr-2"></i>Changer le mot de passe
+                            <i class="fas fa-sync-alt mr-2"></i>Change Password
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Zone de danger -->
+            <!-- Danger Zone -->
             <div class="space-y-6">
                 <div class="border-b border-red-200 pb-4">
                     <h2 class="text-xl font-semibold text-red-600">
                         <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Zone de danger
+                        Danger Zone
                     </h2>
                 </div>
 
@@ -173,13 +172,13 @@
                     <div class="space-y-4">
                         <p class="text-red-600 font-medium">
                             <i class="fas fa-radiation mr-2"></i>
-                            Cette action est irréversible. Toutes vos données seront supprimées.
+                            This action is irreversible. All your data will be permanently deleted.
                         </p>
 
-                        <!-- Confirmation de mot de passe -->
+                        <!-- Password Confirmation -->
                         <div class="max-w-xs space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Confirmez votre mot de passe
+                                Confirm Your Password
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -196,11 +195,11 @@
                         </div>
                     </div>
 
-                    <!-- Bouton de suppression -->
+                    <!-- Delete Button -->
                     <div class="flex justify-end mt-6">
                         <button type="submit" 
                             class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-sm">
-                            <i class="fas fa-trash-alt mr-2"></i>Supprimer définitivement
+                            <i class="fas fa-trash-alt mr-2"></i>Permanently Delete
                         </button>
                     </div>
                 </form>

@@ -12,7 +12,8 @@ use App\Http\Controllers\ProfileController;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', function() { return view('home'); })->name('home');
     Route::get('/dashboard', [MainController::class, 'index'])->middleware(StravaMiddleware::class)->name('dashboard');
-    Route::get('/calendar/{year?}', function() { return view('calendar'); })->middleware(StravaMiddleware::class)->name('calendar');  
+    Route::get('/calendar/{year?}', function ($year = null) { return view('calendar', ['year' => $year]); })->middleware(StravaMiddleware::class)->name('calendar');
+    Route::redirect('/calendar', '/calendar/'.now()->year);
     Route::get('/activities', function() { return view('activities'); })->middleware(StravaMiddleware::class)->name('activities');
     Route::get('/help', function() { return view('help'); })->name('help');
     Route::get('/admin', function() { return view('admin'); })->middleware(AdminMiddleware::class)->name('admin');

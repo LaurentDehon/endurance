@@ -16,6 +16,14 @@ function formatTime(int $seconds): string
     return $remainingMinutes . 'm';
 }
 
+function formatTimeCompact($seconds) 
+{
+    $hours = floor($seconds / 3600);
+    $minutes = floor(($seconds % 3600) / 60);
+    $seconds = $seconds % 60;
+    return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+}
+
 function formatDistance(float $distance): string
 {
     return rtrim(rtrim(number_format($distance, 2), '0'), '.'). 'km';

@@ -1,15 +1,15 @@
-<div class="p-8 bg-white rounded-xl shadow-xl z-50">
-    <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2" id="modal-title">
+<div class="p-4 md:p-8 bg-white rounded-xl shadow-xl z-50 relative">
+    <div class="text-center mb-6 md:mb-8 pt-4">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2" id="modal-title">
             {{ $trainingId ? 'Edit Training' : 'Create New Training' }}
         </h2>
-        <p class="text-sm text-gray-500">
+        <p class="text-xs md:text-sm text-gray-500">
             {{ $trainingId ? 'Update your training session details' : 'Enter the details of your session' }}
         </p>
     </div>
 
-    <form wire:submit.prevent="save" class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form wire:submit.prevent="save" class="space-y-4 md:space-y-6">
+        <div class="grid grid-cols-1 gap-3 md:gap-4">
             <!-- Date -->
             <div class="space-y-1">
                 <label for="date" class="text-sm font-medium text-gray-700">Date</label>
@@ -82,7 +82,7 @@
             <!-- Duration -->
             <div class="col-span-full space-y-1">
                 <label class="text-sm font-medium text-gray-700">Duration</label>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col space-y-2 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
                     <!-- Hours -->
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -143,7 +143,7 @@
                      x-transition:leave="transition ease-in duration-200"
                      x-transition:leave-start="opacity-100 transform scale-100"
                      x-transition:leave-end="opacity-0 transform scale-95">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                         <!-- Interval -->
                         <div class="space-y-1">
                             <label for="recurrenceInterval" class="text-sm font-medium text-gray-700">Repeat every (days)</label>
@@ -179,14 +179,14 @@
         @endif
 
         <!-- Modal footer -->
-        <div class="flex gap-4 {{ $trainingId ? 'justify-between' : 'justify-end' }}">
+        <div class="flex flex-col md:flex-row gap-3 {{ $trainingId ? 'md:justify-between' : 'md:justify-end' }}">
             @if($trainingId)
-                <button type="button" wire:click.prevent="delete" class="w-1/3 px-4 py-2.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200">
+                <button type="button" wire:click.prevent="delete" class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200">
                     Delete session
                 </button>
             @endif
             
-            <button type="submit" class="w-1/3 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
+            <button type="submit" class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
                 {{ $trainingId ? 'Save Changes' : 'Create Session' }}
             </button>
         </div>

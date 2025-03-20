@@ -1,16 +1,16 @@
-<div class="p-8 bg-white rounded-xl shadow-xl z-50 max-w-2xl w-full">
+<div class="p-8 bg-white rounded-xl shadow-xl z-50 max-w-2xl w-full relative">
     <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">
             {{ $activity->name }}
         </h2>
-        <p class="text-sm text-gray-500">
+        <p class="text-xs md:text-sm text-gray-500">
             {{ $activity->start_date->format('M j, Y H:i') }}
         </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <!-- Basic Info -->
-        <div class="space-y-4">
+        <div class="space-y-3 md:space-y-4">
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-blue-100 rounded-lg">
                     <i class="fas fa-route text-blue-600 text-lg"></i>
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Advanced Stats -->
-        <div class="space-y-4">
+        <div class="space-y-3 md:space-y-4">
             <!-- Average Speed -->
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-orange-100 rounded-lg">

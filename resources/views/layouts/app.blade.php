@@ -18,12 +18,16 @@
     <body class="h-full">
         @auth
             <!-- Barre de navigation supérieure -->
-            <nav class="top-0 w-full bg-white shadow-sm z-10">
+            <nav class="top-0 w-full bg-white shadow-sm z-10" x-data="{ isMobileMenuOpen: false }">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <!-- Partie gauche -->
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 flex items-center">
+                            <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            
+                            <div class="flex-shrink-0 flex items-center ml-2">
                                 <i class="fas fa-person-running text-blue-500 text-2xl"></i>
                                 <span class="ml-2 text-xl font-bold hidden md:block">Endurance</span>
                             </div>
@@ -67,15 +71,15 @@
                         <!-- Partie droite (menu utilisateur) -->
                         <div class="flex items-center" x-data="{ open: false }">
                             <a href="{{ route('help') }}" 
-                            class="mr-2 flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                            class="md:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                 <i class="fas fa-circle-question mr-2"></i>
-                                Help
+                                <span class="hidden lg:inline">Help</span>
                             </a>
 
                             <a href="{{ route('contact.show') }}" 
-                            class="mr-6 flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                            class="md:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                 <i class="fas fa-envelope-open mr-2"></i>
-                                Contact
+                                <span class="hidden lg:inline">Contact</span>
                             </a>  
                             <button @click="open = !open" 
                                     class="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none">
@@ -107,6 +111,32 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="md:hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50" x-show="isMobileMenuOpen" x-transition.opacity x-cloak @click.away="isMobileMenuOpen = false">
+                                <div class="absolute top-0 left-0 w-52 bg-white h-full shadow-lg">
+                                    <button @click="isMobileMenuOpen = false" class="absolute top-3 right-3 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <div class="pt-5 pb-3 space-y-1">
+                                        <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-house mr-2"></i> Home
+                                        </a>
+                                        <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-chart-line mr-2"></i> Dashboard
+                                        </a>
+                                        <a href="{{ route('calendar') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-calendar-week mr-2"></i> Calendar
+                                        </a>
+                                        <a href="{{ route('activities') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-list mr-2"></i> Activities
+                                        </a>
+                                        @if (auth()->user()->is_admin)
+                                            <a href="{{ route('admin') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-unlock mr-2"></i> Admin
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>                            
                         </div>
                     </div>
                 </div>

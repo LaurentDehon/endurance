@@ -61,18 +61,37 @@ class Calendar extends Component
             'weekTypes' => WeekType::all(),
             'activities' => $this->activities,
             'trainings' => $this->trainings,
-            'year' => $this->year
+            'year' => $this->year,
+            'years' => $this->getAvailableYears()
         ]);
     }
 
-    public function nextYear()
+    private function getAvailableYears()
     {
-        $this->year++;
+        $user = Auth::user();
+        $currentYear = now()->year;
+        
+        return collect([
+            Activity::where('user_id', $user->id)
+                ->selectRaw('YEAR(start_date) as year')
+                ->distinct()
+                ->pluck('year'),
+            Training::where('user_id', $user->id)
+                ->selectRaw('YEAR(date) as year')
+                ->distinct()
+                ->pluck('year'),
+            range($currentYear - 2, $currentYear + 5)
+        ])
+        ->flatten()
+        ->unique()
+        ->sortDesc()
+        ->values();
     }
 
-    public function previousYear()
+    public function setYear(int $selectedYear): void
     {
-        $this->year--;
+        $this->year = $selectedYear;
+        $this->dispatch('update-url', year: $selectedYear);
     }
 
     public function getActivities()
