@@ -144,6 +144,11 @@ class TrainingModal extends ModalComponent
         return is_numeric($value) && !empty($value) ? $value : 0;
     }
 
+    public function close()
+    {
+        $this->dispatch('closeModal', 'training-modal');
+    }
+
     public function render()
     {
         return view('livewire.training-modal');

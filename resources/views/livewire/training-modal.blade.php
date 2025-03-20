@@ -179,14 +179,24 @@
         @endif
 
         <!-- Modal footer -->
-        <div class="flex flex-col md:flex-row gap-3 {{ $trainingId ? 'md:justify-between' : 'md:justify-end' }}">
+        <div class="flex flex-col md:flex-row gap-3">
+            <!-- Bouton Close -->
+            <button type="button" wire:click.prevent="close" 
+                class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">
+                Close
+            </button>
+
             @if($trainingId)
-                <button type="button" wire:click.prevent="delete" class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200">
+                <!-- Bouton Delete -->
+                <button type="button" wire:click.prevent="delete" 
+                    class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200">
                     Delete session
                 </button>
             @endif
             
-            <button type="submit" class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
+            <!-- Bouton Submit -->
+            <button type="submit" 
+                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
                 {{ $trainingId ? 'Save Changes' : 'Create Session' }}
             </button>
         </div>

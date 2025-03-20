@@ -125,4 +125,11 @@
             </div>
         </div>
     </div>
+    <!-- Modal footer -->
+    <div class="flex flex-col md:flex-row mt-6">
+        <button type="button" wire:click.prevent="close" 
+            class="ml-auto w-1/3 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200 focus:outline-none">
+            Close
+        </button>
+    </div>
 </div>

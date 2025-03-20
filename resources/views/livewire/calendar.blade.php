@@ -349,7 +349,6 @@
 @script
 <script>
     Livewire.on('update-url', ({ year }) => {
-        // Mettre à jour l'URL sans recharger la page
         const url = new URL(window.location);
         url.pathname = `/calendar/${year}`;
         window.history.pushState(null, '', url);

@@ -16,6 +16,11 @@ class ActivityModal extends ModalComponent
         $this->activity = Activity::where('user_id', Auth::id())->findOrFail($id);        
     }
 
+    public function close()
+    {
+        $this->dispatch('closeModal', 'activity-modal');
+    }
+
     public function render()
     {        
         return view('livewire.activity-modal');
