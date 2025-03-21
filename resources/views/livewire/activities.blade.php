@@ -15,8 +15,7 @@
         
             <!-- Contrôles regroupés -->
             <div class="flex gap-3 h-10">
-                <select wire:model.live="perPage" 
-                        class="h-full px-4 py-2 text-sm sm:text-base rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
+                <select wire:model.live="perPage" class="w-28 h-full px-4 py-2 text-sm sm:text-base rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="10">10/page</option>
                     <option value="25">25/page</option>
                     <option value="50">50/page</option>

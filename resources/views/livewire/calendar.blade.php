@@ -9,40 +9,46 @@
         <div class="flex-1">
             <!-- Global stats -->
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
-                <div class="flex flex-wrap gap-4 sm:gap-8 items-center">
-                    @foreach(['distance', 'elevation', 'time'] as $stat)
-                    <div class="flex flex-row items-start gap-3 w-full sm:w-auto">
-                        <div class="py-3 px-4 bg-{{ $statColors[$stat] }}-100 rounded-xl">
-                            <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-600 text-2xl"></i>
-                        </div>
-                        <div class="text-center md:text-left">
-                            <p class="text-sm text-gray-500 mb-1">{{ ucfirst($stat) }}</p>
-                            <div class="flex flex-col md:flex-row items-center md:items-baseline gap-2">
-                                <p class="text-2xl font-bold text-gray-800">
-                                    @if($stat === 'distance')
-                                        {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
-                                    @elseif($stat === 'time')
-                                        {{ formatTime((int)($yearStats['actual'][$stat])) }}
-                                    @else
-                                        {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
-                                    @endif
-                                    
-                                    @if($yearStats['planned'][$stat] > 0)
-                                        <span class="text-sm text-gray-500">/ 
-                                            @if($stat === 'time')
-                                                {{ formatTime($yearStats['planned'][$stat]) }}
-                                            @else
-                                                {{ $stat === 'distance' ? number_format($yearStats['planned'][$stat], 1) : $yearStats['planned'][$stat] }}
-                                            @endif
-                                        </span>
-                                    @endif
-                                </p>
+                <!-- Stats section -->
+                <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
+                    <!-- Stats wrapper -->
+                    <div class="flex flex-wrap justify-center gap-4 sm:gap-8 items-center">
+                        @foreach(['distance', 'elevation', 'time'] as $stat)
+                        <div class="flex flex-row items-start gap-3 w-full sm:w-auto">
+                            <div class="py-3 px-4 bg-{{ $statColors[$stat] }}-100 rounded-xl">
+                                <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-600 text-2xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500 mb-1">{{ ucfirst($stat) }}</p>
+                                <div class="flex flex-col items-center gap-2">
+                                    <p class="text-2xl font-bold text-gray-800">
+                                        @if($stat === 'distance')
+                                            {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
+                                        @elseif($stat === 'time')
+                                            {{ formatTime((int)($yearStats['actual'][$stat])) }}
+                                        @else
+                                            {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
+                                        @endif
+                                        
+                                        @if($yearStats['planned'][$stat] > 0)
+                                            <span class="text-sm text-gray-500">/ 
+                                                @if($stat === 'time')
+                                                    {{ formatTime($yearStats['planned'][$stat]) }}
+                                                @else
+                                                    {{ $stat === 'distance' ? number_format($yearStats['planned'][$stat], 1) : $yearStats['planned'][$stat] }}
+                                                @endif
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                    <div class="flex flex-wrap gap-2 w-full xl:w-auto xl:ml-auto items-center justify-end">
-                        <div class="relative" x-data="{ open: false, selectedYear: @entangle('year').defer }" x-init="selectedYear = @js($year)" @keydown.escape="open = false" @click.away="open = false">
+
+                    <!-- Controls wrapper -->
+                    <div class="flex flex-row justify-between lg:justify-end lg:ml-auto gap-4 items-center">
+                        <div class="relative mt-1" x-data="{ open: false, selectedYear: @entangle('year').defer }" x-init="selectedYear = @js($year)" @keydown.escape="open = false" @click.away="open = false">
                             <button @click="open = !open" type="button" class="flex items-center gap-2 py-3 px-4 bg-white border rounded-lg hover:bg-gray-50">
                                 <span x-text="selectedYear" class="font-medium text-gray-700"></span>
                                 <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
@@ -59,21 +65,23 @@
                                 </div>
                             </div>
                         </div>
-                        <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors">
-                            <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
-                            <div wire:loading wire:target="startSync" class="absolute -bottom-12 right-0 bg-orange-100 p-3 rounded shadow-lg text-sm whitespace-nowrap">
-                                Synchronizing...
-                            </div>
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                Synchronize with Strava
-                            </div>
-                        </button>
-                        <button wire:click.prevent="deleteAll" class="relative group py-3 px-4 bg-red-100 rounded-xl text-red-600 hover:bg-red-200 transition-colors">
-                            <i class="fas fa-trash-alt text-red-600 text-2xl"></i>
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                                Delete training sessions for the year
-                            </div>
-                        </button>
+                        <div class="flex gap-2">
+                            <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors">
+                                <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
+                                <div wire:loading wire:target="startSync" class="absolute -bottom-12 right-0 bg-orange-100 p-3 rounded shadow-lg text-sm whitespace-nowrap">
+                                    Synchronizing...
+                                </div>
+                                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Synchronize with Strava
+                                </div>
+                            </button>
+                            <button wire:click.prevent="deleteAll" class="relative group py-3 px-4 bg-red-100 rounded-xl text-red-600 hover:bg-red-200 transition-colors">
+                                <i class="fas fa-trash-alt text-red-600 text-2xl"></i>
+                                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                                    Delete training sessions for the year
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,45 +94,47 @@
                 @endphp
                 <section id="{{ Str::slug($monthName) }}" class="mb-4 sm:mb-5">
                     <!-- Month header -->
-                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            {{ $monthName }}
-                            <span class="text-gray-500 font-normal text-base sm:text-lg sm:ml-2">
-                                <div class="flex flex-wrap gap-2 sm:gap-4">
-                                    @foreach(['distance', 'elevation', 'time'] as $stat)
-                                        <span class="inline-flex items-center gap-1 sm:gap-2 px-2 py-1">
-                                            <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>
-                                            <span class="text-{{ $statColors[$stat] }}-500">
-                                                @if($stat === 'distance')
-                                                    {{ number_format($monthStats[$monthKey]['actual'][$stat], 1) }}
-                                                @elseif($stat === 'time')
-                                                    {{ formatTime((int)($monthStats[$monthKey]['actual'][$stat])) }}
-                                                @else
-                                                    {{ $monthStats[$monthKey]['actual'][$stat] }}
-                                                @endif
-                                            </span>
-                                            @if($monthStats[$monthKey]['planned'][$stat] > 0)
-                                                <span class="text-gray-400">/ 
-                                                    @if($stat === 'time')
-                                                        {{ formatTime($monthStats[$monthKey]['planned'][$stat]) }}
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <div class="flex items-center gap-2">
+                                    {{ $monthName }}
+                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="relative group text-red-500 hover:text-red-700 shrink-0 ms-2">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                                            Delete training sessions for the month
+                                        </div>
+                                    </button>
+                                </div>
+                                <span class="text-gray-500 font-normal text-base sm:text-lg sm:ml-2">
+                                    <div class="flex flex-wrap gap-2 sm:gap-4">
+                                        @foreach(['distance', 'elevation', 'time'] as $stat)
+                                            <span class="inline-flex items-center gap-1 sm:gap-2 px-2 py-1">
+                                                <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>
+                                                <span class="text-{{ $statColors[$stat] }}-500">
+                                                    @if($stat === 'distance')
+                                                        {{ number_format($monthStats[$monthKey]['actual'][$stat], 1) }}
+                                                    @elseif($stat === 'time')
+                                                        {{ formatTime((int)($monthStats[$monthKey]['actual'][$stat])) }}
                                                     @else
-                                                        {{ $stat === 'distance' ? number_format($monthStats[$monthKey]['planned'][$stat], 1) : $monthStats[$monthKey]['planned'][$stat] }}
+                                                        {{ $monthStats[$monthKey]['actual'][$stat] }}
                                                     @endif
                                                 </span>
-                                            @endif
-                                        </span>
-                                    @endforeach
-                                </div>
-                            </span>                        
-                        </div>
-                    
-                        <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="relative group mx-4 text-red-500 hover:text-red-700">
-                            <i class="fas fa-trash-alt"></i>
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                                Delete training sessions for the month
+                                                @if($monthStats[$monthKey]['planned'][$stat] > 0)
+                                                    <span class="text-gray-400">/ 
+                                                        @if($stat === 'time')
+                                                            {{ formatTime($monthStats[$monthKey]['planned'][$stat]) }}
+                                                        @else
+                                                            {{ $stat === 'distance' ? number_format($monthStats[$monthKey]['planned'][$stat], 1) : $monthStats[$monthKey]['planned'][$stat] }}
+                                                        @endif
+                                                    </span>
+                                                @endif
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </span>                        
                             </div>
-                        </button>
-                        
+                        </div>
                     </h2>                 
 
                     <!-- Weeks -->
@@ -139,19 +149,20 @@
                                 }, $color);
                                 $direction = 'bl';
                             @endphp
-                            <div class="week-header px-2 sm:px-3 py-2 rounded-t-xl bg-gradient-to-{{ $direction }} from-{{ $color }} via-{{ $lighterColor }} to-{{ $color }} border-b">
-                                <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                    <div class="flex flex-col gap-2">
-                                        <div class="flex items-center gap-2">
-                                            <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                                Week {{ $week->week_number }}
-                                            </span>                                        
-                                            <span class="text-sm text-gray-100">
-                                                {{ $week->start }} - {{ $week->end }}
-                                            </span>
-                                        </div>
-                                    
-                                        <div class="h-9">
+                            <div class="week-header p-3 sm:p-4 rounded-t-xl bg-gradient-to-{{ $direction }} from-{{ $color }} via-{{ $lighterColor }} to-{{ $color }} border-b">
+                                <div class="flex flex-col gap-4">
+                                    <!-- Week info and controls -->
+                                    <div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
+                                                    Week {{ $week->week_number }}
+                                                </span>                                        
+                                                <span class="text-sm text-gray-100">
+                                                    {{ $week->start }} - {{ $week->end }}
+                                                </span>
+                                            </div>
+                                        
                                             <div class="flex items-center gap-2">
                                                 <div class="relative">
                                                     <select wire:change="updateWeekType({{ $week->id }}, $event.target.value)" class="bg-gray-100 appearance-none block pl-8 pr-10 py-1.5 text-sm rounded-md border focus:outline-none focus:ring-0 focus:border-gray-300">
@@ -166,7 +177,7 @@
                                                         <i class="fas fa-tag text-gray-400"></i>
                                                     </div>
                                                 </div>
-                                                <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="relative group mx-2 text-gray-100 hover:text-gray-300">
+                                                <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="relative group text-gray-100 hover:text-gray-300">
                                                     <i class="fas fa-trash-alt"></i>
                                                     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
                                                         Delete training sessions for the week
@@ -174,46 +185,46 @@
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>                                                      
 
-                                    <!-- Week stats -->
-                                    <div class="flex flex-wrap gap-3 sm:gap-6 sm:ml-auto">
-                                        @foreach(['distance', 'elevation', 'time'] as $stat)
-                                            <div class="text-center min-w-[120px] sm:min-w-[160px]">
-                                                <p class="text-s text-gray-300 mb-1">
-                                                    <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>{{ ucfirst($stat) }}
-                                                </p>
-                                                <p class="text-xl font-bold text-gray-100 mb-1">
-                                                    @if($stat === 'distance')
-                                                        {{ number_format($week->actual_stats[$stat], 1) }}
-                                                    @elseif($stat === 'time')
-                                                        {{ formatTime((int)($week->actual_stats[$stat])) }}
-                                                    @else
-                                                        {{ $week->actual_stats[$stat] }}
-                                                    @endif
-                                                    
+                                        <!-- Week stats -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:flex-1">
+                                            @foreach(['distance', 'elevation', 'time'] as $stat)
+                                                <div class="bg-white/10 rounded-lg p-3 flex flex-col items-center">
+                                                    <p class="text-sm text-gray-200 mb-2 text-center">
+                                                        <i class="fas fa-{{ $statIcons[$stat] }} mr-2"></i>{{ ucfirst($stat) }}
+                                                    </p>
+                                                    <p class="text-xl font-bold text-gray-100 mb-2 text-center">
+                                                        @if($stat === 'distance')
+                                                            {{ number_format($week->actual_stats[$stat], 1) }}
+                                                        @elseif($stat === 'time')
+                                                            {{ formatTime((int)($week->actual_stats[$stat])) }}
+                                                        @else
+                                                            {{ $week->actual_stats[$stat] }}
+                                                        @endif
+                                                        
+                                                        @if($week->planned_stats[$stat] > 0)
+                                                            <span class="text-sm text-gray-300">/ 
+                                                                @if($stat === 'time')
+                                                                    {{ formatTime($week->planned_stats[$stat]) }}
+                                                                @else
+                                                                    {{ $stat === 'distance' ? number_format($week->planned_stats[$stat], 1) : $week->planned_stats[$stat] }}
+                                                                @endif
+                                                            </span>
+                                                        @endif
+                                                    </p>
                                                     @if($week->planned_stats[$stat] > 0)
-                                                        <span class="text-sm">/ 
-                                                            @if($stat === 'time')
-                                                                {{ formatTime($week->planned_stats[$stat]) }}
-                                                            @else
-                                                                {{ $stat === 'distance' ? number_format($week->planned_stats[$stat], 1) : $week->planned_stats[$stat] }}
-                                                            @endif
-                                                        </span>
+                                                        @php 
+                                                            $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
+                                                            $percentage = min($percentage, 100);
+                                                        @endphp
+                                                        <div class="w-full h-1.5 bg-gray-200/30 rounded-full">
+                                                            <div class="h-1.5 bg-{{ $statColors[$stat] }}-300 rounded-full" 
+                                                                style="width: {{ $percentage }}%"></div>
+                                                        </div>
                                                     @endif
-                                                </p>
-                                                @if($week->planned_stats[$stat] > 0)
-                                                    @php 
-                                                        $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
-                                                        $percentage = min($percentage, 100);
-                                                    @endphp
-                                                    <div class="w-full h-1.5 bg-gray-200 rounded-full">
-                                                        <div class="h-1.5 bg-{{ $statColors[$stat] }}-300 rounded-full" 
-                                                            style="width: {{ $percentage }}%"></div>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        @endforeach
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
