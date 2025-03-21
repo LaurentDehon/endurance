@@ -1,14 +1,13 @@
 @extends('layouts.guest')
-
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg">
         <div class="text-center">
             <h2 class="mt-6 text-3xl font-bold text-gray-900">
-                Réinitialisation du mot de passe
+                Password Reset
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Entrez votre email pour recevoir le lien de réinitialisation
+                Enter your email to receive the reset link
             </p>
         </div>
 
@@ -29,7 +28,7 @@
                         </div>
                         <input type="email" id="email" name="email" required
                             class="pl-10 pr-4 py-3 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 placeholder-gray-400"
-                            placeholder="Adresse email">
+                            placeholder="Email address">
                     </div>
                     @error('email')
                         <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
@@ -41,13 +40,13 @@
                 class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg 
                        bg-blue-600 hover:bg-blue-700 
                        text-white font-medium shadow-sm transition-all duration-200">
-                Envoyer le lien
+                Send Reset Link
             </button>
 
             <p class="mt-4 text-center text-sm text-gray-600">
                 <a href="{{ route('login') }}" 
                    class="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
-                    Retour à la connexion
+                    Back to login
                 </a>
             </p>
         </form>

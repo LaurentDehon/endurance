@@ -40,6 +40,43 @@
 
         <div x-data="{ isOpen: false }" class="space-y-2">
             <button @click="isOpen = !isOpen" :aria-expanded="isOpen" aria-controls="collapse-content" class="flex items-center justify-between w-full px-4 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <span class="font-medium text-indigo-700">Creating your own Training Plan</span>                
+                <svg class="w-5 h-5 text-indigo-600 transform transition-transform duration-300" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">                
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>        
+            <div id="collapse-content" x-show="isOpen" x-collapse
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-y-0 -translate-y-2"
+                x-transition:enter-end="opacity-100 transform scale-y-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-y-100"
+                x-transition:leave-end="opacity-0 transform scale-y-0" class="ml-4 pl-3 border-l-4 border-indigo-200 bg-white rounded-r-lg shadow-sm" :class="{ 'bg-indigo-50 border-indigo-400': isOpen }">
+                <div class="p-4 space-y-3">
+                    <!-- Stats Section -->
+                    <section>
+                        <div class="aspect-video rounded-lg overflow-hidden mb-4">
+                            <iframe 
+                                class="w-full h-full"
+                                src="https://www.youtube.com/embed/cNzBhZSOe78" 
+                                title="YouTube video player" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p class="text-gray-600">
+                            Watch this video guide for useful tips on creating your own training plan. 
+                            This is the approach I personally use to structure my workouts, but of course, it's just one method among many. 
+                            Feel free to take inspiration from it or adapt it to your own needs!
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <div x-data="{ isOpen: false }" class="space-y-2">
+            <button @click="isOpen = !isOpen" :aria-expanded="isOpen" aria-controls="collapse-content" class="flex items-center justify-between w-full px-4 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <span class="font-medium text-indigo-700">Performance Metrics</span>                
                 <svg class="w-5 h-5 text-indigo-600 transform transition-transform duration-300" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">                
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
