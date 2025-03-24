@@ -2,76 +2,77 @@
 @section('content')
     <div class="flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl p-8 max-w-5xl w-full mx-auto">
-            <h2 class="text-2xl text-center font-bold text-gray-800 mb-10">Welcome to Endurance</h2>
+            <h2 class="text-2xl text-center font-bold text-gray-800 mb-6">Bienvenue sur Endurance</h2>
             <p class="text-gray-600 mb-4">
-                Thank you for participating in the beta phase of our Endurance app.
-                Your role is crucial in helping us improve the user experience with your feedback and suggestions.
+                Merci de participer à la phase de bêta-test de Endurance.  
+                Votre rôle est essentiel pour nous aider à améliorer l’expérience utilisateur grâce à vos retours et suggestions.
             </p>
             <p class="text-gray-600 mb-4">
-                Endurance has been designed as a tool to help create personalized training plans.<br>
-                While many runners rely on Excel spreadsheets to track their training programs, 
-                our solution offers an automated and interactive alternative with advanced features.
-                Therefore, think of Endurance more as an intelligent training log than just a training plan creator.
+                Endurance est conçu comme un outil permettant de créer des plans d’entraînement personnalisés.<br>
+                Beaucoup de coureurs utilisent des fichiers Excel pour planifier leurs entraînements.  
+                Notre solution propose une alternative automatisée et interactive avec des fonctionnalités avancées.  
+                Il ne s’agit donc pas seulement d’un générateur de plans, mais plutôt d’un journal d’entraînement intelligent.
             </p>
             <p class="text-gray-600 mb-4">
-                The Endurance app is inspired by a structured approach where your training is divided into blocks of weeks, with each week serving a specific purpose and composed of multiple workouts with clear objectives.
-                By organizing your training in this way, you can focus on building a solid foundation, peaking at the right time, and avoiding overtraining.
-                Each block is designed to progressively prepare you for your goal, ensuring that you are ready when the time comes for your race or event.
+                L’application repose sur une approche structurée en blocs, où chaque semaine a un rôle précis et s’intègre dans un cycle global.  
+                Cette organisation permet de mieux gérer la charge d’entraînement, d’optimiser la progression et d’éviter le surentraînement.  
+                Chaque bloc est conçu pour vous préparer progressivement à votre objectif, afin d’être prêt(e) le jour de votre course ou événement.
             </p>
 
             <div class="mb-4">
-                <h3 class="font-semibold text-gray-800 mb-2">Why a Block-based Approach?</h3>
+                <h3 class="font-semibold text-gray-800 mb-2">Pourquoi une approche par blocs ?</h3>
                 <p class="text-gray-600 mb-4">
-                    Effective training is not just about accumulating sessions. It relies on a structured periodization, where each week plays a specific role in your progress. Endurance draws inspiration from this method and allows you to:
+                    Un entraînement efficace ne se limite pas à une simple accumulation de séances. Il repose sur une périodisation structurée, où chaque semaine joue un rôle spécifique dans votre progression.  
+                    Endurance s’inspire de cette méthode et vous permet de :
                 </p>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2">
-                    <li>Plan your training weeks based on a specific goal (development, maintenance, recovery, etc.).</li>
-                    <li>Structure your training load over several weeks to optimize progress and avoid overtraining.</li>
-                    <li>Adapt each session to its role in the overall cycle, rather than seeing it as an isolated event.</li>
+                    <li>Planifier vos semaines d’entraînement en fonction d’un objectif précis (développement, maintien, récupération…).</li>
+                    <li>Structurer votre charge d’entraînement sur plusieurs semaines pour optimiser la progression et éviter le surentraînement.</li>
+                    <li>Adapter chaque séance à son rôle dans le cycle global, plutôt que de la voir comme un événement isolé.</li>
                 </ul>
             </div>
 
             <div class="mb-4">
-                <h3 class="font-semibold text-gray-800 mb-2">Key Features:</h3>
+                <h3 class="font-semibold text-gray-800 mb-2">Principales fonctionnalités :</h3>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2">
-                    <li>Interactive annual calendar to visualize and manage your training weeks</li>
-                    <li>Ability to set goals (distance, duration, elevation) for each session</li>
-                    <li>Automatic synchronization with Strava to import your activities</li>
-                    <li>Dashboards comparing your actual performance to set goals</li>
-                    <li>Ability to define training week types (reduced, development, etc.)</li>
+                    <li>Calendrier annuel interactif pour visualiser et organiser vos semaines d'entraînement.</li>
+                    <li>Définition des objectifs (distance, durée, dénivelé) pour chaque séance.</li>
+                    <li>Synchronisation automatique avec Strava pour importer vos activités.</li>
+                    <li>Tableaux de bord comparant vos performances réelles avec vos objectifs.</li>
+                    <li>Possibilité de définir des types de semaines d’entraînement (récupération, développement, maintien, etc.).</li>
                 </ul>
             </div>
             <p class="text-gray-600 mb-4">
-                <strong>Important Note:</strong> The app is currently in an English beta version.
-                A full French localization is planned for the final release.
-                Some features are still under development, and residual bugs may appear.
+                <strong>Note importante :</strong> L’application est actuellement en version bêta en anglais.  
+                Une traduction complète en français est prévue pour la version finale.  
+                Certaines fonctionnalités sont encore en développement et des bugs peuvent subsister.
             </p>
             <div class="mb-4">
-                <h3 class="font-semibold text-gray-800 mb-2">Example of Usage:</h3>
+                <h3 class="font-semibold text-gray-800 mb-2">Exemple d’utilisation :</h3>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2">
-                    <li>I start by creating a "training" on June 14th, representing my race goal.</li>
-                    <li>To prepare, I define my training weeks, going backward in time:</li>
+                    <li>Je commence par créer un "entraînement" le 14 juin, qui représente mon objectif (ma course).</li>
+                    <li>Pour m’y préparer, je définis mes semaines d’entraînement en remontant dans le temps :</li>
                     <ul class="list-disc pl-6 text-gray-600 space-y-2">
-                        <li>The race week is set as a "Race" week.</li>
-                        <li>The two weeks prior are "Taper" weeks, where I gradually reduce the training load.</li>
-                        <li>The four weeks before that are "Maintain" weeks, representing the peak of training.</li>
-                        <li>The previous weeks are "Development" weeks, focused on general physical conditioning.</li>
-                        <li>Every 3 or 4 weeks, I integrate a "Reduced" week to prevent overtraining and allow for effective recovery.</li>
-                        <li>During the development weeks, I make sure not to increase the training load by more than 10% per week.</li>
+                        <li>La semaine de la course est marquée comme "Compétition".</li>
+                        <li>Les deux semaines précédentes sont des semaines de "Taper", où je réduis progressivement la charge.</li>
+                        <li>Les quatre semaines précédentes sont des semaines de "Maintien", correspondant au pic d'entraînement.</li>
+                        <li>Les semaines antérieures sont des semaines de "Développement" pour construire ma condition physique.</li>
+                        <li>Une semaine sur trois ou quatre est une semaine "Allégée" pour éviter le surentraînement.</li>
+                        <li>Pendant les semaines de développement, je veille à ne pas augmenter ma charge d’entraînement de plus de 10% par semaine.</li>
                     </ul>
-                    <li>Depending on my goal (marathon, trail, 10k, etc.), I distribute my "trainings" each week to meet my weekly goals.</li>
-                    <li>Personally, I prefer to set my weekly goals in terms of time rather than distance.</li>
+                    <li>En fonction de mon objectif (marathon, trail, 10 km…), je répartis mes séances chaque semaine pour atteindre mes objectifs hebdomadaires.</li>
+                    <li>Personnellement, je préfère fixer mes objectifs hebdomadaires en temps plutôt qu’en distance.</li>
                 </ul>
             </div>            
             <p class="text-gray-600 mb-4 mt-10">
-                We look forward to hearing your thoughts on:<br>
-                - The usability of the interface<br>
-                - The usefulness of the existing features<br>
-                - Any suggestions for improvements<br>
-                - Suggestions for the name (which is just a temporary choice) and the logo
+                Nous attendons vos retours sur :<br>
+                - L’ergonomie de l’interface<br>
+                - L’utilité des fonctionnalités existantes<br>
+                - Toute suggestion d’amélioration<br>
+                - Des idées de nom (celui-ci est temporaire) et de logo
             </p>
             <p class="text-gray-600 font-medium">
-                Use the integrated contact form to share your feedback with us at any time.
+                Utilisez le formulaire de contact intégré pour nous faire part de vos remarques à tout moment.
             </p>
         </div>
     </div>
