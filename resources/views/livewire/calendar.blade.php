@@ -251,20 +251,20 @@
                                             
                                             <!-- Activities badges -->
                                             @php 
-                                            $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
-                                                return $activity->start_date->isSameDay($dayDate);
-                                            });
+                                                $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
+                                                    return $activity->start_date->isSameDay($dayDate);
+                                                });
                                             @endphp
                                             @if($dayActivities->isNotEmpty())
-                                                <div class="absolute top-2 right-2 flex flex-wrap gap-1">
+                                                <div class="absolute top-2 right-2 flex flex-wrap gap-2 sm:gap-1">
                                                     @foreach($dayActivities as $activity)
                                                     <div class="relative group">
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', arguments: { id: '{{ $activity->id }}' }})" 
                                                             class="relative group cursor-pointer">
-                                                             <div class="w-8 h-8 rounded-full flex items-center justify-center bg-orange-500 text-white text-sm hover:bg-orange-600 transition-colors">
-                                                                 <i class="fas fa-running"></i>
-                                                             </div>
-                                                         </a>                                                      
+                                                                <div class="w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-orange-500 text-white text-base sm:text-sm hover:bg-orange-600 transition-colors">
+                                                                    <i class="fas fa-running"></i>
+                                                                </div>
+                                                            </a>                                                      
                                                         <div class="z-50 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                                                             {{ $activity->name }}
                                                         </div>
@@ -275,17 +275,17 @@
 
                                             <!-- Training badges -->
                                             @php 
-                                            $dayTrainings = $trainings->filter(function ($training) use ($dayDate){
-                                                return $training->date->isSameDay($dayDate);
-                                            }); 
+                                                $dayTrainings = $trainings->filter(function ($training) use ($dayDate){
+                                                    return $training->date->isSameDay($dayDate);
+                                                }); 
                                             @endphp
                                             @if($dayTrainings->isNotEmpty())
-                                                <div class="absolute bottom-2 right-2 flex flex-wrap gap-1">
+                                                <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
                                                     @foreach($dayTrainings as $training)
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', arguments: { id: '{{ $training->id }}' }})" class="relative group" 
                                                             draggable="true" 
                                                             ondragstart="onDragStart(event, {{ $training->id }})">
-                                                            <div class="{{ $training->type->name === 'Race' ? 'h-10 w-10' : 'h-8 w-8' }} rounded-full flex items-center justify-center {{ $training->type->color }} text-white text-sm">
+                                                            <div class="w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center {{ $training->type->color }} text-white text-sm">
                                                                 <i class="fas fa-{{ $training->type->icon }}"></i>
                                                             </div>                                                        
                                                             <div class="z-50 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity">
@@ -319,39 +319,73 @@
         </div>
 
         <!-- Side navigation -->
-        <div class="xl:w-64">
-            <div class="bg-white rounded-xl shadow-lg p-4 xl:sticky xl:top-4">
-                <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
-                    Navigation
-                </h3>
-                <nav class="space-y-2">
-                    @foreach ($months as $monthKey => $weeksInMonth)
+        <div x-data="{ mobileNavOpen: false }" class="xl:w-64 xl:sticky xl:top-4 xl:self-start">
+            <button @click="mobileNavOpen = true" class="lg:hidden fixed top-1 right-14 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 transition-all">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
+            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : '-translate-x-full'" x-cloak>
+                <div class="p-4 relative h-full overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold">Navigation</h3>
+                        <button @click="mobileNavOpen = false" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <nav class="space-y-2">
                         @php
-                            if(substr($monthKey, 0, 4) != $year) {
-                                continue;
-                            }
-                            $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
-                            $monthName = $monthDate->format('F Y');
+                            $currentMonthSlug = Str::slug(Carbon::now()->format('F Y'));
                         @endphp
-                        <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
-                            <span>{{ $monthName }}</span>
+                        <a onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            Current Month
                         </a>
-                    @endforeach
-                </nav>
-                <div class="flex flex-col gap-2 mt-2">
-                    @php
-                        $currentMonthSlug = Str::slug(Carbon::now()->format('F Y'));
-                    @endphp
-                    <button onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" 
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors inline-flex items-center justify-center">
-                        <i class="fas fa-calendar-day mr-2"></i>
-                        Current Month
-                    </button>
-                    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" 
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors inline-flex items-center justify-center">
-                        <i class="fas fa-arrow-up mr-2"></i>
-                        Scroll to top
-                    </button>
+                        <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            Scroll to top
+                        </a>
+                        @foreach ($months as $monthKey => $weeksInMonth)
+                            @php
+                                if(substr($monthKey, 0, 4) != $year) {
+                                    continue;
+                                }
+                                $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
+                                $monthName = $monthDate->format('F Y');
+                            @endphp
+                            <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
+                                <span>{{ $monthName }}</span>
+                            </a>
+                        @endforeach
+                    </nav>
+                </div>
+            </div>
+            <div class="hidden xl:block">
+                <div class="bg-white rounded-xl shadow-lg p-4">
+                    <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                        Navigation
+                    </h3>
+                    <nav class="space-y-2">
+                        @php
+                            $currentMonthSlug = Str::slug(Carbon::now()->format('F Y'));
+                        @endphp
+                        <a onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            Current Month
+                        </a>
+                        <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            Scroll to top
+                        </a>
+                        @foreach ($months as $monthKey => $weeksInMonth)
+                            @php
+                                if(substr($monthKey, 0, 4) != $year) {
+                                    continue;
+                                }
+                                $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
+                                $monthName = $monthDate->format('F Y');
+                            @endphp
+                            <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
+                                <span>{{ $monthName }}</span>
+                            </a>
+                        @endforeach
+                    </nav>
                 </div>
             </div>
         </div>
