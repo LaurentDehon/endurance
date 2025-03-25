@@ -58,21 +58,21 @@
                                         <i class="fas fa-unlock mr-2"></i>
                                         Admin
                                     </a>
-                                @endif                                                              
+                                @endif      
+                                <a href="{{ route('help') }}" class="lg:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-circle-question mr-2"></i>
+                                    <span class="hidden lg:inline">Help</span>
+                                </a>
+    
+                                <a href="{{ route('contact.show') }}" class="lg:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <i class="fas fa-envelope-open mr-2"></i>
+                                    <span class="hidden lg:inline">Contact</span>
+                                </a>                                                          
                             </div>
                         </div>
 
                         <!-- Right menu -->
-                        <div class="flex items-center" x-data="{ open: false }">
-                            <a href="{{ route('help') }}" class="lg:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                <i class="fas fa-circle-question mr-2"></i>
-                                <span class="hidden lg:inline">Help</span>
-                            </a>
-
-                            <a href="{{ route('contact.show') }}" class="lg:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                <i class="fas fa-envelope-open mr-2"></i>
-                                <span class="hidden lg:inline">Contact</span>
-                            </a>  
+                        <div class="flex items-center" x-data="{ open: false }">                            
                             <button @click="open = !open" class="hidden lg:flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none">
                                 <i class="fas fa-user-circle text-xl"></i>
                                 <span class="hidden md:block">{{ Auth::user()->name }}</span>
@@ -103,7 +103,7 @@
                                     <button @click="isMobileMenuOpen = false" class="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded-full transition-colors">
                                         <i class="fas fa-times"></i>
                                     </button>
-                                    <div class="pt-8 pb-3 px-4 space-y-1 flex-1">
+                                    <div class="pt-12 pb-3 px-4 space-y-1 flex-1">
                                         <a href="{{ route('home') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                                             <i class="fas fa-house mr-2"></i> Home
                                         </a>
@@ -121,6 +121,12 @@
                                                 <i class="fas fa-unlock mr-2"></i> Admin
                                             </a>
                                         @endif
+                                        <a href="{{ route('help') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                                            <i class="fas fa-circle-question mr-2"></i> Help
+                                        </a>
+                                        <a href="{{ route('contact.show') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                                            <i class="fas fa-envelope-open mr-2"></i> Contact
+                                        </a>
                                     </div>
                                     
                                     <!-- User menu -->

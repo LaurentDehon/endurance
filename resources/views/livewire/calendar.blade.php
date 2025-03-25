@@ -319,12 +319,12 @@
         </div>
 
         <!-- Side navigation -->
-        <div x-data="{ mobileNavOpen: false }" class="xl:w-64 xl:sticky xl:top-4 xl:self-start">
-            <button @click="mobileNavOpen = true" class="lg:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 transition-transform transform-none" style="transform: none; will-change: transform;">
+        <div x-data="{ mobileNavOpen: false }" class="xl:w-52 xl:sticky xl:top-4 xl:self-start">
+            <button @click="mobileNavOpen = true" class="xl:hidden fixed top-0 right-0 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto">
                 <i class="fas fa-bars text-lg"></i>
             </button>
             <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
-            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : 'translate-x-full'" style="transform: none !important;" x-cloak>
+            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : 'translate-x-full'" x-cloak>
                 <div class="p-4 relative h-full overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Navigation</h3>
@@ -358,12 +358,12 @@
                     </nav>
                 </div>
             </div>
-            <div class="hidden xl:block">
+            <div class="hidden lg:block">
                 <div class="bg-white rounded-xl shadow-lg p-4">
                     <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
                         Navigation
                     </h3>
-                    <nav class="space-y-2">
+                    <nav class="">
                         @php
                             $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                         @endphp
