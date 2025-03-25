@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 ?>    
 
-<div class="mx-auto p-2 sm:p-4 xl:scrollbar-auto scrollbar-hide">
+<div class="mx-auto p-2 sm:p-4 overflow-y-scroll">
     <div class="flex flex-col xl:flex-row gap-4 lg:gap-8">
         <!-- Main content -->
         <div class="flex-1">
