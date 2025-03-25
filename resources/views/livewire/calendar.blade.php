@@ -365,7 +365,7 @@
                     </h3>
                     <nav class="space-y-2">
                         @php
-                            $currentMonthSlug = Str::slug(Carbon::now()->format('F Y'));
+                            $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                         @endphp
                         <a onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
                             Current Month
@@ -379,7 +379,7 @@
                                     continue;
                                 }
                                 $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
-                                $monthName = $monthDate->format('F Y');
+                                $monthName = $monthDate->format('F');
                             @endphp
                             <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
                                 <span>{{ $monthName }}</span>
