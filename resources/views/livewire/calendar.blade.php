@@ -12,7 +12,7 @@
                 <!-- Stats section -->
                 <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
                     <!-- Stats wrapper -->
-                    <div class="flex flex-wrap justify-center gap-4 sm:gap-8 items-center">
+                    <div class="hidden sm:flex justify-between lg:justify-start gap-4">
                         @foreach(['distance', 'elevation', 'time'] as $stat)
                         <div class="flex flex-row items-start gap-3 w-full sm:w-auto">
                             <div class="py-3 px-4 bg-{{ $statColors[$stat] }}-100 rounded-xl">
@@ -75,7 +75,7 @@
                                     Synchronize with Strava
                                 </div>
                             </button>
-                            <button wire:click.prevent="deleteAll" class="relative group py-3 px-4 bg-red-100 rounded-xl text-red-600 hover:bg-red-200 transition-colors">
+                            <button wire:click.prevent="deleteAll" class="hidden sm:block relative group py-3 px-4 bg-red-100 rounded-xl text-red-600 hover:bg-red-200 transition-colors">
                                 <i class="fas fa-trash-alt text-red-600 text-2xl"></i>
                                 <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
                                     Delete training sessions for the year
@@ -90,24 +90,24 @@
             @foreach ($months as $monthKey => $weeksInMonth)
                 @php
                     $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
-                    $monthName = $monthDate->format('F Y');
+                    $monthName = $monthDate->format('F');
                 @endphp
                 <section id="{{ Str::slug($monthName) }}" class="mb-4 sm:mb-5">
                     <!-- Month header -->
-                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">
+                        <div class="flex items-center">
+                            <div class="flex gap-2 justify-between w-full">
                                 <div class="flex items-center gap-2">
-                                    {{ $monthName }}
-                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="relative group text-red-500 hover:text-red-700 shrink-0 ms-2">
+                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="hidden sm:block relative group text-red-500 hover:text-red-700 shrink-0">
                                         <i class="fas fa-trash-alt"></i>
                                         <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
                                             Delete training sessions for the month
                                         </div>
                                     </button>
+                                    {{ $monthName }}
                                 </div>
                                 <span class="text-gray-500 font-normal text-base sm:text-lg sm:ml-2">
-                                    <div class="flex flex-wrap gap-2 sm:gap-4">
+                                    <div class="hidden sm:flex gap-2">
                                         @foreach(['distance', 'elevation', 'time'] as $stat)
                                             <span class="inline-flex items-center gap-1 sm:gap-2 px-2 py-1">
                                                 <i class="fas fa-{{ $statIcons[$stat] }} mr-1"></i>
@@ -152,10 +152,10 @@
                             <div class="week-header p-3 sm:p-4 rounded-t-xl bg-gradient-to-{{ $direction }} from-{{ $color }} via-{{ $lighterColor }} to-{{ $color }} border-b">
                                 <div class="flex flex-col gap-4">
                                     <!-- Week info and controls -->
-                                    <div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
-                                        <div class="flex flex-col gap-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                        <div class="flex justify-between sm:flex-col gap-2">
                                             <div class="flex flex-wrap items-center gap-2">
-                                                <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
+                                                <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
                                                     Week {{ $week->week_number }}
                                                 </span>                                        
                                                 <span class="text-sm text-gray-100">
@@ -177,7 +177,7 @@
                                                         <i class="fas fa-tag text-gray-400"></i>
                                                     </div>
                                                 </div>
-                                                <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="relative group text-gray-100 hover:text-gray-300">
+                                                <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="hidden sm:block relative group text-gray-100 hover:text-gray-300 ms-2">
                                                     <i class="fas fa-trash-alt"></i>
                                                     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50">
                                                         Delete training sessions for the week
@@ -187,9 +187,9 @@
                                         </div>
 
                                         <!-- Week stats -->
-                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:flex-1">
+                                        <div class="flex justify-between sm:gap-6 md:gap-8">
                                             @foreach(['distance', 'elevation', 'time'] as $stat)
-                                                <div class="bg-white/10 rounded-lg p-3 flex flex-col items-center">
+                                                <div class="flex flex-col md:w-32 lg:w-40">
                                                     <p class="text-sm text-gray-200 mb-2 text-center">
                                                         <i class="fas fa-{{ $statIcons[$stat] }} mr-2"></i>{{ ucfirst($stat) }}
                                                     </p>
@@ -217,7 +217,7 @@
                                                             $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
                                                             $percentage = min($percentage, 100);
                                                         @endphp
-                                                        <div class="w-full h-1.5 bg-gray-200/30 rounded-full">
+                                                        <div class="w-full h-1.5 bg-white rounded-full">
                                                             <div class="h-1.5 bg-{{ $statColors[$stat] }}-300 rounded-full" 
                                                                 style="width: {{ $percentage }}%"></div>
                                                         </div>
@@ -230,7 +230,7 @@
                             </div>
                             <!-- Days grid -->
                             <div class="p-2">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
                                         @php
                                             $dayDate = $day['date'];
@@ -320,7 +320,7 @@
 
         <!-- Side navigation -->
         <div x-data="{ mobileNavOpen: false }" class="xl:w-64 xl:sticky xl:top-4 xl:self-start">
-            <button @click="mobileNavOpen = true" class="lg:hidden fixed top-1 right-14 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 transition-all">
+            <button @click="mobileNavOpen = true" class="lg:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 transition-all">
                 <i class="fas fa-bars text-lg"></i>
             </button>
             <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
@@ -349,7 +349,7 @@
                                     continue;
                                 }
                                 $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
-                                $monthName = $monthDate->format('F Y');
+                                $monthName = $monthDate->format('F');
                             @endphp
                             <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
                                 <span>{{ $monthName }}</span>
