@@ -322,7 +322,7 @@
         <div x-data="{ mobileNavOpen: false }" class="xl:w-52 xl:sticky xl:top-4 xl:self-start">
             <button 
                 @click="mobileNavOpen = true" 
-                class="xl:hidden fixed top-2 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto"
+                class="xl:hidden fixed top-4 right 4 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto"
                 style="right: calc(0.5rem + (100vw - 100%));">
                 <i class="fas fa-bars text-lg"></i>
             </button>
