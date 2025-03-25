@@ -324,7 +324,7 @@
                 <i class="fas fa-bars text-lg"></i>
             </button>
             <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
-            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : '-translate-x-full'" x-cloak>
+            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : 'translate-x-full'" x-cloak>
                 <div class="p-4 relative h-full overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Navigation</h3>
