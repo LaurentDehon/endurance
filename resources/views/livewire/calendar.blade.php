@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 ?>    
 
-<div class="mx-auto p-2 sm:p-4">
+<div class="mx-auto p-2 sm:p-4 xl:scrollbar-auto scrollbar-hide">
     <div class="flex flex-col xl:flex-row gap-4 lg:gap-8">
         <!-- Main content -->
         <div class="flex-1">
@@ -320,42 +320,75 @@
 
         <!-- Side navigation -->
         <div x-data="{ mobileNavOpen: false }" class="xl:w-52 xl:sticky xl:top-4 xl:self-start">
-            <button @click="mobileNavOpen = true" class="xl:hidden fixed top-0 right-0 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto">
+            <button @click="mobileNavOpen = true" class="xl:hidden fixed top-2 right-2 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto">
                 <i class="fas fa-bars text-lg"></i>
             </button>
             <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
-            <div x-show="mobileNavOpen" class="xl:hidden fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform" :class="mobileNavOpen ? 'translate-x-0' : 'translate-x-full'" x-cloak>
-                <div class="p-4 relative h-full overflow-y-auto">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Navigation</h3>
-                        <button @click="mobileNavOpen = false" class="p-2 hover:bg-gray-100 rounded-lg">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+            <div class="xl:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
+                x-show="mobileNavOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                x-cloak
+                @click.away="mobileNavOpen = false">
+                
+                <div class="absolute top-0 left-0 w-64 bg-white h-full shadow-2xl rounded-r-xl transform transition-all duration-300"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="-translate-x-full"
+                    x-transition:enter-end="translate-x-0"
+                    x-transition:leave="transition ease-in duration-250"
+                    x-transition:leave-start="translate-x-0"
+                    x-transition:leave-end="-translate-x-full">
+                    
+                    <div class="p-4 relative h-full overflow-y-auto">
+                        <!-- Header -->
+                        <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-2 text-indigo-600">
+                                <i class="fas fa-rocket text-lg"></i>
+                                <span class="font-bold text-lg">Navigation</span>
+                            </div>
+                            <button @click="mobileNavOpen = false" 
+                                    class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
+                                    aria-label="Close menu">
+                                <i class="fas fa-times fa-lg"></i>
+                            </button>
+                        </div>
 
-                    <nav class="space-y-2">
-                        @php
-                            $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
-                        @endphp
-                        <a onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
-                            Current Month
-                        </a>
-                        <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
-                            Scroll to top
-                        </a>
-                        @foreach ($months as $monthKey => $weeksInMonth)
+                        <!-- Navigation -->
+                        <nav class="space-y-1">
                             @php
-                                if(substr($monthKey, 0, 4) != $year) {
-                                    continue;
-                                }
-                                $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
-                                $monthName = $monthDate->format('F');
+                                $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                             @endphp
-                            <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
-                                <span>{{ $monthName }}</span>
+                            <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" 
+                            class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-indigo-50 rounded-xl transition-all duration-200 cursor-pointer">
+                                <i class="fas fa-arrow-up text-indigo-500 w-5 text-center"></i>
+                                <span>Scroll to top</span>
                             </a>
-                        @endforeach
-                    </nav>
+                            
+                            @foreach ($months as $monthKey => $weeksInMonth)
+                                @php
+                                    if(substr($monthKey, 0, 4) != $year) {
+                                        continue;
+                                    }
+                                    $monthDate = Carbon::createFromFormat('Y-m', $monthKey);
+                                    $monthName = $monthDate->format('F');
+                                @endphp
+                                <a href="#{{ Str::slug($monthName) }}" 
+                                class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-purple-600 group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-calendar-day text-purple-500 w-5 text-center"></i>
+                                        <span>{{ $monthName }}</span>
+                                    </div>
+                                    <span class="text-sm text-gray-400 group-hover:text-purple-400">
+                                        {{ count($weeksInMonth) }} weeks
+                                    </span>
+                                </a>
+                            @endforeach
+                        </nav>
+                    </div>
                 </div>
             </div>
             <div class="hidden lg:block">
@@ -367,9 +400,6 @@
                         @php
                             $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                         @endphp
-                        <a onclick="document.getElementById('{{ $currentMonthSlug }}').scrollIntoView({ behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
-                            Current Month
-                        </a>
                         <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
                             Scroll to top
                         </a>

@@ -23,7 +23,7 @@
                         <!-- Left menu -->
                         <div class="flex items-center">
                             <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none">
-                                <i class="fas fa-bars"></i>
+                                <i class="fas fa-bars text-lg"></i>
                             </button>
                             
                             <div class="flex-shrink-0 flex items-center ml-2">
@@ -32,8 +32,8 @@
                             </div>
                             
                             <!-- Main navigation -->
-                            <div class="hidden lg:ml-6 lg:flex lg:space-x-4">
-                                <a href="{{ route('home') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-pink-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                            <div class="hidden lg:ml-6 lg:flex lg:space-x-1">
+                                <a href="{{ route('home') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-house mr-2"></i>
                                     Home
                                 </a>
@@ -43,12 +43,12 @@
                                     Dashboard
                                 </a>
                                 
-                                <a href="{{ route('calendar') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('calendar') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-calendar-week mr-2"></i>
                                     Calendar
                                 </a>
                                 
-                                <a href="{{ route('activities') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('activities') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-list mr-2"></i>
                                     Activities
                                 </a>                                
@@ -59,12 +59,12 @@
                                         Admin
                                     </a>
                                 @endif      
-                                <a href="{{ route('help') }}" class="lg:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('help') }}" class="lg:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-circle-question mr-2"></i>
                                     <span class="hidden lg:inline">Help</span>
                                 </a>
     
-                                <a href="{{ route('contact.show') }}" class="lg:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-cyan-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('contact.show') }}" class="lg:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-pink-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-envelope-open mr-2"></i>
                                     <span class="hidden lg:inline">Contact</span>
                                 </a>                                                          
@@ -73,7 +73,7 @@
 
                         <!-- Right menu -->
                         <div class="flex items-center" x-data="{ open: false }">                            
-                            <button @click="open = !open" class="hidden lg:flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none">
+                            <button @click="open = !open" class="hidden lg:flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none mr-8">
                                 <i class="fas fa-user-circle text-xl"></i>
                                 <span class="hidden md:block">{{ Auth::user()->name }}</span>
                                 <i class="fas fa-chevron-down text-xs"></i>
@@ -98,56 +98,94 @@
                                 </div>
                             </div>
                             <!-- Mobile menu -->
-                            <div class="lg:hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50" x-show="isMobileMenuOpen" x-transition.opacity x-cloak @click.away="isMobileMenuOpen = false">
-                                <div class="absolute top-0 left-0 w-56 bg-gray-50 h-full shadow-xl rounded-r-lg flex flex-col">
-                                    <button @click="isMobileMenuOpen = false" class="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded-full transition-colors">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <div class="pt-12 pb-3 px-4 space-y-1 flex-1">
-                                        <a href="{{ route('home') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-house mr-2"></i> Home
+                            <div class="lg:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
+                                x-show="isMobileMenuOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                x-cloak
+                                @click.away="isMobileMenuOpen = false">
+
+                                <div class="absolute top-0 left-0 w-64 bg-white h-full shadow-2xl rounded-r-xl flex flex-col transform transition-all duration-300"
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="-translate-x-full"
+                                    x-transition:enter-end="translate-x-0"
+                                    x-transition:leave="transition ease-in duration-250"
+                                    x-transition:leave-start="translate-x-0"
+                                    x-transition:leave-end="-translate-x-full">
+                                
+                                    <!-- Header with close button -->
+                                    <div class="flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100">
+                                        <div class="flex items-center gap-2 text-indigo-600">
+                                            <i class="fas fa-running text-lg"></i>
+                                            <span class="font-bold text-lg">Menu</span>
+                                        </div>
+                                        <button @click="isMobileMenuOpen = false" 
+                                                class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
+                                                aria-label="Close menu">
+                                            <i class="fas fa-times fa-lg"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Main menu -->
+                                    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-indigo-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-house text-indigo-500 w-5 text-center"></i>
+                                            <span>Home</span>
                                         </a>
-                                        <a href="{{ route('dashboard') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-chart-line mr-2"></i> Dashboard
+                                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-chart-line text-blue-500 w-5 text-center"></i>
+                                            <span>Dashboard</span>
                                         </a>
-                                        <a href="{{ route('calendar') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-calendar-week mr-2"></i> Calendar
+                                        <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-purple-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-calendar-week text-purple-500 w-5 text-center"></i>
+                                            <span>Calendar</span>
                                         </a>
-                                        <a href="{{ route('activities') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-list mr-2"></i> Activities
+                                        <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-green-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-list text-green-500 w-5 text-center"></i>
+                                            <span>Activities</span>
                                         </a>
                                         @if (auth()->user()->is_admin)
-                                            <a href="{{ route('admin') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                                <i class="fas fa-unlock mr-2"></i> Admin
-                                            </a>
+                                        <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-red-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-unlock text-red-500 w-5 text-center"></i>
+                                            <span>Admin</span>
+                                        </a>
                                         @endif
-                                        <a href="{{ route('help') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-circle-question mr-2"></i> Help
+                                        <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-orange-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-circle-question text-orange-500 w-5 text-center"></i>
+                                            <span>Help</span>
                                         </a>
-                                        <a href="{{ route('contact.show') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                            <i class="fas fa-envelope-open mr-2"></i> Contact
+                                        <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-pink-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-envelope-open text-pink-500 w-5 text-center"></i>
+                                            <span>Contact</span>
                                         </a>
-                                    </div>
-                                    
+                                    </nav>
+
                                     <!-- User menu -->
-                                    <div class="border-t border-gray-200 mt-auto">
-                                        <div class="py-4 px-4 space-y-1">
-                                            <a href="{{ route('profile.edit') }}" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                                <i class="fas fa-user mr-2 text-yellow-500"></i>Profile
+                                    <div class="mt-auto border-t border-gray-100">
+                                        <div class="px-4 py-4 space-y-2">
+                                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-200">
+                                                <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
+                                                <span>Profile</span>
                                             </a>
-                                            <a href="#" class="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                                <i class="fas fa-gear mr-2 text-gray-400"></i>Settings
+                                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-200">
+                                                <i class="fas fa-gear text-gray-400 w-5 text-center"></i>
+                                                <span>Settings</span>
                                             </a>
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
-                                                <button type="submit" class="w-full text-left px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                                    <i class="fas fa-sign-out-alt mr-2 text-red-500"></i>Logout
+                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-red-50 rounded-xl transition-all duration-200">
+                                                    <i class="fas fa-sign-out-alt text-red-500 w-5 text-center"></i>
+                                                    <span>Logout</span>
                                                 </button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                      
+                            </div>              
                         </div>
                     </div>
                 </div>
