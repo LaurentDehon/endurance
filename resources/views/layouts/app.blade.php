@@ -211,6 +211,7 @@
                             Training plan creation and tracking solution
                         </p>
                     </div>
+                    <img src="{{ asset('storage/images/powered.png') }}" alt="Powered by" class="h-7 mt-4">
         
                     <!-- Links Container -->
                     <div class="flex flex-col sm:flex-row gap-12">

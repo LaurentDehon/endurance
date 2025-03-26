@@ -108,7 +108,7 @@
 
                             <!-- Actions agrandies pour mobile -->
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap space-x-3">
-                                <a href="{{ route('activities', $activity) }}" class="text-indigo-600 hover:text-indigo-900 p-1.5 sm:p-1">
+                                <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" class="text-indigo-600 hover:text-indigo-900 p-1.5 sm:p-1">
                                     <i class="fas fa-eye text-sm sm:text-base"></i>
                                 </a>
                                 <button wire:click.prevent="delete({{ $activity->id }})" class="text-red-600 hover:text-red-900 p-1.5 sm:p-1">

@@ -46,35 +46,10 @@
                     </p>
                 </div>
             </div>
-
-            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div class="p-2 bg-teal-100 rounded-lg">
-                    <i class="fas fa-thumbs-up text-teal-600 text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Kudos</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ $activity->kudos_count }}
-                    </p>
-                </div>
-            </div>
         </div>
 
         <!-- Advanced Stats -->
         <div class="space-y-3 md:space-y-4">
-            <!-- Average Speed -->
-            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div class="p-2 bg-orange-100 rounded-lg">
-                    <i class="fas fa-tachometer-alt text-orange-600 text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Average Speed</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ number_format($activity->average_speed * 3.6, 1) }} km/h
-                    </p>
-                </div>
-            </div>
-
             <!-- Average Pace -->
             <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <div class="p-2 bg-yellow-100 rounded-lg">
@@ -127,6 +102,10 @@
     </div>
     <!-- Modal footer -->
     <div class="flex flex-col md:flex-row mt-6">
+        <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" 
+            class="w-1/3 px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors duration-200 focus:outline-none text-center">
+            View on Strava
+        </a>
         <button type="button" wire:click.prevent="close" 
             class="ml-auto w-1/3 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200 focus:outline-none">
             Close
