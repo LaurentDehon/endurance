@@ -27,13 +27,12 @@
                             </button>
                             
                             <div class="flex-shrink-0 flex items-center ml-2">
-                                <i class="fas fa-person-running text-blue-500 text-2xl"></i>
                                 <span class="ml-2 text-xl font-bold hidden md:block">Endurance</span>
                             </div>
                             
                             <!-- Main navigation -->
                             <div class="hidden lg:ml-6 lg:flex lg:space-x-1">
-                                <a href="{{ route('home') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <a href="{{ route('home') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-teal-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                     <i class="fas fa-house mr-2"></i>
                                     Home
                                 </a>
@@ -194,7 +193,7 @@
 
         <!-- Main content -->
         <main class="min-h-screen">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6 h-full">
                 <!-- Page Content -->
                 @yield('content')
             </div>

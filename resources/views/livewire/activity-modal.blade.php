@@ -101,13 +101,13 @@
         </div>
     </div>
     <!-- Modal footer -->
-    <div class="flex flex-col md:flex-row mt-6">
+    <div class="flex flex-col md:flex-row gap-3 mt-6">
         <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" 
-            class="w-1/3 px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors duration-200 focus:outline-none text-center">
+            class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors duration-200 focus:outline-none text-center">
             View on Strava
         </a>
         <button type="button" wire:click.prevent="close" 
-            class="ml-auto w-1/3 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200 focus:outline-none">
+            class="w-full md:w-1/3 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200 focus:outline-none md:ml-auto">
             Close
         </button>
     </div>
