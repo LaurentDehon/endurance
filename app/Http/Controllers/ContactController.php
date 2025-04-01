@@ -26,9 +26,16 @@ class ContactController extends Controller
             'message' => 'required|string'
         ]);
 
-        Mail::to(env('MAIL_FROM_ADDRESS'))->send(new ContactMail($request->all()));
+        $recipient = config('mail.from.address');
+
+        if (!$recipient) {
+            throw new \Exception('Le destinataire du mail est vide.');
+        }
+
+        Mail::to($recipient)->send(new ContactMail($request->all()));
         $this->toast()->success('Votre message a été envoyé avec succès !')->send();
 
         return back();
     }
+
 }
