@@ -1,13 +1,13 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header optimisé mobile -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">        
-        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto ml-auto">
+    <div class="flex justify-between items-start mb-6 gap-4">        
+        <div class="flex gap-3 w-full ml-auto">
             <!-- Search bar -->
-            <div class="relative w-full">
+            <div class="relative flex-1">
                 <input type="text" 
                        wire:model.live.debounce.300ms="search" 
                        placeholder="Search..." 
-                       class="w-full h-10 px-4 py-2 text-sm sm:text-base rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
+                       class="w-full h-10 px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
                 @if($search)
                     <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 transition-colors">✕</button>
                 @endif
@@ -15,111 +15,117 @@
         
             <!-- Contrôles regroupés -->
             <div class="flex gap-3 h-10">
-                <select wire:model.live="perPage" class="w-28 h-full px-4 py-2 text-sm sm:text-base rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
+                <select wire:model.live="perPage" class="w-28 px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="10">10/page</option>
                     <option value="25">25/page</option>
                     <option value="50">50/page</option>
                 </select>
         
                 <button wire:click.prevent="deleteAll" 
-                        class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm sm:text-base rounded-lg transition-colors whitespace-nowrap">
+                        class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
                     Delete all
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Tableau responsive -->
+    <!-- Tableau non-responsive -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <!-- En-têtes adaptatifs -->
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <!-- En-têtes standards -->
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('name')">
-                            <span class="hidden xs:inline">Activité</span>
-                            <span class="xs:hidden">Name</span>
+                            Name
                             @include('components.sort-icon', ['field' => 'name'])
                         </th>
                         
-                        <!-- Date responsive -->
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('start_date')">
-                            <span class="hidden sm:inline">Date</span>
-                            <span class="sm:hidden">📅</span>
+                            Date
+                            @include('components.sort-icon', ['field' => 'start_date'])
                         </th>
 
-                        <!-- Colonnes compressées sur mobile -->
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('distance')">
-                            <span class="hidden sm:inline">Distance</span>
-                            <span class="sm:hidden">↔</span>
+                            Distance
+                            @include('components.sort-icon', ['field' => 'distance'])
                         </th>
 
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('moving_time')">
-                            <span class="hidden sm:inline">Time</span>
-                            <span class="sm:hidden">⏱</span>
+                            Time
+                            @include('components.sort-icon', ['field' => 'moving_time'])
                         </th>
 
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('total_elevation_gain')">
-                            <span class="hidden sm:inline">Elevation</span>
-                            <span class="sm:hidden">⛰</span>
+                            Elevation
+                            @include('components.sort-icon', ['field' => 'total_elevation_gain'])
                         </th>
 
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
                 </thead>
                 
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($activities as $activity)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <!-- Nom d'activité tronqué -->
-                            <td class="px-4 sm:px-6 py-4 max-w-[150px] sm:max-w-none truncate" title="{{ $activity->name }}">
-                                {{ Str::limit($activity->name, $loop->first ? 25 : 15) }}
+                            <!-- Nom d'activité standard -->
+                            <td class="px-4 py-4 truncate" title="{{ $activity->name }}">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ Str::limit($activity->name, 25) }}
+                                </div>
                             </td>
 
                             <!-- Date format responsive -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="sm:hidden">{{ $activity->start_date->format('d/m/y') }}</span>
-                                <span class="hidden sm:inline">{{ $activity->start_date->format('d/m/Y H:i') }}</span>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="block text-sm md:hidden">{{ $activity->start_date->format('d/m/y') }}</span>
+                                <span class="hidden md:block text-sm">{{ $activity->start_date->format('d/m/Y H:i') }}</span>
                             </td>
 
-                            <!-- Données numériques compactes -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm sm:text-base">
-                                    {{ number_format($activity->distance / 1000, 1) }}<span class="hidden sm:inline">km</span>
+                            <!-- Distance - hidden on smallest screens -->
+                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm font-medium">
+                                    {{ number_format($activity->distance / 1000, 1) }}km
                                 </span>
                             </td>
 
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm sm:text-base">
+                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm font-medium">
                                     {{ formatTimeCompact($activity->moving_time) }}
                                 </span>
                             </td>
 
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm sm:text-base">
-                                    {{ $activity->total_elevation_gain }}<span class="hidden sm:inline">m</span>
+                            <!-- Elevation - hidden on small/medium screens -->
+                            <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap">
+                                <span class="text-sm font-medium">
+                                    {{ $activity->total_elevation_gain }}m
                                 </span>
                             </td>
 
-                            <!-- Actions agrandies pour mobile -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap space-x-3">
-                                <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" class="text-indigo-600 hover:text-indigo-900 p-1.5 sm:p-1">
-                                    <i class="fas fa-eye text-sm sm:text-base"></i>
-                                </a>
-                                <button wire:click.prevent="delete({{ $activity->id }})" class="text-red-600 hover:text-red-900 p-1.5 sm:p-1">
-                                    <i class="fas fa-trash text-sm sm:text-base"></i>
-                                </button>
+                            <!-- Actions standards -->
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                <div class="flex justify-center items-center space-x-1">
+                                    <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" 
+                                       class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-100 transition-colors">
+                                        <i class="fas fa-eye text-base"></i>
+                                    </a>
+                                    <button wire:click.prevent="delete({{ $activity->id }})" 
+                                            class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100 transition-colors">
+                                        <i class="fas fa-trash text-base"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                               No activity found
+                               <div class="flex justify-center items-center py-6">
+                                    <span class="font-medium">No activity found</span>
+                               </div>
                             </td>
                         </tr>
                     @endforelse
@@ -127,9 +133,9 @@
             </table>
         </div>
 
-        <!-- Pagination adaptative -->
+        <!-- Pagination standard -->
         @if($activities->hasPages())
-            <div class="px-4 sm:px-6 py-4 border-t border-gray-200">
+            <div class="px-6 py-4 border-t border-gray-200">
                 {{ $activities->onEachSide(1)->links() }}
             </div>
         @endif
