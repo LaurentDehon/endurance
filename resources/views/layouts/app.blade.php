@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,9 +15,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="h-full">
+    <body class="h-full flex flex-col">
         @auth
-            <nav class="top-0 w-full " x-data="{ isMobileMenuOpen: false }">
+            <nav class="top-0 w-full" x-data="{ isMobileMenuOpen: false }">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <!-- Left menu -->
@@ -27,41 +27,34 @@
                             </button>
                             
                             <!-- Main navigation -->
-                            <div class="hidden lg:ml-6 lg:flex lg:space-x-1">
-                                <a href="{{ route('home') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-gray-100 text-teal-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-house mr-2"></i>
+                            <div class="hidden lg:ml-6 lg:flex lg:space-x-2">
+                                <a href="{{ route('home') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'border-b-2 border-teal-600 text-teal-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
                                     Home
                                 </a>
 
-                                <a href="{{ route('dashboard') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-gray-100 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-house mr-2"></i>
+                                <a href="{{ route('dashboard') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('dashboard') ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
                                     Dashboard
                                 </a>
                                 
-                                <a href="{{ route('calendar') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'bg-gray-100 text-purple-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-calendar-week mr-2"></i>
+                                <a href="{{ route('calendar') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('calendar') ? 'border-b-2 border-purple-600 text-purple-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
                                     Calendar
                                 </a>
                                 
-                                <a href="{{ route('activities') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'bg-gray-100 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-list mr-2"></i>
+                                <a href="{{ route('activities') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('activities') ? 'border-b-2 border-green-600 text-green-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
                                     Activities
                                 </a>                                
 
                                 @if (auth()->user()->is_admin)
-                                    <a href="{{ route('admin') }}" class="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('admin') ? 'bg-gray-100 text-red-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                        <i class="fas fa-unlock mr-2"></i>
+                                    <a href="{{ route('admin') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('admin') ? 'border-b-2 border-red-600 text-red-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
                                         Admin
                                     </a>
                                 @endif      
-                                <a href="{{ route('help') }}" class="lg:flex hidden  mr-2 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'bg-gray-100 text-orange-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-circle-question mr-2"></i>
-                                    <span class="hidden lg:inline">Help</span>
+                                <a href="{{ route('help') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('help') ? 'border-b-2 border-orange-600 text-orange-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
+                                    Help
                                 </a>
     
-                                <a href="{{ route('contact.show') }}" class="lg:flex hidden mr-6 flex-1 items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'bg-gray-100 text-pink-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <i class="fas fa-envelope-open mr-2"></i>
-                                    <span class="hidden lg:inline">Contact</span>
+                                <a href="{{ route('contact.show') }}" class="w-24 text-center px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('contact.show') ? 'border-b-2 border-pink-600 text-pink-600' : 'text-gray-600 hover:border-b-2 hover:border-gray-400' }}">
+                                    Contact
                                 </a>                                                          
                             </div>
                         </div>
@@ -76,7 +69,7 @@
 
                             <!-- User menu -->
                             <div x-show="open" @click.away="open = false" x-cloak
-                                 class="origin-top-right absolute right-4 mt-36 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                 class="origin-top-right absolute right-4 mt-36 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                 <div class="py-1">
                                     <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-user mr-2 text-yellow-500"></i>Profile
@@ -124,54 +117,44 @@
 
                                     <!-- Main menu -->
                                     <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-teal-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-house text-teal-500 w-5 text-center"></i>
-                                            <span>Home</span>
+                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('home') ? 'border-l-4 border-teal-500 text-teal-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Home
                                         </a>
-                                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-chart-line text-blue-500 w-5 text-center"></i>
-                                            <span>Dashboard</span>
+                                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'border-l-4 border-blue-500 text-blue-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Dashboard
                                         </a>
-                                        <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-purple-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-calendar-week text-purple-500 w-5 text-center"></i>
-                                            <span>Calendar</span>
+                                        <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('calendar') ? 'border-l-4 border-purple-500 text-purple-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Calendar
                                         </a>
-                                        <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-green-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-list text-green-500 w-5 text-center"></i>
-                                            <span>Activities</span>
+                                        <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('activities') ? 'border-l-4 border-green-500 text-green-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Activities
                                         </a>
                                         @if (auth()->user()->is_admin)
-                                        <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-red-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-unlock text-red-500 w-5 text-center"></i>
-                                            <span>Admin</span>
+                                        <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('admin') ? 'border-l-4 border-red-500 text-red-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Admin
                                         </a>
                                         @endif
-                                        <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-orange-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-circle-question text-orange-500 w-5 text-center"></i>
-                                            <span>Help</span>
+                                        <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('help') ? 'border-l-4 border-orange-500 text-orange-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Help
                                         </a>
-                                        <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-pink-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-envelope-open text-pink-500 w-5 text-center"></i>
-                                            <span>Contact</span>
+                                        <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('contact.show') ? 'border-l-4 border-pink-500 text-pink-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                            Contact
                                         </a>
                                     </nav>
 
                                     <!-- User menu -->
                                     <div class="mt-auto border-t border-gray-100">
                                         <div class="px-4 py-4 space-y-1">
-                                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-200">
-                                                <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
-                                                <span>Profile</span>
+                                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('profile.edit') ? 'border-l-4 border-yellow-500 text-yellow-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Profile
                                             </a>
-                                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-200">
-                                                <i class="fas fa-gear text-gray-400 w-5 text-center"></i>
-                                                <span>Settings</span>
+                                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-gray-300 hover:pl-5">
+                                                Settings
                                             </a>
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
-                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-red-50 rounded-xl transition-all duration-200">
-                                                    <i class="fas fa-sign-out-alt text-red-500 w-5 text-center"></i>
-                                                    <span>Logout</span>
+                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-red-300 hover:pl-5">
+                                                    Logout
                                                 </button>
                                             </form>
                                         </div>
@@ -185,15 +168,15 @@
         @endauth
 
         <!-- Main content -->
-        <main class="min-h-screen">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6 h-full">
+        <main class="flex-grow">
+            <div class="h-full">
                 <!-- Page Content -->
                 @yield('content')
             </div>
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-gray-100 mt-auto py-4">
+        <footer class="bg-white border-t border-gray-100 py-4">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <!-- Brand and copyright in one section -->

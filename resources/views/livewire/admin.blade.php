@@ -40,6 +40,16 @@
                             Email
                             @include('components.sort-icon', ['field' => 'email'])
                         </th>
+                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell cursor-pointer" 
+                            wire:click="sortBy('activities_count')">
+                            Activities
+                            @include('components.sort-icon', ['field' => 'activities_count'])
+                        </th>
+                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell cursor-pointer" 
+                            wire:click="sortBy('trainings_count')">
+                            Trainings
+                            @include('components.sort-icon', ['field' => 'trainings_count'])
+                        </th>
                         <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">
                             Verified
                         </th>
@@ -71,6 +81,16 @@
                             <!-- Email -->
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden sm:table-cell">
                                 <div class="text-gray-900">{{ $user->email }}</div>
+                            </td>
+                            
+                            <!-- Activities Count -->
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden lg:table-cell">
+                                <div class="text-gray-900">{{ $user->activities_count ?? 0 }}</div>
+                            </td>
+                            
+                            <!-- Trainings Count -->
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden lg:table-cell">
+                                <div class="text-gray-900">{{ $user->trainings_count ?? 0 }}</div>
                             </td>
                             
                             <!-- Verified with better visual indicators -->

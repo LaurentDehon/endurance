@@ -72,6 +72,8 @@ class Admin extends Component
     public function render()
     {
         $users = User::query()
+            ->withCount('activities')
+            ->withCount('trainings')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
