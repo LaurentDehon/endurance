@@ -370,7 +370,7 @@
                     x-cloak
                     @click.away="mobileNavOpen = false">
                     
-                    <div class="absolute top-0 right-0 w-64 bg-white h-full shadow-2xl rounded-r-xl transform transition-all duration-300"
+                    <div class="absolute top-0 right-0 w-64 bg-white h-full shadow-2xl rounded-l-xl transform transition-all duration-300"
                         x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="-translate-x-full"
                         x-transition:enter-end="translate-x-0"
