@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">        
 
-        <title>Endurance</title>
+        <title>{{ config('app.name') }}</title>
     </head>
 
     <body class="bg-gray-50 test-bg">

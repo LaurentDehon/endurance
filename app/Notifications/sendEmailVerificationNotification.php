@@ -32,7 +32,7 @@ class sendEmailVerificationNotification extends Notification
             ->action('Verify Email Address', $this->verificationUrl($notifiable))
             ->line("This verification link will expire in $expires minutes.")
             ->line('If you did not create an account, no further action is required.')
-            ->salutation(new HtmlString('Regards,<br>The Endurance team'));
+            ->salutation(new HtmlString('Regards,<br>The ' . config('app.name') . ' team'));
     }
 
     protected function verificationUrl($notifiable)

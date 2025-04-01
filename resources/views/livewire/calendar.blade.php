@@ -351,7 +351,7 @@
 
         <!-- Side navigation -->
         <div x-data="{ mobileNavOpen: false }" class="xl:w-52">
-            <div class="xl:fixed xl:w-52">
+            <div class="xl:fixed">
                 <button 
                     @click="mobileNavOpen = true" 
                     class="xl:hidden fixed top-4 right 4 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto"
@@ -370,7 +370,7 @@
                     x-cloak
                     @click.away="mobileNavOpen = false">
                     
-                    <div class="absolute top-0 left-0 w-64 bg-white h-full shadow-2xl rounded-r-xl transform transition-all duration-300"
+                    <div class="absolute top-0 right-0 w-64 bg-white h-full shadow-2xl rounded-r-xl transform transition-all duration-300"
                         x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="-translate-x-full"
                         x-transition:enter-end="translate-x-0"
@@ -381,10 +381,9 @@
                         <div class="p-4 relative h-full overflow-y-auto">
                             <!-- Header -->
                             <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
-                                <div class="flex items-center gap-2 text-indigo-600">
-                                    <i class="fas fa-map-marker-alt text-lg"></i>
-                                    <span class="font-bold text-lg">Navigation</span>
-                                </div>
+                                <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                    Navigation
+                                </h3>
                                 <button @click="mobileNavOpen = false" 
                                         class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
                                         aria-label="Close menu">
@@ -397,10 +396,8 @@
                                 @php
                                     $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                                 @endphp
-                                <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" 
-                                class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-indigo-50 rounded-xl transition-all duration-200 cursor-pointer">
-                                    <i class="fas fa-arrow-up text-indigo-500 w-5 text-center"></i>
-                                    <span>Scroll to top</span>
+                                <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                                    Scroll to top
                                 </a>
                                 
                                 @foreach ($months as $monthKey => $weeksInMonth)
@@ -421,12 +418,9 @@
                                         }
                                     @endphp
                                     <a href="#{{ Str::slug($monthName) }}" 
-                                    class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-purple-600 group">
-                                        <div class="flex items-center gap-3">
-                                            <i class="fas fa-calendar-day text-purple-500 w-5 text-center"></i>
-                                            <span>{{ $monthName }}</span>
-                                        </div>
-                                        <span class="text-sm text-gray-400 group-hover:text-purple-400">
+                                    class="flex items-center justify-between px-3 py-1 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-blue-600 group">
+                                        <span>{{ $monthName }}</span>
+                                        <span class="text-sm text-gray-400 group-hover:text-blue-400">
                                             {{ count($weeksInMonth) }} weeks
                                         </span>
                                     </a>
@@ -437,14 +431,14 @@
                 </div>
                 <div class="hidden lg:block">
                     <div class="bg-white rounded-xl shadow-lg p-4">
-                        <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                        <h3 class="font-bold text-gray-800 mt-5 pb-4 mb-4 border-b border-gray-100"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
                             Navigation
                         </h3>
                         <nav class="">
                             @php
                                 $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                             @endphp
-                            <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
                                 Scroll to top
                             </a>
                             @foreach ($months as $monthKey => $weeksInMonth)
@@ -464,8 +458,12 @@
                                         $monthName = "Month $monthKey";
                                     }
                                 @endphp
-                                <a href="#{{ Str::slug($monthName) }}" class="flex items-center justify-between px-3 py-1 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 group">
+                                <a href="#{{ Str::slug($monthName) }}" 
+                                class="flex items-center justify-between px-3 py-1 gap-2 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-blue-600 group">
                                     <span>{{ $monthName }}</span>
+                                    <span class="text-sm text-gray-400 group-hover:text-blue-400">
+                                        {{ count($weeksInMonth) }} weeks
+                                    </span>
                                 </a>
                             @endforeach
                         </nav>

@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
         
-        <title>Endurance</title>
+        <title>{{ config('app.name') }}</title>
 
         <tallstackui:script />         
         @livewireStyles 
@@ -17,7 +17,7 @@
 
     <body class="h-full">
         @auth
-            <nav class="top-0 w-full bg-white shadow-sm z-10" x-data="{ isMobileMenuOpen: false }">
+            <nav class="top-0 w-full " x-data="{ isMobileMenuOpen: false }">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <!-- Left menu -->
@@ -114,10 +114,7 @@
                                 
                                     <!-- Header with close button -->
                                     <div class="flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100">
-                                        <div class="flex items-center gap-2 text-indigo-600">
-                                            <i class="fas fa-running text-lg"></i>
-                                            <span class="font-bold text-lg">Menu</span>
-                                        </div>
+                                        <span class="font-bold text-lg">Menu</span>                                        
                                         <button @click="isMobileMenuOpen = false" 
                                                 class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
                                                 aria-label="Close menu">
@@ -127,8 +124,8 @@
 
                                     <!-- Main menu -->
                                     <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-indigo-50 rounded-xl transition-all duration-200">
-                                            <i class="fas fa-house text-indigo-500 w-5 text-center"></i>
+                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-teal-50 rounded-xl transition-all duration-200">
+                                            <i class="fas fa-house text-teal-500 w-5 text-center"></i>
                                             <span>Home</span>
                                         </a>
                                         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
@@ -161,7 +158,7 @@
 
                                     <!-- User menu -->
                                     <div class="mt-auto border-t border-gray-100">
-                                        <div class="px-4 py-4 space-y-2">
+                                        <div class="px-4 py-4 space-y-1">
                                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-all duration-200">
                                                 <i class="fas fa-user text-yellow-500 w-5 text-center"></i>
                                                 <span>Profile</span>
@@ -196,45 +193,24 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-gray-100 mt-auto">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="flex flex-col md:flex-row justify-between gap-8">
-                    <!-- Brand Section -->
-                    <div class="space-y-2 max-w-xs">
-                        <span class="text-gray-900 font-medium tracking-tight">Endurance</span>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Training plan creation and tracking solution
-                        </p>
+        <footer class="bg-white border-t border-gray-100 mt-auto py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <!-- Brand and copyright in one section -->
+                    <div class="flex items-center gap-2 text-gray-400 text-xs">
+                        <span class="text-gray-700 font-medium">{{ config('app.name') }}</span>
+                        <span>•</span>
+                        <span>© {{ date('Y') }} All rights reserved</span>
                     </div>
-                    <img src="{{ asset('storage/images/powered.png') }}" alt="Powered by" class="h-7 mt-4">
-        
-                    <!-- Links Container -->
-                    <div class="flex flex-col sm:flex-row gap-12">
-                        <!-- Legal Links -->
-                        <div class="space-y-3">
-                            <h5 class="text-gray-500 text-sm font-medium">Legal</h5>
-                            <ul class="space-y-2.5">
-                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Terms of Use</a></li>
-                                <li><a href="#" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Privacy Policy</a></li>
-                            </ul>
-                        </div>
-        
-                        <!-- Support Links -->
-                        <div class="space-y-3">
-                            <h5 class="text-gray-500 text-sm font-medium">Support</h5>
-                            <ul class="space-y-2.5">
-                                <li><a href="{{ route('contact.show') }}" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Technical Support</a></li>
-                                <li><a href="{{ route('help') }}" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">Documentation</a></li>
-                            </ul>
-                        </div>
+                    
+                    <!-- Powered by image -->
+                    <img src="{{ asset('storage/images/powered.png') }}" alt="Powered by" class="h-5">
+                    
+                    <!-- Links all in one row -->
+                    <div class="flex items-center gap-4 text-xs">
+                        <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors">Terms</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors">Privacy</a>
                     </div>
-                </div>
-        
-                <!-- Copyright -->
-                <div class="border-t border-gray-100 mt-12 pt-6">
-                    <p class="text-gray-400 text-xs text-center">
-                        © {{ date('Y') }} Endurance. All rights reserved
-                    </p>
                 </div>
             </div>
         </footer>

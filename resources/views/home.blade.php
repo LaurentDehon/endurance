@@ -2,13 +2,13 @@
 @section('content')
     <div class="flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl p-8 max-w-5xl w-full mx-auto">
-            <h2 class="text-2xl text-center font-bold text-gray-800 mb-6">Bienvenue sur Endurance</h2>
+            <h2 class="text-2xl text-center font-bold text-gray-800 mb-6">Bienvenue sur Zone 2</h2>
             <p class="text-gray-600 mb-4">
-                Merci de participer à la phase de bêta-test de Endurance.  
+                Merci de participer à la phase de bêta-test de Zone 2.  
                 Votre rôle est essentiel pour nous aider à améliorer l’expérience utilisateur grâce à vos retours et suggestions.
             </p>
             <p class="text-gray-600 mb-4">
-                Endurance est conçu comme un outil permettant de créer des plans d’entraînement personnalisés.<br>
+                Zone 2 est conçu comme un outil permettant de créer des plans d’entraînement personnalisés.<br>
                 Beaucoup de coureurs utilisent des fichiers Excel pour planifier leurs entraînements.  
                 Notre solution propose une alternative automatisée et interactive avec des fonctionnalités avancées.  
                 Il ne s’agit donc pas seulement d’un générateur de plans, mais plutôt d’un journal d’entraînement intelligent.
@@ -23,7 +23,7 @@
                 <h3 class="font-semibold text-gray-800 mb-2">Pourquoi une approche par blocs ?</h3>
                 <p class="text-gray-600 mb-4">
                     Un entraînement efficace ne se limite pas à une simple accumulation de séances. Il repose sur une périodisation structurée, où chaque semaine joue un rôle spécifique dans votre progression.  
-                    Endurance s’inspire de cette méthode et vous permet de :
+                    Zone 2 s’inspire de cette méthode et vous permet de :
                 </p>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2">
                     <li>Planifier vos semaines d’entraînement en fonction d’un objectif précis (développement, maintien, récupération…).</li>

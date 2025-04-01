@@ -32,7 +32,7 @@ class ResetPasswordNotification extends Notification
                     ->line("This password reset link will expire in $expires minutes.")
                     ->line('If you did not request a password reset, no further action is required.')
                     ->line('Thank you for using our application!')
-                    ->salutation(new HtmlString('Regards,<br>The Endurance team'));
+                    ->salutation(new HtmlString('Regards,<br>The Zone 2 team'));
     }
 
     protected function resetUrl(mixed $notifiable): string
