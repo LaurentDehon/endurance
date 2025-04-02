@@ -3,7 +3,102 @@
     use Carbon\Carbon;
 ?>    
 
-<div class="mx-auto p-2 sm:p-4">
+<div class="mx-auto p-2 sm:p-4 overflow-y-scroll">
+    <!-- Mobile Navigation Button - Placed inside the root div but with fixed positioning -->
+    <div 
+        x-data="{ mobileNavOpen: false }" 
+        class="xl:hidden" 
+        style="position: fixed; top: 12px; right: 12px; z-index: 9999;">
+        
+        <button 
+            @click="mobileNavOpen = true" 
+            class="w-11 h-11 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+        
+        <!-- Mobile Menu Overlay -->
+        <div 
+            x-show="mobileNavOpen" 
+            @click.away="mobileNavOpen = false" 
+            class="fixed inset-0 bg-black/50 z-40" 
+            style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;"
+            x-cloak>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div 
+            x-show="mobileNavOpen"
+            class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            @click.away="mobileNavOpen = false">
+            
+            <div class="absolute top-0 right-0 w-64 bg-white h-full shadow-2xl rounded-l-xl transform transition-all duration-300"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="-translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in duration-250"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="-translate-x-full">
+                
+                <div class="p-4 relative h-full overflow-y-auto">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                            Navigation
+                        </h3>
+                        <button @click="mobileNavOpen = false" 
+                                class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
+                                aria-label="Close menu">
+                            <i class="fas fa-times fa-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="space-y-1">
+                        @php
+                            $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
+                        @endphp
+                        <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
+                            Scroll to top
+                        </a>
+                        
+                        @foreach ($months as $monthKey => $weeksInMonth)
+                            @php
+                                if(substr($monthKey, 0, 4) != $year) {
+                                    continue;
+                                }
+                                
+                                try {
+                                    // Parse the month key to get the correct month
+                                    list($yearPart, $monthPart) = explode('-', $monthKey);
+                                    
+                                    // Get correct month name using PHP's date function directly
+                                    $monthNumber = (int)$monthPart;
+                                    $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+                                } catch (\Exception $e) {
+                                    $monthName = "Month $monthKey";
+                                }
+                            @endphp
+                            <a href="#{{ Str::slug($monthName) }}" 
+                            class="flex items-center justify-between px-3 py-1 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-blue-600 group">
+                                <span>{{ $monthName }}</span>
+                                <span class="text-sm text-gray-400 group-hover:text-blue-400">
+                                    {{ count($weeksInMonth) }} weeks
+                                </span>
+                            </a>
+                        @endforeach
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="flex flex-col xl:flex-row gap-4 lg:gap-8">
         <!-- Main content -->
         <div class="flex-1">
@@ -350,85 +445,9 @@
         </div>
 
         <!-- Side navigation -->
-        <div x-data="{ mobileNavOpen: false }" class="xl:w-52">
+        <div class="xl:w-52">
             <div class="xl:fixed">
-                <button 
-                    @click="mobileNavOpen = true" 
-                    class="xl:hidden fixed top-4 right 4 z-50 w-12 h-12 bg-blue-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 ml-auto"
-                    style="right: calc(0.5rem + (100vw - 100%));">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
-                <div x-show="mobileNavOpen" @click.away="mobileNavOpen = false" class="xl:hidden fixed inset-0 bg-black/50 z-40" x-cloak></div>
-                <div class="xl:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
-                    x-show="mobileNavOpen"
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    x-cloak
-                    @click.away="mobileNavOpen = false">
-                    
-                    <div class="absolute top-0 right-0 w-64 bg-white h-full shadow-2xl rounded-l-xl transform transition-all duration-300"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="-translate-x-full"
-                        x-transition:enter-end="translate-x-0"
-                        x-transition:leave="transition ease-in duration-250"
-                        x-transition:leave-start="translate-x-0"
-                        x-transition:leave-end="-translate-x-full">
-                        
-                        <div class="p-4 relative h-full overflow-y-auto">
-                            <!-- Header -->
-                            <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
-                                <h3 class="font-bold text-gray-800 mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
-                                    Navigation
-                                </h3>
-                                <button @click="mobileNavOpen = false" 
-                                        class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
-                                        aria-label="Close menu">
-                                    <i class="fas fa-times fa-lg"></i>
-                                </button>
-                            </div>
-
-                            <!-- Navigation -->
-                            <nav class="space-y-1">
-                                @php
-                                    $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
-                                @endphp
-                                <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600 cursor-pointer">
-                                    Scroll to top
-                                </a>
-                                
-                                @foreach ($months as $monthKey => $weeksInMonth)
-                                    @php
-                                        if(substr($monthKey, 0, 4) != $year) {
-                                            continue;
-                                        }
-                                        
-                                        try {
-                                            // Parse the month key to get the correct month
-                                            list($yearPart, $monthPart) = explode('-', $monthKey);
-                                            
-                                            // Get correct month name using PHP's date function directly
-                                            $monthNumber = (int)$monthPart;
-                                            $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
-                                        } catch (\Exception $e) {
-                                            $monthName = "Month $monthKey";
-                                        }
-                                    @endphp
-                                    <a href="#{{ Str::slug($monthName) }}" 
-                                    class="flex items-center justify-between px-3 py-1 rounded-xl hover:bg-purple-50 transition-all duration-200 text-gray-600 hover:text-blue-600 group">
-                                        <span>{{ $monthName }}</span>
-                                        <span class="text-sm text-gray-400 group-hover:text-blue-400">
-                                            {{ count($weeksInMonth) }} weeks
-                                        </span>
-                                    </a>
-                                @endforeach
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+                <!-- Desktop sidebar only -->
                 <div class="hidden lg:block">
                     <div class="bg-white rounded-xl shadow-lg p-4">
                         <h3 class="font-bold text-gray-800 mt-5 pb-4 mb-4 border-b border-gray-100"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>

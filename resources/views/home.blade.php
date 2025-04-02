@@ -8,7 +8,7 @@
         <!-- Button to open the welcome modal -->
         <button id="openWelcomeModal" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg shadow-lg text-xl">
             Bienvenue sur Zone 2<br>
-            <div class="text-xs mt-1">cliquez ici</div>
+            <div class="text-xs mt-1">cliquez ici pour commencer</div>
         </button>
         
         <!-- Welcome Modal (hidden by default) -->
