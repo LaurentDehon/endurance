@@ -13,6 +13,31 @@
         <tallstackui:script />         
         @livewireStyles 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            body.mobile-menu-open {
+                overflow: hidden;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .active-menu-item {
+                position: relative;
+            }
+            
+            .active-menu-item::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0.05);
+                pointer-events: none;
+                border-radius: 0.5rem;
+            }
+        </style>
     </head>
 
     <body class="h-full flex flex-col">
@@ -95,9 +120,9 @@
                                 x-transition:leave-start="opacity-100"
                                 x-transition:leave-end="opacity-0"
                                 x-cloak
-                                @click.away="isMobileMenuOpen = false">
+                                @click.self="isMobileMenuOpen = false">
 
-                                <div class="absolute top-0 left-0 w-64 bg-white h-full shadow-2xl rounded-r-xl flex flex-col transform transition-all duration-300"
+                                <div class="absolute top-0 left-0 w-48 bg-white h-full shadow-2xl rounded-r-xl overflow-hidden flex flex-col transform transition-all duration-300"
                                     x-transition:enter="transition ease-out duration-300"
                                     x-transition:enter-start="-translate-x-full"
                                     x-transition:enter-end="translate-x-0"
@@ -106,7 +131,7 @@
                                     x-transition:leave-end="-translate-x-full">
                                 
                                     <!-- Header with close button -->
-                                    <div class="flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100">
+                                    <div class="flex-shrink-0 flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100">
                                         <span class="font-bold text-lg">Menu</span>                                        
                                         <button @click="isMobileMenuOpen = false" 
                                                 class="p-2.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors"
@@ -116,49 +141,52 @@
                                     </div>
 
                                     <!-- Main menu -->
-                                    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                                        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('home') ? 'border-l-4 border-teal-500 text-teal-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Home
-                                        </a>
-                                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'border-l-4 border-blue-500 text-blue-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Dashboard
-                                        </a>
-                                        <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('calendar') ? 'border-l-4 border-purple-500 text-purple-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Calendar
-                                        </a>
-                                        <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('activities') ? 'border-l-4 border-green-500 text-green-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Activities
-                                        </a>
-                                        @if (auth()->user()->is_admin)
-                                        <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('admin') ? 'border-l-4 border-red-500 text-red-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Admin
-                                        </a>
-                                        @endif
-                                        <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('help') ? 'border-l-4 border-orange-500 text-orange-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Help
-                                        </a>
-                                        <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('contact.show') ? 'border-l-4 border-pink-500 text-pink-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                            Contact
-                                        </a>
-                                    </nav>
-
-                                    <!-- User menu -->
-                                    <div class="mt-auto border-t border-gray-100">
-                                        <div class="px-4 py-4 space-y-1">
-                                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('profile.edit') ? 'border-l-4 border-yellow-500 text-yellow-700 pl-5' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
-                                                Profile
+                                    <nav class="flex-1 flex flex-col h-full justify-between overflow-y-auto">
+                                        <!-- Main navigation links -->
+                                        <div class="space-y-1 px-4 py-6">
+                                            <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('home') ? 'border-l-4 border-teal-500 text-teal-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Home
                                             </a>
-                                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-gray-300 hover:pl-5">
-                                                Settings
+                                            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'border-l-4 border-blue-500 text-blue-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Dashboard
                                             </a>
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-red-300 hover:pl-5">
-                                                    Logout
-                                                </button>
-                                            </form>
+                                            <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('calendar') ? 'border-l-4 border-purple-500 text-purple-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Calendar
+                                            </a>
+                                            <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('activities') ? 'border-l-4 border-green-500 text-green-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Activities
+                                            </a>
+                                            @if (auth()->user()->is_admin)
+                                            <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('admin') ? 'border-l-4 border-red-500 text-red-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Admin
+                                            </a>
+                                            @endif
+                                            <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('help') ? 'border-l-4 border-orange-500 text-orange-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Help
+                                            </a>
+                                            <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('contact.show') ? 'border-l-4 border-pink-500 text-pink-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                Contact
+                                            </a>
                                         </div>
-                                    </div>
+                                        
+                                        <!-- User menu - pushed to bottom -->
+                                        <div class="border-t border-gray-100 mt-auto">
+                                            <div class="space-y-1 px-4 py-6">
+                                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 {{ request()->routeIs('profile.edit') ? 'border-l-4 border-yellow-500 text-yellow-700 pl-5 active-menu-item' : 'hover:border-l-4 hover:border-gray-300 hover:pl-5' }}">
+                                                    Profile
+                                                </a>
+                                                <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-gray-300 hover:pl-5">
+                                                    Settings
+                                                </a>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg transition-all duration-200 hover:border-l-4 hover:border-red-300 hover:pl-5">
+                                                        Logout
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </nav>
                                 </div>
                             </div>              
                         </div>
@@ -255,4 +283,30 @@
             });
         }
     }
+
+    // Toggle body class when mobile menu opens/closes
+    document.addEventListener('DOMContentLoaded', function() {
+        const body = document.body;
+        const menuButton = document.querySelector('.lg\\:hidden.p-2.rounded-md');
+        const closeButton = document.querySelector('[aria-label="Close menu"]');
+        const mobileMenu = document.querySelector('.lg\\:hidden.fixed.inset-0');
+        
+        if (menuButton && closeButton && mobileMenu) {
+            menuButton.addEventListener('click', function() {
+                body.classList.add('mobile-menu-open');
+            });
+            
+            closeButton.addEventListener('click', function() {
+                body.classList.remove('mobile-menu-open');
+            });
+            
+            // Handle click-away on the overlay (outside the menu)
+            mobileMenu.addEventListener('click', function(e) {
+                // Only trigger if clicking directly on the backdrop (not on the menu itself)
+                if (e.target === mobileMenu) {
+                    body.classList.remove('mobile-menu-open');
+                }
+            });
+        }
+    });
 </script>
