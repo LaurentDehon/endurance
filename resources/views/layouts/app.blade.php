@@ -13,8 +13,25 @@
         <tallstackui:script />         
         @livewireStyles 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="{{ asset('js/layout-heights.js') }}"></script>
 
         <style>
+            /* Set default values to prevent layout shift */
+            :root {
+                --nav-height: 64px;
+                --footer-height: 57px;
+            }
+            
+            /* Hide content until layout heights are calculated */
+            body:not(.layout-ready) .layout-dependent {
+                opacity: 0;
+            }
+            
+            body.layout-ready .layout-dependent {
+                opacity: 1;
+                transition: opacity 0.15s ease-in;
+            }
+            
             body.mobile-menu-open {
                 overflow: hidden;
                 position: fixed;
@@ -196,7 +213,7 @@
         @endauth
 
         <!-- Main content -->
-        <main class="flex-grow">
+        <main class="flex-grow layout-dependent">
             <div class="h-full">
                 <!-- Page Content -->
                 @yield('content')
@@ -308,13 +325,5 @@
                 }
             });
         }
-
-        // Calculate the height of the navbar and footer
-        const navbar = document.querySelector('nav') || { offsetHeight: 0 };
-        const footer = document.querySelector('footer') || { offsetHeight: 0 };
-        
-        // Set the CSS variables
-        document.documentElement.style.setProperty('--nav-height', `${navbar.offsetHeight}px`);
-        document.documentElement.style.setProperty('--footer-height', `${footer.offsetHeight}px`);
     });
 </script>
