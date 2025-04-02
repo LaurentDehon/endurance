@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="flex flex-col items-center justify-center h-full">
+    <div class="flex flex-col items-center justify-center min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))]">
         <!-- Logo -->
         {{-- <div class="mb-8">
             <img src="{{ asset('storage/images/logo_notext_noborder.png') }}" alt="Zone 2 Logo" class="h-44 w-auto">
@@ -100,6 +100,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Calculate the height of the navbar and footer
+            const navbar = document.querySelector('nav') || { offsetHeight: 0 };
+            const footer = document.querySelector('footer') || { offsetHeight: 0 };
+            
+            // Set the CSS variables
+            document.documentElement.style.setProperty('--nav-height', `${navbar.offsetHeight}px`);
+            document.documentElement.style.setProperty('--footer-height', `${footer.offsetHeight}px`);
+            
             const modal = document.getElementById('welcomeModal');
             const openButton = document.getElementById('openWelcomeModal');
             const closeButton = document.getElementById('closeWelcomeModal');
