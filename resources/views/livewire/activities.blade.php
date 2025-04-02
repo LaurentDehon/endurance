@@ -36,31 +36,31 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <!-- En-têtes standards -->
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="w-1/4 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('name')">
                             Name
                             @include('components.sort-icon', ['field' => 'name'])
                         </th>
                         
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('start_date')">
                             Date
                             @include('components.sort-icon', ['field' => 'start_date'])
                         </th>
 
-                        <th class="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden sm:table-cell px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('distance')">
                             Distance
                             @include('components.sort-icon', ['field' => 'distance'])
                         </th>
 
-                        <th class="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden sm:table-cell px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('moving_time')">
                             Time
                             @include('components.sort-icon', ['field' => 'moving_time'])
                         </th>
 
-                        <th class="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" 
+                        <th class="hidden md:table-cell px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('total_elevation_gain')">
                             Elevation
                             @include('components.sort-icon', ['field' => 'total_elevation_gain'])
@@ -74,33 +74,33 @@
                     @forelse($activities as $activity)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <!-- Nom d'activité standard -->
-                            <td class="px-4 py-4 truncate" title="{{ $activity->name }}">
+                            <td class="w-1/4 px-4 py-4 truncate" title="{{ $activity->name }}">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ Str::limit($activity->name, 25) }}
                                 </div>
                             </td>
 
                             <!-- Date format responsive -->
-                            <td class="px-4 py-4 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
                                 <span class="block text-sm md:hidden">{{ $activity->start_date->format('d/m/y') }}</span>
                                 <span class="hidden md:block text-sm">{{ $activity->start_date->format('d/m/Y H:i') }}</span>
                             </td>
 
                             <!-- Distance - hidden on smallest screens -->
-                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
+                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium">
                                     {{ number_format($activity->distance / 1000, 1) }}km
                                 </span>
                             </td>
 
-                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
+                            <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium">
                                     {{ formatTimeCompact($activity->moving_time) }}
                                 </span>
                             </td>
 
                             <!-- Elevation - hidden on small/medium screens -->
-                            <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap">
+                            <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium">
                                     {{ $activity->total_elevation_gain }}m
                                 </span>

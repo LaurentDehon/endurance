@@ -40,23 +40,23 @@
                             Email
                             @include('components.sort-icon', ['field' => 'email'])
                         </th>
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell cursor-pointer" 
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('activities_count')">
                             Activities
                             @include('components.sort-icon', ['field' => 'activities_count'])
                         </th>
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell cursor-pointer" 
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('trainings_count')">
                             Trainings
                             @include('components.sort-icon', ['field' => 'trainings_count'])
                         </th>
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
                             Verified
                         </th>
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
                             Admin
                         </th>
-                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hidden lg:table-cell" 
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer" 
                             wire:click="sortBy('last_login_at')">
                             Last Login
                             @include('components.sort-icon', ['field' => 'last_login_at'])
@@ -84,17 +84,17 @@
                             </td>
                             
                             <!-- Activities Count -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden lg:table-cell">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
                                 <div class="text-gray-900">{{ $user->activities_count ?? 0 }}</div>
                             </td>
                             
                             <!-- Trainings Count -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden lg:table-cell">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
                                 <div class="text-gray-900">{{ $user->trainings_count ?? 0 }}</div>
                             </td>
                             
                             <!-- Verified with better visual indicators -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
                                 @if($user->email_verified_at)
                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
@@ -113,7 +113,7 @@
                             </td>
                             
                             <!-- Admin -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
                                 @if($user->is_admin)
                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-purple-400" fill="currentColor" viewBox="0 0 8 8">
@@ -132,7 +132,7 @@
                             </td>
                             
                             <!-- Last Login -->
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm hidden lg:table-cell">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
                                 @if($user->last_login_at && $user->last_login_at != '')
                                     @php
                                         try {
