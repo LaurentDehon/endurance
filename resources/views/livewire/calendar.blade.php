@@ -7,8 +7,7 @@
     <!-- Mobile Navigation Button - Placed inside the root div but with fixed positioning -->
     <div 
         x-data="{ mobileNavOpen: false }" 
-        class="xl:hidden" 
-        style="position: fixed; top: 12px; right: 12px; z-index: 9999;">
+        class="xl:hidden fixed top-4 right-4 z-[9999]">
         
         <button 
             @click="mobileNavOpen = true" 
