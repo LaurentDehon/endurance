@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="mx-auto p-4 md:p-8 max-w-5xl">
+<div class="mx-auto p-4 md:p-8 max-w-5xl min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))]">
     <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 md:mb-8">Help - Training Calendar Guide</h1>
 
     <div class="space-y-3 md:space-y-4">    

@@ -308,5 +308,13 @@
                 }
             });
         }
+
+        // Calculate the height of the navbar and footer
+        const navbar = document.querySelector('nav') || { offsetHeight: 0 };
+        const footer = document.querySelector('footer') || { offsetHeight: 0 };
+        
+        // Set the CSS variables
+        document.documentElement.style.setProperty('--nav-height', `${navbar.offsetHeight}px`);
+        document.documentElement.style.setProperty('--footer-height', `${footer.offsetHeight}px`);
     });
 </script>

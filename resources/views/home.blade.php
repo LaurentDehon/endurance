@@ -12,7 +12,7 @@
         </button>
         
         <!-- Welcome Modal (hidden by default) -->
-        <div id="welcomeModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div id="welcomeModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-5xl w-full mx-auto max-h-[90vh] overflow-y-auto">
                 <h2 class="text-2xl text-center font-bold text-gray-800 mb-10">Bienvenue sur Zone 2</h2>
                 <p class="text-gray-600 mb-4">
@@ -99,15 +99,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Calculate the height of the navbar and footer
-            const navbar = document.querySelector('nav') || { offsetHeight: 0 };
-            const footer = document.querySelector('footer') || { offsetHeight: 0 };
-            
-            // Set the CSS variables
-            document.documentElement.style.setProperty('--nav-height', `${navbar.offsetHeight}px`);
-            document.documentElement.style.setProperty('--footer-height', `${footer.offsetHeight}px`);
-            
+        document.addEventListener('DOMContentLoaded', function() {            
             const modal = document.getElementById('welcomeModal');
             const openButton = document.getElementById('openWelcomeModal');
             const closeButton = document.getElementById('closeWelcomeModal');
@@ -115,11 +107,13 @@
             // Open modal function
             function openModal() {
                 modal.classList.remove('hidden');
+                modal.classList.add('flex');
             }
             
             // Close modal function
             function closeModal() {
                 modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }
             
             // Add event listeners
