@@ -364,7 +364,7 @@
                                             ondragover="onDragOver(event)" 
                                             ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
                                             ondragleave="onDragLeave(event)" 
-                                            wire:click="$dispatch('openModal', { component: 'training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})" class="relative block p-2 rounded-lg border min-h-24 cursor-pointer
+                                            wire:click.stop="$dispatch('openModal', { component: 'training-modal', arguments: { date: '{{ $dayDate->format('Y-m-d') }}' }})" class="relative block p-2 rounded-lg border min-h-24 cursor-pointer
                                                     {{ $day['is_today'] ? 'border-2 border-blue-300 bg-blue-50' : 'hover:border-blue-200' }}">
                                             <!-- Day header -->
                                             <div class="absolute top-2 left-2">
