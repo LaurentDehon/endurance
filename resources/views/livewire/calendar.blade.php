@@ -161,7 +161,7 @@
                         </div>
                         <div class="flex gap-2">
                             <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-orange-100 rounded-xl text-orange-600 hover:bg-orange-200 transition-colors">
-                                <i class="fas fa-sync text-orange-600 text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
+                                <i class="fab fa-strava text-orange-600 text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
                                 <div wire:loading wire:target="startSync" class="absolute -bottom-12 right-0 bg-orange-100 p-3 rounded shadow-lg text-sm whitespace-nowrap">
                                     Synchronizing...
                                 </div>

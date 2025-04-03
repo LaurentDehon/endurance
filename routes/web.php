@@ -3,6 +3,7 @@
 require __DIR__.'/auth.php';
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ThemeController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StravaMiddleware;
 use App\Http\Controllers\StravaController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Route pour changer de thème
+    Route::post('/theme/switch', [ThemeController::class, 'switchTheme'])->name('theme.switch');
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [MainController::class, 'index'])->middleware(StravaMiddleware::class)->name('dashboard');
     Route::get('/calendar/{year?}', function ($year = null) { return view('calendar', ['year' => $year]); })->middleware(StravaMiddleware::class)->name('calendar');

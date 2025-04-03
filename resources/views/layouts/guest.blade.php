@@ -16,9 +16,11 @@
         <title>{{ config('app.name') }}</title>
     </head>
 
-    <body class="bg-gray-50 test-bg">
-        <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-0">
-            @yield('content')
-        </div>
+    <body>
+        <x-themed.background class="min-h-screen">
+            <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-0">
+                @yield('content')
+            </div>
+        </x-themed.background>
     </body>
 </html>

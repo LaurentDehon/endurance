@@ -23,7 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'strava_token',
         'strava_refresh_token',
         'strava_expires_at',
-        'email_verified_at'
+        'email_verified_at',
+        'theme_preference'
     ];
 
     protected $hidden = [

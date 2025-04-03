@@ -1,6 +1,35 @@
 @extends('layouts.app')
+
 @section('content')
-    <div class="flex flex-col items-center justify-center min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))]">
-        <img src="https://www.creativefabrica.com/wp-content/uploads/2022/03/09/under-construction-road-sign-Graphics-26776427-1.jpg" alt="Dashboard Logo" class="w-1/2">
+<style>
+    html, body {
+        height: 100%;
+        overflow-y: hidden !important;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .dashboard-content-container {
+        height: calc(100vh - var(--nav-height) - var(--footer-height));
+        overflow-y: auto;
+        max-height: calc(100vh - var(--nav-height) - var(--footer-height));
+        scrollbar-width: none; /* Masque la scrollbar sur Firefox */
+        -ms-overflow-style: none; /* Masque la scrollbar sur IE/Edge */
+    }
+    
+    .dashboard-content-container::-webkit-scrollbar {
+        width: 0;
+        display: none; /* Masque la scrollbar sur Chrome, Safari et Opera */
+    }
+</style>
+
+<div class="dashboard-content-container">
+    <div class="container mx-auto px-4 py-12">
+        <div class="{{ themeClass('card-bg', 'bg-white bg-opacity-10') }} backdrop-blur-lg rounded-xl p-6 shadow-xl border {{ themeClass('card-border', 'border-white border-opacity-20') }}">
+            <div class="flex flex-col items-center justify-center py-8">
+                <img src="https://pngimg.com/uploads/under_construction/under_construction_PNG29.png" alt="Dashboard Logo" class="w-1/3 md:w-1/4">
+            </div>
+        </div>
     </div>
+</div>
 @endsection
