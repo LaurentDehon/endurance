@@ -8,9 +8,10 @@ use App\Http\Middleware\StravaMiddleware;
 use App\Http\Controllers\StravaController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', function() { return view('home'); })->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [MainController::class, 'index'])->middleware(StravaMiddleware::class)->name('dashboard');
     Route::get('/calendar/{year?}', function ($year = null) { return view('calendar', ['year' => $year]); })->middleware(StravaMiddleware::class)->name('calendar');
     Route::redirect('/calendar', '/calendar/'.now()->year);
