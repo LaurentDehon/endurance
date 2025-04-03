@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))]">
     <!-- Header optimisé mobile -->
     <div class="flex justify-between items-start mb-6 gap-4">        
         <div class="flex gap-3 w-full ml-auto">
