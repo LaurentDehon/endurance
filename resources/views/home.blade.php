@@ -32,7 +32,7 @@
                     <h1 class="text-4xl md:text-5xl font-bold mb-2 {{ themeClass('text-primary', 'text-white') }}">Welcome, {{ Auth::user()->name }}</h1>
                     <p class="text-xl {{ themeClass('text-secondary', 'text-blue-200') }}">Your journey continues today. Let's make it count.</p>
                 </div>
-                <button id="openWelcomeModal" class="{{ themeClass('button-bg', 'bg-blue-500 hover:bg-blue-600') }} {{ themeClass('button-text', 'text-white') }} p-3 px-6 rounded-full transition-colors shadow-lg flex items-center justify-center">
+                <button id="openWelcomeModal" class="{{ themeClass('accent-1', 'bg-blue-500 hover:bg-blue-600') }} {{ themeClass('button-text', 'text-white') }} p-3 px-6 rounded-full transition-colors shadow-lg flex items-center justify-center">
                     <i class="fas fa-info text-lg"></i>
                 </button>
             </div>
