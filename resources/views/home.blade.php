@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-12">
         <!-- Welcome Section -->
         <div class="welcome-section mb-10 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="welcomeSection">
-            <div class="flex justify-between items-center">
+            <div class="flex items-center gap-28">
                 <div>
                     <h1 class="text-4xl md:text-5xl font-bold mb-2 {{ themeClass('text-1') }}">Welcome, {{ Auth::user()->name }}</h1>
                     <p class="text-xl {{ themeClass('text-2') }}">Your journey continues today. Let's make it count.</p>

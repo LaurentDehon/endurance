@@ -79,23 +79,23 @@
                                         x-transition:leave="transition ease-in duration-150"
                                         x-transition:leave-start="transform opacity-100 scale-100"
                                         x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="absolute right-0 mt-3 w-60 rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-white/95 backdrop-blur-sm">
-                                        <div class="py-2 divide-y divide-gray-100">
+                                        class="absolute right-0 mt-3 w-60 rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 {{ themeClass('card') }} backdrop-blur-sm">
+                                        <div class="py-2 divide-y {{ themeClass('divider') }}">
                                             <div class="pb-1 px-3">
-                                                <p class="text-xs text-gray-500 font-medium">APPEARANCE</p>
+                                                <p class="text-xs {{ themeClass('text-2') }} font-medium">APPEARANCE</p>
                                             </div>
                                             <form method="POST" action="{{ route('theme.switch') }}" id="themeForm" class="py-1">
                                                 @csrf
                                                 <div class="space-y-0.5">
                                                 @foreach(config('themes.themes', []) as $key => $themeOption)
                                                     <button type="submit" name="theme" value="{{ $key }}" 
-                                                        class="w-full text-left flex items-center px-4 py-2.5 text-sm {{ $themeName === $key ? 'bg-blue-50' : 'hover:bg-gray-200' }} transition-colors">
-                                                        <span class="w-4 h-4 mr-3 rounded-full {{ $themeName === $key ? 'bg-gradient-to-br ' . themeClass('check-bg') .' ring-2 ' . themeClass('check-ring') . ' ring-opacity-30' : 'bg-gray-200' }} flex items-center justify-center">
+                                                        class="w-full text-left flex items-center px-4 py-2.5 text-sm {{ $themeName === $key ? themeClass('button') . ' bg-opacity-20' : themeClass('text-1') . ' hover:bg-white hover:bg-opacity-10' }} transition-colors">
+                                                        <span class="w-4 h-4 mr-3 rounded-full {{ $themeName === $key ? 'bg-gradient-to-br ' . themeClass('check-bg') .' ring-2 ' . themeClass('check-ring') . ' ring-opacity-30' : 'bg-opacity-20 bg-white' }} flex items-center justify-center">
                                                             @if($themeName === $key)
                                                             <i class="fas fa-check text-[10px] text-white"></i>
                                                             @endif
                                                         </span>
-                                                        <span class="{{ $themeName === $key ? 'font-medium ' . themeClass('text-3') : 'text-gray-700' }}">
+                                                        <span class="{{ $themeName === $key ? 'font-medium ' . themeClass('text-1') : themeClass('text-2') }}">
                                                             {{ $themeOption['name'] }}
                                                         </span>
                                                     </button>
@@ -122,24 +122,24 @@
                                         x-transition:leave="transition ease-in duration-150"
                                         x-transition:leave-start="transform opacity-100 scale-100"
                                         x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="absolute right-0 mt-3 w-auto rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-white/95 backdrop-blur-sm">
-                                        <div class="py-2 divide-y divide-gray-100">
+                                        class="absolute right-0 mt-3 w-auto rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 {{ themeClass('card') }} backdrop-blur-sm">
+                                        <div class="py-2 divide-y {{ themeClass('divider') }}">
                                             <div class="pb-1 px-3">
-                                                <p class="text-xs text-gray-500 font-medium">ACCOUNT</p>
+                                                <p class="text-xs {{ themeClass('text-2') }} font-medium">ACCOUNT</p>
                                             </div>
                                             <div class="pt-1">
-                                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors">
-                                                    <i class="fas fa-user-edit w-5 mr-3 text-gray-400"></i>
+                                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm {{ themeClass('text-1') }} hover:bg-white hover:bg-opacity-10 transition-colors">
+                                                    <i class="fas fa-user-edit w-5 mr-3 {{ themeClass('text-2') }}"></i>
                                                     <span>Profile</span>
                                                 </a>
-                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors">
-                                                    <i class="fas fa-cog w-5 mr-3 text-gray-400"></i>
+                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm {{ themeClass('text-1') }} hover:bg-white hover:bg-opacity-10 transition-colors">
+                                                    <i class="fas fa-cog w-5 mr-3 {{ themeClass('text-2') }}"></i>
                                                     <span>Settings</span>
                                                 </a>
                                                 <form method="POST" action="{{ route('logout') }}">
                                                     @csrf
-                                                    <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-200 transition-colors">
-                                                        <i class="fas fa-sign-out-alt w-5 mr-3 text-red-400"></i>
+                                                    <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm {{ themeClass('button-danger') }} bg-opacity-5 hover:bg-opacity-20 transition-colors">
+                                                        <i class="fas fa-sign-out-alt w-5 mr-3 {{ themeClass('text-2') }}"></i>
                                                         <span>Logout</span>
                                                     </button>
                                                 </form>

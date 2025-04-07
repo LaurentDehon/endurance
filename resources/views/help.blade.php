@@ -20,7 +20,7 @@
     </div>
 
     <!-- Navigation Pills -->
-    <div class="mb-8 pb-2 pt-1 px-2 {{ themeClass('card') }} rounded-lg border-b">
+    <div class="mb-8 pb-2 pt-1 px-2 {{ themeClass('card') }} rounded-lg border">
         <div class="flex flex-nowrap overflow-x-auto gap-2 md:gap-4 py-2 no-scrollbar justify-center">
             <a href="#overview" class="whitespace-nowrap px-4 py-2 {{ themeClass('button') }} rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-bullseye"></i> Overview
@@ -51,28 +51,28 @@
 
     <!-- Features Quick Access -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        <div class="feature-card {{ themeClass('card') }} backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card {{ themeClass('card') }} border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25">
                 <i class="fab fa-strava text-orange-400"></i>
             </div>
             <h3 class="text-sm font-medium {{ themeClass('text-1') }}">Strava Sync</h3>
         </div>
         
-        <div class="feature-card {{ themeClass('card') }} backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card {{ themeClass('card') }} border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25">
                 <i class="fas fa-calendar text-teal-400"></i>
             </div>
             <h3 class="text-sm font-medium {{ themeClass('text-1') }}">Weekly Planning</h3>
         </div>
         
-        <div class="feature-card {{ themeClass('card') }} backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card {{ themeClass('card') }} border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25">
                 <i class="fas fa-chart-line text-purple-400"></i>
             </div>
             <h3 class="text-sm font-medium {{ themeClass('text-1') }}">Performance Tracking</h3>
         </div>
         
-        <div class="feature-card {{ themeClass('card') }} backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card {{ themeClass('card') }} border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25">
                 <i class="fas fa-lightbulb text-blue-400"></i>
             </div>

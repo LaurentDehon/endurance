@@ -85,7 +85,7 @@
                 
                 <tbody>
                     @forelse($activities as $activity)
-                        <tr class="{{ $loop->even ? 'bg-white bg-opacity-10' : 'bg-black bg-opacity-10' }}">
+                        <tr class="{{ $loop->even ? themeClass('table-even') : themeClass('table-odd') }}">
                             <!-- Name -->
                             <td class="w-1/4 px-4 py-4 truncate" title="{{ $activity->name }}">
                                 <div class="text-sm font-medium {{ themeClass('text-2') }}">

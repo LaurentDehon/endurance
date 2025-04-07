@@ -79,7 +79,7 @@
                 
                 <tbody>
                     @forelse($users as $user)
-                        <tr class="{{ $loop->even ? 'bg-white bg-opacity-10' : 'bg-black bg-opacity-10' }}">
+                        <tr class="{{ $loop->even ? themeClass('table-even') : themeClass('table-odd') }}">
                             <!-- Name with tooltip for long names -->
                             <td class="px-4 py-4 max-w-[150px] sm:max-w-none truncate">
                                 <div class="text-sm font-medium {{ themeClass('text-2') }}" title="{{ $user->name }}">

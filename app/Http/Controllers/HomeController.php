@@ -42,6 +42,9 @@ class HomeController extends Controller
     {
         $nextTrainings = Training::where('user_id', $user->id)
             ->where('date', '>=', Carbon::today())
+            ->whereHas('type', function($query) {
+            $query->where('name', '!=', 'Race');
+            })
             ->orderBy('date', 'asc')
             ->with('type')
             ->take(2)
