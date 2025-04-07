@@ -18,6 +18,8 @@ return [
                 'text-3' => ['text-slate-300'],
                 'text-link' => ['text-cyan-400'],
                 'text-accent'=> ['text-amber-300'],
+                'border-accent'=> ['border-amber-300'],
+                'bg-accent'=> ['bg-amber-200'],
                 'check-bg'=> ['from-cyan-700', 'to-blue-500'],
                 'check-ring'=> ['ring-cyan-500'],
                 'divider'=> ['border-white', 'border-opacity-20'],
