@@ -3,21 +3,35 @@
         <div class="flex gap-4 w-full ml-auto">
             <!-- Search -->
             <div class="relative flex-1">
-                <input type="text" 
-                       wire:model.live.debounce.300ms="search" 
-                       placeholder="Search..." 
-                       class="w-full h-10 px-4 py-2 rounded-lg {{ themeClass('input') }} placeholder-gray-200 focus:ring-0 transition-all">
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search..." 
+                       class="w-full h-10 px-4 py-2 rounded-lg {{ themeClass('input') }} placeholder-gray-400 focus:ring-0 transition-all border-0 outline-none">
                 @if($search)
                     <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 {{ themeClass('text-2') }} transition-colors">✕</button>
                 @endif
             </div>
 
             <!-- Items per page -->
-            <select wire:model.live="perPage" class="w-28 px-4 py-2 rounded-lg">
-                <option value="10">10/page</option>
-                <option value="25">25/page</option>
-                <option value="50">50/page</option>
-            </select>
+            <div class="relative" x-data="{ open: false, selected: '{{ $perPage }}' }">
+                <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg {{ themeClass('input') }} focus:ring-0 transition-all">
+                    <span x-text="selected + '/page'"></span>
+                    <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': open}"></i>
+                </button>
+                
+                <div x-show="open" @click.away="open = false" x-cloak
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 mt-1 w-28 z-10 rounded-lg overflow-hidden shadow-lg {{ themeClass('input') }} backdrop-blur-sm">
+                    <div class="py-1">
+                        <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">10/page</button>
+                        <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">25/page</button>
+                        <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">50/page</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

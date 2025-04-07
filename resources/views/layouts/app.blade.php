@@ -65,24 +65,42 @@
                             <div class="flex items-center gap-4" x-data="{ open: false, themeOpen: false }">
                                 <!-- Theme selector -->
                                 <div class="relative mr-4">
-                                    <button @click="themeOpen = !themeOpen" class="flex items-center space-x-2 text-sm font-medium {{ themeClass('text-1') }} focus:outline-none">
+                                    <button @click="themeOpen = !themeOpen" class="flex items-center space-x-2 text-sm font-medium {{ themeClass('text-1') }} hover:opacity-80 transition-opacity duration-200 focus:outline-none">
                                         <i class="fas fa-palette text-xl"></i>
                                         <span class="hidden xl:block">{{ $theme['name'] }}</span>
+                                        <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': themeOpen}"></i>
                                     </button>
                                     
                                     <!-- Theme dropdown -->
                                     <div x-show="themeOpen" @click.away="themeOpen = false" x-cloak
-                                        class="absolute right-0 mt-2 w-48 rounded-md shadow-lg  focus:outline-none z-50">
-                                        <div>
-                                            <form method="POST" action="{{ route('theme.switch') }}" id="themeForm">
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="transform opacity-0 scale-95"
+                                        x-transition:enter-end="transform opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="transform opacity-100 scale-100"
+                                        x-transition:leave-end="transform opacity-0 scale-95"
+                                        class="absolute right-0 mt-3 w-60 rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-white/95 backdrop-blur-sm">
+                                        <div class="py-2 divide-y divide-gray-100">
+                                            <div class="pb-1 px-3">
+                                                <p class="text-xs text-gray-500 font-medium">APPEARANCE</p>
+                                            </div>
+                                            <form method="POST" action="{{ route('theme.switch') }}" id="themeForm" class="py-1">
                                                 @csrf
+                                                <div class="space-y-0.5">
                                                 @foreach(config('themes.themes', []) as $key => $themeOption)
                                                     <button type="submit" name="theme" value="{{ $key }}" 
-                                                        class="w-full text-left flex items-center px-4 py-2 text-sm {{ $themeName === $key ? 'bg-gray-100 '.themeClass('text-link') : 'text-gray-700 hover:bg-gray-200' }} transition-colors">
-                                                        <span class="w-3 h-3 mr-3 rounded-full" ></span>
-                                                        {{ $themeOption['name'] }}
+                                                        class="w-full text-left flex items-center px-4 py-2.5 text-sm {{ $themeName === $key ? 'bg-blue-50' : 'hover:bg-gray-200' }} transition-colors">
+                                                        <span class="w-4 h-4 mr-3 rounded-full {{ $themeName === $key ? 'bg-gradient-to-br ' . themeClass('check-bg') .' ring-2 ' . themeClass('check-ring') . ' ring-opacity-30' : 'bg-gray-200' }} flex items-center justify-center">
+                                                            @if($themeName === $key)
+                                                            <i class="fas fa-check text-[10px] text-white"></i>
+                                                            @endif
+                                                        </span>
+                                                        <span class="{{ $themeName === $key ? 'font-medium ' . themeClass('text-3') : 'text-gray-700' }}">
+                                                            {{ $themeOption['name'] }}
+                                                        </span>
                                                     </button>
                                                 @endforeach
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -90,27 +108,42 @@
                                 
                                 <!-- User menu -->
                                 <div class="hidden lg:block relative">
-                                    <button @click="open = !open" class="flex items-center space-x-2 text-sm font-medium {{ themeClass('text-1') }} focus:outline-none mr-8">
+                                    <button @click="open = !open" class="flex items-center space-x-2 text-sm font-medium {{ themeClass('text-1') }} hover:opacity-80 transition-opacity duration-200 focus:outline-none">
                                         <i class="fas fa-user-circle text-xl"></i>
                                         <span class="hidden xl:block">{{ Auth::user()->name }}</span>
+                                        <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': open}"></i>
                                     </button>
 
                                     <!-- User menu dropdown -->
                                     <div x-show="open" @click.away="open = false" x-cloak
-                                        class="absolute right-0 mt-2 w-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                                        <div class="py-1">
-                                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
-                                                Profile
-                                            </a>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
-                                                Settings
-                                            </a>
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
-                                                    Logout
-                                                </button>
-                                            </form>
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="transform opacity-0 scale-95"
+                                        x-transition:enter-end="transform opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="transform opacity-100 scale-100"
+                                        x-transition:leave-end="transform opacity-0 scale-95"
+                                        class="absolute right-0 mt-3 w-auto rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-white/95 backdrop-blur-sm">
+                                        <div class="py-2 divide-y divide-gray-100">
+                                            <div class="pb-1 px-3">
+                                                <p class="text-xs text-gray-500 font-medium">ACCOUNT</p>
+                                            </div>
+                                            <div class="pt-1">
+                                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors">
+                                                    <i class="fas fa-user-edit w-5 mr-3 text-gray-400"></i>
+                                                    <span>Profile</span>
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors">
+                                                    <i class="fas fa-cog w-5 mr-3 text-gray-400"></i>
+                                                    <span>Settings</span>
+                                                </a>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-200 transition-colors">
+                                                        <i class="fas fa-sign-out-alt w-5 mr-3 text-red-400"></i>
+                                                        <span>Logout</span>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -260,29 +293,79 @@
 </html>
 
 <script>
-    // Toggle body class when mobile menu opens/closes
-    document.addEventListener('DOMContentLoaded', function() {
-        const body = document.body;
-        const menuButton = document.querySelector('.lg\\:hidden.p-2.rounded-md');
-        const closeButton = document.querySelector('[aria-label="Close menu"]');
-        const mobileMenu = document.querySelector('.lg\\:hidden.fixed.inset-0');
+// Toggle body class when mobile menu opens/closes
+document.addEventListener('DOMContentLoaded', function() {
+    const body = document.body;
+    const menuButton = document.querySelector('.lg\\:hidden.p-2.rounded-md');
+    const closeButton = document.querySelector('[aria-label="Close menu"]');
+    const mobileMenu = document.querySelector('.lg\\:hidden.fixed.inset-0');
+    
+    if (menuButton && closeButton && mobileMenu) {
+        menuButton.addEventListener('click', function() {
+            body.classList.add('mobile-menu-open');
+        });
         
-        if (menuButton && closeButton && mobileMenu) {
-            menuButton.addEventListener('click', function() {
-                body.classList.add('mobile-menu-open');
-            });
-            
-            closeButton.addEventListener('click', function() {
+        closeButton.addEventListener('click', function() {
+            body.classList.remove('mobile-menu-open');
+        });
+        
+        // Handle click-away on the overlay (outside the menu)
+        mobileMenu.addEventListener('click', function(e) {
+            // Only trigger if clicking directly on the backdrop (not on the menu itself)
+            if (e.target === mobileMenu) {
                 body.classList.remove('mobile-menu-open');
-            });
-            
-            // Handle click-away on the overlay (outside the menu)
-            mobileMenu.addEventListener('click', function(e) {
-                // Only trigger if clicking directly on the backdrop (not on the menu itself)
-                if (e.target === mobileMenu) {
-                    body.classList.remove('mobile-menu-open');
-                }
-            });
-        }
-    });
+            }
+        });
+    }
+});
+
+function onDragStart(e, trainingId) {
+    const isCopy = e.ctrlKey;
+    // Store the training ID and copy status in the drag data
+    e.dataTransfer.setData('text/plain', JSON.stringify({
+        trainingId,
+        isCopy
+    }));
+    
+    // Apply visual feedback based on operation type (copy or move)
+    if(isCopy) {
+        e.currentTarget.classList.add('dragging-copy');
+    } else {
+        e.currentTarget.classList.add('opacity-50');
+    }
+}
+
+function onDragOver(e) {
+    e.preventDefault(); // Allow dropping
+    e.currentTarget.classList.add('bg-blue-50', 'border-blue-300'); // Visual feedback for potential drop
+}
+
+function onDragLeave(e) {
+    // Remove visual feedback when dragging leaves the drop target
+    e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
+}
+
+function onDrop(e, newDate) {
+    e.preventDefault();
+    // Extract data from the drag operation
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const trainingId = data.trainingId;
+    const isCopy = data.isCopy;
+    
+    // Remove visual feedback
+    e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
+    
+    // Dispatch appropriate Livewire event based on operation type
+    if(isCopy) {
+        Livewire.dispatch('training-copied', {
+            trainingId: parseInt(trainingId),
+            newDate: newDate
+        });
+    } else {
+        Livewire.dispatch('training-moved', {
+            trainingId: parseInt(trainingId),
+            newDate: newDate
+        });
+    }
+}
 </script>
