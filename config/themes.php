@@ -24,6 +24,7 @@ return [
                 'check-ring'=> ['ring-cyan-500'],
                 'divider'=> ['border-white', 'border-opacity-20'],
                 'nav'=> ['text-slate-100', 'border-cyan-500'],
+                'nav-hover'=> ['bg-cyan-800', 'bg-opacity-20', 'text-cyan-200'],
                 'nav-active'=> ['border-cyan-400', 'text-white'],
                 'button' => ['bg-cyan-600', 'hover:bg-cyan-700','text-white'],
                 'button-accent' => ['bg-amber-500', 'hover:bg-amber-600', 'text-white'],

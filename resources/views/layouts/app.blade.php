@@ -64,11 +64,11 @@
                             <!-- Right menu -->
                             <div class="flex items-center gap-4" x-data="{ open: false, themeOpen: false }">
                                 <!-- Theme selector -->
-                                <div class="relative mr-4">
+                                <div class="mr-20 relative lg:mr-2">
                                     <button @click="themeOpen = !themeOpen" class="flex items-center space-x-2 text-sm font-medium {{ themeClass('text-1') }} hover:opacity-80 transition-opacity duration-200 focus:outline-none">
                                         <i class="fas fa-palette text-xl"></i>
                                         <span class="hidden xl:block">{{ $theme['name'] }}</span>
-                                        <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': themeOpen}"></i>
+                                        <i class="hidden xl:block fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': themeOpen}"></i>
                                     </button>
                                     
                                     <!-- Theme dropdown -->
@@ -283,11 +283,13 @@
             </div>
         </div>
         
+        <livewire:custom-modal />
         <x-ts-toast />  
         <x-ts-dialog /> 
         <x-ts-tooltip />
         
-        @livewire('wire-elements-modal')
+        <!-- Nous utilisons notre système personnalisé à la place de wire-elements-modal -->
+        <!-- @livewire('wire-elements-modal') -->
         @livewireScripts  
     </body>
 </html>
