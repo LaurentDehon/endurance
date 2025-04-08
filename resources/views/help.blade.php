@@ -20,8 +20,8 @@
     </div>
 
     <!-- Navigation Pills -->
-    <div class="mb-8 pb-2 pt-1 px-2 {{ themeClass('card') }} rounded-lg border">
-        <div class="flex flex-nowrap overflow-x-auto gap-2 md:gap-4 py-2 no-scrollbar justify-center">
+    <div class="mb-8 p-3 {{ themeClass('card') }} rounded-lg border">
+        <div class="flex flex-wrap justify-center gap-2">
             <a href="#overview" class="whitespace-nowrap px-4 py-2 {{ themeClass('button') }} rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-bullseye"></i> Overview
             </a>
@@ -444,7 +444,7 @@
                 <h2 class="text-2xl md:text-3xl font-bold {{ themeClass('text-1') }}">Pro Tips</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                 <div class="bg-green-900 bg-opacity-20 border border-green-600 border-opacity-20 p-5 rounded-xl">
                     <h3 class="font-semibold {{ themeClass('text-1') }} mb-3">Best Practices</h3>
                     <ul class="space-y-2 {{ themeClass('text-1') }}">
@@ -615,7 +615,6 @@
     
     .help-container {
         overflow-y: auto;
-        max-height: calc(100vh - var(--nav-height) - var(--footer-height));
         scrollbar-width: none;
         -ms-overflow-style: none;
     }

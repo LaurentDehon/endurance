@@ -16,14 +16,14 @@
         <script src="{{ asset('js/layout-heights.js') }}"></script>
     </head>
 
-    <body class="h-full flex flex-col">
+    <body class="min-h-screen flex flex-col">
         @php
             // Get the theme preference from session or use the default theme
             $themeName = session('theme_preference', config('themes.default', 'blue'));
         @endphp
 
         @auth
-            <div class="min-h-[calc(100vh-var(--footer-height,0px))] bg-gradient-to-br {{ themeClass('background') }}">
+            <div class="flex-grow bg-gradient-to-br {{ themeClass('background') }}">
                 <nav class="top-0 w-full" x-data="{ isMobileMenuOpen: false }">
                     <div class="mx-auto px-4">
                         <div class="flex justify-between h-16">

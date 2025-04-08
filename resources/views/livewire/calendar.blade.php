@@ -494,7 +494,7 @@
                                                                 x-transition:leave-start="opacity-100 transform scale-100"
                                                                 x-transition:leave-end="opacity-0 transform scale-95"
                                                                 x-cloak
-                                                                class="px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg whitespace-nowrap"
+                                                                class="px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg whitespace-nowrap hidden md:block"
                                                                 :style="{
                                                                     position: 'fixed',
                                                                     zIndex: 9999,
@@ -562,7 +562,7 @@
                                                                     x-transition:leave-start="opacity-100 transform scale-100"
                                                                     x-transition:leave-end="opacity-0 transform scale-95"
                                                                     x-cloak
-                                                                    class="px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg"
+                                                                    class="px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg hidden md:block"
                                                                     :style="{
                                                                         position: 'fixed',
                                                                         zIndex: 9999,

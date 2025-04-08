@@ -224,14 +224,12 @@
     <style>
         html, body {
             height: 100%;
-            overflow-y: hidden !important;
             margin: 0;
             padding: 0;
         }
         
         .activities-container {
             overflow-y: auto;
-            max-height: calc(100vh - var(--nav-height) - var(--footer-height));
             scrollbar-width: none;
             -ms-overflow-style: none;
         }

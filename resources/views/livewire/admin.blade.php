@@ -311,7 +311,6 @@
         
         .admin-container {
             overflow-y: auto;
-            max-height: calc(100vh - var(--nav-height) - var(--footer-height));
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
