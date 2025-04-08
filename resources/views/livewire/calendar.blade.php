@@ -415,7 +415,7 @@
                                                             $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
                                                             $percentage = min($percentage, 100);
                                                         @endphp
-                                                        <div class="w-full h-2 bg-gray-700 bg-opacity-50 rounded-full">
+                                                        <div class="w-full h-2 {{ themeClass('progress-bg') }} bg-opacity-50 rounded-full">
                                                             <div class="h-2 bg-{{ $statColors[$stat] }}-500 rounded-full" 
                                                                 style="width: {{ $percentage }}%"></div>
                                                         </div>
@@ -476,7 +476,7 @@
                                                             }
                                                          }" 
                                                          @mouseleave="tooltipVisible = false">
-                                                        <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', arguments: { id: '{{ $activity->id }}' }})" 
+                                                        <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
                                                             class="relative cursor-pointer block"
                                                             @mouseenter="showTooltip()"
                                                             x-ref="badge">
@@ -542,7 +542,7 @@
                                                                 }
                                                              }" 
                                                              @mouseleave="tooltipVisible = false">
-                                                            <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', arguments: { id: '{{ $training->id }}' }})" 
+                                                            <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', attributes: { id: '{{ $training->id }}' }})" 
                                                                 class="relative cursor-pointer block"
                                                                 draggable="true" 
                                                                 ondragstart="onDragStart(event, {{ $training->id }})"

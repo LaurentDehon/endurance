@@ -3,46 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Connect to Strava</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+<body class="bg-gradient-to-br {{ themeClass('background') }} min-h-screen flex items-center justify-center">
     <div class="max-w-2xl mx-auto px-4 py-16 sm:py-24 lg:py-32">
-        <div class="bg-white rounded-2xl shadow-xl p-8 sm:p-12 lg:p-16 text-center">
+        <div class="{{ themeClass('card') }} border backdrop-blur-lg rounded-2xl shadow-xl p-8 sm:p-12 lg:p-16 text-center">
             
-            <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+            <h2 class="text-2xl font-bold {{ themeClass('text-1') }} mb-5">Connect Your Account</h2>
+            
+            <p class="{{ themeClass('text-2') }} mb-8 text-lg leading-relaxed">
                 To access all features of your training calendar, please connect your Strava account.
             </p>
 
-            <!-- Connect button -->
-            <a href="{{ route('strava.redirect') }}">
+            <!-- Connect button - conservé comme demandé -->
+            <a href="{{ route('strava.redirect') }}" class="inline-block transform transition-all duration-300 hover:scale-105 hover:shadow-lg">    
                 <img src="{{ asset('storage/images/connect.png') }}" 
                      alt="Connect with Strava"
-                     class="w-full transition-all duration-200 hover:scale-105">
+                     class="w-full max-w-sm mx-auto">
             </a>
 
             <!-- Benefits -->
-            <div class="bg-orange-50 rounded-lg p-6 my-8 text-left space-y-4">
+            <div class="{{ themeClass('bg-accent') }} bg-opacity-10 rounded-xl p-6 my-8 text-left space-y-4">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <span>Automatic sync of your activities</span>
+                    <i class="fas fa-check {{ themeClass('text-accent') }} mr-3"></i>
+                    <span class="{{ themeClass('text-1') }}">Automatic sync of your activities</span>
                 </div>
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    <span>Secure access via Strava API</span>
+                    <i class="fas fa-lock {{ themeClass('text-accent') }} mr-3"></i>
+                    <span class="{{ themeClass('text-1') }}">Secure access via Strava API</span>
                 </div>
             </div>
 
             <!-- Legal notices -->
-            <p class="mt-8 text-sm text-gray-500">
+            <p class="mt-8 text-sm {{ themeClass('text-3') }}">
                 By clicking, you agree to our 
-                <a href="#" class="text-orange-600 hover:text-orange-700 underline">Terms of Service</a> 
+                <a href="#" class="{{ themeClass('text-link') }} hover:underline">Terms of Service</a> 
                 and 
-                <a href="#" class="text-orange-600 hover:text-orange-700 underline">Privacy Policy</a>. 
+                <a href="#" class="{{ themeClass('text-link') }} hover:underline">Privacy Policy</a>.</br> 
                 Strava is a registered trademark of Strava, Inc.
             </p>
         </div>

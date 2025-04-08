@@ -150,7 +150,7 @@
                                 <span class="text-sm font-bold {{ themeClass('text-1') }}">{{ number_format($weeklyStats->distance ?? 0, 1) }} km</span>
                             @endif
                         </div>
-                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                        <div class="w-full {{ themeClass('progress-bg') }} bg-opacity-50 rounded-full h-2.5">
                             @if(isset($weeklyGoal->distance) && $weeklyGoal->distance > 0)
                                 <div class="bg-blue-400 h-2.5 rounded-full progress-bar" style="width: {{ isset($weeklyStats->distance) ? min(($weeklyStats->distance / $weeklyGoal->distance) * 100, 100) : 0 }}%"></div>
                             @else

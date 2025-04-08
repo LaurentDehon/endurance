@@ -1,4 +1,4 @@
-<div class="{{ themeClass('card') }} {{ themeClass('background') }} border p-6 rounded-xl backdrop-blur-lg">
+<div class="{{ themeClass('card') }} border p-6 rounded-xl backdrop-blur-lg">
     <h2 class="text-xl font-bold mb-4 {{ themeClass('text-1') }}">Select Week Type</h2>
     <div class="flex flex-col space-y-2 mb-4">
         <button 

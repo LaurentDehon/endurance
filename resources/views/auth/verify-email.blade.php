@@ -31,7 +31,7 @@
                 @csrf
                 <button type="submit" 
                     class="text-sm {{ themeClass('text-accent') }} transition-colors duration-200">
-                    Log Out
+                    Back
                 </button>
             </form>
         </div>
