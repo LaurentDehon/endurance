@@ -7,7 +7,7 @@
         <div class="flex justify-between items-start mb-4">
             <h2 class="text-xl md:text-2xl font-bold {{ themeClass('text-1') }} mb-1 flex items-center" id="modal-title">
                 <i class="fas fa-{{ $trainingId ? 'edit' : 'plus-circle' }} {{ themeClass('text-accent') }} mr-3"></i>
-                {{ $trainingId ? 'Edit Training' : 'Create New Training' }}
+                {{ $trainingId ? 'Edit Workout' : 'Create New Workout' }}
             </h2>
             <button type="button" wire:click.prevent="close" 
                 class="{{ themeClass('button') }} h-8 w-8 rounded-full flex items-center justify-center hover:scale-105 transition-all"

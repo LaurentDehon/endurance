@@ -81,11 +81,6 @@
                         <h3 class="font-bold {{ themeClass('text-1') }} mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 {{ themeClass('text-accent') }}"></i>
                             Navigation
                         </h3>
-                        <button @click="mobileNavOpen = false" 
-                                class="p-2.5 hover:bg-gray-100 rounded-lg {{ themeClass('text-2') }} hover:{{ themeClass('text-1') }} transition-colors"
-                                aria-label="Close menu">
-                            <i class="fas fa-times fa-lg"></i>
-                        </button>
                     </div>
 
                     <!-- Navigation -->
@@ -498,9 +493,7 @@
                                                                 :style="{
                                                                     position: 'fixed',
                                                                     zIndex: 9999,
-                                                                    top: badgePosition && badgePosition.top > window.innerHeight/2 
-                                                                        ? (badgePosition.top - 10) + 'px' 
-                                                                        : (badgePosition.bottom + 10) + 'px',
+                                                                    top: (badgePosition.top - 35) + 'px',
                                                                     left: badgePosition 
                                                                         ? (badgePosition.left + badgePosition.width/2) + 'px' 
                                                                         : 0,
@@ -566,9 +559,7 @@
                                                                     :style="{
                                                                         position: 'fixed',
                                                                         zIndex: 9999,
-                                                                        top: badgePosition && badgePosition.top > window.innerHeight/2 
-                                                                            ? (badgePosition.top - 10) + 'px' 
-                                                                            : (badgePosition.bottom + 10) + 'px',
+                                                                        top: (badgePosition.bottom + 10) + 'px',
                                                                         left: badgePosition 
                                                                             ? (badgePosition.left + badgePosition.width/2) + 'px' 
                                                                             : 0,

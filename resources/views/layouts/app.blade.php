@@ -151,7 +151,7 @@
                                 <!-- Mobile menu -->
                                 <div class="lg:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
                                      x-show="isMobileMenuOpen" x-cloak @click.self="isMobileMenuOpen = false">
-                                    <div class="absolute top-0 left-0 w-60 bg-gradient-to-bl {{ themeClass('mobile-bg') }} h-full shadow-2xl rounded-r-xl overflow-hidden flex flex-col transform transition-all duration-300"
+                                    <div class="absolute top-0 left-0 w-48 {{ themeClass('card') }} h-full shadow-2xl rounded-r-xl overflow-hidden flex flex-col transform transition-all duration-300"
                                         x-transition:enter="transition ease-out duration-300"
                                         x-transition:enter-start="-translate-x-full"
                                         x-transition:enter-end="translate-x-0"
@@ -159,60 +159,69 @@
                                         x-transition:leave-start="translate-x-0"
                                         x-transition:leave-end="-translate-x-full">
                                     
-                                        <!-- Header with close button -->
-                                        <div class="flex-shrink-0 flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100">
-                                            <span class="font-bold text-lg {{ themeClass('text-1') }}">Menu</span>                                        
-                                            <button @click="isMobileMenuOpen = false" aria-label="Close menu">
-                                                <i class="fas fa-times fa-lg {{ themeClass('text-1') }}"></i>
-                                            </button>
-                                        </div>
+                                        <!-- Header and content with navigation and user menu at the bottom -->
+                                        <div class="flex flex-col h-full">
+                                            <!-- Header and main navigation -->
+                                            <div class="p-4">
+                                                <!-- Header -->
+                                                <div class="flex justify-between items-center pb-4 mb-4 border-b {{ themeClass('divider') }}">
+                                                    <h3 class="font-bold mb-3 mt-5 {{ themeClass('text-1') }}">
+                                                        <i class="fas fa-map-marker-alt mr-2 {{ themeClass('text-accent') }}"></i>
+                                                        Menu
+                                                    </h3>
+                                                </div>
 
-                                        <!-- Main navigation -->
-                                        <nav class="flex-1 flex flex-col h-full justify-between overflow-y-auto">
-                                            <div class="space-y-2 px-4 py-3">
-                                                <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('home') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Home
-                                                </a>
-                                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('dashboard') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Dashboard
-                                                </a>
-                                                <a href="{{ route('calendar') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('calendar') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Calendar
-                                                </a>
-                                                <a href="{{ route('activities') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('activities') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Activities
-                                                </a>
-                                                @if (auth()->user()->is_admin)
-                                                <a href="{{ route('admin') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('admin') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Admin
-                                                </a>
-                                                @endif
-                                                <a href="{{ route('help') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('help') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Help
-                                                </a>
-                                                <a href="{{ route('contact.show') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('contact.show') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                    Contact
-                                                </a>
+                                                <!-- Main navigation -->
+                                                <nav>
+                                                    <div class="space-y-4">
+                                                        <a href="{{ route('home') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('home') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Home</span>
+                                                        </a>
+                                                        <a href="{{ route('dashboard') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('dashboard') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Dashboard</span>
+                                                        </a>
+                                                        <a href="{{ route('calendar') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('calendar') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Calendar</span>
+                                                        </a>
+                                                        <a href="{{ route('activities') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('activities') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Activities</span>
+                                                        </a>
+                                                        <a href="{{ route('help') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('help') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Help</span>
+                                                        </a>
+                                                        <a href="{{ route('contact.show') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('contact.show') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Contact</span>
+                                                        </a>
+                                                        @if (auth()->user()->is_admin)
+                                                        <a href="{{ route('admin') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('admin') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Admin</span>
+                                                        </a>
+                                                        @endif
+                                                    </div>
+                                                </nav>
                                             </div>
                                             
-                                            <!-- User menu -->
-                                            <div class="border-t border-gray-100 mt-auto">
-                                                <div class="space-y-2 px-4 py-3">
-                                                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }} {{ request()->routeIs('profile.edit') ? themeClass('mobile-nav-active') . ' pl-5' : '' }}">
-                                                        Profile
-                                                    </a>
-                                                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }}">
-                                                        Settings
-                                                    </a>
-                                                    <form method="POST" action="{{ route('logout') }}">
-                                                        @csrf
-                                                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ themeClass('mobile-nav') }}">
-                                                            Logout
-                                                        </button>
-                                                    </form>
-                                                </div>
+                                            <!-- User menu with divider pushed to the bottom with margin-top:auto -->
+                                            <div class="mt-auto p-4 border-t {{ themeClass('divider') }}">
+                                                <h3 class="text-xs uppercase {{ themeClass('text-3') }} mb-4 px-3">Account</h3>
+                                                <nav>
+                                                    <div class="space-y-4">
+                                                        <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group {{ request()->routeIs('profile.edit') ? themeClass('mobile-nav-active') : '' }}">
+                                                            <span>Profile</span>
+                                                        </a>
+                                                        <a href="#" class="flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group">
+                                                            <span>Settings</span>
+                                                        </a>
+                                                        <form method="POST" action="{{ route('logout') }}">
+                                                            @csrf
+                                                            <button type="submit" class="w-full text-left flex items-center justify-between px-3 py-1 rounded-xl {{ themeClass('mobile-nav') }} hover:{{ themeClass('nav-hover') }} transition-all duration-200 group">
+                                                                <span>Logout</span>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </nav>
                                             </div>
-                                        </nav>
+                                        </div>
                                     </div>
                                 </div>              
                             </div>
@@ -288,8 +297,6 @@
         <x-ts-dialog /> 
         <x-ts-tooltip />
         
-        <!-- Nous utilisons notre système personnalisé à la place de wire-elements-modal -->
-        <!-- @livewire('wire-elements-modal') -->
         @livewireScripts  
     </body>
 </html>
