@@ -36,12 +36,12 @@ class Calendar extends Component
     public $statIcons = [
         'distance' => 'route',
         'elevation' => 'mountain', 
-        'time' => 'stopwatch'
+        'duration' => 'stopwatch'
     ];    
     public $statColors = [
         'distance' => 'blue',
         'elevation' => 'red',
-        'time' => 'green'
+        'duration' => 'green'
     ];
 
     public function mount($year = null)
@@ -180,12 +180,12 @@ class Calendar extends Component
             'actual' => [
                 'distance' => round($actualActivities->sum('distance') / 1000, 1),
                 'elevation' => $actualActivities->sum('total_elevation_gain'),
-                'time' => $actualActivities->sum('moving_time')
+                'duration' => $actualActivities->sum('moving_time')
             ],
             'planned' => [
                 'distance' => $plannedTrainings->sum('distance'),
                 'elevation' => $plannedTrainings->sum('elevation'),
-                'time' => $plannedTrainings->sum('duration') * 60
+                'duration' => $plannedTrainings->sum('duration') * 60
             ]
         ];
     }
@@ -199,13 +199,13 @@ class Calendar extends Component
 
             if (!isset($monthStats[$monthKey])) {
                 $monthStats[$monthKey] = [
-                    'actual' => ['distance' => 0, 'elevation' => 0, 'time' => 0],
-                    'planned' => ['distance' => 0, 'elevation' => 0, 'time' => 0]
+                    'actual' => ['distance' => 0, 'elevation' => 0, 'duration' => 0],
+                    'planned' => ['distance' => 0, 'elevation' => 0, 'duration' => 0]
                 ];
             }
 
             foreach (['actual', 'planned'] as $type) {
-                foreach (['distance', 'elevation', 'time'] as $metric) {
+                foreach (['distance', 'elevation', 'duration'] as $metric) {
                     $monthStats[$monthKey][$type][$metric] += $week->{$type . '_stats'}[$metric];
                 }
             }
@@ -217,13 +217,13 @@ class Calendar extends Component
     private function calculateYearStats(Collection $weeks): array
     {
         $yearStats = [
-            'actual' => ['distance' => 0, 'elevation' => 0, 'time' => 0],
-            'planned' => ['distance' => 0, 'elevation' => 0, 'time' => 0]
+            'actual' => ['distance' => 0, 'elevation' => 0, 'duration' => 0],
+            'planned' => ['distance' => 0, 'elevation' => 0, 'duration' => 0]
         ];
 
         foreach ($weeks as $week) {
             foreach (['actual', 'planned'] as $type) {
-                foreach (['distance', 'elevation', 'time'] as $metric) {
+                foreach (['distance', 'elevation', 'duration'] as $metric) {
                     $yearStats[$type][$metric] += $week->{$type . '_stats'}[$metric];
                 }
             }

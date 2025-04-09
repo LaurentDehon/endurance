@@ -215,7 +215,7 @@
                     $currentMonthSlug = Str::slug($currentMonthName);
                 @endphp
                 <div class="mt-auto pt-4 border-t {{ themeClass('divider') }}">
-                    <a href="{{ route('calendar') }}#{{ $currentMonthSlug }}" class="flex items-center justify-center gap-2 px-4 py-2 {{ themeClass('button') }} rounded-lg transition-colors w-full">
+                    <a href="{{ route('calendar') }}#{{ $currentMonthSlug }}" class="flex items-center justify-center gap-2 px-4 py-2 {{ themeClass('button-accent') }} rounded-lg transition-colors w-full">
                         <i class="fas fa-calendar"></i>
                         <span>View {{ $currentMonthName }} in Calendar</span>
                     </a>

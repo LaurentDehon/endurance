@@ -1,4 +1,4 @@
-<div class="{{ themeClass('card') }} border backdrop-blur-lg shadow-xl z-50 max-w-2xl w-full relative overflow-hidden">
+<div class="{{ themeClass('modal-bg') }} border rounded-lg shadow-xl z-50 max-w-2xl w-full relative overflow-hidden">
     <!-- Top decorative bar with Strava brand color -->
     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
     

@@ -13,6 +13,8 @@ class TrainingModal extends ModalComponent
 {
     use Interactions; 
 
+    protected $listeners = ['confirmDelete' => 'confirmDelete'];
+    
     public $trainingId;
     public $date;
     public $distance;
@@ -116,27 +118,27 @@ class TrainingModal extends ModalComponent
 
     public function delete()
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmed')
-            ->send();        
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm deletion',
+            'message' => 'Are you sure you want to delete this training?<br>This action cannot be undone.',
+            'confirmButtonText' => 'Confirm',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDelete',
+            'icon' => 'trash-alt',
+            'iconColor' => 'red'
+        ]);
     }
 
-    public function confirmed()
+    public function confirmDelete()
     {
-        try {
-            $training = Training::where('user_id', Auth::id())
-                ->findOrFail($this->trainingId);
+        $training = Training::where('user_id', Auth::id())
+            ->findOrFail($this->trainingId);
             
-            $training->delete();
-            
-            $this->dispatch('training-created');
-            $this->toast()->success('Training deleted successfully')->send();
-            $this->dispatch('closeModal', 'training-modal');
-            
-        } catch (\Exception $e) {
-            $this->toast()->error('Error deleting training : ' . $e->getMessage())->send();
-        }
+        $training->delete();
+
+        $this->toast()->success('Training deleted successfully')->send();
+        $this->dispatch('closeModal', 'training-modal');
+        $this->dispatch('training-created');
     }
 
     private function validateNumeric($value)

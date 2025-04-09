@@ -1,4 +1,4 @@
-<div class="{{ themeClass('card') }} border backdrop-blur-lg shadow-xl z-50 max-w-3xl w-full relative overflow-hidden">
+<div class="{{ themeClass('modal-bg') }} border rounded-lg shadow-xl z-50 max-w-3xl w-full relative overflow-hidden">
     <!-- Top decorative bar -->
     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
     

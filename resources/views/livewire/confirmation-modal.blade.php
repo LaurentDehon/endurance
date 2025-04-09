@@ -1,7 +1,7 @@
 <div>
     @if($showModal)
     <div 
-        class="fixed inset-0 z-50"
+        class="fixed inset-0 z-[9999]"
         x-data
         x-init="$el.click = (e) => { if(e.target === e.currentTarget) $wire.cancel() }"
     >
@@ -18,7 +18,7 @@
                         if (e.key === 'Escape') $wire.cancel();
                     });
                 "
-                class="{{ themeClass('card') }} border shadow-xl rounded-xl max-w-md w-full overflow-hidden opacity-0 scale-95 transform transition-all duration-300"
+                class="{{ themeClass('modal-bg') }} border rounded-lg shadow-xl max-w-md w-full overflow-hidden opacity-0 scale-95 transform transition-all duration-300"
                 @click.outside="$wire.cancel()"
             >
                 <!-- Barre décorative en haut -->

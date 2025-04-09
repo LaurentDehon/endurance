@@ -37,7 +37,7 @@
 
     <!-- Table -->
     <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
-        <div class="overflow-x-auto border rounded-t-xl {{ themeClass('table-border') }}">
+        <div class="overflow-x-auto border {{ $users->hasPages() ? 'rounded-t-xl' : 'rounded-xl' }} {{ themeClass('table-border') }}">
             <table class="min-w-full divide-y {{ themeClass('table') }}">
                 <thead">
                     <tr>

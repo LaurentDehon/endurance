@@ -238,7 +238,7 @@
             </div>
 
             <!-- Footer -->
-            <footer class="py-4 {{ themeClass('footer-bg') }}">
+            <footer class="py-4 {{ themeClass('footer-bg') }} border-t">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <!-- Desktop layout -->
@@ -293,8 +293,7 @@
         </div>
         
         <livewire:custom-modal />
-        <x-ts-toast />  
-        <x-ts-dialog /> 
+        <x-ts-toast />
         <x-ts-tooltip />
         
         @livewireScripts  
@@ -346,12 +345,16 @@ function onDragStart(e, trainingId) {
 
 function onDragOver(e) {
     e.preventDefault(); // Allow dropping
-    e.currentTarget.classList.add('bg-blue-50', 'border-blue-300'); // Visual feedback for potential drop
+    e.currentTarget.classList.add('drag-over'); // Visual feedback for potential drop
+    // Apply theme-specific classes using theme helper in the inline style
+    e.currentTarget.setAttribute('data-drag-hovering', 'true');
 }
 
 function onDragLeave(e) {
     // Remove visual feedback when dragging leaves the drop target
-    e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
+    e.currentTarget.classList.remove('drag-over');
+    e.currentTarget.removeAttribute('data-drag-hovering');
+    e.currentTarget.classList.remove('dragging-copy');
 }
 
 function onDrop(e, newDate) {
@@ -362,7 +365,9 @@ function onDrop(e, newDate) {
     const isCopy = data.isCopy;
     
     // Remove visual feedback
-    e.currentTarget.classList.remove('bg-blue-50', 'border-blue-300', 'dragging-copy');
+    e.currentTarget.classList.remove('drag-over');
+    e.currentTarget.removeAttribute('data-drag-hovering');
+    e.currentTarget.classList.remove('dragging-copy');
     
     // Dispatch appropriate Livewire event based on operation type
     if(isCopy) {
