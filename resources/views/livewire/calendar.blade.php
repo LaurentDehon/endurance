@@ -661,6 +661,9 @@
             display: none;
         }
     </style>
+    
+    <!-- Confirmation Modal Component -->
+    <livewire:confirmation-modal />
 </div>
 @script
 <script>

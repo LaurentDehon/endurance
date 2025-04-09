@@ -5,11 +5,14 @@ namespace App\Livewire;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use TallStackUi\Traits\Interactions;
 use Illuminate\Support\Facades\Password;
 
 class Admin extends Component
 {
-    use WithPagination;
+    use WithPagination, Interactions;
+    
+    protected $listeners = ['confirmDeleteUser'];
 
     public $search = '';
     public $sortField = 'name';
@@ -36,12 +39,32 @@ class Admin extends Component
     public function deleteUser($userId)
     {
         $user = User::findOrFail($userId);
-
+        
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm User Deletion',
+            'message' => "Are you sure you want to delete user <strong>{$user->name}</strong>?<br>All associated data (activities, trainings, and weeks) will be permanently removed.",
+            'confirmButtonText' => 'Delete User',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDeleteUser',
+            'params' => [$userId],
+            'icon' => 'user-slash',
+            'iconColor' => 'red'
+        ]);
+    }
+    
+    public function confirmDeleteUser($params)
+    {
+        $userId = $params[0];
+        $user = User::findOrFail($userId);
+        $name = $user->name;
+        
         $user->weeks()->delete();
         $user->activities()->delete();
         $user->trainings()->delete();
 
         $user->delete();
+        
+        $this->toast()->success('User ' . $name . 'has been successfully deleted')->send();
     }
 
     public function toggleAdmin($userId)

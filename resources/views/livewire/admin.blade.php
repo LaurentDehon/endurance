@@ -213,7 +213,7 @@
                         </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-center {{ themeClass('text-2') }}">
+                        <td colspan="8" class="px-6 py-4 text-center {{ themeClass('text-2') }}">
                            <div class="flex justify-center items-center py-6">
                                 <span class="font-medium">No user found</span>
                            </div>
@@ -263,7 +263,7 @@
                         
                         <!-- Active page -->
                         @foreach($users->getUrlRange(max($users->currentPage() - 2, 1), min($users->currentPage() + 2, $users->lastPage())) as $page => $url)
-                            @if($page == $activities->currentPage())
+                            @if($page == $users->currentPage())
                                 <span class="pagination-button pagination-active {{ themeClass('button-accent') }} cursor-pointer">
                                     {{ $page }}
                                 </span>
@@ -345,4 +345,7 @@
             });
         });
     </script>
+    
+    <!-- Confirmation Modal Component -->
+    <livewire:confirmation-modal />
 </div>

@@ -34,13 +34,15 @@
                     </div>
                 </div>
         
-                <button wire:click.prevent="deleteAll" 
+                <button wire:click="deleteAll" 
                         class="h-full {{ themeClass('button-danger') }} px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
                     Delete all
                 </button>
             </div>
         </div>
     </div>
+    
+    <livewire:confirmation-modal />
 
     <!-- Table -->
     <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">

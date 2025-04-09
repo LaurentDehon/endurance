@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Auth;
 class Calendar extends Component
 {
     use Interactions; 
+    
+    protected $listeners = [
+        'refresh' => '$refresh',
+        'confirmDeleteAll',
+        'confirmDeleteMonth',
+        'confirmDeleteWeek'
+    ];
 
     public $year;
     public $activities;
@@ -36,8 +43,6 @@ class Calendar extends Component
         'elevation' => 'red',
         'time' => 'green'
     ];
-
-    protected $listeners = ['refresh' => '$refresh'];
 
     public function mount($year = null)
     {
@@ -312,10 +317,19 @@ class Calendar extends Component
 
     public function deleteAll()
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmDeleteAll')
-            ->send();
+        $count = Training::where('user_id', Auth::id())
+            ->whereYear('date', $this->year)
+            ->count();
+            
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm deletion',
+            'message' => "Are you sure you want to delete all training sessions for the year {$this->year}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'confirmButtonText' => 'Delete All',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDeleteAll',
+            'icon' => 'calendar-times',
+            'iconColor' => 'red'
+        ]);
     }
 
     public function confirmDeleteAll()
@@ -326,18 +340,32 @@ class Calendar extends Component
         $count = $trainings->count();
         $trainings->delete(); 
 
-        $this->toast()->success($count . ' trainings deleted successfully')->send();
+        $this->toast()->success($count . ' training sessions deleted successfully')->send();
     }
 
     public function deleteMonth($monthKey)
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmDeleteMonth', params: [$monthKey])
-            ->send();
+        $month = Carbon::createFromFormat('Y-m', $monthKey);
+        $monthName = $month->format('F');
+        
+        $count = Training::where('user_id', Auth::id())
+            ->whereYear('date', $month->year)
+            ->whereMonth('date', $month->month)
+            ->count();
+            
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm Monthly Deletion',
+            'message' => "Are you sure you want to delete all training sessions for {$monthName} {$month->year}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'confirmButtonText' => 'Delete Sessions',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDeleteMonth',
+            'params' => [$monthKey],
+            'icon' => 'calendar-minus',
+            'iconColor' => 'red'
+        ]);
     }
 
-    public function confirmDeleteMonth(array $params)
+    public function confirmDeleteMonth($params)
     {
         $monthKey = $params[0];
         $month = Carbon::createFromFormat('Y-m', $monthKey);
@@ -349,15 +377,31 @@ class Calendar extends Component
         $count = $trainings->count();
         $trainings->delete(); 
 
-        $this->toast()->success($count . ' trainings deleted successfully')->send();
+        $this->toast()->success($count . ' training sessions deleted successfully')->send();
     }
 
     public function deleteWeek($weekId)
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmDeleteWeek', params: [$weekId])
-            ->send();
+        $week = Week::findOrFail($weekId);
+        
+        $date = Carbon::createFromDate($this->year, 1, 1)->startOfYear();
+        $start = $date->copy()->setISODate($this->year, $week->week_number, 1)->startOfWeek();
+        $end = $start->copy()->endOfWeek();
+        
+        $count = Training::where('user_id', Auth::id())
+            ->whereBetween('date', [$start, $end])
+            ->count();
+            
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm Weekly Deletion',
+            'message' => "Are you sure you want to delete all training sessions for Week {$week->week_number}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'confirmButtonText' => 'Delete Sessions',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDeleteWeek',
+            'params' => [$weekId],
+            'icon' => 'calendar-week',
+            'iconColor' => 'red'
+        ]);
     }
 
     public function confirmDeleteWeek(array $params)

@@ -11,6 +11,8 @@ use TallStackUi\Traits\Interactions;
 class Activities extends Component
 {
     use WithPagination, Interactions;
+    
+    protected $listeners = ['confirmDeleteAll', 'confirmDelete'];
 
     public $search = '';
     public $sortField = 'start_date';
@@ -37,33 +39,44 @@ class Activities extends Component
 
     public function delete($activityId)
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmDelete', params: [$activityId])
-            ->send();
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm deletion',
+            'message' => 'Are you sure you want to delete this activity?<br>This action cannot be undone.',
+            'confirmButtonText' => 'Confirm',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDelete',
+            'params' => [$activityId],
+            'icon' => 'trash-alt',
+            'iconColor' => 'red'
+        ]);
     }
 
-    public function confirmDelete(array $params)
+    public function confirmDelete($params)
     {
         $activityId = $params[0];
         Activity::find($activityId)->delete();
 
-        $this->toast()->success('Training deleted successfully')->send();
+        $this->toast()->success('Activity deleted successfully')->send();
     }
 
     public function deleteAll()
     {
-        $this->dialog()
-            ->question('Warning!', 'Are you sure?')
-            ->confirm(method: 'confirmDeleteAll')
-            ->send();
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Confirm deletion',
+            'message' => 'Are you sure you want to delete all your activities?<br> This action cannot be undone.',
+            'confirmButtonText' => 'Confirm',
+            'cancelButtonText' => 'Cancel',
+            'confirmAction' => 'confirmDeleteAll',
+            'icon' => 'exclamation-triangle',
+            'iconColor' => 'red'
+        ]);
     }
 
     public function confirmDeleteAll()
     {
-        Activity::truncate();
+        Activity::where('user_id', Auth::id())->delete();
 
-        $this->toast()->success('All activities deleted successfully')->send();
+        $this->toast()->success('All activities were successfully deleted')->send();
     }
 
     public function render()
