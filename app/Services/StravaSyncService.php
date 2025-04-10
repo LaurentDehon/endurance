@@ -23,7 +23,8 @@ class StravaSyncService
 
         return [
             'success' => true,
-            'message' => $this->buildResultMessage(count($activities))
+            'message' => $this->buildResultMessage(count($activities)),
+            'count' => count($activities)
         ];
     }
 
@@ -100,7 +101,8 @@ class StravaSyncService
     private function buildResultMessage(int $count): string
     {
         return $count > 0 
-            ? "Synchronization successful. $count activities imported"
-            : "Synchronization successful. No new activities found";
+            ? ($count == 1 ? "1 new activity imported"
+            : "$count new activities imported")
+            : "No new activities to import";
     }
 }

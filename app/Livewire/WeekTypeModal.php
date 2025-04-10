@@ -32,11 +32,12 @@ class WeekTypeModal extends Component
             ]);
             
             $typeName = $typeId ? WeekType::find($typeId)->name : 'None';
+            $this->dispatch('toast', 'Week type updated to ' . strtolower($typeName), 'success');
             $this->dispatch('refresh');
             $this->dispatch('closeModal');
             
         } catch (\Exception $e) {
-            $this->toast()->error('Error updating week type: ' . $e->getMessage())->send();
+            $this->dispatch('toast', $e->getMessage(), 'error');
         }
     }
 

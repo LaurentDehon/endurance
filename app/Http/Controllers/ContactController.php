@@ -6,12 +6,9 @@ use App\Mail\ContactMail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use TallStackUi\Traits\Interactions;
 
 class ContactController extends Controller
 {
-    use Interactions; 
-
     public function show()
     {
         return view('contact');
@@ -29,13 +26,16 @@ class ContactController extends Controller
         $recipient = config('mail.from.address');
 
         if (!$recipient) {
-            throw new \Exception('Le destinataire du mail est vide.');
+            throw new \Exception('The mail recipient is empty.');
         }
 
         Mail::to($recipient)->send(new ContactMail($request->all()));
-        $this->toast()->success('Votre message a été envoyé avec succès !')->send();
+        
+        session()->flash('toast', [
+            'message' => 'Your message has been sent successfully',
+            'type' => 'success'
+        ]);
 
         return back();
     }
-
 }

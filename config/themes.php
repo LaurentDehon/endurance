@@ -36,6 +36,11 @@ return [
                 'mobile-nav-active'=> ['border-l-4', 'border-cyan-400', '!border-opacity-100', 'bg-cyan-800', 'bg-opacity-30', 'text-white', 'font-medium'],
                 'modal-bg'=> ['bg-slate-800', 'bg-opacity-90', 'border-white', 'border-opacity-20'],
                 'footer-bg' => ['bg-slate-800', 'bg-opacity-90', 'text-white', 'text-opacity-80', 'border-white', 'border-opacity-20'],
+                'toast-success' => ['bg-green-100', 'text-green-800', 'shadow-green-200/20'],
+                'toast-error' => ['bg-red-100', 'text-red-800', 'shadow-red-200/20'],
+                'toast-warning' => ['bg-yellow-100', 'text-yellow-800', 'shadow-yellow-200/20'],
+                'toast-info' => ['bg-blue-100', 'text-blue-800', 'shadow-blue-200/20'],
+                'toast-close' => ['text-gray-500', 'hover:text-gray-700'],
             ],
         ]
     ]

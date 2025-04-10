@@ -18,20 +18,7 @@ if (!function_exists('themeClass')) {
         }
         
         // Récupération des données du thème
-        $theme = config('themes.themes.'.$themeName, [
-            'name' => 'Blue Performance',
-            'colors' => [
-                'background' => ['from-indigo-900', 'via-blue-800', 'to-blue-600'],
-                'text-primary' => ['text-white'],
-                'text-secondary' => ['text-blue-200'],
-                'button-bg' => ['bg-blue-500', 'hover:bg-blue-600'],
-                'button-text' => ['text-white'],
-                'card-bg' => ['bg-white', 'bg-opacity-10'],
-                'card-border' => ['border-white', 'border-opacity-20'],
-                'modal-bg' => ['bg-white'],
-                'modal-text' => ['text-gray-800'],
-            ],
-        ]);
+        $theme = config('themes.themes.'.$themeName);
         
         return isset($theme['colors'][$key]) ? implode(' ', $theme['colors'][$key]) : $default;
     }

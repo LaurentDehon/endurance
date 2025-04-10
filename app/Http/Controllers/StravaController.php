@@ -26,10 +26,16 @@ class StravaController extends Controller
     {
         try {
             $this->authService->handleAuthorizationCode($request->code);
-            $this->toast()->success('Strava connected')->send();
+            session()->flash('toast', [
+                'message' => 'Strava connected successfully',
+                'type' => 'success'
+            ]);
 
         } catch (\Exception $e) {
-            $this->toast()->error('Connection failed : ' . $e->getMessage())->send();
+            session()->flash('toast', [
+                'message' => $e->getMessage(),
+                'type' => 'error'
+            ]);
         }
 
         // Récupérer l'URL d'origine depuis la session et y rediriger l'utilisateur

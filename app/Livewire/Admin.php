@@ -64,7 +64,7 @@ class Admin extends Component
 
         $user->delete();
         
-        $this->toast()->success('User ' . $name . 'has been successfully deleted')->send();
+        $this->dispatch('toast', 'User ' . $name . 'has been successfully deleted', 'success');
     }
 
     public function toggleAdmin($userId)

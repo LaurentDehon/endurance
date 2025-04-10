@@ -108,11 +108,11 @@ class TrainingModal extends ModalComponent
             }
 
             $this->dispatch('training-created');
-            $this->toast()->success($message)->send();
+            $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'training-modal');
 
         } catch (\Exception $e) {
-            $this->toast()->error('Error saving training: ' . $e->getMessage())->send();
+            $this->dispatch('toast', $e->getMessage(), 'error');
         }
     }
 
@@ -136,7 +136,7 @@ class TrainingModal extends ModalComponent
             
         $training->delete();
 
-        $this->toast()->success('Training deleted successfully')->send();
+        $this->dispatch('toast', 'Training deleted successfully', 'success');
         $this->dispatch('closeModal', 'training-modal');
         $this->dispatch('training-created');
     }

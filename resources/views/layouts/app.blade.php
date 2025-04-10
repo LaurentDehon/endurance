@@ -293,7 +293,7 @@
         </div>
         
         <livewire:custom-modal />
-        <x-ts-toast />
+        <livewire:toast />
         <x-ts-tooltip />
         
         @livewireScripts  

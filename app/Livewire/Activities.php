@@ -38,7 +38,7 @@ class Activities extends Component
     }
 
     public function delete($activityId)
-    {
+    {        
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm deletion',
             'message' => 'Are you sure you want to delete this activity?<br>This action cannot be undone.',
@@ -56,7 +56,7 @@ class Activities extends Component
         $activityId = $params[0];
         Activity::find($activityId)->delete();
 
-        $this->toast()->success('Activity deleted successfully')->send();
+        $this->dispatch('toast', 'Activity deleted successfully', 'success');
     }
 
     public function deleteAll()
@@ -76,7 +76,7 @@ class Activities extends Component
     {
         Activity::where('user_id', Auth::id())->delete();
 
-        $this->toast()->success('All activities were successfully deleted')->send();
+        $this->dispatch('toast', 'All activities were successfully deleted', 'success');
     }
 
     public function render()

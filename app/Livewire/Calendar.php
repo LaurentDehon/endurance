@@ -262,7 +262,7 @@ class Calendar extends Component
             'week_type_id' => $weekTypeId
         ]);
         
-        $this->toast()->success('Week type updated successfully')->send();
+        $this->dispatch('toast', 'Week type updated successfully', 'success');
     }  
 
     #[On('training-moved')]
@@ -275,7 +275,7 @@ class Calendar extends Component
         ]);
         
         $this->refreshCalendar();
-        $this->toast()->success($training->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'))->send();
+        $this->dispatch('toast', $training->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
     #[On('training-copied')]
@@ -288,7 +288,7 @@ class Calendar extends Component
         $newTraining->save();
 
         $this->refreshCalendar();
-        $this->toast()->success($originalTraining->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'))->send();
+        $this->dispatch('toast', $originalTraining->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
     #[On('training-created')]
@@ -303,13 +303,17 @@ class Calendar extends Component
             $result = $syncService->sync(Auth::user());
             
             if ($result['success']) {
-                $this->toast()->success($result['message'])->send();
+                if ($result['count'] > 0) {
+                    $this->dispatch('toast', $result['message'], 'success');
+                } else {
+                    $this->dispatch('toast', $result['message'], 'info');
+                }
             } else {
-                $this->toast()->error($result['message'])->send();
+                $this->dispatch('toast', $result['message'], 'error');
             }
 
         } catch (\Exception $e) {
-            $this->toast()->error('An error occurred during synchronization : ' . $e->getMessage())->send();
+            $this->dispatch('toast', $e->getMessage(), 'error');
         }
 
         $this->dispatch('refresh');
@@ -340,7 +344,7 @@ class Calendar extends Component
         $count = $trainings->count();
         $trainings->delete(); 
 
-        $this->toast()->success($count . ' training sessions deleted successfully')->send();
+        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
     }
 
     public function deleteMonth($monthKey)
@@ -377,7 +381,7 @@ class Calendar extends Component
         $count = $trainings->count();
         $trainings->delete(); 
 
-        $this->toast()->success($count . ' training sessions deleted successfully')->send();
+        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
     }
 
     public function deleteWeek($weekId)
@@ -419,6 +423,6 @@ class Calendar extends Component
         $count = $trainings->count();
         $trainings->delete(); 
 
-        $this->toast()->success($count . ' trainings deleted successfully')->send();
+        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
     }
 }
