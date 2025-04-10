@@ -32,7 +32,7 @@
                         @foreach($nextTrainings->take(2) as $training)
                             <div class="mb-4 pb-4 {{ !$loop->last ? 'border-b border-white border-opacity-20' : '' }}">
                                 <div class="text-2xl font-bold {{ themeClass('text-accent') }} mb-2">{{ $training->title }}</div>
-                                <div class="flex items-center mb-2 gap-2 {{ themeClass('text-primary', 'text-white') }}">
+                                <div class="flex items-center mb-2 gap-2 {{ themeClass('text-1') }}">
                                     <i class="fas fa-calendar"></i>
                                     <span>{{ \Carbon\Carbon::parse($training->date)->format('l, F j, Y') }}</span>
                                 </div>
@@ -76,7 +76,7 @@
                 <div class="flex-grow mb-4" id="nextRaceContent">
                     @if(isset($nextRace))
                         <div class="text-3xl font-bold {{ themeClass('text-accent') }} mb-2">{{ $nextRace->title }}</div>
-                        <div class="flex items-center mb-2 gap-2 {{ themeClass('text-primary', 'text-white') }}">
+                        <div class="flex items-center mb-2 gap-2 {{ themeClass('text-1') }}">
                             <i class="fas fa-calendar"></i>
                             <span>{{ \Carbon\Carbon::parse($nextRace->date)->format('l, F j, Y') }}</span>
                         </div>
@@ -107,7 +107,7 @@
                 
                 @if(isset($nextRace))
                     <div class="mt-auto pt-4 border-t {{ themeClass('border-divider', 'border-white border-opacity-20') }}">
-                        <h3 class="font-semibold mb-2 {{ themeClass('text-primary', 'text-white') }}">Time Until Race:</h3>
+                        <h3 class="font-semibold mb-2 {{ themeClass('text-1') }}">Time Until Race:</h3>
                         <div class="grid grid-cols-4 gap-2 text-center" id="raceCountdown" data-target-date="{{ $nextRace->date }}">
                             <div class="{{ themeClass('countdown-bg', 'bg-red-600 bg-opacity-60') }} rounded-lg p-2">
                                 <span id="raceDays" class="text-3xl font-bold block {{ themeClass('text-1') }}">--</span>

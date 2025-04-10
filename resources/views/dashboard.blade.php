@@ -10,9 +10,7 @@
     }
     
     .dashboard-content-container {
-        height: calc(100vh - var(--nav-height) - var(--footer-height));
         overflow-y: auto;
-        max-height: calc(100vh - var(--nav-height) - var(--footer-height));
         scrollbar-width: none; /* Masque la scrollbar sur Firefox */
         -ms-overflow-style: none; /* Masque la scrollbar sur IE/Edge */
     }

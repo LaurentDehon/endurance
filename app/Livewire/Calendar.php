@@ -99,6 +99,20 @@ class Calendar extends Component
         $this->dispatch('update-url', year: $selectedYear);
     }
 
+    // Méthode pour naviguer à l'année précédente
+    public function previousYear()
+    {
+        $this->year--;
+        $this->dispatch('update-url', year: $this->year);
+    }
+
+    // Méthode pour naviguer à l'année suivante
+    public function nextYear()
+    {
+        $this->year++;
+        $this->dispatch('update-url', year: $this->year);
+    }
+
     public function getActivities()
     {
         $year = $this->year;

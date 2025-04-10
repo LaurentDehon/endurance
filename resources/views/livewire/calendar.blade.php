@@ -328,7 +328,7 @@
                             $borderColor = $colorName . '-' . min(500, $colorWeight);
                         @endphp
                         <!-- Week header avec style amélioré et plus marqué -->
-                        <div class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-hidden {{ themeClass('card') }} border">
+                        <div class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-hidden {{ themeClass('week') }} border">
                             <!-- Background overlay plus visible -->
                             <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $lightShade }} via-{{ $midShade }} to-{{ $darkShade }}"></div>
                             
@@ -378,11 +378,11 @@
                                             @foreach(['distance', 'duration', 'elevation'] as $stat)
                                                 <div class="flex flex-col md:w-28 lg:w-36">
                                                     <div class="flex items-center justify-center mb-1 gap-2">
-                                                        <p class="text-xs text-gray-200 flex items-center">
+                                                        <p class="text-xs flex items-center">
                                                             <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-500 text-lg mr-1"></i>
                                                         </p>
                                                         <div class="flex items-end">
-                                                            <span class="text-lg font-bold text-gray-100">
+                                                            <span class="text-lg font-bold {{ themeClass('text-3') }}">
                                                                 @if($stat === 'distance')
                                                                     {{ number_format($week->actual_stats[$stat], 1) }}
                                                                 @elseif($stat === 'duration')
@@ -393,7 +393,7 @@
                                                             </span>
                                                             
                                                             @if($week->planned_stats[$stat] > 0)
-                                                                <span class="text-2xs text-gray-300 ml-1 whitespace-nowrap flex items-end mb-0.5">
+                                                                <span class="text-2xs {{ themeClass('text-3') }} ml-1 whitespace-nowrap flex items-end mb-0.5">
                                                                     /&nbsp;<span>
                                                                         @if($stat === 'duration')
                                                                             {{ formatTime($week->planned_stats[$stat]) }}
@@ -433,8 +433,7 @@
                                             ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
                                             ondragleave="onDragLeave(event)" 
                                             wire:click.stop="$dispatch('openModal', { component: 'training-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
-                                            class="relative block p-2 rounded-lg border min-h-24 cursor-pointer
-                                                    {{ $day['is_today'] ? 'border-2 border-opacity-100 ' . themeClass('border-accent') . ' bg-opacity-20 ' . themeClass('bg-accent') : 'border-opacity-30 border-white' }}">
+                                            class="relative block p-2 rounded-lg {{ $day['is_today'] ? 'border-2 ' . themeClass('border-accent') . ' bg-opacity-20 ' . themeClass('bg-accent') : 'border ' . themeClass('day') }} min-h-24 cursor-pointer">
                                             <!-- Day header -->
                                             <div class="absolute top-2 left-2">
                                                 <div>
