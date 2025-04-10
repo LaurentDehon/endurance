@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))] admin-container">
+<div class="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))] admin-container">
     <div class="flex justify-between items-center mb-6 gap-4">        
         <div class="flex gap-4 w-full ml-auto">
             <!-- Search -->
@@ -52,16 +52,6 @@
                             Email
                             @include('components.sort-icon', ['field' => 'email'])
                         </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase cursor-pointer" 
-                            wire:click="sortBy('activities_count')">
-                            Activities
-                            @include('components.sort-icon', ['field' => 'activities_count'])
-                        </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase cursor-pointer" 
-                            wire:click="sortBy('trainings_count')">
-                            Trainings
-                            @include('components.sort-icon', ['field' => 'trainings_count'])
-                        </th>
                         <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase">
                             Verified
                         </th>
@@ -73,7 +63,6 @@
                             Last Login
                             @include('components.sort-icon', ['field' => 'last_login_at'])
                         </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase">Actions</th>
                     </tr>
                 </thead>
                 
@@ -82,9 +71,9 @@
                         <tr class="{{ $loop->even ? themeClass('table-even') : themeClass('table-odd') }}">
                             <!-- Name with tooltip for long names -->
                             <td class="px-4 py-4 max-w-[150px] sm:max-w-none truncate">
-                                <div class="text-sm font-medium {{ themeClass('text-2') }}" title="{{ $user->name }}">
+                                <a href="{{ route('user.detail', $user->id) }}" class="text-sm font-medium hover:underline {{ themeClass('text-accent') }}" title="{{ $user->name }}">
                                     {{ $user->name }}
-                                </div>
+                                </a>
                                 <div class="text-xs {{ themeClass('text-2') }} sm:hidden truncate">
                                     {{ $user->email }}
                                 </div>
@@ -93,16 +82,6 @@
                             <!-- Email -->
                             <td class="px-4 py-4 whitespace-nowrap text-sm hidden sm:table-cell">
                                 <div class="{{ themeClass('text-2') }}">{{ $user->email }}</div>
-                            </td>
-                            
-                            <!-- Activities Count -->
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center">
-                                <div class="{{ themeClass('text-2') }}">{{ $user->activities_count ?? 0 }}</div>
-                            </td>
-                            
-                            <!-- Trainings Count -->
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center">
-                                <div class="{{ themeClass('text-2') }}">{{ $user->trainings_count ?? 0 }}</div>
                             </td>
                             
                             <!-- Verified -->
@@ -163,57 +142,10 @@
                                 <div class="{{ themeClass('text-2') }}">-</div>
                                 @endif
                             </td>
-                            
-                            <!-- Actions -->
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="flex justify-center items-center gap-3">
-                                    @if($user->email_verified_at)
-                                        <button wire:click="verifyEmail({{ $user->id }})" 
-                                                class="text-red-400 hover:text-red-500"
-                                                title="Unverify Email">
-                                            <i class="fas fa-times-circle text-sm sm:text-base"></i>
-                                        </button>
-                                    @else
-                                        <button wire:click="verifyEmail({{ $user->id }})" 
-                                                class="text-green-400 hover:text-green-500"
-                                                title="Verify Email">
-                                            <i class="fas fa-check-circle text-sm sm:text-base"></i>
-                                        </button>
-                                    @endif
-                                    @if($user->is_admin)
-                                        <button wire:click="toggleAdmin({{ $user->id }})" 
-                                                class="text-red-400 hover:text-red-500"
-                                                title="Revoke Admin">
-                                            <i class="fas fa-user-minus text-sm sm:text-base"></i>
-                                        </button>
-                                    @else
-                                        <button wire:click="toggleAdmin({{ $user->id }})" 
-                                                class="text-blue-400 hover:text-blue-500"
-                                                title="Make Admin">
-                                            <i class="fas fa-user-plus text-sm sm:text-base"></i>
-                                        </button>
-                                    @endif
-                                    <button wire:click="resendVerificationEmail({{ $user->id }})" 
-                                            class="text-yellow-400 hover:text-yellow-500"
-                                            title="Resend Verification Email">
-                                        <i class="fas fa-envelope text-sm sm:text-base"></i>
-                                    </button>
-                                    <button wire:click="sendResetPassword({{ $user->id }})" 
-                                            class="text-purple-400 hover:text-purple-500"
-                                            title="Send Password Reset">
-                                        <i class="fas fa-key text-sm sm:text-base"></i>
-                                    </button>
-                                    <button wire:click="deleteUser({{ $user->id }})" 
-                                            class="text-red-400 hover:text-red-500"
-                                            title="Delete User">
-                                        <i class="fas fa-trash text-sm sm:text-base"></i>
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center {{ themeClass('text-2') }}">
+                        <td colspan="5" class="px-6 py-4 text-center {{ themeClass('text-2') }}">
                            <div class="flex justify-center items-center py-6">
                                 <span class="font-medium">No user found</span>
                            </div>

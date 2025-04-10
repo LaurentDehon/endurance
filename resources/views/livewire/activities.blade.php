@@ -90,9 +90,9 @@
                         <tr class="{{ $loop->even ? themeClass('table-even') : themeClass('table-odd') }}">
                             <!-- Name -->
                             <td class="w-1/4 px-4 py-4 truncate" title="{{ $activity->name }}">
-                                <div class="text-sm font-medium {{ themeClass('text-2') }}">
+                                <div class="text-sm font-medium {{ themeClass('text-accent') }}">
                                     <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" >
-                                        <span class="cursor-pointer underline">{{ Str::limit($activity->name, 25) }}</span>
+                                        <span class="cursor-pointer hover:underline">{{ Str::limit($activity->name, 25) }}</span>
                                     </a>
                                 </div>
                             </td>

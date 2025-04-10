@@ -10,6 +10,7 @@ use App\Http\Controllers\StravaController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\UserDetail;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route pour changer de thème
@@ -22,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/activities', function() { return view('activities'); })->middleware(StravaMiddleware::class)->name('activities');
     Route::get('/help', function() { return view('help'); })->name('help');
     Route::get('/admin', function() { return view('admin'); })->middleware(AdminMiddleware::class)->name('admin');
+    Route::get('/admin/user/{userId}', function($userId) {
+        return view('user-detail', ['userId' => $userId]);
+    })->middleware(AdminMiddleware::class)->name('user.detail');
 
     Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
     Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
