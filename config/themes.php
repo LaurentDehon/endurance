@@ -28,7 +28,7 @@ return [
                 'nav-hover'=> ['bg-cyan-800', 'bg-opacity-20', 'text-cyan-200'],
                 'nav-active'=> ['border-cyan-400', 'text-white'],
                 'button' => ['bg-cyan-700', 'hover:bg-cyan-600','text-white'],
-                'button-accent' => ['bg-blue-600', 'hover:bg-blue-500', 'text-white'],
+                'button-accent' => ['bg-amber-600', 'hover:bg-amber-500', 'text-white'],
                 'button-danger' => ['bg-red-600', 'hover:bg-red-500','text-white'],
                 'input' => ['bg-slate-700', 'bg-opacity-60', 'text-white', 'placeholder-gray-400', 'border-slate-600', 'border-opacity-50'],
                 'mobile-bg'=> ['from-slate-900', 'via-blue-900', 'to-slate-800'],
