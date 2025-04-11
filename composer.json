@@ -10,11 +10,8 @@
         "guzzlehttp/guzzle": "^7.9",
         "illuminate/support": "^11.0",
         "laravel/framework": "^11.31",
-        "laravel/telescope": "^5.5",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.6",
-        "tallstackui/tallstackui": "^2.2",
-        "wire-elements/modal": "^2.0"
+        "livewire/livewire": "^3.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

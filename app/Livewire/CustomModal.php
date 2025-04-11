@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class CustomModal extends Component
 {
@@ -13,11 +14,8 @@ class CustomModal extends Component
     public $maxWidth = '2xl';
     public $closeable = true;
     
-    protected $listeners = [
-        'openModal' => 'openModal',
-        'closeModal' => 'closeModal',
-    ];
-
+    // Utiliser les attributs On de Livewire 3 pour écouter les événements
+    #[On('openModal')]
     public function openModal($component, $attributes = [])
     {
         $this->component = $component;
@@ -25,6 +23,7 @@ class CustomModal extends Component
         $this->show = true;
     }
 
+    #[On('closeModal')]
     public function closeModal()
     {
         $this->show = false;

@@ -5,12 +5,9 @@ namespace App\Livewire;
 use App\Models\Week;
 use App\Models\WeekType;
 use Livewire\Component;
-use TallStackUi\Traits\Interactions;
 
 class WeekTypeModal extends Component
 {
-    use Interactions;
-
     public $weekId;
     public $currentTypeId;
     public $weekTypes;

@@ -1,14 +1,16 @@
-<div>
+<div
+    wire:key="modal-container"
+>
     <div
-        x-data="{ show: @entangle('show') }"
+        x-data="{ show: @entangle('show').live }"
         x-show="show"
-        x-on:keydown.escape.window="show && @this.closeModal()"
+        x-on:keydown.escape.window="show && $wire.closeModal()"
         class="fixed inset-0 z-50 overflow-y-auto"
         style="display: none;"
     >
         <div 
             class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0"
-            x-on:click="@this.closeable && @this.closeModal()"
+            x-on:click="$wire.closeable && $wire.closeModal()"
         >
             <!-- Background overlay -->
             <div 
@@ -19,10 +21,9 @@
                 x-transition:leave="ease-in duration-200" 
                 x-transition:leave-start="opacity-100" 
                 x-transition:leave-end="opacity-0"
-                class="fixed inset-0 {{ themeClass('background') }} backdrop-blur-sm transition-opacity"
+                class="fixed inset-0 backdrop-blur-sm transition-opacity"
                 aria-hidden="true"
             ></div>
-
             <!-- Modal panel -->
             <div 
                 x-show="show" 
@@ -39,7 +40,7 @@
                 aria-labelledby="modal-headline"
             >
                 @if($show && $component)
-                    @livewire($component, $componentAttributes, key($component))
+                    @livewire($component, $componentAttributes, key('modal-content-'.$component))
                 @endif
             </div>
         </div>

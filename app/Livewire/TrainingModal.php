@@ -3,16 +3,13 @@
 namespace App\Livewire;
 
 use Carbon\Carbon;
-use LivewireUI\Modal\ModalComponent;
+use Livewire\Component;
 use App\Models\Training;
 use App\Models\TrainingType;
 use Illuminate\Support\Facades\Auth;
-use TallStackUi\Traits\Interactions;
 
-class TrainingModal extends ModalComponent
+class TrainingModal extends Component
 {
-    use Interactions; 
-
     protected $listeners = ['confirmDelete' => 'confirmDelete'];
     
     public $trainingId;
@@ -41,6 +38,17 @@ class TrainingModal extends ModalComponent
         'recurrenceEndDate' => 'nullable|required_if:isRecurring,true|date|after:date',
     ]; 
 
+    // Ajout d'une méthode pour basculer l'état de isRecurring
+    public function toggleRecurring()
+    {
+        $this->isRecurring = !$this->isRecurring;
+        
+        // Préparer la date de fin par défaut si elle n'est pas définie
+        if ($this->isRecurring && empty($this->recurrenceEndDate)) {
+            $this->recurrenceEndDate = Carbon::parse($this->date)->addDays(30)->format('Y-m-d');
+        }
+    }
+
     public function mount($id = null, $date = null)
     {
         $this->trainingTypes = TrainingType::all();
@@ -62,6 +70,8 @@ class TrainingModal extends ModalComponent
         // Create mode
         else {
             $this->date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
+            // Définir la date de fin par défaut à 30 jours dans le futur
+            $this->recurrenceEndDate = $this->date ? Carbon::parse($this->date)->addDays(30)->format('Y-m-d') : null;
         }
     }
 
@@ -73,6 +83,7 @@ class TrainingModal extends ModalComponent
         $this->elevation = $this->validateNumeric($this->elevation);
 
         $baseData = [
+            'date' => Carbon::parse($this->date),
             'distance' => $this->distance,
             'duration' => (is_numeric($this->hours) ? $this->hours : 0) * 60 + (is_numeric($this->minutes) ? $this->minutes : 0),
             'elevation' => $this->elevation,
@@ -102,7 +113,7 @@ class TrainingModal extends ModalComponent
                     $message = 'Training successfully updated';
                 } 
                 else {
-                    Training::create(array_merge($baseData, ['date' => Carbon::parse($this->date)]));
+                    Training::create($baseData); // Simplified since baseData already includes date
                     $message = 'Training successfully created';
                 }
             }

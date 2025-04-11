@@ -10,10 +10,10 @@
     @foreach($toasts as $toast)
         <div 
             wire:key="toast-{{ $toast['id'] }}"
-            class="toast flex items-center p-4 rounded-lg shadow-lg transform transition-all duration-300"
+            class="toast flex items-center p-4 rounded-lg shadow-sm transform transition-all duration-300"
             x-data="{ show: false }"
             x-init="
-                setTimeout(() => { show = true }, 50);
+                setTimeout(() => { show = true }, 100);
                 setTimeout(() => { 
                     show = false;
                     setTimeout(() => $wire.removeToast('{{ $toast['id'] }}'), 500);
@@ -27,10 +27,10 @@
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-4"
             :class="{
-                '{{ themeClass('toast-success') }}': '{{ $toast['type'] }}' === 'success',
-                '{{ themeClass('toast-error') }}': '{{ $toast['type'] }}' === 'error',
-                '{{ themeClass('toast-warning') }}': '{{ $toast['type'] }}' === 'warning',
-                '{{ themeClass('toast-info') }}': '{{ $toast['type'] }}' === 'info'
+                'bg-green-100 text-green-800 shadow-green-200 shadow-opacity-20': '{{ $toast['type'] }}' === 'success',
+                'bg-red-100 text-red-800 shadow-red-200 shadow-opacity-20': '{{ $toast['type'] }}' === 'error',
+                'bg-yellow-100 text-yellow-800 shadow-yellow-200 shadow-opacity-20': '{{ $toast['type'] }}' === 'warning',
+                'bg-blue-100 text-blue-800 shadow-blue-200 shadow-opacity-20': '{{ $toast['type'] }}' === 'info'
             }"
         >
             <div class="shrink-0 mr-3">
@@ -49,7 +49,7 @@
             </div>
             <button 
                 type="button" 
-                class="ml-3 shrink-0 {{ themeClass('toast-close') }}"
+                class="ml-3 shrink-0 text-gray-500 hover:text-gray-700"
                 @click="show = false; $wire.removeToast('{{ $toast['id'] }}')"
             >
                 <i class="fas fa-times text-xs"></i>

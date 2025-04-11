@@ -18,7 +18,7 @@
                         if (e.key === 'Escape') $wire.cancel();
                     });
                 "
-                class="{{ themeClass('modal-bg') }} border rounded-lg shadow-xl max-w-md w-full overflow-hidden opacity-0 scale-95 transform transition-all duration-300"
+                class="bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-lg shadow-xl max-w-md w-full overflow-hidden opacity-0 scale-95 transform transition-all duration-300"
                 @click.outside="$wire.cancel()"
             >
                 <!-- Barre décorative en haut -->
@@ -30,22 +30,22 @@
                         <div class="mr-4 p-2 rounded-full bg-{{ $iconColor }}-100 text-{{ $iconColor }}-600">
                             <i class="fas fa-{{ $icon }} text-xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold {{ themeClass('text-1') }}">{{ $title }}</h3>
+                        <h3 class="text-xl font-bold text-white">{{ $title }}</h3>
                     </div>
                 </div>
                 
                 <!-- Corps -->
                 <div class="px-6 pb-6 pt-2">
-                    <p class="{{ themeClass('text-2') }} mb-6">
+                    <p class="text-cyan-200 mb-6">
                         {!! $message !!}
                     </p>
                     
                     <!-- Boutons -->
                     <div class="flex justify-end gap-3">
-                        <button wire:click="cancel" type="button" class="{{ themeClass('button') }} px-4 py-2 rounded-lg transition-colors">
+                        <button wire:click="cancel" type="button" class="text-white bg-cyan-600 hover:bg-cyan-500 px-4 py-2 rounded-lg transition-colors">
                             {{ $cancelButtonText }}
                         </button>
-                        <button wire:click="confirm" type="button" class="{{ themeClass('button-accent') }} px-4 py-2 rounded-lg transition-colors">
+                        <button wire:click="confirm" type="button" class="bg-amber-600 text-white hover:bg-amber-500 px-4 py-2 rounded-lg transition-colors">
                             {{ $confirmButtonText }}
                         </button>
                     </div>

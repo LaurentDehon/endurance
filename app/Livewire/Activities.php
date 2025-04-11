@@ -6,11 +6,10 @@ use Livewire\Component;
 use App\Models\Activity;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use TallStackUi\Traits\Interactions;
 
 class Activities extends Component
 {
-    use WithPagination, Interactions;
+    use WithPagination;
     
     protected $listeners = ['confirmDeleteAll', 'confirmDelete'];
 

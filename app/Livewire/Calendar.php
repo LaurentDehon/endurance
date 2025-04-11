@@ -9,15 +9,12 @@ use App\Models\Activity;
 use App\Models\Training;
 use App\Models\WeekType;
 use Livewire\Attributes\On;
-use TallStackUi\Traits\Interactions; 
 use Illuminate\Support\Collection;
 use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
-{
-    use Interactions; 
-    
+{    
     protected $listeners = [
         'refresh' => '$refresh',
         'confirmDeleteAll',

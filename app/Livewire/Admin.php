@@ -5,12 +5,10 @@ namespace App\Livewire;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use TallStackUi\Traits\Interactions;
-use Illuminate\Support\Facades\Password;
 
 class Admin extends Component
 {
-    use WithPagination, Interactions;
+    use WithPagination;
     
     protected $listeners = ['confirmDeleteUser'];
 

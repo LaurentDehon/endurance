@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
-use LivewireUI\Modal\ModalComponent;
 
-class ActivityModal extends ModalComponent
+class ActivityModal extends Component
 {
     public $activityId;
     public $activity;

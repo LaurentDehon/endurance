@@ -4,15 +4,15 @@
             <!-- Search -->
             <div class="relative flex-1">
                 <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search..." 
-                       class="w-full h-10 px-4 py-2 rounded-lg {{ themeClass('input') }} placeholder-gray-400 focus:ring-0 transition-all border-0 outline-none">
+                       class="w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400 focus:ring-0 transition-all border-0 outline-none">
                 @if($search)
-                    <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 {{ themeClass('text-2') }} transition-colors">✕</button>
+                    <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 text-cyan-200 transition-colors">✕</button>
                 @endif
             </div>
 
             <!-- Items per page -->
             <div class="relative" x-data="{ open: false, selected: '{{ $perPage }}' }">
-                <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg {{ themeClass('input') }} focus:ring-0 transition-all">
+                <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-0 transition-all">
                     <span x-text="selected + '/page'"></span>
                     <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': open}"></i>
                 </button>
@@ -24,11 +24,11 @@
                     x-transition:leave="transition ease-in duration-150"
                     x-transition:leave-start="transform opacity-100 scale-100"
                     x-transition:leave-end="transform opacity-0 scale-95"
-                    class="absolute right-0 mt-1 w-28 z-10 rounded-lg overflow-hidden shadow-lg {{ themeClass('input') }} backdrop-blur-sm">
+                    class="absolute right-0 mt-1 w-28 z-10 rounded-lg overflow-hidden shadow-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 backdrop-blur-sm">
                     <div class="py-1">
-                        <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">10/page</button>
-                        <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">25/page</button>
-                        <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm {{ themeClass('text-1') }} hover:bg-opacity-20 hover:bg-white transition-colors">50/page</button>
+                        <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">10/page</button>
+                        <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">25/page</button>
+                        <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">50/page</button>
                     </div>
                 </div>
             </div>
@@ -37,28 +37,28 @@
 
     <!-- Table -->
     <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
-        <div class="overflow-x-auto border {{ $users->hasPages() ? 'rounded-t-xl' : 'rounded-xl' }} {{ themeClass('table-border') }}">
-            <table class="min-w-full divide-y {{ themeClass('table') }}">
+        <div class="overflow-x-auto border {{ $users->hasPages() ? 'rounded-t-xl' : 'rounded-xl' }} border-white border-opacity-20">
+            <table class="min-w-full divide-y bg-white bg-opacity-10">
                 <thead">
                     <tr>
                         <!-- Headings -->
-                        <th class="px-4 py-3 text-left text-xs font-medium {{ themeClass('text-2') }} uppercase cursor-pointer" 
+                        <th class="px-4 py-3 text-left text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('name')">
                             Name
                             @include('components.sort-icon', ['field' => 'name'])
                         </th>
-                        <th class="px-4 py-3 text-left text-xs font-medium {{ themeClass('text-2') }} uppercase cursor-pointer hidden sm:table-cell" 
+                        <th class="px-4 py-3 text-left text-xs font-medium text-cyan-200 uppercase cursor-pointer hidden sm:table-cell" 
                             wire:click="sortBy('email')">
                             Email
                             @include('components.sort-icon', ['field' => 'email'])
                         </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase">
+                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
                             Verified
                         </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase">
+                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
                             Admin
                         </th>
-                        <th class="px-4 py-3 text-center text-xs font-medium {{ themeClass('text-2') }} uppercase cursor-pointer" 
+                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('last_login_at')">
                             Last Login
                             @include('components.sort-icon', ['field' => 'last_login_at'])
@@ -68,20 +68,20 @@
                 
                 <tbody>
                     @forelse($users as $user)
-                        <tr class="{{ $loop->even ? themeClass('table-even') : themeClass('table-odd') }}">
+                        <tr class="{{ $loop->even ? 'bg-white bg-opacity-10' : 'bg-slate-800 bg-opacity-30' }}">
                             <!-- Name with tooltip for long names -->
                             <td class="px-4 py-4 max-w-[150px] sm:max-w-none truncate">
-                                <a href="{{ route('user.detail', $user->id) }}" class="text-sm font-medium hover:underline {{ themeClass('text-accent') }}" title="{{ $user->name }}">
+                                <a href="{{ route('user.detail', $user->id) }}" class="text-sm font-medium hover:underline text-amber-300" title="{{ $user->name }}">
                                     {{ $user->name }}
                                 </a>
-                                <div class="text-xs {{ themeClass('text-2') }} sm:hidden truncate">
+                                <div class="text-xs text-cyan-200 sm:hidden truncate">
                                     {{ $user->email }}
                                 </div>
                             </td>
                             
                             <!-- Email -->
                             <td class="px-4 py-4 whitespace-nowrap text-sm hidden sm:table-cell">
-                                <div class="{{ themeClass('text-2') }}">{{ $user->email }}</div>
+                                <div class="text-cyan-200">{{ $user->email }}</div>
                             </td>
                             
                             <!-- Verified -->
@@ -136,16 +136,16 @@
                                     @endphp
                                     
                                     <span title="{{ $lastLoginDate ? $lastLoginDate->format('d/m/Y H:i:s') : '' }}">
-                                        <div class="{{ themeClass('text-2') }}">{{ $lastLoginDate ? $lastLoginDate->diffForHumans() : '-' }}</div>
+                                        <div class="text-cyan-200">{{ $lastLoginDate ? $lastLoginDate->diffForHumans() : '-' }}</div>
                                     </span>
                                 @else
-                                <div class="{{ themeClass('text-2') }}">-</div>
+                                <div class="text-cyan-200">-</div>
                                 @endif
                             </td>
                         </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center {{ themeClass('text-2') }}">
+                        <td colspan="5" class="px-6 py-4 text-center text-cyan-200">
                            <div class="flex justify-center items-center py-6">
                                 <span class="font-medium">No user found</span>
                            </div>
@@ -158,37 +158,37 @@
 
         <!-- Pagination -->
         @if($users->hasPages())
-            <div class="p-4 border-t {{ themeClass('table') }}">
+            <div class="p-4 border-t bg-white bg-opacity-10">
                 <div class="custom-pagination">
-                    <div class="pagination-summary {{ themeClass('text-2') }}">
+                    <div class="pagination-summary text-cyan-200">
                         Showing 
-                        <span class="font-medium mx-1 {{ themeClass('text-1') }}">{{ $users->firstItem() }}</span> 
+                        <span class="font-medium mx-1 text-white">{{ $users->firstItem() }}</span> 
                         to 
-                        <span class="font-medium mx-1 {{ themeClass('text-1') }}">{{ $users->lastItem() }}</span> 
+                        <span class="font-medium mx-1 text-white">{{ $users->lastItem() }}</span> 
                         of 
-                        <span class="font-medium mx-1 {{ themeClass('text-1') }}">{{ $users->total() }}</span> 
+                        <span class="font-medium mx-1 text-white">{{ $users->total() }}</span> 
                         results
                     </div>
                     
                     <div class="pagination-controls">
                         <!-- First page -->
                         @if($users->onFirstPage())
-                            <span class="pagination-button opacity-50 {{ themeClass('text-2') }}">
+                            <span class="pagination-button opacity-50 text-cyan-200">
                                 <i class="fas fa-angle-double-left"></i>
                             </span>
                         @else
-                            <a href="{{ $users->url(1) }}" class="pagination-button {{ themeClass('button') }}" wire:click.prevent="gotoPage(1)" wire:key="first-page">
+                            <a href="{{ $users->url(1) }}" class="pagination-button text-white bg-cyan-600 hover:bg-cyan-500" wire:click.prevent="gotoPage(1)" wire:key="first-page">
                                 <i class="fas fa-angle-double-left"></i>
                             </a>
                         @endif
 
                         <!-- Previous page -->
                         @if($users->onFirstPage())
-                            <span class="pagination-button opacity-50 {{ themeClass('text-2') }}">
+                            <span class="pagination-button opacity-50 text-cyan-200">
                                 <i class="fas fa-chevron-left"></i>
                             </span>
                         @else
-                            <a href="{{ $users->previousPageUrl() }}" class="pagination-button {{ themeClass('button') }}" wire:click.prevent="previousPage" wire:key="prev-page">
+                            <a href="{{ $users->previousPageUrl() }}" class="pagination-button text-white bg-cyan-600 hover:bg-cyan-500" wire:click.prevent="previousPage" wire:key="prev-page">
                                 <i class="fas fa-chevron-left"></i>
                             </a>
                         @endif
@@ -196,11 +196,11 @@
                         <!-- Active page -->
                         @foreach($users->getUrlRange(max($users->currentPage() - 2, 1), min($users->currentPage() + 2, $users->lastPage())) as $page => $url)
                             @if($page == $users->currentPage())
-                                <span class="pagination-button pagination-active {{ themeClass('button-accent') }} cursor-pointer">
+                                <span class="pagination-button pagination-active bg-amber-600 text-white hover:bg-amber-500 cursor-pointer">
                                     {{ $page }}
                                 </span>
                             @else
-                                <a href="{{ $url }}" class="pagination-button {{ themeClass('button') }}" wire:click.prevent="gotoPage({{ $page }})" wire:key="page-{{ $page }}">
+                                <a href="{{ $url }}" class="pagination-button text-white bg-cyan-600 hover:bg-cyan-500" wire:click.prevent="gotoPage({{ $page }})" wire:key="page-{{ $page }}">
                                     {{ $page }}
                                 </a>
                             @endif
@@ -208,22 +208,22 @@
                         
                         <!-- Next page -->
                         @if($users->hasMorePages())
-                            <a href="{{ $users->nextPageUrl() }}" class="pagination-button {{ themeClass('button') }}" wire:click.prevent="nextPage" wire:key="next-page">
+                            <a href="{{ $users->nextPageUrl() }}" class="pagination-button text-white bg-cyan-600 hover:bg-cyan-500" wire:click.prevent="nextPage" wire:key="next-page">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         @else
-                            <span class="pagination-button opacity-50 {{ themeClass('text-2') }}">
+                            <span class="pagination-button opacity-50 text-cyan-200">
                                 <i class="fas fa-chevron-right"></i>
                             </span>
                         @endif
 
                         <!-- Last page -->
                         @if($users->hasMorePages())
-                            <a href="{{ $users->url($users->lastPage()) }}" class="pagination-button {{ themeClass('button') }} " wire:click.prevent="gotoPage({{ $users->lastPage() }})" wire:key="last-page">
+                            <a href="{{ $users->url($users->lastPage()) }}" class="pagination-button text-white bg-cyan-600 hover:bg-cyan-500 " wire:click.prevent="gotoPage({{ $users->lastPage() }})" wire:key="last-page">
                                 <i class="fas fa-angle-double-right"></i>
                             </a>
                         @else
-                            <span class="pagination-button opacity-50 {{ themeClass('text-2') }}">
+                            <span class="pagination-button opacity-50 text-cyan-200">
                                 <i class="fas fa-angle-double-right"></i>
                             </span>
                         @endif

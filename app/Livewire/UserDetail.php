@@ -4,14 +4,11 @@ namespace App\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
-use TallStackUi\Traits\Interactions;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 
 class UserDetail extends Component
-{
-    use Interactions;
-    
+{    
     public User $user;
     public $email = [];
     public $showEmailForm = false;
@@ -25,13 +22,27 @@ class UserDetail extends Component
     
     public function mount($userId)
     {
-        $this->user = User::with(['activities', 'trainings', 'weeks'])
-            ->withCount(['activities', 'trainings', 'weeks'])
-            ->findOrFail($userId);
+        $this->refreshUserData($userId);
+    }
+    
+    // New method to refresh user data with counts
+    private function refreshUserData($userId = null)
+    {
+        $query = User::with(['activities', 'trainings', 'weeks'])
+            ->withCount(['activities', 'trainings', 'weeks']);
+            
+        if ($userId) {
+            $this->user = $query->findOrFail($userId);
+        } else {
+            $this->user = $query->findOrFail($this->user->id);
+        }
     }
     
     public function toggleEmailForm()
     {
+        // Make sure user data is fresh before opening modal
+        $this->refreshUserData();
+        
         $this->email = [
             'subject' => 'Message from ' . config('app.name'),
             'message' => "Hello {$this->user->name},\n\n",
@@ -158,6 +169,11 @@ class UserDetail extends Component
 
     public function render()
     {
+        // Ensure we have fresh data when rendering
+        if (isset($this->user->id)) {
+            $this->refreshUserData();
+        }
+        
         return view('livewire.user-detail');
     }
 }

@@ -5,12 +5,9 @@ namespace App\Livewire;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Mail;
-use TallStackUi\Traits\Interactions;
 
 class EmailForm extends Component
-{
-    use Interactions;
-    
+{    
     public $userId;
     public $user;
     public $email = [
