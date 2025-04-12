@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Activity;
-use App\Models\Training;
+use App\Models\Workout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 
@@ -19,8 +19,8 @@ class HomeController extends Controller
             return redirect()->route('login');
         }
         
-        // Get next trainings (for the first card)
-        $nextTrainings = $this->getNextTrainings($user);
+        // Get next workouts (for the first card)
+        $nextWorkouts = $this->getNextWorkouts($user);
         
         // Get next race (for the second card)
         $nextRace = $this->getNextRace($user);
@@ -35,12 +35,12 @@ class HomeController extends Controller
         $monthlyConsistency = $this->calculateMonthlyConsistency($user);
         $monthlyConsistency = $this->calculateMonthlyConsistency($user);
         
-        return view('home', compact('nextTrainings', 'nextRace', 'weeklyStats', 'weeklyGoal', 'monthlyConsistency'));
+        return view('home', compact('nextWorkouts', 'nextRace', 'weeklyStats', 'weeklyGoal', 'monthlyConsistency'));
     }
     
-    private function getNextTrainings(User $user)
+    private function getNextWorkouts(User $user)
     {
-        $nextTrainings = Training::where('user_id', $user->id)
+        $nextWorkouts = Workout::where('user_id', $user->id)
             ->where('date', '>=', Carbon::today())
             ->whereHas('type', function($query) {
             $query->where('name', '!=', 'Race');
@@ -50,20 +50,20 @@ class HomeController extends Controller
             ->take(2)
             ->get();
             
-        foreach ($nextTrainings as $training) {
-            // Add a title property that combines training type and date
-            $typeName = $training->type ? $training->type->name : 'Training';
-            $training->title = $typeName;
+        foreach ($nextWorkouts as $workout) {
+            // Add a title property that combines workout type and date
+            $typeName = $workout->type ? $workout->type->name : 'Workout';
+            $workout->title = $typeName;
         }
             
-        return $nextTrainings;
+        return $nextWorkouts;
     }
 
     private function getNextRace(User $user)
     {
         // Assuming there is a 'type_id' that defines a race (adjust as needed)
         // You might need to adjust this query based on how races are identified in your system
-        $nextRace = Training::where('user_id', $user->id)
+        $nextRace = Workout::where('user_id', $user->id)
             ->where('date', '>=', Carbon::today())
             ->whereHas('type', function($query) {
                 $query->where('name', 'Race');
@@ -101,17 +101,17 @@ class HomeController extends Controller
     {
         $goals = new \stdClass();
         
-        // Calculate weekly goals based on planned trainings for the week
+        // Calculate weekly goals based on planned workouts for the week
         $weekStart = Carbon::now()->startOfWeek();
         $weekEnd = Carbon::now()->endOfWeek();
         
-        $plannedTrainings = Training::where('user_id', $user->id)
+        $plannedWorkouts = Workout::where('user_id', $user->id)
             ->whereBetween('date', [$weekStart, $weekEnd])
             ->get();
             
-        $goals->distance = $plannedTrainings->sum('distance');
-        $goals->duration = $plannedTrainings->sum('duration') * 60;
-        $goals->elevation = $plannedTrainings->sum('elevation');
+        $goals->distance = $plannedWorkouts->sum('distance');
+        $goals->duration = $plannedWorkouts->sum('duration') * 60;
+        $goals->elevation = $plannedWorkouts->sum('elevation');
         
         return $goals;
     }
@@ -121,14 +121,14 @@ class HomeController extends Controller
         $monthStart = Carbon::now()->startOfMonth();
         $today = Carbon::now();
         
-        // Get days with planned trainings
-        $plannedDays = Training::where('user_id', $user->id)
+        // Get days with planned workouts
+        $plannedDays = Workout::where('user_id', $user->id)
             ->where('date', '>=', $monthStart)
             ->where('date', '<=', $today)
             ->distinct('date')
             ->count('date');
             
-        // No planned trainings means we can't calculate consistency
+        // No planned workouts means we can't calculate consistency
         if ($plannedDays === 0) {
             return 0;
         }

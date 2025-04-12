@@ -74,23 +74,23 @@
                                         x-transition:leave="transition ease-in duration-150"
                                         x-transition:leave-start="transform opacity-100 scale-100"
                                         x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="absolute right-0 mt-3 w-auto rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border backdrop-blur-sm">
-                                        <div class="py-2 divide-y border-white border-opacity-20">
+                                        class="absolute right-0 py-1 px-2 mt-3 w-auto rounded-xl overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border backdrop-blur-sm">
+                                        <div class="py-1 divide-y border-white border-opacity-20">
                                             <div class="pb-1 px-3">
                                                 <p class="text-xs text-cyan-200 font-medium">ACCOUNT</p>
                                             </div>
                                             <div class="pt-1">
-                                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors">
+                                                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
                                                     <i class="fas fa-user-edit w-5 mr-3 text-cyan-200"></i>
                                                     <span>Profile</span>
                                                 </a>
-                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors">
+                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
                                                     <i class="fas fa-cog w-5 mr-3 text-cyan-200"></i>
                                                     <span>Settings</span>
                                                 </a>
                                                 <form method="POST" action="{{ route('logout') }}">
                                                     @csrf
-                                                    <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors">
+                                                    <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-white hover:bg-red-500 hover:bg-opacity-50 transition-colors rounded-lg">
                                                         <i class="fas fa-sign-out-alt w-5 mr-3 text-cyan-200"></i>
                                                         <span>Logout</span>
                                                     </button>
@@ -103,7 +103,7 @@
                                 <!-- Mobile menu -->
                                 <div class="lg:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50" 
                                      x-show="isMobileMenuOpen" x-cloak @click.self="isMobileMenuOpen = false">
-                                    <div class="absolute top-0 left-0 w-48 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm h-full shadow-2xl rounded-r-xl overflow-hidden flex flex-col transform transition-all duration-300"
+                                    <div class="absolute top-0 left-0 w-48 bg-white bg-opacity-10 border-white border-opacity-20 h-full shadow-lg rounded-r-xl overflow-hidden flex flex-col transform transition-all duration-300"
                                         x-transition:enter="transition ease-out duration-300"
                                         x-transition:enter-start="-translate-x-full"
                                         x-transition:enter-end="translate-x-0"
@@ -238,7 +238,7 @@
         @endguest
         
         <!-- Modals and other UI components -->
-        <div id="training-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div id="workout-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
             <div class="modal-content bg-transparent rounded-lg mx-auto mt-5 max-w-2xl relative max-h-[95vh] overflow-y-auto">
                 <div id="modal-body"></div>
             </div>
@@ -278,12 +278,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 // Fonctions améliorées pour le drag & drop
-function onDragStart(e, trainingId) {
+function onDragStart(e, workoutId) {
     const isCopy = e.ctrlKey || e.metaKey;
     
     // Définir les données à transférer
     e.dataTransfer.setData('text/plain', JSON.stringify({
-        trainingId,
+        workoutId,
         isCopy
     }));
     
@@ -329,7 +329,7 @@ function onDrop(e, newDate) {
     try {
         // Extraire les données
         const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-        const trainingId = data.trainingId;
+        const workoutId = data.workoutId;
         const isCopy = data.isCopy;
         
         // Supprimer le retour visuel
@@ -342,13 +342,13 @@ function onDrop(e, newDate) {
         
         // Déclencher l'événement Livewire approprié
         if(isCopy) {
-            Livewire.dispatch('training-copied', {
-                trainingId: parseInt(trainingId),
+            Livewire.dispatch('workout-copied', {
+                workoutId: parseInt(workoutId),
                 newDate: newDate
             });
         } else {
-            Livewire.dispatch('training-moved', {
-                trainingId: parseInt(trainingId),
+            Livewire.dispatch('workout-moved', {
+                workoutId: parseInt(workoutId),
                 newDate: newDate
             });
         }

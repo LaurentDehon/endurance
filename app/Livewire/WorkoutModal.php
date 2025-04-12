@@ -4,23 +4,23 @@ namespace App\Livewire;
 
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\Training;
-use App\Models\TrainingType;
+use App\Models\Workout;
+use App\Models\WorkoutType;
 use Illuminate\Support\Facades\Auth;
 
-class TrainingModal extends Component
+class WorkoutModal extends Component
 {
     protected $listeners = ['confirmDelete' => 'confirmDelete'];
     
-    public $trainingId;
+    public $workoutId;
     public $date;
     public $distance;
     public $hours;
     public $minutes;
     public $elevation;
     public $notes;
-    public $trainingTypeId;
-    public $trainingTypes;
+    public $workoutTypeId;
+    public $workoutTypes;
     public $isRecurring = false;
     public $recurrenceInterval = 7;
     public $recurrenceEndDate;
@@ -32,7 +32,7 @@ class TrainingModal extends Component
         'minutes' => 'nullable|integer|between:0,59',
         'elevation' => 'nullable|integer',
         'notes' => 'nullable|string',
-        'trainingTypeId' => 'required|exists:training_types,id',
+        'workoutTypeId' => 'required|exists:workout_types,id',
         'isRecurring' => 'nullable|boolean',
         'recurrenceInterval' => 'nullable|required_if:isRecurring,true|integer|min:1',
         'recurrenceEndDate' => 'nullable|required_if:isRecurring,true|date|after:date',
@@ -51,21 +51,21 @@ class TrainingModal extends Component
 
     public function mount($id = null, $date = null)
     {
-        $this->trainingTypes = TrainingType::all();
-        $this->trainingTypeId = $this->trainingTypes->first()->id;        
+        $this->workoutTypes = WorkoutType::all();
+        $this->workoutTypeId = $this->workoutTypes->first()->id;        
 
         // Edit mode
         if ($id) {
-            $this->trainingId = $id;
-            $training = Training::where('user_id', Auth::id())->findOrFail($id);
+            $this->workoutId = $id;
+            $workout = Workout::where('user_id', Auth::id())->findOrFail($id);
             
-            $this->date = $training->date->format('Y-m-d');
-            $this->distance = $training->distance;
-            $this->hours = floor($training->duration / 60);
-            $this->minutes = $training->duration % 60;
-            $this->elevation = $training->elevation;
-            $this->notes = $training->notes;
-            $this->trainingTypeId = $training->training_type_id;
+            $this->date = $workout->date->format('Y-m-d');
+            $this->distance = $workout->distance;
+            $this->hours = floor($workout->duration / 60);
+            $this->minutes = $workout->duration % 60;
+            $this->elevation = $workout->elevation;
+            $this->notes = $workout->notes;
+            $this->workoutTypeId = $workout->workout_type_id;
         } 
         // Create mode
         else {
@@ -88,7 +88,7 @@ class TrainingModal extends Component
             'duration' => (is_numeric($this->hours) ? $this->hours : 0) * 60 + (is_numeric($this->minutes) ? $this->minutes : 0),
             'elevation' => $this->elevation,
             'notes' => $this->notes,
-            'training_type_id' => $this->trainingTypeId,
+            'workout_type_id' => $this->workoutTypeId,
             'user_id' => Auth::id(),
         ];
 
@@ -101,26 +101,26 @@ class TrainingModal extends Component
                 $currentDate = $startDate->copy();
 
                 while ($currentDate <= $endDate) {
-                    Training::create(array_merge($baseData, ['date' => $currentDate]));
+                    Workout::create(array_merge($baseData, ['date' => $currentDate]));
                     $currentDate = $currentDate->addDays((int)$interval);
                 }
 
-                $message = 'Recurring trainings created successfully';
+                $message = 'Recurring workouts created successfully';
             } else {
-                if ($this->trainingId) {
-                    $training = Training::where('user_id', Auth::id())->findOrFail($this->trainingId);
-                    $training->update($baseData);
-                    $message = 'Training successfully updated';
+                if ($this->workoutId) {
+                    $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
+                    $workout->update($baseData);
+                    $message = 'Workout successfully updated';
                 } 
                 else {
-                    Training::create($baseData); // Simplified since baseData already includes date
-                    $message = 'Training successfully created';
+                    Workout::create($baseData); // Simplified since baseData already includes date
+                    $message = 'Workout successfully created';
                 }
             }
 
-            $this->dispatch('training-created');
+            $this->dispatch('workout-created');
             $this->dispatch('toast', $message, 'success');
-            $this->dispatch('closeModal', 'training-modal');
+            $this->dispatch('closeModal', 'workout-modal');
 
         } catch (\Exception $e) {
             $this->dispatch('toast', $e->getMessage(), 'error');
@@ -131,7 +131,7 @@ class TrainingModal extends Component
     {
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm deletion',
-            'message' => 'Are you sure you want to delete this training?<br>This action cannot be undone.',
+            'message' => 'Are you sure you want to delete this workout?<br>This action cannot be undone.',
             'confirmButtonText' => 'Confirm',
             'cancelButtonText' => 'Cancel',
             'confirmAction' => 'confirmDelete',
@@ -142,14 +142,14 @@ class TrainingModal extends Component
 
     public function confirmDelete()
     {
-        $training = Training::where('user_id', Auth::id())
-            ->findOrFail($this->trainingId);
+        $workout = Workout::where('user_id', Auth::id())
+            ->findOrFail($this->workoutId);
             
-        $training->delete();
+        $workout->delete();
 
-        $this->dispatch('toast', 'Training deleted successfully', 'success');
-        $this->dispatch('closeModal', 'training-modal');
-        $this->dispatch('training-created');
+        $this->dispatch('toast', 'Workout deleted successfully', 'success');
+        $this->dispatch('closeModal', 'workout-modal');
+        $this->dispatch('workout-created');
     }
 
     private function validateNumeric($value)
@@ -159,11 +159,11 @@ class TrainingModal extends Component
 
     public function close()
     {
-        $this->dispatch('closeModal', 'training-modal');
+        $this->dispatch('closeModal', 'workout-modal');
     }
 
     public function render()
     {
-        return view('livewire.training-modal');
+        return view('livewire.workout-modal');
     }
 }

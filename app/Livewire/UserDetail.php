@@ -28,13 +28,13 @@ class UserDetail extends Component
     // New method to refresh user data with counts
     private function refreshUserData($userId = null)
     {
-        $query = User::with(['activities', 'trainings', 'weeks'])
-            ->withCount(['activities', 'trainings', 'weeks']);
+        $query = User::with(['activities', 'workouts', 'weeks'])
+            ->withCount(['activities', 'workouts', 'weeks']);
             
         if ($userId) {
-            $this->user = $query->findOrFail($userId);
+            $this->user = $query->where('id', $userId)->firstOrFail();
         } else {
-            $this->user = $query->findOrFail($this->user->id);
+            $this->user = $query->where('id', $this->user->id)->firstOrFail();
         }
     }
     
@@ -110,7 +110,7 @@ class UserDetail extends Component
         
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm User Deletion',
-            'message' => "Are you sure you want to delete user <strong>{$this->user->name}</strong>?<br>All associated data (activities, trainings, and weeks) will be permanently removed.",
+            'message' => "Are you sure you want to delete user <strong>{$this->user->name}</strong>?<br>All associated data (activities, workouts, and weeks) will be permanently removed.",
             'confirmButtonText' => 'Delete User',
             'cancelButtonText' => 'Cancel',
             'confirmAction' => 'confirmDeleteUser',
@@ -132,7 +132,7 @@ class UserDetail extends Component
         
         $this->user->weeks()->delete();
         $this->user->activities()->delete();
-        $this->user->trainings()->delete();
+        $this->user->workouts()->delete();
 
         $this->user->delete();
         

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Training extends Model
+class Workout extends Model
 {
     use HasFactory;
 
@@ -15,7 +15,7 @@ class Training extends Model
         'duration',
         'elevation',
         'notes',
-        'training_type_id',
+        'workout_type_id',
         'user_id'
     ];
 
@@ -31,7 +31,7 @@ class Training extends Model
 
     public function type()
     {
-        return $this->belongsTo(TrainingType::class, 'training_type_id');
+        return $this->belongsTo(WorkoutType::class, 'workout_type_id');
     }
 
     public function scopeForUser($query, User $user)

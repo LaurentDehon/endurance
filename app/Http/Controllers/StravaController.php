@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\StravaAuthService;
 use Illuminate\Http\Request;
-use TallStackUi\Traits\Interactions;
 
 class StravaController extends Controller
 {
-    use Interactions; 
-
     public function __construct(protected StravaAuthService $authService) {}
 
     public function redirect()

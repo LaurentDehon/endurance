@@ -5,11 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TrainingTypesTableSeeder extends Seeder
+class WorkoutTypesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('training_types')->insert([
+        DB::table('workout_types')->insert([
             [
                 'name' => 'Easy Run',
                 'color' => 'bg-blue-500',

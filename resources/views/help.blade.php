@@ -2,11 +2,11 @@
 @section('content')
 <div class="help-container mx-auto p-4 md:p-8 max-w-7xl min-h-[calc(100vh-var(--nav-height)-var(--footer-height,0px))]">
     <!-- Header Section -->
-    <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6 border">
+    <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6 border">
         <div class="container mx-auto px-6 text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">User Guide</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
-                Discover how to get the most out of your training calendar
+                Discover how to get the most out of your workout calendar
             </p>
             <div class="flex flex-wrap justify-center gap-4 mt-6">
                 <a href="#overview" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
@@ -25,7 +25,7 @@
             <a href="#overview" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-bullseye"></i> Overview
             </a>
-            <a href="#training-plan" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
+            <a href="#workout-plan" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-tasks"></i> Create Your Plan
             </a>
             <a href="#metrics" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
@@ -83,7 +83,7 @@
     <!-- Main Content Sections -->
     <div class="space-y-16">
         <!-- Overview Section -->
-        <section id="overview" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="overview" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-bullseye text-xl"></i>
@@ -93,14 +93,14 @@
             
             <p class="text-cyan-200 text-lg mb-6">
                 This calendar combines your actual sports activities (synced from Strava) 
-                with your planned training sessions.
+                with your planned workout sessions.
             </p>
             
             <div class="grid md:grid-cols-2 gap-6">
                 <ul class="list-none space-y-4">
                     <li class="flex items-start gap-3">
                         <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">View your weekly/monthly/yearly training load</span>
+                        <span class="text-white">View your weekly/monthly/yearly workout load</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
@@ -108,14 +108,14 @@
                     </li>
                     <li class="flex items-start gap-3">
                         <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Organize training cycles with week types</span>
+                        <span class="text-white">Organize workout cycles with week types</span>
                     </li>
                 </ul>
                 
                 <ul class="list-none space-y-4">
                     <li class="flex items-start gap-3">
                         <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Drag and drop training sessions</span>
+                        <span class="text-white">Drag and drop workout sessions</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
@@ -129,13 +129,13 @@
             </div>
         </section>
 
-        <!-- Creating Training Plan Section -->
-        <section id="training-plan" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <!-- Creating Workout Plan Section -->
+        <section id="workout-plan" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-tasks text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Create Your Training Plan</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Create Your Workout Plan</h2>
             </div>
             
             <div class="aspect-video rounded-lg overflow-hidden mb-6">
@@ -150,14 +150,14 @@
             </div>
             
             <p class="text-white text-lg">
-                Watch this video for useful tips on creating your own training plan.
-                This is the approach I personally use to structure my training sessions, but of course, it's just one method among many.
+                Watch this video for useful tips on creating your own workout plan.
+                This is the approach I personally use to structure my workout sessions, but of course, it's just one method among many.
                 Feel free to use it for inspiration or adapt it to your own needs!
             </p>
         </section>
 
         <!-- Performance Metrics Section -->
-        <section id="metrics" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="metrics" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-chart-bar text-xl"></i>
@@ -187,7 +187,7 @@
                         <i class="fas fa-stopwatch text-green-800 text-2xl"></i>
                     </div>
                     <h3 class="text-lg font-semibold text-white">Time</h3>
-                    <p class="text-sm text-cyan-200 mt-2">Training time management and comparison with planned sessions</p>
+                    <p class="text-sm text-cyan-200 mt-2">Workout time management and comparison with planned sessions</p>
                 </div>
             </div>
             
@@ -213,7 +213,7 @@
         </section>
 
         <!-- Strava Sync Section -->
-        <section id="strava" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="strava" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-sync text-xl"></i>
@@ -246,7 +246,7 @@
         </section>
 
         <!-- Week Management Section -->
-        <section id="week" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="week" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-calendar-week text-xl"></i>
@@ -334,15 +334,15 @@
                     <ul class="space-y-3">
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-cyan-400"><i class="fas fa-mouse-pointer"></i></div>
-                            <span class="text-white">Click on any day to add training sessions</span>
+                            <span class="text-white">Click on any day to add workout sessions</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-cyan-400"><i class="fas fa-edit"></i></div>
-                            <span class="text-white">Click on a training badge to edit session details</span>
+                            <span class="text-white">Click on a workout badge to edit session details</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-cyan-400"><i class="fas fa-tag"></i></div>
-                            <span class="text-white">Use week types to categorize training phases</span>
+                            <span class="text-white">Use week types to categorize workout phases</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-cyan-400"><i class="fas fa-arrows-alt"></i></div>
@@ -376,7 +376,7 @@
         </section>
 
         <!-- Visual Guide Section -->
-        <section id="visual" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="visual" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-palette text-xl"></i>
@@ -402,10 +402,10 @@
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center">
                             <i class="fas fa-running text-white"></i>
                         </div>
-                        <h3 class="font-medium text-white">Planned Training Session</h3>
+                        <h3 class="font-medium text-white">Planned Workout Session</h3>
                     </div>
                     <p class="text-sm text-cyan-200">
-                        Represents a planned session (color and icon varies by training type)
+                        Represents a planned session (color and icon varies by workout type)
                     </p>
                 </div>
                 
@@ -436,7 +436,7 @@
         </section>
 
         <!-- Pro Tips Section -->
-        <section id="tips" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="tips" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-lightbulb text-xl"></i>
@@ -454,11 +454,11 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Use color-coded week types for training phases</span>
+                            <span>Use color-coded week types for workout phases</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Build your training weeks starting from your race goal</span>
+                            <span>Build your workout weeks starting from your race goal</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
@@ -474,7 +474,7 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Recovery is as important as training sessions</span>
+                            <span>Recovery is as important as workout sessions</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
@@ -484,7 +484,7 @@
                 </div>      
                 
                 <div class="bg-blue-900 bg-opacity-20 border border-blue-600 border-opacity-20 p-5 rounded-xl">
-                    <h3 class="font-semibold text-white mb-3">Training Types</h3>
+                    <h3 class="font-semibold text-white mb-3">Workout Types</h3>
                     <ul class="space-y-2 text-white">
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
@@ -492,7 +492,7 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Recovery Run:</span> A very light run performed after intense training to promote muscle recovery</span>
+                            <span><span class="font-medium">Recovery Run:</span> A very light run performed after intense workout to promote muscle recovery</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
@@ -538,7 +538,7 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Taper:</span> A progressive reduction in training volume before a race</span>
+                            <span><span class="font-medium">Taper:</span> A progressive reduction in workout volume before a race</span>
                         </li>
                     </ul>
                 </div>
@@ -546,7 +546,7 @@
         </section>
 
         <!-- Data Controls Section -->
-        <section id="data" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="data" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                     <i class="fas fa-database text-xl"></i>
@@ -562,7 +562,7 @@
                     <ul class="space-y-3">
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-red-400"><i class="fas fa-trash-alt"></i></div>
-                            <span class="text-white">Delete individual sessions from the training session view</span>
+                            <span class="text-white">Delete individual sessions from the workout session view</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="mt-1 text-red-400"><i class="fas fa-calendar-times"></i></div>

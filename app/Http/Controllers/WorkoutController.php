@@ -3,27 +3,27 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Training;
-use App\Models\TrainingType;
+use App\Models\Workout;
+use App\Models\WorkoutType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TrainingController extends Controller
+class WorkoutController extends Controller
 {
     public function show($id)
     {
-        $training = Training::with('trainingType')->findOrFail($id);
-        $trainingTypes = TrainingType::all();
+        $workout = Workout::with('workoutType')->findOrFail($id);
+        $workouTypes = WorkoutType::all();
 
-        return view('trainings.show', compact('training', 'trainingTypes'));
+        return view('workouts.show', compact('workout', 'workoutTypes'));
     }
 
     public function create(string $date)
     {
-        $trainingTypes = TrainingType::all();  
+        $workoutTypes = WorkoutType::all();  
         $date = Carbon::parse($date);
 
-        return view('trainings.create', compact('trainingTypes', 'date'));
+        return view('workouts.create', compact('workoutTypes', 'date'));
     }    
 
     public function store(Request $request)
@@ -35,25 +35,25 @@ class TrainingController extends Controller
             'minutes' => 'nullable|integer|min:0|max:59',
             'elevation' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
-            'type' => 'required|exists:training_types,id',
+            'type' => 'required|exists:workout_types,id',
         ]);
 
         $duration = ($validated['hours'] ?? 0) * 60 + ($validated['minutes'] ?? 0);
 
-        Training::create([
+        Workout::create([
             'user_id' => Auth::id(),
             'date' => $validated['date'],
             'distance' => $validated['distance'],
             'duration' => $duration,
             'elevation' => $validated['elevation'],
             'notes' => $validated['notes'],
-            'training_type_id' => $validated['type'],
+            'workout_type_id' => $validated['type'],
         ]);
 
-        return redirect()->route('calendar.index')->with('success', 'Training successfully added');
+        return redirect()->route('calendar.index')->with('success', 'Workout successfully added');
     }
 
-    public function update(Request $request, Training $training)
+    public function update(Request $request, Workout $workout)
     {
         $validated = $request->validate([
             'date' => 'sometimes|date',
@@ -62,7 +62,7 @@ class TrainingController extends Controller
             'minutes' => 'sometimes|nullable|integer|min:0|max:59',
             'elevation' => 'sometimes|nullable|integer|min:0',
             'notes' => 'sometimes|nullable|string',
-            'training_type_id' => 'sometimes|exists:training_types,id',
+            'workout_type_id' => 'sometimes|exists:workout_types,id',
         ]);
 
         if (isset($validated['hours']) || isset($validated['minutes'])) {
@@ -71,19 +71,19 @@ class TrainingController extends Controller
 
         unset($validated['hours'], $validated['minutes']);
 
-        $training->update($validated);
+        $workout->update($validated);
 
-        return redirect()->route('calendar.index')->with('success', 'Training updated successfully');
+        return redirect()->route('calendar.index')->with('success', 'Workout updated successfully');
     }
 
-    public function updateDate(Request $request, Training $training)
+    public function updateDate(Request $request, Workout $workout)
     {
         try {
             $validated = $request->validate([
                 'date' => 'required|date'
             ]);
 
-            $training->update($validated);
+            $workout->update($validated);
 
             return response()->json([
                 'success' => true,
@@ -106,9 +106,9 @@ class TrainingController extends Controller
 
     public function createRoutine()
     {
-        $trainingTypes = TrainingType::all();
+        $workoutTypes = WorkoutType::all();
 
-        return view('trainings.create-routine', compact('trainingTypes'));
+        return view('workouts.create-routine', compact('workoutTypes'));
     }
 
     public function storeRoutine(Request $request)
@@ -126,7 +126,7 @@ class TrainingController extends Controller
             'minutes' => 'nullable|integer|min:0|max:59',
             'elevation' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
-            'type' => 'required|exists:training_types,id',
+            'type' => 'required|exists:workout_types,id',
         ]);
 
         $startDate = Carbon::parse($validated['start_date']);
@@ -143,17 +143,17 @@ class TrainingController extends Controller
         $duration = ($validated['hours'] ?? 0) * 60 + ($validated['minutes'] ?? 0);
 
         foreach ($dates as $date) {
-            Training::create([
+            Workout::create([
                 'user_id' => Auth::id(),
                 'date' => $date->format('Y-m-d'),
                 'distance' => $validated['distance'],
                 'duration' => $duration,
                 'elevation' => $validated['elevation'],
-                'training_type_id' => $validated['type'],
+                'workout_type_id' => $validated['type'],
             ]);
         }
 
-        return redirect()->route('calendar.index')->with('success', count($dates) . ' training sessions created');
+        return redirect()->route('calendar.index')->with('success', count($dates) . ' workout sessions created');
     }
 
     private function generateRecurringDates(Carbon $start, ?Carbon $end, string $type, int $interval, array $days = []): array
@@ -172,10 +172,10 @@ class TrainingController extends Controller
             while (!$end || $date <= $end) {
                 foreach ($days as $day) {
                     $weekStart = $date->copy()->startOfWeek(Carbon::MONDAY);
-                    $trainingDate = $weekStart->addDays((int)$day);
+                    $workoutDate = $weekStart->addDays((int)$day);
 
-                    if ($trainingDate >= $start && (!$end || $trainingDate <= $end)) {
-                        $dates[] = $trainingDate->copy();
+                    if ($workoutDate >= $start && (!$end || $workoutDate <= $end)) {
+                        $dates[] = $workoutDate->copy();
                     }
                 }
 
@@ -201,16 +201,16 @@ class TrainingController extends Controller
 
     public function destroy(int $id)
     {
-        $training = Training::findOrFail($id);
-        $training->delete();
+        $workout = Workout::findOrFail($id);
+        $workout->delete();
 
-        return redirect()->route('calendar.index')->with('success', 'Training successfully deleted');
+        return redirect()->route('calendar.index')->with('success', 'Workout successfully deleted');
     }
 
     public function destroyAll()
     {
-        Training::where('user_id', Auth::id())->delete();
+        Workout::where('user_id', Auth::id())->delete();
 
-        return redirect()->back()->with('success', 'All trainings deleted successfully');
+        return redirect()->back()->with('success', 'All workouts deleted successfully');
     }
 }

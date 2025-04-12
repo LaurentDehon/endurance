@@ -2,9 +2,9 @@
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <!-- Fond d'écran fixe avec dégradé de couleur -->
-    <div class="fixed inset-0 bg-gradient-to-br {{ themeClass('background') }} -z-10"></div>
+    <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
     
-    <div class="max-w-3xl w-full space-y-8 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+    <div class="max-w-3xl w-full space-y-8 bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg p-8 rounded-2xl shadow-lg">
         <!-- Header avec style amélioré -->
         <div class="text-center">
             <h1 class="text-3xl font-bold text-white">
@@ -163,7 +163,7 @@
             <!-- Danger Zone -->
             <div class="space-y-6">
                 <div class="border-b border-red-200/30 pb-3">
-                    <h2 class="text-xl font-semibold text-red-500/90 flex items-center">
+                    <h2 class="text-xl font-semibold text-red-500 flex items-center">
                         <i class="fas fa-exclamation-triangle mr-2 text-red-500/90"></i>
                         Danger Zone
                     </h2>
@@ -175,7 +175,7 @@
 
                     <div class="space-y-4">
                         <div class="p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-                            <p class="text-red-400 font-medium flex items-start">
+                            <p class="text-red-500 font-medium flex items-start">
                                 <i class="fas fa-radiation mr-2 mt-1"></i>
                                 <span>This action is irreversible. All your data will be permanently deleted.</span>
                             </p>
@@ -188,7 +188,7 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-key text-red-400"></i>
+                                    <i class="fas fa-key text-red-500"></i>
                                 </div>
                                 <input type="password" 
                                     class="pl-10 pr-4 py-3 w-full rounded-lg border border-red-300/30 bg-red-500/5 focus:border-red-400/50 focus:ring-2 focus:ring-red-400/20 text-white" 

@@ -17,8 +17,8 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Next Trainings Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 shadow-xl border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextTrainingCard">
+            <!-- Next Workouts Card -->
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 shadow-xl border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -26,31 +26,31 @@
                     Next Objectives
                 </h2>
                 
-                <div class="mb-4" id="nextTrainingContent">
-                    @if(isset($nextTrainings) && count($nextTrainings) > 0)
-                        @foreach($nextTrainings->take(2) as $training)
+                <div class="mb-4" id="nextWorkoutContent">
+                    @if(isset($nextWorkouts) && count($nextWorkouts) > 0)
+                        @foreach($nextWorkouts->take(2) as $workout)
                             <div class="mb-4 pb-4 {{ !$loop->last ? 'border-b border-white border-opacity-20' : '' }}">
-                                <div class="text-2xl font-bold text-amber-300 mb-2">{{ $training->title }}</div>
+                                <div class="text-2xl font-bold text-amber-300 mb-2">{{ $workout->title }}</div>
                                 <div class="flex items-center mb-2 gap-2 text-white">
                                     <i class="fas fa-calendar"></i>
-                                    <span>{{ \Carbon\Carbon::parse($training->date)->format('l, F j, Y') }}</span>
+                                    <span>{{ \Carbon\Carbon::parse($workout->date)->format('l, F j, Y') }}</span>
                                 </div>
-                                @if($training->duration > 0)
+                                @if($workout->duration > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
                                     <i class="fas fa-stopwatch"></i>
-                                    <span>{{ formatTime($training->duration * 60) }}</span>
+                                    <span>{{ formatTime($workout->duration * 60) }}</span>
                                 </div>
                                 @endif
-                                @if(isset($training->distance) && $training->distance > 0)
+                                @if(isset($workout->distance) && $workout->distance > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
                                     <i class="fas fa-route"></i>
-                                    <span>{{ $training->distance }} km</span>
+                                    <span>{{ $workout->distance }} km</span>
                                 </div>
                                 @endif
-                                @if(isset($training->elevation) && $training->elevation > 0)
+                                @if(isset($workout->elevation) && $workout->elevation > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
                                     <i class="fas fa-mountain"></i>
-                                    <span>{{ $training->elevation }} m</span>
+                                    <span>{{ $workout->elevation }} m</span>
                                 </div>
                                 @endif
                             </div>
@@ -375,7 +375,7 @@
             document.getElementById('welcomeSection').classList.remove('opacity-0', 'translate-y-10');
             
             setTimeout(() => {
-                document.getElementById('nextTrainingCard').classList.remove('opacity-0');
+                document.getElementById('nextWorkoutCard').classList.remove('opacity-0');
                 
                 setTimeout(() => {
                     document.getElementById('raceCard').classList.remove('opacity-0');

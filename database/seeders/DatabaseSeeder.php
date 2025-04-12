@@ -10,7 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersTableSeeder::class,
-            TrainingTypesTableSeeder::class,
+            WorkoutTypesTableSeeder::class,
             WeekTypesTableSeeder::class,
         ]);
     }

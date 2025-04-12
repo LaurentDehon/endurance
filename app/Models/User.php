@@ -41,9 +41,9 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function trainings()
+    public function workouts()
     {
-        return $this->hasMany(Training::class);
+        return $this->hasMany(Workout::class);
     }
 
     public function weeks()

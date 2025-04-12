@@ -33,8 +33,8 @@
                             <div class="text-sm text-cyan-200">Activities</div>
                         </div>
                         <div class="text-center px-4 py-2 rounded-lg">
-                            <div class="text-2xl font-bold text-white">{{ $user->trainings_count ?? 0 }}</div>
-                            <div class="text-sm text-cyan-200">Trainings</div>
+                            <div class="text-2xl font-bold text-white">{{ $user->workouts_count ?? 0 }}</div>
+                            <div class="text-sm text-cyan-200">Workouts</div>
                         </div>
                         <div class="text-center px-4 py-2 rounded-lg">
                         </div>
@@ -134,7 +134,7 @@
             </button>
         </div>
         
-        <!-- User data tabs (optional expansion for activities, trainings, etc) -->
+        <!-- User data tabs (optional expansion for activities, workouts, etc) -->
         <!-- You could add tabs here to show the user's data -->
     </div>
     

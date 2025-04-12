@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Training;
+use App\Models\Workout;
 
 function formatTime(int $seconds): string
 {
@@ -36,7 +36,7 @@ function getDayData($date)
         'date' => $date,
         'name' => $date->format('D'),
         'number' => $date->day,
-        'trainings' => Training::whereDate('date', $date)->get(),
+        'workouts' => Workout::whereDate('date', $date)->get(),
         'is_today' => $date->isToday()
     ];
 }

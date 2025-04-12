@@ -6,8 +6,8 @@
     <div class="p-6 pb-2">
         <div class="flex justify-between items-start mb-4">
             <h2 class="text-xl md:text-2xl font-bold text-white mb-1 flex items-center" id="modal-title">
-                <i class="fas fa-{{ $trainingId ? 'edit' : 'plus-circle' }} text-amber-300 mr-3"></i>
-                {{ $trainingId ? 'Edit Workout' : 'Create New Workout' }}
+                <i class="fas fa-{{ $workoutId ? 'edit' : 'plus-circle' }} text-amber-300 mr-3"></i>
+                {{ $workoutId ? 'Edit Workout' : 'Create New Workout' }}
             </h2>
             <button type="button" wire:click.prevent="close" 
                 class="text-white bg-cyan-600 hover:bg-cyan-500 h-8 w-8 rounded-full flex items-center justify-center hover:scale-105 transition-all"
@@ -16,7 +16,7 @@
             </button>
         </div>
         <p class="text-cyan-200 text-sm mb-4">
-            {{ $trainingId ? 'Update your training session details' : 'Enter the details of your session' }}
+            {{ $workoutId ? 'Update your workout session details' : 'Enter the details of your session' }}
         </p>
     </div>
 
@@ -30,31 +30,30 @@
                         <i class="fas fa-calendar-alt text-slate-300 text-sm"></i>
                     </div>
                     <input type="date" wire:model="date" id="date" 
-                        class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all">
-                    @error('date')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all">                    @error('date')
+                        <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('date') }}</span>
                     @enderror
                 </div>
             </div>
 
-            <!-- Training Type -->
+            <!-- Workout Type -->
             <div class="space-y-1.5">
-                <label for="training_type_id" class="text-sm font-medium text-white">Training Type</label>
+                <label for="workout_type_id" class="text-sm font-medium text-white">Workout Type</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-tag text-slate-300 text-sm"></i>
                     </div>
-                    <select wire:model="trainingTypeId" id="training_type_id" 
+                    <select wire:model="workoutTypeId" id="workout_type_id" 
                         class="pl-10 pr-8 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 appearance-none transition-all">
-                        @foreach($trainingTypes as $type)
+                        @foreach($workoutTypes as $type)
                             <option value="{{ $type->id }}">{{ $type->name }}</option>
                         @endforeach
                     </select>
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <i class="fas fa-chevron-down text-slate-300 text-sm"></i>
                     </div>
-                    @error('trainingTypeId')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                    @error('workoutTypeId')
+                        <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('workoutTypeId') }}</span>
                     @enderror
                 </div>
             </div>
@@ -70,7 +69,7 @@
                         class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all"
                         placeholder="0.0">
                     @error('distance')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('distance') }}</span>
                     @enderror
                 </div>
             </div>
@@ -86,7 +85,7 @@
                         class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all"
                         placeholder="0">
                     @error('elevation')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('elevation') }}</span>
                     @enderror
                 </div>
             </div>
@@ -118,8 +117,8 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    @error('hours')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
-                    @error('minutes')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+                    @error('hours')<span class="text-red-500 text-xs">{{ $errors->first('hours') }}</span>@enderror
+                    @error('minutes')<span class="text-red-500 text-xs">{{ $errors->first('minutes') }}</span>@enderror
                 </div>
             </div>
 
@@ -134,13 +133,13 @@
                         class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
                         placeholder="Write additional notes..."></textarea>
                     @error('notes')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('notes') }}</span>
                     @enderror
                 </div>
             </div>
         </div>
 
-        @if(!$trainingId)
+        @if(!$workoutId)
             <div class="col-span-full space-y-4">
                 <div class="flex items-center space-x-2">
                     <div class="relative inline-flex items-center">
@@ -149,7 +148,7 @@
                         <label for="isRecurring" class="ml-2 text-sm font-medium text-white cursor-pointer"></label>
                             <span class="flex items-center text-white">
                                 <i class="fas fa-repeat text-amber-400 mr-1.5"></i>
-                                Recurring Training
+                                Recurring Workout
                             </span>
                         </label>
                     </div>
@@ -169,7 +168,7 @@
                                     class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all"
                                     placeholder="7">
                                 @error('recurrenceInterval')
-                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('recurrenceInterval') }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -184,7 +183,7 @@
                                 <input type="date" wire:model="recurrenceEndDate" id="recurrenceEndDate" 
                                     class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all">
                                 @error('recurrenceEndDate')
-                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('recurrenceEndDate') }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -203,7 +202,7 @@
                 Close
             </button>
 
-            @if($trainingId)
+            @if($workoutId)
                 <!-- Bouton Delete -->
                 <button type="button" wire:click.prevent="delete" 
                     class="bg-red-600 hover:bg-red-500 text-white flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300/50 hover:shadow-md">
@@ -215,8 +214,8 @@
             <!-- Bouton Submit -->
             <button type="submit" 
                 class="bg-amber-600 text-white hover:bg-amber-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 hover:shadow-md">
-                <i class="fas fa-{{ $trainingId ? 'save' : 'plus' }} mr-1.5"></i>
-                {{ $trainingId ? 'Save Changes' : 'Create Session' }}
+                <i class="fas fa-{{ $workoutId ? 'save' : 'plus' }} mr-1.5"></i>
+                {{ $workoutId ? 'Save Changes' : 'Create Session' }}
             </button>
         </div>
     </form>

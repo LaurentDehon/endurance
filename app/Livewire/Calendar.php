@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Week;
 use Livewire\Component;
 use App\Models\Activity;
-use App\Models\Training;
+use App\Models\Workout;
 use App\Models\WeekType;
 use Livewire\Attributes\On;
 use Illuminate\Support\Collection;
@@ -24,7 +24,7 @@ class Calendar extends Component
 
     public $year;
     public $activities;
-    public $trainings;
+    public $workouts;
     public $weeks;
     public $months;
     public $monthStats;
@@ -49,9 +49,9 @@ class Calendar extends Component
     public function render()
     {
         $this->activities = $this->getActivities();
-        $this->trainings = $this->getTrainings();
+        $this->workouts = $this->getWorkouts();
 
-        $this->weeks = $this->getWeeks($this->activities, $this->trainings);
+        $this->weeks = $this->getWeeks($this->activities, $this->workouts);
         $this->months = $this->groupWeeksByMonth($this->weeks);
         $this->monthStats = $this->calculateMonthStats($this->weeks);
         $this->yearStats = $this->calculateYearStats($this->weeks);
@@ -62,7 +62,7 @@ class Calendar extends Component
             'yearStats' => $this->yearStats,
             'weekTypes' => WeekType::all(),
             'activities' => $this->activities,
-            'trainings' => $this->trainings,
+            'workouts' => $this->workouts,
             'year' => $this->year,
             'years' => $this->getAvailableYears()
         ]);
@@ -78,7 +78,7 @@ class Calendar extends Component
                 ->selectRaw('YEAR(start_date) as year')
                 ->distinct()
                 ->pluck('year'),
-            Training::where('user_id', $user->id)
+            Workout::where('user_id', $user->id)
                 ->selectRaw('YEAR(date) as year')
                 ->distinct()
                 ->pluck('year'),
@@ -123,20 +123,20 @@ class Calendar extends Component
             ->get();
     }
 
-    public function getTrainings()
+    public function getWorkouts()
     {
         $year = $this->year;
         
         $startDate = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
         $endDate = Carbon::createFromDate($year, 12, 31)->endOfWeek(Carbon::SUNDAY);
 
-        return Training::with('type')
+        return Workout::with('type')
             ->where('user_id', Auth::id())
             ->whereBetween('date', [$startDate, $endDate])
             ->get();
     }
 
-    private function getWeeks(Collection $activities, Collection $trainings): Collection
+    private function getWeeks(Collection $activities, Collection $workouts): Collection
     {
         $weeks = collect();
         $date = Carbon::createFromDate($this->year, 1, 1)->startOfYear();
@@ -158,7 +158,7 @@ class Calendar extends Component
             );
 
             // Calcul des stats
-            $weekStats = $this->calculateWeekStats($start, $end, $activities, $trainings);
+            $weekStats = $this->calculateWeekStats($start, $end, $activities, $workouts);
 
             $week->start = $start->format('d M');
             $week->end = $end->format('d M');
@@ -173,7 +173,7 @@ class Calendar extends Component
         return $weeks;
     }
 
-    private function calculateWeekStats(Carbon $start, Carbon $end, Collection $activities, Collection $trainings): array
+    private function calculateWeekStats(Carbon $start, Carbon $end, Collection $activities, Collection $workouts): array
     {
         // Activités réelles
         $actualActivities = $activities->filter(function ($activity) use ($start, $end) {
@@ -182,8 +182,8 @@ class Calendar extends Component
         });
 
         // Entraînements planifiés
-        $plannedTrainings = $trainings->filter(function ($training) use ($start, $end) {
-            $date = Carbon::parse($training->date);
+        $plannedWorkouts = $workouts->filter(function ($workout) use ($start, $end) {
+            $date = Carbon::parse($workout->date);
             return $date->between($start, $end);
         });
 
@@ -194,9 +194,9 @@ class Calendar extends Component
                 'duration' => $actualActivities->sum('moving_time')
             ],
             'planned' => [
-                'distance' => $plannedTrainings->sum('distance'),
-                'elevation' => $plannedTrainings->sum('elevation'),
-                'duration' => $plannedTrainings->sum('duration') * 60
+                'distance' => $plannedWorkouts->sum('distance'),
+                'elevation' => $plannedWorkouts->sum('elevation'),
+                'duration' => $plannedWorkouts->sum('duration') * 60
             ]
         ];
     }
@@ -276,42 +276,48 @@ class Calendar extends Component
         $this->dispatch('toast', 'Week type updated successfully', 'success');
     }  
 
-    #[On('training-moved')]
-    public function updateTrainingDate($trainingId, $newDate)
+    #[On('workout-moved')]
+    public function updateWorkoutDate($workoutId, $newDate)
     {
-        $training = Training::with('type')->findOrFail($trainingId);
+        $workout = Workout::with('type')->findOrFail($workoutId);
 
-        $training->update([
+        $workout->update([
             'date' => Carbon::parse($newDate)
         ]);
         
         $this->refreshCalendar();
-        $this->dispatch('toast', $training->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+        $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
-    #[On('training-copied')]
-    public function copyTraining($trainingId, $newDate)
+    #[On('workout-copied')]
+    public function copyWorkout($workoutId, $newDate)
     {
-        $originalTraining = Training::with('type')->findOrFail($trainingId);
+        $originalWorkout = Workout::with('type')->findOrFail($workoutId);
         
-        $newTraining = $originalTraining->replicate();
-        $newTraining->date = Carbon::parse($newDate);
-        $newTraining->save();
+        $newWorkout = $originalWorkout->replicate();
+        $newWorkout->date = Carbon::parse($newDate);
+        $newWorkout->save();
 
         $this->refreshCalendar();
-        $this->dispatch('toast', $originalTraining->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+        $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
-    #[On('training-created')]
+    #[On('workout-created')]
     public function refreshCalendar()
     {
-        $this->trainings = $this->getTrainings();
+        $this->workouts = $this->getWorkouts();
     }
     
     public function startSync(StravaSyncService $syncService)
     {
         try {
-            $result = $syncService->sync(Auth::user());
+            $user = Auth::user();
+            if (!$user || !($user instanceof \App\Models\User)) {
+                $this->dispatch('toast', 'User authentication required', 'error');
+                return;
+            }
+            
+            $result = $syncService->sync($user);
             
             if ($result['success']) {
                 if ($result['count'] > 0) {
@@ -332,13 +338,13 @@ class Calendar extends Component
 
     public function deleteAll()
     {
-        $count = Training::where('user_id', Auth::id())
+        $count = Workout::where('user_id', Auth::id())
             ->whereYear('date', $this->year)
             ->count();
             
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm deletion',
-            'message' => "Are you sure you want to delete all training sessions for the year {$this->year}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'message' => "Are you sure you want to delete all workout sessions for the year {$this->year}?<br>This will remove {$count} workout sessions and cannot be undone.",
             'confirmButtonText' => 'Delete All',
             'cancelButtonText' => 'Cancel',
             'confirmAction' => 'confirmDeleteAll',
@@ -349,13 +355,13 @@ class Calendar extends Component
 
     public function confirmDeleteAll()
     {
-        $trainings = Training::where('user_id', Auth::id())
+        $workouts = Workout::where('user_id', Auth::id())
             ->whereYear('date', $this->year);
 
-        $count = $trainings->count();
-        $trainings->delete(); 
+        $count = $workouts->count();
+        $workouts->delete(); 
 
-        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
+        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
     public function deleteMonth($monthKey)
@@ -363,14 +369,14 @@ class Calendar extends Component
         $month = Carbon::createFromFormat('Y-m', $monthKey);
         $monthName = $month->format('F');
         
-        $count = Training::where('user_id', Auth::id())
+        $count = Workout::where('user_id', Auth::id())
             ->whereYear('date', $month->year)
             ->whereMonth('date', $month->month)
             ->count();
             
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm Monthly Deletion',
-            'message' => "Are you sure you want to delete all training sessions for {$monthName} {$month->year}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'message' => "Are you sure you want to delete all workout sessions for {$monthName} {$month->year}?<br>This will remove {$count} workout sessions and cannot be undone.",
             'confirmButtonText' => 'Delete Sessions',
             'cancelButtonText' => 'Cancel',
             'confirmAction' => 'confirmDeleteMonth',
@@ -385,14 +391,14 @@ class Calendar extends Component
         $monthKey = $params[0];
         $month = Carbon::createFromFormat('Y-m', $monthKey);
 
-        $trainings = Training::where('user_id', Auth::id())
+        $workouts = Workout::where('user_id', Auth::id())
             ->whereYear('date', $month->year)
             ->whereMonth('date', $month->month);
 
-        $count = $trainings->count();
-        $trainings->delete(); 
+        $count = $workouts->count();
+        $workouts->delete(); 
 
-        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
+        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
     public function deleteWeek($weekId)
@@ -403,13 +409,13 @@ class Calendar extends Component
         $start = $date->copy()->setISODate($this->year, $week->week_number, 1)->startOfWeek();
         $end = $start->copy()->endOfWeek();
         
-        $count = Training::where('user_id', Auth::id())
+        $count = Workout::where('user_id', Auth::id())
             ->whereBetween('date', [$start, $end])
             ->count();
             
         $this->dispatch('openConfirmModal', [
             'title' => 'Confirm Weekly Deletion',
-            'message' => "Are you sure you want to delete all training sessions for Week {$week->week_number}?<br>This will remove {$count} training sessions and cannot be undone.",
+            'message' => "Are you sure you want to delete all workout sessions for Week {$week->week_number}?<br>This will remove {$count} workout sessions and cannot be undone.",
             'confirmButtonText' => 'Delete Sessions',
             'cancelButtonText' => 'Cancel',
             'confirmAction' => 'confirmDeleteWeek',
@@ -428,12 +434,12 @@ class Calendar extends Component
         $start = $date->copy()->setISODate($this->year, $week->week_number, 1)->startOfWeek();
         $end = $start->copy()->endOfWeek();
 
-        $trainings = Training::where('user_id', Auth::id())
+        $workouts = Workout::where('user_id', Auth::id())
             ->whereBetween('date', [$start, $end]);
             
-        $count = $trainings->count();
-        $trainings->delete(); 
+        $count = $workouts->count();
+        $workouts->delete(); 
 
-        $this->dispatch('toast', $count . ' training sessions deleted successfully', 'success');
+        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 }

@@ -25,7 +25,7 @@
             </div>
             
             <h3 class="text-2xl font-bold text-white mb-2">Strava Synchronization</h3>
-            <p class="text-center text-white/80 mb-6">Retrieving your training data from Strava...</p>
+            <p class="text-center text-white/80 mb-6">Retrieving your workout data from Strava...</p>
             
             <!-- Animated progress indicator -->
             <div class="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden">
@@ -67,7 +67,7 @@
             x-transition:leave-end="opacity-0"
             x-cloak>
             
-            <div class="absolute top-0 right-0 w-64 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm h-full shadow-2xl rounded-l-xl transform transition-all duration-300"
+            <div class="absolute top-0 right-0 w-64 bg-white bg-opacity-10 border-white border-opacity-20 h-full shadow-lg rounded-l-xl transform transition-all duration-300"
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="translate-x-full"
                 x-transition:enter-end="translate-x-0"
@@ -127,7 +127,7 @@
         <!-- Main content -->
         <div class="flex-1">
             <!-- Global stats -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
                 <!-- Stats section -->
                 <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
                     <!-- Stats wrapper -->
@@ -149,7 +149,7 @@
                                     </span>
                                     
                                     @if($yearStats['planned'][$stat] > 0)
-                                        <span class="text-xs text-slate-300 ml-1.5 whitespace-nowrap">
+                                        <span class="text-sm text-gray-400 ml-1.5 whitespace-nowrap">
                                             <span class="me-1">/</span>{{ $stat === 'duration' ? formatTime($yearStats['planned'][$stat]) : ($stat === 'distance' ? number_format($yearStats['planned'][$stat], 0, ',', '') : number_format($yearStats['planned'][$stat], 0, ',', '')) }}
                                         </span>
                                     @endif
@@ -166,7 +166,7 @@
                         }" 
                         x-on:livewire:navigating="isLoading = true"
                         x-on:livewire:navigated="isLoading = false">
-                            <div class="flex items-center justify-between gap-2 py-2 px-4 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl shadow-sm w-full">
+                            <div class="flex items-center justify-between gap-2 py-2 px-4 bg-white bg-opacity-10 border-white border-opacity-20 rounded-xl shadow-lg w-full">
                                 <button 
                                     wire:click="previousYear" 
                                     type="button"
@@ -202,7 +202,7 @@
                         </div>
                         
                         <div class="flex gap-2 flex-shrink-0">
-                            <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-amber-600 text-white hover:bg-amber-500 rounded-xl hover:bg-amber-600 transition-colors">
+                            <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-amber-600 text-white hover:bg-amber-500 rounded-xl transition-colors">
                                 <i class="fab fa-strava text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
                                 <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">
                                     Synchronize with Strava
@@ -211,7 +211,7 @@
                             <button wire:click.prevent="deleteAll" class="hidden sm:block relative group py-3 px-4 bg-red-600 hover:bg-red-500 text-white rounded-xl transition-colors">
                                 <i class="fas fa-trash-alt text-2xl"></i>
                                 <div class="absolute bottom-full right-0 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50 hidden sm:block">
-                                    Delete training sessions for the year
+                                    Delete yearly workouts
                                 </div>
                             </button>
                         </div>
@@ -264,34 +264,9 @@
                             
                             <!-- Month stats -->
                             <div class="ml-auto hidden sm:flex">
-                                <div class="flex items-center gap-2 px-2 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border rounded-lg shadow-sm">
-                                    <!-- Dropdown Menu Button -->
-                                    <div class="relative" x-data="{ open: false }">
-                                        <button @click="open = !open" class="py-3 px-3.5 text-white rounded-xl transition-colors hover:bg-white hover:bg-opacity-10 focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        
-                                        <!-- Dropdown menu -->
-                                        <div x-show="open" 
-                                             @click.away="open = false" 
-                                             x-transition:enter="transition ease-out duration-200" 
-                                             x-transition:enter-start="opacity-0 scale-95" 
-                                             x-transition:enter-end="opacity-100 scale-100" 
-                                             x-transition:leave="transition ease-in duration-175" 
-                                             x-transition:leave-start="opacity-100 scale-100" 
-                                             x-transition:leave-end="opacity-0 scale-95" 
-                                             class="absolute right-0 mt-2 w-48 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
-                                            <div class="py-1">
-                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                    <span>Delete trainings</span>
-                                                </button>
-                                                <!-- Other actions can be added here later -->
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="flex items-center gap-3 px-4 bg-white bg-opacity-10 border-white border-opacity-20 border rounded-lg shadow-lg">                                    
                                     @foreach(['distance', 'duration', 'elevation'] as $stat)
-                                        <div class="flex flex-row items-center gap-2 py-2 pe-3">
+                                        <div class="flex flex-row items-center gap-2 py-2">
                                             <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400"></i>
                                             <div class="flex items-end">
                                                 <span class="font-semibold text-white">
@@ -318,6 +293,31 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    <!-- Dropdown Menu Button -->
+                                    <div class="relative" x-data="{ open: false }">
+                                        <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        
+                                        <!-- Dropdown menu -->
+                                        <div x-show="open" 
+                                             @click.away="open = false" 
+                                             x-transition:enter="transition ease-out duration-200" 
+                                             x-transition:enter-start="opacity-0 scale-95" 
+                                             x-transition:enter-end="opacity-100 scale-100" 
+                                             x-transition:leave="transition ease-in duration-175" 
+                                             x-transition:leave-start="opacity-100 scale-100" 
+                                             x-transition:leave-end="opacity-0 scale-95" 
+                                             class="absolute right-0 py-1 px-2 mt-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
+                                            <div class="py-1">
+                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                    <span class="text-sm">Delete monthly workouts</span>
+                                                </button>
+                                                <!-- Other actions can be added here later -->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -382,7 +382,7 @@
                                                 
                                                 <!-- Dropdown Menu Button -->
                                                 <div class="relative" x-data="{ open: false }">
-                                                    <button @click="open = !open" class="py-1.5 px-3 text-white bg-cyan-600 hover:bg-cyan-500 rounded-md transition-colors focus:outline-none">
+                                                    <button @click="open = !open" class="hidden sm:block py-1.5 px-3 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     
@@ -395,11 +395,11 @@
                                                          x-transition:leave="transition ease-in duration-175" 
                                                          x-transition:leave-start="opacity-100 scale-100" 
                                                          x-transition:leave-end="opacity-0 scale-95" 
-                                                         class="absolute right-0 py-1 px-2 mt-2 w-48 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
+                                                         class="absolute -right-28 py-1 px-2 mt-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
                                                         <div class="py-1">
                                                             <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
                                                                 <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                                <span>Delete trainings</span>
+                                                                <span class="text-sm">Delete weekly workouts</span>
                                                             </button>
                                                             <!-- Other actions can be added here later -->
                                                         </div>
@@ -428,7 +428,7 @@
                                                             </span>
                                                             
                                                             @if($week->planned_stats[$stat] > 0)
-                                                                <span class="text-2xs text-slate-300 ml-1 whitespace-nowrap flex items-end mb-0.5">
+                                                                <span class="text-sm text-gray-400 ml-1 whitespace-nowrap flex items-end mb-0.5">
                                                                     /&nbsp;<span>
                                                                         @if($stat === 'duration')
                                                                             {{ formatTime($week->planned_stats[$stat]) }}
@@ -467,7 +467,7 @@
                                             ondragover="onDragOver(event)" 
                                             ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
                                             ondragleave="onDragLeave(event)" 
-                                            wire:click.stop="$dispatch('openModal', { component: 'training-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
+                                            wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
                                             class="relative block p-2 rounded-lg {{ $day['is_today'] ? 'border border-amber-300 bg-amber-200/10' : 'border border-white/20' }} min-h-24 cursor-pointer">
                                             <!-- Day header -->
                                             <div class="absolute top-2 left-2">
@@ -501,38 +501,38 @@
                                                 </div>
                                             @endif
 
-                                            <!-- Training badges -->
+                                            <!-- Workout badges -->
                                             @php 
-                                                $dayTrainings = $trainings->filter(function ($training) use ($dayDate){
-                                                    return $training->date->isSameDay($dayDate);
+                                                $dayWorkouts = $workouts->filter(function ($workout) use ($dayDate){
+                                                    return $workout->date->isSameDay($dayDate);
                                                 }); 
                                             @endphp
-                                            @if($dayTrainings->isNotEmpty())
+                                            @if($dayWorkouts->isNotEmpty())
                                                 <div class="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[80%]">
-                                                    @foreach($dayTrainings as $training)
+                                                    @foreach($dayWorkouts as $workout)
                                                         <div class="relative group">
-                                                            <a wire:click.stop="$dispatch('openModal', { component: 'training-modal', attributes: { id: '{{ $training->id }}' }})" 
+                                                            <a wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { id: '{{ $workout->id }}' }})" 
                                                                 class="relative cursor-pointer block"
                                                                 draggable="true" 
-                                                                ondragstart="onDragStart(event, {{ $training->id }})">
-                                                                <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center {{ $training->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                                                    <i class="fas fa-{{ $training->type->icon }} text-sm"></i>
+                                                                ondragstart="onDragStart(event, {{ $workout->id }})">
+                                                                <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                                    <i class="fas fa-{{ $workout->type->icon }} text-sm"></i>
                                                                 </div>
                                                                 <div class="absolute top-full left-1/2 -translate-x-1/2 translate-y-2 px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] hidden md:block w-max max-w-[150px]">
-                                                                    <div class="font-medium mb-0.5">{{ $training->type->name }}</div>
+                                                                    <div class="font-medium mb-0.5">{{ $workout->type->name }}</div>
                                                                     <div class="flex flex-wrap gap-x-2 text-gray-300 text-2xs">
-                                                                        @if($training->duration > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-stopwatch mr-1"></i>{{ formatTime($training->duration * 60) }}</span>
+                                                                        @if($workout->duration > 0)
+                                                                            <span class="whitespace-nowrap"><i class="fas fa-stopwatch mr-1"></i>{{ formatTime($workout->duration * 60) }}</span>
                                                                         @endif
-                                                                        @if($training->distance > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-route mr-1"></i>{{ formatDistance($training->distance) }}</span>
+                                                                        @if($workout->distance > 0)
+                                                                            <span class="whitespace-nowrap"><i class="fas fa-route mr-1"></i>{{ formatDistance($workout->distance) }}</span>
                                                                         @endif
-                                                                        @if($training->elevation > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-mountain mr-1"></i>{{ $training->elevation }}m</span>
+                                                                        @if($workout->elevation > 0)
+                                                                            <span class="whitespace-nowrap"><i class="fas fa-mountain mr-1"></i>{{ $workout->elevation }}m</span>
                                                                         @endif
                                                                     </div>
-                                                                    @if($training->notes != '')
-                                                                        <div class="mt-1 text-gray-200 text-2xs line-clamp-2">{{ $training->notes }}</div>
+                                                                    @if($workout->notes != '')
+                                                                        <div class="mt-1 text-gray-200 text-2xs line-clamp-2">{{ $workout->notes }}</div>
                                                                     @endif
                                                                 </div>
                                                             </a>
@@ -556,7 +556,7 @@
             <div class="xl:fixed">
                 <!-- Desktop sidebar only -->
                 <div class="hidden lg:block">
-                    <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl shadow-lg p-4">
+                    <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4">
                         <h3 class="font-bold text-white mt-1 pb-4 mb-4 border-b border-white border-opacity-20"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>
                             Navigation
                         </h3>
@@ -624,6 +624,3 @@
     });    
 </script>
 @endscript
-
-
-
