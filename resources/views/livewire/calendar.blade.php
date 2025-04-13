@@ -208,12 +208,53 @@
                                     Synchronize with Strava
                                 </div>
                             </button>
-                            <button wire:click.prevent="deleteAll" class="hidden sm:block relative group py-3 px-4 bg-red-600 hover:bg-red-500 text-white rounded-xl transition-colors">
-                                <i class="fas fa-trash-alt text-2xl"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity z-50 hidden sm:block">
-                                    Delete yearly workouts
-                                </div>
-                            </button>
+                            
+                            <!-- Year Options Dropdown Menu Button -->
+                            <div class="relative hidden sm:block" x-data="{ open: false }">
+                                <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                    <i class="fas fa-ellipsis-v text-2xl"></i>
+                                </button>
+                                
+                                <!-- Dropdown menu using teleport -->
+                                <template x-teleport="body">
+                                    <div x-show="open" 
+                                         x-effect="
+                                            if (open) {
+                                                $nextTick(() => {
+                                                    const button = $root.previousElementSibling;
+                                                    const rect = button.getBoundingClientRect();
+                                                    $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                                    $el.style.left = `${rect.left - 210 + rect.width}px`;
+                                                });
+                                            }
+                                         "
+                                         @click.away="open = false" 
+                                         x-transition:enter="transition ease-out duration-200" 
+                                         x-transition:enter-start="opacity-0 scale-95" 
+                                         x-transition:enter-end="opacity-100 scale-100" 
+                                         x-transition:leave="transition ease-in duration-175" 
+                                         x-transition:leave-start="opacity-100 scale-100" 
+                                         x-transition:leave-end="opacity-0 scale-95" 
+                                         class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                                         x-cloak
+                                         style="position: absolute; z-index: 99999;">
+                                        <div class="py-1">
+                                            <button wire:click.prevent="deleteAll" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                <span class="text-sm">Delete yearly workouts</span>
+                                            </button>
+                                            <button 
+                                                x-data="{ allCollapsed: false }"
+                                                @click="allCollapsed = !allCollapsed; $dispatch(allCollapsed ? 'collapse-all-year' : 'expand-all-year'); open = false;" 
+                                                class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                <i class="w-5 text-cyan-400" :class="allCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
+                                                <span class="text-sm" x-text="allCollapsed ? 'Expand all weeks' : 'Collapse all weeks'"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -248,7 +289,21 @@
                         $monthNumber = 0;
                     }
                 @endphp
-                <section id="{{ Str::slug($monthName) }}" class="mb-4 sm:mb-5" 
+                <section id="{{ Str::slug($monthName) }}" 
+                        x-data="{ 
+                            monthCollapsed: false,
+                            monthKey: '{{ $monthKey }}' 
+                        }"
+                        @toggle-month-collapse.window="if ($event.detail.monthKey === monthKey) { 
+                            monthCollapsed = !monthCollapsed; 
+                            // Dispatch events to all weeks in this month to collapse/expand
+                            if (monthCollapsed) {
+                                $dispatch('collapse-all-weeks', { monthKey: monthKey });
+                            } else {
+                                $dispatch('expand-all-weeks', { monthKey: monthKey });
+                            }
+                        }"
+                        class="mb-4 sm:mb-5" 
                         data-month-key="{{ $monthKey }}" 
                         data-month-number="{{ $monthNumber }}"
                         @if($hasMismatch) style="border: 2px solid red; padding: 1rem;" @endif>
@@ -292,31 +347,58 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach
-                                    <!-- Dropdown Menu Button -->
+                                    @endforeach                                        <!-- Dropdown Menu Button -->
                                     <div class="relative" x-data="{ open: false }">
                                         <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
                                         
-                                        <!-- Dropdown menu -->
-                                        <div x-show="open" 
-                                             @click.away="open = false" 
-                                             x-transition:enter="transition ease-out duration-200" 
-                                             x-transition:enter-start="opacity-0 scale-95" 
-                                             x-transition:enter-end="opacity-100 scale-100" 
-                                             x-transition:leave="transition ease-in duration-175" 
-                                             x-transition:leave-start="opacity-100 scale-100" 
-                                             x-transition:leave-end="opacity-0 scale-95" 
-                                             class="absolute right-0 py-1 px-2 mt-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
-                                            <div class="py-1">
-                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                    <span class="text-sm">Delete monthly workouts</span>
-                                                </button>
-                                                <!-- Other actions can be added here later -->
+                                        <!-- Dropdown menu using teleport -->
+                                        <template x-teleport="body">
+                                            <div x-show="open" 
+                                                 x-effect="
+                                                    if (open) {
+                                                        $nextTick(() => {
+                                                            const button = $root.previousElementSibling;
+                                                            const rect = button.getBoundingClientRect();
+                                                            $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                                            $el.style.left = `${rect.left - 210 + rect.width}px`;
+                                                        });
+                                                    }
+                                                 "
+                                                 @click.away="open = false" 
+                                                 x-transition:enter="transition ease-out duration-200" 
+                                                 x-transition:enter-start="opacity-0 scale-95" 
+                                                 x-transition:enter-end="opacity-100 scale-100" 
+                                                 x-transition:leave="transition ease-in duration-175" 
+                                                 x-transition:leave-start="opacity-100 scale-100" 
+                                                 x-transition:leave-end="opacity-0 scale-95" 
+                                                 class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                                                 x-cloak
+                                                 style="position: absolute; z-index: 99999;">
+                                                <div class="py-1">
+                                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                        <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                        <span class="text-sm">Delete monthly workouts</span>
+                                                    </button>
+                                                    <button 
+                                                        x-data="{ monthCollapsed: false }"
+                                                        x-init="
+                                                            const parentEl = $root.closest('section[x-data*=\'monthCollapsed\']');
+                                                            if (parentEl && parentEl.__x) {
+                                                                monthCollapsed = parentEl.__x.$data.monthCollapsed;
+                                                                parentEl.__x.$watch('monthCollapsed', value => monthCollapsed = value);
+                                                            }
+                                                        "
+                                                        @click="monthCollapsed = !monthCollapsed; $dispatch('toggle-month-collapse', { monthKey: '{{ $monthKey }}' }); open = false;" 
+                                                        class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                        <i class="w-5 text-cyan-400" :class="monthCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
+                                                        <span class="text-sm" x-text="monthCollapsed ? 'Expand month' : 'Collapse month'"></span>
+                                                    </button>
+                                                    <!-- Other actions can be added here later -->
+                                                </div>
                                             </div>
-                                        </div>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -343,7 +425,17 @@
                             $borderColor = $colorName . '-' . min(500, $colorWeight);
                         @endphp
                         <!-- Week header avec style amélioré et plus marqué -->
-                        <div class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20">
+                        <div x-data="{ 
+                                collapsed: false,
+                                weekId: '{{ $week->id }}',
+                                monthKey: '{{ $monthKey }}'
+                             }"
+                             @toggle-week-collapse.window="if ($event.detail.weekId === weekId) collapsed = !collapsed"
+                             @collapse-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = true"
+                             @expand-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = false"
+                             @collapse-all-year.window="collapsed = true"
+                             @expand-all-year.window="collapsed = false"
+                             class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20">
                             <!-- Background overlay plus visible -->
                             <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $lightShade }} via-{{ $midShade }} to-{{ $darkShade }}"></div>
                             
@@ -366,19 +458,60 @@
                                             </div>
                                         
                                             <div class="flex items-center gap-2">
-                                                <button 
-                                                    wire:click="$dispatch('openModal', { component: 'week-type-modal', attributes: { weekId: {{ $week->id }}, currentTypeId: {{ $week->week_type_id ?? 'null' }} }})"
-                                                    class="text-white bg-cyan-600 hover:bg-cyan-500 py-1.5 px-3 text-sm rounded-md flex items-center gap-2">
-                                                    <i class="fas fa-tag"></i>
-                                                    @if($week->type)
-                                                        <span class="flex items-center gap-2">
-                                                            <span class="w-3 h-3 rounded-full {{ $week->type->color }}"></span>
-                                                            {{ $week->type->name }}
-                                                        </span>
-                                                    @else
-                                                        <span>Set week type</span>
-                                                    @endif
-                                                </button>
+                                                <!-- Week Type Button with Dropdown -->
+                                                <div class="relative" x-data="{ typeMenuOpen: false }">
+                                                    <button 
+                                                        @click="typeMenuOpen = !typeMenuOpen" 
+                                                        class="text-white bg-cyan-600 hover:bg-cyan-500 py-1.5 px-3 text-sm rounded-md flex items-center gap-2">
+                                                        <i class="fas fa-tag"></i>
+                                                        @if($week->type)
+                                                            <span class="flex items-center gap-2">
+                                                                <span class="w-3 h-3 rounded-full {{ $week->type->color }}"></span>
+                                                                {{ $week->type->name }}
+                                                            </span>
+                                                        @else
+                                                            <span>Set week type</span>
+                                                        @endif
+                                                    </button>
+                                                    
+                                                    <!-- Week Type Dropdown Menu -->
+                                                    <template x-teleport="body">
+                                                        <div 
+                                                            x-show="typeMenuOpen" 
+                                                            x-effect="
+                                                                if (typeMenuOpen) {
+                                                                    $nextTick(() => {
+                                                                        const button = $root.querySelector('button');
+                                                                        const rect = button.getBoundingClientRect();
+                                                                        $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                                                        $el.style.left = `${rect.left}px`;
+                                                                    });
+                                                                }
+                                                            "
+                                                            @click.away="typeMenuOpen = false" 
+                                                            x-transition:enter="transition ease-out duration-200" 
+                                                            x-transition:enter-start="opacity-0 scale-95" 
+                                                            x-transition:enter-end="opacity-100 scale-100" 
+                                                            x-transition:leave="transition ease-in duration-175" 
+                                                            x-transition:leave-start="opacity-100 scale-100" 
+                                                            x-transition:leave-end="opacity-0 scale-95" 
+                                                            class="p-2 w-44 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                                                            x-cloak
+                                                            style="position: absolute; z-index: 99999;">
+                                                            <div class="pb-1 max-h-60 overflow-y-auto">
+                                                                @foreach($weekTypes as $weekType)
+                                                                    <button 
+                                                                        wire:click="setWeekType({{ $week->id }}, {{ $weekType->id }})" 
+                                                                        @click="typeMenuOpen = false"
+                                                                        class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                                        <span class="w-4 h-4 rounded-full {{ $weekType->color }}"></span>
+                                                                        <span class="text-sm">{{ $weekType->name }}</span>
+                                                                    </button>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </div>
                                                 
                                                 <!-- Dropdown Menu Button -->
                                                 <div class="relative" x-data="{ open: false }">
@@ -386,24 +519,52 @@
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     
-                                                    <!-- Dropdown menu -->
-                                                    <div x-show="open" 
-                                                         @click.away="open = false" 
-                                                         x-transition:enter="transition ease-out duration-200" 
-                                                         x-transition:enter-start="opacity-0 scale-95" 
-                                                         x-transition:enter-end="opacity-100 scale-100" 
-                                                         x-transition:leave="transition ease-in duration-175" 
-                                                         x-transition:leave-start="opacity-100 scale-100" 
-                                                         x-transition:leave-end="opacity-0 scale-95" 
-                                                         class="absolute -right-28 py-1 px-2 mt-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg z-50">
-                                                        <div class="py-1">
-                                                            <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                                <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                                <span class="text-sm">Delete weekly workouts</span>
-                                                            </button>
-                                                            <!-- Other actions can be added here later -->
+                                                    <!-- Dropdown menu using teleport -->
+                                                    <template x-teleport="body">
+                                                        <div x-show="open" 
+                                                             x-effect="
+                                                                if (open) {
+                                                                    $nextTick(() => {
+                                                                        const button = $root.previousElementSibling;
+                                                                        const rect = button.getBoundingClientRect();
+                                                                        $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                                                        $el.style.left = `${rect.left + rect.width}px`;
+                                                                    });
+                                                                }
+                                                             "
+                                                             @click.away="open = false" 
+                                                             x-transition:enter="transition ease-out duration-200" 
+                                                             x-transition:enter-start="opacity-0 scale-95" 
+                                                             x-transition:enter-end="opacity-100 scale-100" 
+                                                             x-transition:leave="transition ease-in duration-175" 
+                                                             x-transition:leave-start="opacity-100 scale-100" 
+                                                             x-transition:leave-end="opacity-0 scale-95" 
+                                                             class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                                                             x-cloak
+                                                             style="position: absolute; z-index: 99999;">
+                                                             <div class="py-1">
+                                                                <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                                    <span class="text-sm">Delete weekly workouts</span>
+                                                                </button>
+                                                                <button 
+                                                                    x-data="{ weekCollapsed: false }"
+                                                                    x-init="
+                                                                        const parentEl = $root.closest('[x-data*=\'collapsed\']');
+                                                                        if (parentEl && parentEl.__x) {
+                                                                            weekCollapsed = parentEl.__x.$data.collapsed;
+                                                                            parentEl.__x.$watch('collapsed', value => weekCollapsed = value);
+                                                                        }
+                                                                    "
+                                                                    @click="weekCollapsed = !weekCollapsed; $dispatch('toggle-week-collapse', { weekId: '{{ $week->id }}' }); open = false;" 
+                                                                    class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                                    <i class="w-5 text-cyan-400" :class="weekCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
+                                                                    <span class="text-sm" x-text="weekCollapsed ? 'Expand week' : 'Collapse week'"></span>
+                                                                </button>
+                                                                <!-- Other actions can be added here later -->
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </template>
                                                 </div>
                                             </div>
                                         </div>
@@ -457,7 +618,7 @@
                                 </div>
                             </div>
                             <!-- Days grid -->
-                            <div class="p-2">
+                            <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
                                         @php

@@ -18,7 +18,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Next Workouts Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 shadow-xl border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -64,7 +64,7 @@
             </div>
             
             <!-- Race Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 shadow-xl border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="raceCard">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="raceCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
@@ -130,7 +130,7 @@
             </div>
             
             <!-- Statistics Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm backdrop-blur-lg rounded-xl p-6 shadow-xl border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="statsCard">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="statsCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />

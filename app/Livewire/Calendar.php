@@ -242,6 +242,29 @@ class Calendar extends Component
 
         return $yearStats;
     }
+    
+    /**
+     * Met à jour le type de semaine.
+     *
+     * @param int $weekId L'identifiant de la semaine
+     * @param int $weekTypeId L'identifiant du type de semaine
+     * @return void
+     */
+    public function setWeekType($weekId, $weekTypeId)
+    {
+        $week = Week::findOrFail($weekId);
+        
+        // Vérifier que l'utilisateur actuel est le propriétaire de cette semaine
+        if ($week->user_id !== Auth::id()) {
+            return;
+        }
+        
+        $week->week_type_id = $weekTypeId;
+        $week->save();
+        
+        // Rafraîchir la page pour afficher les modifications
+        $this->dispatch('refresh');
+    }
 
     private function generateWeekDays(Carbon $start): array
     {
