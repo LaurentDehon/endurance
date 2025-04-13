@@ -209,6 +209,15 @@
                                 </div>
                             </button>
                             
+                            <!-- Collapse/Expand Year Button with chevron -->
+                            <div class="relative hidden sm:block" x-data="{ allYearCollapsed: false }">
+                                <button 
+                                    @click="allYearCollapsed = !allYearCollapsed; $dispatch(allYearCollapsed ? 'collapse-all-year' : 'expand-all-year')" 
+                                    class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                    <i class="fas" :class="allYearCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                                </button>
+                            </div>
+                            
                             <!-- Year Options Dropdown Menu Button -->
                             <div class="relative hidden sm:block" x-data="{ open: false }">
                                 <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
@@ -348,6 +357,20 @@
                                             </div>
                                         </div>
                                     @endforeach                                        <!-- Dropdown Menu Button -->
+                                    <!-- Collapse/Expand Month Button with chevron -->
+                                    <button 
+                                        @click="
+                                            monthCollapsed = !monthCollapsed; 
+                                            if (monthCollapsed) {
+                                                $dispatch('collapse-all-weeks', { monthKey: monthKey });
+                                            } else {
+                                                $dispatch('expand-all-weeks', { monthKey: monthKey });
+                                            }
+                                        " 
+                                        class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                        <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                                    </button>
+                                    
                                     <div class="relative" x-data="{ open: false }">
                                         <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                             <i class="fas fa-ellipsis-v"></i>
@@ -512,6 +535,13 @@
                                                         </div>
                                                     </template>
                                                 </div>
+                                                
+                                                <!-- Collapse/Expand Button with chevron -->
+                                                <button 
+                                                    @click="collapsed = !collapsed" 
+                                                    class="hidden sm:flex py-1.5 px-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                                                </button>
                                                 
                                                 <!-- Dropdown Menu Button -->
                                                 <div class="relative" x-data="{ open: false }">
