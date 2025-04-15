@@ -4,17 +4,18 @@
 ?>    
 
 <div class="mx-auto p-2 sm:p-4 overflow-y-scroll relative">
-    <!-- Fond d'écran fixe qui couvre toute la page -->
+    <!-- Fixed gradient background covering the entire page -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
 
-    <!-- Synchronization notification -->
+    <!-- Strava Synchronization Loading Overlay -->
+    <!-- This overlay appears when syncing with Strava API -->
     <div
         wire:loading
         wire:target="startSync"
         class="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center">
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-700/20 border border-amber-500/30 backdrop-blur-lg shadow-2xl max-w-md w-full">
             <div class="relative w-24 h-24 mb-6">
-                <!-- External rotating circle -->
+                <!-- Animated loading spinner with Strava branding -->
                 <div class="absolute inset-0 rounded-full border-4 border-amber-500/20"></div>
                 <div class="absolute inset-0 rounded-full border-t-4 border-amber-500 animate-spin"></div>
                 
@@ -27,14 +28,14 @@
             <h3 class="text-2xl font-bold text-white mb-2">Strava Synchronization</h3>
             <p class="text-center text-white/80 mb-6">Retrieving your workout data from Strava...</p>
             
-            <!-- Animated progress indicator -->
+            <!-- Animated progress indicator for sync process -->
             <div class="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden">
                 <div class="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full animate-pulse"></div>
             </div>
         </div>
     </div>
 
-    <!-- Mobile Navigation Button -->
+    <!-- Mobile Navigation Toggle Button - Only visible on small screens -->
     <div 
         x-data="{ mobileNavOpen: false }" 
         class="xl:hidden fixed top-4 right-4 z-[9999]">
@@ -45,7 +46,7 @@
             <i class="fas fa-bars text-lg"></i>
         </button>
         
-        <!-- Mobile Menu Overlay -->
+        <!-- Mobile Menu Background Overlay - Darkens the screen when menu is open -->
         <div 
             x-show="mobileNavOpen" 
             @click.away="mobileNavOpen = false" 
@@ -54,7 +55,7 @@
             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
         </div>
         
-        <!-- Mobile Menu Panel -->
+        <!-- Mobile Navigation Sidebar - Slides in from right -->
         <div 
             x-show="mobileNavOpen"
             @click.away="mobileNavOpen = false"
@@ -67,6 +68,7 @@
             x-transition:leave-end="opacity-0"
             x-cloak>
             
+            <!-- Mobile Navigation Sidebar Content - Glass morphism design -->
             <div class="absolute top-0 right-0 w-64 bg-white bg-opacity-10 border-white border-opacity-20 h-full shadow-lg rounded-l-xl transform transition-all duration-300"
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="translate-x-full"
@@ -83,7 +85,7 @@
                         </h3>
                     </div>
 
-                    <!-- Navigation -->
+                    <!-- Month navigation links for mobile view -->
                     <nav class="space-y-1">
                         @php
                             $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
@@ -124,9 +126,9 @@
     </div>
 
     <div class="flex flex-col xl:flex-row gap-4 lg:gap-8">
-        <!-- Main content -->
+        <!-- Main content area - Contains the calendar display -->
         <div class="flex-1">
-            <!-- Global stats -->
+            <!-- Global stats panel - Shows yearly statistics -->
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
                 <!-- Stats section -->
                 <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
@@ -213,14 +215,14 @@
                             <div class="relative hidden sm:block" x-data="{ allYearCollapsed: false }">
                                 <button 
                                     @click="allYearCollapsed = !allYearCollapsed; $dispatch(allYearCollapsed ? 'collapse-all-year' : 'expand-all-year')" 
-                                    class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                    class="pt-4 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                     <i class="fas" :class="allYearCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                 </button>
                             </div>
                             
                             <!-- Year Options Dropdown Menu Button -->
                             <div class="relative hidden sm:block" x-data="{ open: false }">
-                                <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                <button @click="open = !open" class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                     <i class="fas fa-ellipsis-v text-2xl"></i>
                                 </button>
                                 
@@ -251,13 +253,6 @@
                                             <button wire:click.prevent="deleteAll" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
                                                 <i class="fas fa-trash-alt w-5 text-red-400"></i>
                                                 <span class="text-sm">Delete yearly workouts</span>
-                                            </button>
-                                            <button 
-                                                x-data="{ allCollapsed: false }"
-                                                @click="allCollapsed = !allCollapsed; $dispatch(allCollapsed ? 'collapse-all-year' : 'expand-all-year'); open = false;" 
-                                                class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                <i class="w-5 text-cyan-400" :class="allCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
-                                                <span class="text-sm" x-text="allCollapsed ? 'Expand all weeks' : 'Collapse all weeks'"></span>
                                             </button>
                                         </div>
                                     </div>
@@ -312,6 +307,8 @@
                                 $dispatch('expand-all-weeks', { monthKey: monthKey });
                             }
                         }"
+                        @collapse-all-year.window="monthCollapsed = true"
+                        @expand-all-year.window="monthCollapsed = false"
                         class="mb-4 sm:mb-5" 
                         data-month-key="{{ $monthKey }}" 
                         data-month-number="{{ $monthNumber }}"
@@ -366,13 +363,26 @@
                                             } else {
                                                 $dispatch('expand-all-weeks', { monthKey: monthKey });
                                             }
-                                        " 
-                                        class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                        "
+                                        x-effect="
+                                            // Mettre à jour l'icône du bouton quand monthCollapsed change
+                                            const icon = $el.querySelector('i');
+                                            if (icon) {
+                                                if (monthCollapsed) {
+                                                    icon.classList.add('fa-chevron-down');
+                                                    icon.classList.remove('fa-chevron-up');
+                                                } else {
+                                                    icon.classList.add('fa-chevron-up');
+                                                    icon.classList.remove('fa-chevron-down');
+                                                }
+                                            }
+                                        "
+                                        class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                         <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                     </button>
                                     
                                     <div class="relative" x-data="{ open: false }">
-                                        <button @click="open = !open" class="py-3 px-3.5 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                        <button @click="open = !open" class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
                                         
@@ -403,20 +413,6 @@
                                                     <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
                                                         <i class="fas fa-trash-alt w-5 text-red-400"></i>
                                                         <span class="text-sm">Delete monthly workouts</span>
-                                                    </button>
-                                                    <button 
-                                                        x-data="{ monthCollapsed: false }"
-                                                        x-init="
-                                                            const parentEl = $root.closest('section[x-data*=\'monthCollapsed\']');
-                                                            if (parentEl && parentEl.__x) {
-                                                                monthCollapsed = parentEl.__x.$data.monthCollapsed;
-                                                                parentEl.__x.$watch('monthCollapsed', value => monthCollapsed = value);
-                                                            }
-                                                        "
-                                                        @click="monthCollapsed = !monthCollapsed; $dispatch('toggle-month-collapse', { monthKey: '{{ $monthKey }}' }); open = false;" 
-                                                        class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                        <i class="w-5 text-cyan-400" :class="monthCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
-                                                        <span class="text-sm" x-text="monthCollapsed ? 'Expand month' : 'Collapse month'"></span>
                                                     </button>
                                                     <!-- Other actions can be added here later -->
                                                 </div>
@@ -539,13 +535,13 @@
                                                 <!-- Collapse/Expand Button with chevron -->
                                                 <button 
                                                     @click="collapsed = !collapsed" 
-                                                    class="hidden sm:flex py-1.5 px-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    class="hidden sm:flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                                     <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                 </button>
                                                 
                                                 <!-- Dropdown Menu Button -->
                                                 <div class="relative" x-data="{ open: false }">
-                                                    <button @click="open = !open" class="hidden sm:block py-1.5 px-3 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    <button @click="open = !open" class="hidden sm:block py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     
@@ -576,20 +572,6 @@
                                                                 <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
                                                                     <i class="fas fa-trash-alt w-5 text-red-400"></i>
                                                                     <span class="text-sm">Delete weekly workouts</span>
-                                                                </button>
-                                                                <button 
-                                                                    x-data="{ weekCollapsed: false }"
-                                                                    x-init="
-                                                                        const parentEl = $root.closest('[x-data*=\'collapsed\']');
-                                                                        if (parentEl && parentEl.__x) {
-                                                                            weekCollapsed = parentEl.__x.$data.collapsed;
-                                                                            parentEl.__x.$watch('collapsed', value => weekCollapsed = value);
-                                                                        }
-                                                                    "
-                                                                    @click="weekCollapsed = !weekCollapsed; $dispatch('toggle-week-collapse', { weekId: '{{ $week->id }}' }); open = false;" 
-                                                                    class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                                    <i class="w-5 text-cyan-400" :class="weekCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt'"></i>
-                                                                    <span class="text-sm" x-text="weekCollapsed ? 'Expand week' : 'Collapse week'"></span>
                                                                 </button>
                                                                 <!-- Other actions can be added here later -->
                                                             </div>
@@ -631,11 +613,12 @@
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    @if($week->planned_stats[$stat] > 0)
+                                                    @if($week->planned_stats[$stat] > 0)                                
                                                         @php 
                                                             $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
                                                             $percentage = min($percentage, 100);
                                                         @endphp
+                                                        <!-- Progress bar showing completion percentage of planned stats -->
                                                         <div class="w-full h-2 bg-gray-800 bg-opacity-50 rounded-full">
                                                             <div class="h-2 bg-{{ $statColors[$stat] }}-500 rounded-full" 
                                                                 style="width: {{ $percentage }}%"></div>
@@ -647,7 +630,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Days grid -->
+                            <!-- Days grid - Calendar view organized by days of the week -->
                             <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
@@ -660,7 +643,7 @@
                                             ondragleave="onDragLeave(event)" 
                                             wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
                                             class="relative block p-2 rounded-lg {{ $day['is_today'] ? 'border border-amber-300 bg-amber-200/10' : 'border border-white/20' }} min-h-24 cursor-pointer">
-                                            <!-- Day header -->
+                                            <!-- Day date display in calendar cell -->
                                             <div class="absolute top-2 left-2">
                                                 <div>
                                                     <span class="text-sm text-cyan-200">{{ $day['name'] }}</span>
@@ -668,7 +651,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <!-- Activities badges -->
+                                            <!-- Completed activities badges - Shows Strava activities for this day -->
                                             @php 
                                                 $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
                                                     return $activity->start_date->isSameDay($dayDate);
@@ -706,9 +689,11 @@
                                                                 class="relative cursor-pointer block"
                                                                 draggable="true" 
                                                                 ondragstart="onDragStart(event, {{ $workout->id }})">
+                                                                <!-- Workout icon with drag and drop functionality -->
                                                                 <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                                     <i class="fas fa-{{ $workout->type->icon }} text-sm"></i>
                                                                 </div>
+                                                                <!-- Workout details tooltip - Appears on hover -->
                                                                 <div class="absolute top-full left-1/2 -translate-x-1/2 translate-y-2 px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] hidden md:block w-max max-w-[150px]">
                                                                     <div class="font-medium mb-0.5">{{ $workout->type->name }}</div>
                                                                     <div class="flex flex-wrap gap-x-2 text-gray-300 text-2xs">
@@ -742,10 +727,10 @@
 
         </div>
 
-        <!-- Side navigation -->
+        <!-- Side navigation panel - Fixed position on desktop -->
         <div class="xl:w-52">
             <div class="xl:fixed">
-                <!-- Desktop sidebar only -->
+                <!-- Desktop navigation sidebar - Only visible on large screens -->
                 <div class="hidden lg:block">
                     <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4">
                         <h3 class="font-bold text-white mt-1 pb-4 mb-4 border-b border-white border-opacity-20"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>
@@ -790,6 +775,7 @@
         </div>
     </div>
     <style>        
+        /* Hide scrollbars for better UI aesthetics while maintaining scroll functionality */
         .mx-auto.overflow-y-scroll,
         .overflow-y-auto,
         .p-4.relative.h-full.overflow-y-auto {
@@ -804,6 +790,7 @@
         }
     </style>
     
+    <!-- Confirmation dialog component for delete operations -->
     <livewire:confirmation-modal />
 </div>
 @script

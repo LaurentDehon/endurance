@@ -1,312 +1,517 @@
 @extends('layouts.app')
 @section('content')
-<div class="home-content-container">
-    <div class="container mx-auto px-4 py-12">
-        <!-- Welcome Section -->
-        <div class="welcome-section mb-10 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="welcomeSection">
-            <div class="flex items-center gap-28">
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white">Welcome, {{ Auth::user()->name }}</h1>
-                    <p class="text-xl text-cyan-200">Your journey continues today. Let's make it count.</p>
-                </div>
-                <button id="openWelcomeModal" class="bg-amber-600 text-white hover:bg-amber-500 relative p-3 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center justify-center">
-                    <i class="fas fa-info-circle text-lg mr-2"></i>
-                    <span class="font-bold">Bienvenue</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Next Workouts Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
-                <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Next Objectives
-                </h2>
-                
-                <div class="mb-4" id="nextWorkoutContent">
-                    @if(isset($nextWorkouts) && count($nextWorkouts) > 0)
-                        @foreach($nextWorkouts->take(2) as $workout)
-                            <div class="mb-4 pb-4 {{ !$loop->last ? 'border-b border-white border-opacity-20' : '' }}">
-                                <div class="text-2xl font-bold text-amber-300 mb-2">{{ $workout->title }}</div>
-                                <div class="flex items-center mb-2 gap-2 text-white">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>{{ \Carbon\Carbon::parse($workout->date)->format('l, F j, Y') }}</span>
-                                </div>
-                                @if($workout->duration > 0)
-                                <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                                    <i class="fas fa-stopwatch"></i>
-                                    <span>{{ formatTime($workout->duration * 60) }}</span>
-                                </div>
-                                @endif
-                                @if(isset($workout->distance) && $workout->distance > 0)
-                                <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                                    <i class="fas fa-route"></i>
-                                    <span>{{ $workout->distance }} km</span>
-                                </div>
-                                @endif
-                                @if(isset($workout->elevation) && $workout->elevation > 0)
-                                <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                                    <i class="fas fa-mountain"></i>
-                                    <span>{{ $workout->elevation }} m</span>
-                                </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="text-center py-6">
-                            <p class="text-xl text-cyan-200 mb-4">No upcoming objectives scheduled</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-            
-            <!-- Race Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="raceCard">
-                <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                    </svg>
-                    Next Race
-                </h2>
-                
-                <div class="flex-grow mb-4" id="nextRaceContent">
-                    @if(isset($nextRace))
-                        <div class="text-3xl font-bold text-amber-300 mb-2">{{ $nextRace->title }}</div>
-                        <div class="flex items-center mb-2 gap-2 text-white">
-                            <i class="fas fa-calendar"></i>
-                            <span>{{ \Carbon\Carbon::parse($nextRace->date)->format('l, F j, Y') }}</span>
-                        </div>
-                        @if($nextRace->duration > 0)
-                        <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                            <i class="fas fa-stopwatch"></i>
-                            <span>{{ formatTime($nextRace->duration * 60) }}</span>
-                        </div>
-                        @endif
-                        @if(isset($nextRace->distance) && $nextRace->distance > 0)
-                        <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                            <i class="fas fa-route"></i>
-                            <span>{{ $nextRace->distance }} km</span>
-                        </div>
-                        @endif
-                        @if(isset($nextRace->elevation) && $nextRace->elevation > 0)
-                        <div class="flex items-center mb-2 gap-2 text-cyan-200">
-                            <i class="fas fa-mountain"></i>
-                            <span>{{ $nextRace->elevation }} m</span>
-                        </div>
-                        @endif
-                    @else
-                        <div class="text-center py-6">
-                            <p class="text-xl text-cyan-200 mb-4">No upcoming races scheduled</p>
-                        </div>
-                    @endif
-                </div>
-                
-                @if(isset($nextRace))
-                    <div class="mt-auto pt-4">
-                        <h3 class="font-semibold mb-2 text-white">Time Until Race:</h3>
-                        <div class="grid grid-cols-4 gap-2 text-center" id="raceCountdown" data-target-date="{{ $nextRace->date }}">
-                            <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
-                                <span id="raceDays" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">DAYS</span>
-                            </div>
-                            <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
-                                <span id="raceHours" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">HRS</span>
-                            </div>
-                            <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
-                                <span id="raceMinutes" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">MINS</span>
-                            </div>
-                            <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
-                                <span id="raceSeconds" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">SECS</span>
-                            </div>
+<div class="welcome-container overflow-y-auto scrollbar-hidden">
+    <div class="mx-auto px-4 py-8 max-w-7xl">
+        <!-- Hero Section -->
+        <div class="hero-section bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-12 p-8 border">
+            <div class="container mx-auto">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-full">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">Take Control of Your Training</h1>
+                        <p class="text-xl text-cyan-200 mb-6">
+                            Zone 2 helps you create personalized, structured training plans tailored to your goals.
+                            A clear, progressive approach that you control.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="{{ route('calendar') }}" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center">
+                                <i class="fas fa-running mr-2"></i> Create My Training Plan
+                            </a>
+                            <a href="#features" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center">
+                                <i class="fas fa-search mr-2"></i> Discover Features
+                            </a>
                         </div>
                     </div>
-                @endif
-            </div>
-            
-            <!-- Statistics Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="statsCard">
-                <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    Your Progress
-                </h2>
-                
-                <div class="space-y-6 flex-grow mb-4">
-                    <!-- Weekly Distance -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Distance</span>
-                            @if(isset($weeklyGoal->distance) && $weeklyGoal->distance > 0)
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} / {{ number_format($weeklyGoal->distance, 1) }} km</span>
-                            @else
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} km</span>
-                            @endif
+                    {{-- <div class="md:w-1/3 flex justify-center">
+                        <div class="w-64 h-64 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-full flex items-center justify-center shadow-2xl">
+                            <span class="text-6xl font-bold text-white">Z2</span>
                         </div>
-                        <div class="w-full bg-gray-800 bg-opacity-50 rounded-full h-2.5">
-                            @if(isset($weeklyGoal->distance) && $weeklyGoal->distance > 0)
-                                <div class="bg-blue-400 h-2.5 rounded-full progress-bar" style="width: {{ isset($weeklyStats->distance) ? min(($weeklyStats->distance / $weeklyGoal->distance) * 100, 100) : 0 }}%"></div>
-                            @else
-                                <div class="bg-blue-400 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Weekly Duration -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Duration</span>
-                            @if(isset($weeklyGoal->duration) && $weeklyGoal->duration > 0)
-                                <span class="text-sm font-bold text-white">{{ formatTime($weeklyStats->duration ?? 0) }} / {{ formatTime($weeklyGoal->duration) }}</span>
-                            @else
-                                <span class="text-sm font-bold text-white">{{ formatTime($weeklyStats->duration ?? 0) }}</span>
-                            @endif
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-2.5">
-                            @if(isset($weeklyGoal->duration) && $weeklyGoal->duration > 0)
-                                <div class="bg-green-400 h-2.5 rounded-full progress-bar" style="width: {{ isset($weeklyStats->duration) ? min(($weeklyStats->duration / $weeklyGoal->duration) * 100, 100) : 0 }}%"></div>
-                            @else
-                                <div class="bg-green-400 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Weekly Elevation -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Elevation</span>
-                            @if(isset($weeklyGoal->elevation) && $weeklyGoal->elevation > 0)
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} / {{ number_format($weeklyGoal->elevation) }} m</span>
-                            @else
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} m</span>
-                            @endif
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-2.5">
-                            @if(isset($weeklyGoal->elevation) && $weeklyGoal->elevation > 0)
-                                <div class="bg-red-400 h-2.5 rounded-full progress-bar" style="width: {{ isset($weeklyStats->elevation) ? min(($weeklyStats->elevation / $weeklyGoal->elevation) * 100, 100) : 0 }}%"></div>
-                            @else
-                                <div class="bg-red-400 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Monthly Consistency -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Monthly Consistency</span>
-                            <span class="text-sm font-bold text-white">{{ $monthlyConsistency ?? 0 }}%</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-2.5">
-                            <div class="bg-purple-400 h-2.5 rounded-full progress-bar" style="width: {{ $monthlyConsistency ?? 0 }}%"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Calendar Link Button -->
-                @php
-                    $currentMonthName = \Carbon\Carbon::now()->format('F');
-                    $currentMonthSlug = Str::slug($currentMonthName);
-                @endphp
-                <div class="mt-auto pt-4 border-t border-white border-opacity-20">
-                    <a href="{{ route('calendar') }}#{{ $currentMonthSlug }}" class="flex items-center justify-center gap-2 px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors w-full">
-                        <i class="fas fa-calendar"></i>
-                        <span>View {{ $currentMonthName }} in Calendar</span>
-                    </a>
+                    </div> --}}
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Welcome Modal -->
-    <div id="welcomeModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 items-center justify-center z-50 hidden">
-        <div class="bg-slate-900 bg-opacity-90 border-white border-opacity-20 rounded-lg shadow-xl p-8 max-w-5xl w-full mx-auto max-h-[90vh] overflow-y-auto modal-content">
-            <h2 class="text-2xl text-center font-bold text-cyan-200 mb-10">Bienvenue sur Zone 2</h2>
-            <p class="text-white mb-4">
-                Merci de participer à la phase de bêta-test de Zone 2.  
-                Votre rôle est essentiel pour nous aider à améliorer l'expérience utilisateur grâce à vos retours et suggestions.
-            </p>
-            <p class="text-white mb-4">
-                Zone 2 est conçu comme un outil permettant de créer des plans d'entraînement personnalisés.<br>
-                Beaucoup de coureurs utilisent des fichiers Excel pour planifier leurs entraînements.  
-                Notre solution propose une alternative automatisée et interactive avec des fonctionnalités avancées.  
-                Il ne s'agit donc pas seulement d'un générateur de plans, mais plutôt d'un journal d'entraînement intelligent.
-            </p>
-            <p class="text-white mb-4">
-                L'application repose sur une approche structurée en blocs, où chaque semaine a un rôle précis et s'intègre dans un cycle global.  
-                Cette organisation permet de mieux gérer la charge d'entraînement, d'optimiser la progression et d'éviter le surentraînement.  
-                Chaque bloc est conçu pour vous préparer progressivement à votre objectif, afin d'être prêt(e) le jour de votre course ou événement.
-            </p>
 
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Pourquoi une approche par blocs ?</h3>
-                <p class="text-white mb-4">
-                    Un entraînement efficace ne se limite pas à une simple accumulation de séances. Il repose sur une périodisation structurée, où chaque semaine joue un rôle spécifique dans votre progression.  
-                    Zone 2 s'inspire de cette méthode et vous permet de :
+        <!-- Why Zone 2 Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="whySection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <h2 class="text-3xl font-bold text-white mb-6">Why Zone 2?</h2>
+                <p class="text-lg text-cyan-200 mb-6">
+                    Many runners still plan their workouts in Excel spreadsheets.<br>
+                    Zone 2 offers an interactive and structured alternative, designed for those who want to track their progress methodically.
                 </p>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Planifier vos semaines d'entraînement en fonction d'un objectif précis (développement, maintien, récupération…).</li>
-                    <li>Structurer votre charge d'entraînement sur plusieurs semaines pour optimiser la progression et éviter le surentraînement.</li>
-                    <li>Adapter chaque séance à son rôle dans le cycle global, plutôt que de la voir comme un événement isolé.</li>
-                </ul>
+                
+                <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
+                    <p class="text-xl text-center font-semibold text-white">
+                        Zone 2 isn't just a plan generator, it's your smart training companion that evolves with you.
+                    </p>
+                </div>
+                
+                <h3 class="text-xl font-bold text-white mb-4">What Zone 2 Offers You:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-cyan-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-calendar-alt text-cyan-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Clear Annual Planning</h4>
+                        <p class="text-cyan-200">Visualize and organize your training year in just a few clicks</p>
+                    </div>
+                    
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
+                            <i class="fab fa-strava text-orange-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Automatic Strava Connection</h4>
+                        <p class="text-cyan-200">Import your activities with one click and compare them to your plan</p>
+                    </div>
+                    
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-puzzle-piece text-teal-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Coherent Block Structure</h4>
+                        <p class="text-cyan-200">Organize your weeks based on your specific goals</p>
+                    </div>
+                    
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-chart-line text-purple-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Performance Analysis</h4>
+                        <p class="text-cyan-200">Track your progress and compare goals to results</p>
+                    </div>
+                    
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-pencil-alt text-blue-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">100% Customized Plans</h4>
+                        <p class="text-cyan-200">Create and adapt your plan according to your specific needs</p>
+                    </div>
+                    
+                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-red-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-brain text-red-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Training Intelligence</h4>
+                        <p class="text-cyan-200">Overload alerts and advice to optimize your progression</p>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Principales fonctionnalités :</h3>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Calendrier annuel interactif pour visualiser et organiser vos semaines d'entraînement.</li>
-                    <li>Définition des objectifs (distance, durée, dénivelé) pour chaque séance.</li>
-                    <li>Synchronisation automatique avec Strava pour importer vos activités.</li>
-                    <li>Tableaux de bord comparant vos performances réelles avec vos objectifs.</li>
-                    <li>Possibilité de définir des types de semaines d'entraînement (récupération, développement, maintien, etc.).</li>
-                </ul>
+        <!-- Structure Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="structureSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                        <i class="fas fa-cube text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">A Structure Designed for Progression</h2>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="md:w-full">
+                        <h3 class="text-2xl font-bold text-white mb-4">Think in Blocks, Progress Intelligently</h3>
+                        <p class="text-lg text-cyan-200 mb-4">
+                            Zone 2 is based on structured periodization. Each week plays a specific role in your progression.
+                        </p>
+                        <p class="text-lg text-cyan-200 mb-6">
+                            This method helps balance training load and optimize performance.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-pink-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-bed text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Recovery</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    A light intensity week focused on rest and active recovery
+                                </p>
+                            </div>
+
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-arrow-up text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Development</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    A high-load week designed to improve endurance, speed, or strength
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-amber-700 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-equals text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Maintain</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    A balanced week that maintains fitness without excessive stress
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-emerald-400 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-arrow-down text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Reduced</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    A week with reduced volume to prevent burnout and allow adaptation
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-fuchsia-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-compress-alt text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Taper</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    A progressive reduction in workout volume before a race
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-rose-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-flag-checkered text-white"></i>
+                                    </div>
+                                    <h4 class="font-medium text-white">Race</h4>
+                                </div>
+                                <p class="text-sm text-cyan-200">
+                                    Competition week including the race and recovery
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{-- <div class="md:w-1/2 flex justify-center">
+                        <img src="{{ asset('images/progression-chart.jpg') }}" alt="Training Structure" class="rounded-xl shadow-lg max-w-full h-auto" onerror="this.src='https://via.placeholder.com/500x350?text=Training+Structure';this.onerror='';">
+                    </div> --}}
+                </div>
             </div>
-            <p class="text-white mb-4">
-                <strong>Note importante :</strong> L'application est actuellement en version bêta en anglais.  
-                Une traduction complète en français est prévue pour la version finale.  
-                Certaines fonctionnalités sont encore en développement et des bugs peuvent subsister.
-            </p>
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Exemple d'utilisation :</h3>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Je commence par créer un "entraînement" le 14 juin, qui représente mon objectif (ma course).</li>
-                    <li>Pour m'y préparer, je définis mes semaines d'entraînement en remontant dans le temps :</li>
-                    <ul class="list-disc pl-6 text-white space-y-2">
-                        <li>La semaine de la course est marquée comme "Compétition".</li>
-                        <li>Les deux semaines précédentes sont des semaines de "Taper", où je réduis progressivement la charge.</li>
-                        <li>Les quatre semaines précédentes sont des semaines de "Maintien", correspondant au pic d'entraînement.</li>
-                        <li>Les semaines antérieures sont des semaines de "Développement" pour construire ma condition physique.</li>
-                        <li>Une semaine sur trois ou quatre est une semaine "Allégée" pour éviter le surentraînement.</li>
-                        <li>Pendant les semaines de développement, je veille à ne pas augmenter ma charge d'entraînement de plus de 10% par semaine.</li>
-                    </ul>
-                    <li>En fonction de mon objectif (marathon, trail, 10 km…), je répartis mes séances chaque semaine pour atteindre mes objectifs hebdomadaires.</li>
-                    <li>Personnellement, je préfère fixer mes objectifs hebdomadaires en temps plutôt qu'en distance.</li>
-                </ul>
-            </div>            
-            <p class="text-white mb-4 mt-10">
-                Nous attendons vos retours sur :<br>
-                - L'ergonomie de l'interface<br>
-                - L'utilité des fonctionnalités existantes<br>
-                - Toute suggestion d'amélioration
-            </p>
-            <p class="text-white mb-2 font-medium">
-                Utilisez le formulaire de contact intégré pour nous faire part de vos remarques à tout moment.
-            </p>
-            <p class="text-white">
-                Merci pour votre participation et votre confiance !<br>
-                Laurent
-            </p>
-            <div class="text-center mt-8">
-                <button id="closeWelcomeModal" class="text-white bg-cyan-600 hover:bg-cyan-500 py-2 px-6 rounded-lg">
-                    J'ai compris
-                </button>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                        <i class="fas fa-tools text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">Key Features</h2>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-6">Everything You Need to Plan, Track, and Adjust</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-cyan-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-calendar-alt text-cyan-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Interactive Calendar</h4>
+                        <p class="text-cyan-200">View your plan by week and month with an intuitive interface</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-yellow-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-bullseye text-yellow-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Precise Goal Setting</h4>
+                        <p class="text-cyan-200">Set your targets in duration, distance, and elevation for each session</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
+                            <i class="fab fa-strava text-orange-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Strava Synchronization</h4>
+                        <p class="text-cyan-200">Automatically import your activities to compare with your plan</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-chart-bar text-purple-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Dashboards</h4>
+                        <p class="text-cyan-200">Analyze your performance and compare planned vs. actual results</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-dumbbell text-teal-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Custom Week Types</h4>
+                        <p class="text-cyan-200">Adapt your weeks according to your specific training phases</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-red-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-2">Overload Alert</h4>
+                        <p class="text-cyan-200">Receive notifications if you exceed the 10% increase rule</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="howSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                        <i class="fas fa-question text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">How It Works</h2>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-6">Your Training in 5 Steps</h3>
+                
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="md:w-full">
+                        <div class="steps-container relative">
+                            <div class="steps-line absolute left-6 top-8 bottom-0 w-0.5 bg-cyan-500 z-0"></div>
+                            
+                            <div class="step-item relative z-10 flex items-start gap-4 mb-8">
+                                <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">1</div>
+                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                    <h4 class="text-lg font-semibold text-white mb-2">Create Your Goal</h4>
+                                    <p class="text-cyan-200">Define your main objective (e.g., Marathon, 50K Trail) and the event date</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item relative z-10 flex items-start gap-4 mb-8">
+                                <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">2</div>
+                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                    <h4 class="text-lg font-semibold text-white mb-2">Organize Your Weeks</h4>
+                                    <p class="text-cyan-200">Structure your weeks in blocks adapted to your goal (development, maintenance, recovery...)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item relative z-10 flex items-start gap-4 mb-8">
+                                <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">3</div>
+                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                    <h4 class="text-lg font-semibold text-white mb-2">Add Your Sessions</h4>
+                                    <p class="text-cyan-200">Plan your weekly sessions with details (type, distance, duration, elevation)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item relative z-10 flex items-start gap-4 mb-8">
+                                <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">4</div>
+                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                    <h4 class="text-lg font-semibold text-white mb-2">Sync with Strava</h4>
+                                    <p class="text-cyan-200">Connect your Strava account or manually enter your completed activities</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item relative z-10 flex items-start gap-4">
+                                <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">5</div>
+                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                    <h4 class="text-lg font-semibold text-white mb-2">Track and Adjust</h4>
+                                    <p class="text-cyan-200">Modify your plan based on how you feel and your actual performance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{-- <div class="md:w-1/3 flex justify-center">
+                        <img src="{{ asset('images/zone2-app.jpg') }}" alt="Zone 2 Interface" class="rounded-xl shadow-lg max-w-full h-auto" onerror="this.src='https://via.placeholder.com/400x600?text=Zone+2+Interface';this.onerror='';">
+                    </div> --}}
+                </div>
+            </div>
+        </section>
+
+        <!-- Example Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="exampleSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                        <i class="fas fa-running text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">Real Example – Preparing for a Marathon in 16 Weeks</h2>
+                </div>
+                
+                <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
+                    <p class="text-lg italic text-white">
+                        "I'm preparing for a marathon on October 6th. I've created my training plan in Zone 2 spanning 16 weeks."
+                    </p>
+                </div>
+                
+                <!-- Timeline -->
+                <div class="timeline-container mb-10 relative overflow-hidden">
+                    <div class="h-1 bg-gray-700 absolute left-0 right-0 top-1/2 transform -translate-y-1/2"></div>
+                    
+                    <div class="flex justify-between relative">
+                        <!-- Week 1 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-6 h-6 rounded-full bg-green-500 mb-3"></div>
+                            <div class="timeline-week text-xs font-bold text-white bg-green-900 px-2 py-1 rounded mb-2">Week 1</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-green-300">Development</div>
+                                <div class="text-xs text-white">Startup</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Week 2 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-6 h-6 rounded-full bg-yellow-500 mb-3"></div>
+                            <div class="timeline-week text-xs font-bold text-white bg-yellow-900 px-2 py-1 rounded mb-2">Week 2</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-yellow-300">Recovery</div>
+                                <div class="text-xs text-white">Active Rest</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weeks 3-9 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-green-500 mb-3 flex items-center justify-center text-white font-bold text-xs">3-9</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-green-900 px-2 py-1 rounded mb-2">Weeks 3-9</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-green-300">Development</div>
+                                <div class="text-xs text-white">Progressive Load</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weeks 10-13 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-500 mb-3 flex items-center justify-center text-white font-bold text-xs">10-13</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-blue-900 px-2 py-1 rounded mb-2">Weeks 10-13</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-blue-300">Maintenance</div>
+                                <div class="text-xs text-white">Stable Volume</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weeks 14-15 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-purple-500 mb-3 flex items-center justify-center text-white font-bold text-xs">14-15</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-purple-900 px-2 py-1 rounded mb-2">Weeks 14-15</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-purple-300">Taper</div>
+                                <div class="text-xs text-white">Reduction</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Week 16 -->
+                        <div class="timeline-item flex flex-col items-center relative z-10">
+                            <div class="timeline-dot w-6 h-6 rounded-full bg-red-500 mb-3"></div>
+                            <div class="timeline-week text-xs font-bold text-white bg-red-900 px-2 py-1 rounded mb-2">Week 16</div>
+                            <div class="timeline-content max-w-[100px] text-center">
+                                <div class="text-xs text-red-300">Competition</div>
+                                <div class="text-xs text-white">Marathon!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8 mt-8">
+                    <div class="md:w-1/2">
+                        <h3 class="text-xl font-bold text-white mb-4">📅 My Week Organization</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-red-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Week 16:</span> Competition</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-purple-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Weeks 14–15:</span> Taper – Progressive load reduction</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Weeks 10–13:</span> Maintenance – Stable volume and controlled intensity</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Weeks 3–9:</span> Development – Progressive increase in training load</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-yellow-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Week 2:</span> Recovery – Active rest</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0"></div>
+                                <span class="text-white"><span class="font-semibold">Week 1:</span> Development – Gentle start</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="md:w-1/2">
+                        <h3 class="text-xl font-bold text-white mb-4">⚙️ My Method</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
+                                <span class="text-white">Weekly goals defined <span class="font-semibold">in time</span></span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
+                                <span class="text-white"><span class="font-semibold">3 to 5 sessions</span> per week based on my availability</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
+                                <span class="text-white">Weekly review to adjust training load</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
+                                <span class="text-white">Zone 2 alerts me if I increase too quickly (>10%)</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mt-6">
+                            <p class="text-lg italic text-white">
+                                "Thanks to Zone 2, I maintain a clear vision of my journey and approach the race with confidence."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Beta Notice Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="betaSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full text-white bg-amber-600 flex items-center justify-center">
+                        <i class="fas fa-flask text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">Beta Version</h2>
+                </div>
+                
+                <div class="flex items-center gap-6 bg-amber-900 bg-opacity-30 border border-amber-500 border-opacity-20 p-5 rounded-xl mb-8">
+                    <div class="text-amber-400 text-4xl">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <p class="text-lg text-white mb-2">Zone 2 is currently in beta version.</p>
+                        <p class="text-white">The application is available in English, with additional languages planned for the final release. Some features are still under development.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="ctaSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border text-center">
+                <h2 class="text-3xl font-bold text-white mb-6">Ready to Structure Your Progress?</h2>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <a href="{{ route('calendar') }}" class="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center text-lg">
+                        <i class="fas fa-check-circle mr-2"></i> Create My Plan Now
+                    </a>
+                    {{-- <button id="openDemoModal" class="px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center text-lg">
+                        <i class="fas fa-play-circle mr-2"></i> See Interface Demo
+                    </button> --}}
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
@@ -317,117 +522,80 @@
         padding: 0;
     }
     
-    .home-content-container {
-        overflow-y: auto;
-        scrollbar-width: none;
-    }
-    
-    .home-content-container::-webkit-scrollbar {
-        width: 0;
-        display: none;
-    }
-    
-    .modal-content {
+    .welcome-container {
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
     
-    .modal-content::-webkit-scrollbar {
-        width: 0;
+    .welcome-container::-webkit-scrollbar {
         display: none;
+    }
+
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .scrollbar-hidden {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .benefit-icon, .feature-icon {
+        transition: all 0.3s ease;
+    }
+    
+    .benefit-card:hover .benefit-icon,
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    
+    .timeline-dot {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+        .timeline-content {
+            max-width: 60px;
+        }
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality
-        const modal = document.getElementById('welcomeModal');
-        const openButton = document.getElementById('openWelcomeModal');
-        const closeButton = document.getElementById('closeWelcomeModal');
+        // Animate sections on scroll
+        const sections = [
+            document.getElementById('whySection'),
+            document.getElementById('structureSection'),
+            document.getElementById('features'),
+            document.getElementById('howSection'),
+            document.getElementById('exampleSection'),
+            document.getElementById('betaSection'),
+            document.getElementById('ctaSection')
+        ];
         
-        // Open modal function
-        function openModal() {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        // Function to check if element is in viewport
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85
+            );
         }
         
-        // Close modal function
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-        
-        // Add event listeners if elements exist
-        if (openButton) openButton.addEventListener('click', openModal);
-        if (closeButton) closeButton.addEventListener('click', closeModal);
-        
-        // Close modal when clicking outside the content
-        if (modal) {
-            modal.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    closeModal();
+        // Function to handle scroll animation
+        function handleScrollAnimation() {
+            sections.forEach(section => {
+                if (section && isInViewport(section) && section.classList.contains('opacity-0')) {
+                    section.classList.remove('opacity-0', 'translate-y-10');
                 }
             });
         }
         
-        // Animations on page load
-        setTimeout(() => {
-            document.getElementById('welcomeSection').classList.remove('opacity-0', 'translate-y-10');
-            
-            setTimeout(() => {
-                document.getElementById('nextWorkoutCard').classList.remove('opacity-0');
-                
-                setTimeout(() => {
-                    document.getElementById('raceCard').classList.remove('opacity-0');
-                    
-                    setTimeout(() => {
-                        document.getElementById('statsCard').classList.remove('opacity-0');
-                        
-                        // Animate progress bars
-                        const progressBars = document.querySelectorAll('.progress-bar');
-                        progressBars.forEach(bar => {
-                            const width = bar.style.width;
-                            bar.style.width = '0%';
-                            setTimeout(() => {
-                                bar.style.transition = 'width 1s ease-out';
-                                bar.style.width = width;
-                            }, 100);
-                        });
-                    }, 200);
-                }, 200);
-            }, 200);
-        }, 300);
+        // Initial check
+        handleScrollAnimation();
         
-        // Race Countdown timer functionality
-        const raceCountdownElement = document.getElementById('raceCountdown');
-        if (raceCountdownElement) {
-            const targetDate = new Date(raceCountdownElement.getAttribute('data-target-date')).getTime();
-            
-            // Update countdown every second
-            const raceCountdownTimer = setInterval(function() {
-                // Get current date and time
-                const now = new Date().getTime();
-                
-                // Find the time difference between now and the target date
-                const distance = targetDate - now;
-                
-                // If the countdown is over, clear the interval
-                if (distance < 0) {
-                    clearInterval(raceCountdownTimer);
-                    document.getElementById('raceDays').innerHTML = "0";
-                    document.getElementById('raceHours').innerHTML = "0";
-                    document.getElementById('raceMinutes').innerHTML = "0";
-                    document.getElementById('raceSeconds').innerHTML = "0";
-                    return;
-                }
-                
-                // Time calculations for days, hours, minutes and seconds
-                document.getElementById('raceDays').innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
-                document.getElementById('raceHours').innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                document.getElementById('raceMinutes').innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById('raceSeconds').innerHTML = Math.floor((distance % (1000 * 60)) / 1000);
-            }, 1000);
-        }
+        // Listen for scroll
+        window.addEventListener('scroll', handleScrollAnimation);
     });
 </script>
 @endsection
