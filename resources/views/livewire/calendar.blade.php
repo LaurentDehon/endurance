@@ -212,7 +212,7 @@
                             </button>
                             
                             <!-- Collapse/Expand Year Button with chevron -->
-                            <div class="relative hidden sm:block" x-data="{ allYearCollapsed: false }">
+                            <div class="relative block" x-data="{ allYearCollapsed: false }">
                                 <button 
                                     @click="allYearCollapsed = !allYearCollapsed; $dispatch(allYearCollapsed ? 'collapse-all-year' : 'expand-all-year')" 
                                     class="pt-4 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
@@ -221,7 +221,7 @@
                             </div>
                             
                             <!-- Year Options Dropdown Menu Button -->
-                            <div class="relative hidden sm:block" x-data="{ open: false }">
+                            <div class="relative block" x-data="{ open: false }">
                                 <button @click="open = !open" class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                     <i class="fas fa-ellipsis-v text-2xl"></i>
                                 </button>
@@ -315,7 +315,7 @@
                         @if($hasMismatch) style="border: 2px solid red; padding: 1rem;" @endif>
                     <!-- Month header -->
                     <h2>
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-3 py-2">
+                        <div class="flex flex-row items-center gap-3 py-2">
                             <span class="text-2xl font-bold text-white ms-2">{{ $monthName }}</span>
                             @if($hasMismatch)
                                 <span class="text-xs text-red-500 font-normal">
@@ -323,7 +323,83 @@
                                 </span>
                             @endif
                             
-                            <!-- Month stats -->
+                            <!-- Mobile Month Controls - Now on same line as month name, visible only on mobile -->
+                            <div class="flex sm:hidden items-center gap-2 ml-auto">
+                                <!-- Month collapse/expand Button with chevron for mobile -->
+                                <button 
+                                    @click="
+                                        monthCollapsed = !monthCollapsed; 
+                                        if (monthCollapsed) {
+                                            $dispatch('collapse-all-weeks', { monthKey: monthKey });
+                                        } else {
+                                            $dispatch('expand-all-weeks', { monthKey: monthKey });
+                                        }
+                                    "
+                                    x-effect="
+                                        // Mettre à jour l'icône du bouton quand monthCollapsed change
+                                        const icon = $el.querySelector('i');
+                                        if (icon) {
+                                            if (monthCollapsed) {
+                                                icon.classList.add('fa-chevron-down');
+                                                icon.classList.remove('fa-chevron-up');
+                                            } else {
+                                                icon.classList.add('fa-chevron-up');
+                                                icon.classList.remove('fa-chevron-down');
+                                            }
+                                        }
+                                    "
+                                    class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                    <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                                </button>
+                                
+                                <!-- Month menu contextuel for mobile -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    
+                                    <!-- Dropdown menu using teleport -->
+                                    <template x-teleport="body">
+                                        <div x-show="open" 
+                                             x-effect="
+                                                if (open) {
+                                                    $nextTick(() => {
+                                                        const button = $root.previousElementSibling;
+                                                        const rect = button.getBoundingClientRect();
+                                                        $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                                        
+                                                        // Positionnement mobile : décalé vers la gauche avec l'extrémité droite alignée sous le bouton
+                                                        if (window.innerWidth < 640) { // sm breakpoint
+                                                            $el.style.left = `${rect.right - $el.offsetWidth + 25}px`;
+                                                        } else {
+                                                            $el.style.left = `${rect.left + rect.width}px`;
+                                                        }
+                                                    });
+                                                }
+                                             "
+                                             @click.away="open = false" 
+                                             x-transition:enter="transition ease-out duration-200" 
+                                             x-transition:enter-start="opacity-0 scale-95" 
+                                             x-transition:enter-end="opacity-100 scale-100" 
+                                             x-transition:leave="transition ease-in duration-175" 
+                                             x-transition:leave-start="opacity-100 scale-100" 
+                                             x-transition:leave-end="opacity-0 scale-95" 
+                                             class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                                             x-cloak
+                                             style="position: absolute; z-index: 99999;">
+                                            <div class="py-1">
+                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                    <span class="text-sm">Delete monthly workouts</span>
+                                                </button>
+                                                <!-- Other actions can be added here later -->
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            
+                            <!-- Month stats - Only visible on desktop -->
                             <div class="ml-auto hidden sm:flex">
                                 <div class="flex items-center gap-3 px-4 bg-white bg-opacity-10 border-white border-opacity-20 border rounded-lg shadow-lg">                                    
                                     @foreach(['distance', 'duration', 'elevation'] as $stat)
@@ -354,7 +430,7 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    <!-- Collapse/Expand Month Button with chevron -->
+                                    <!-- Month collapse/expand Button with chevron - Changed from hidden to visible on mobile -->
                                     <button 
                                         @click="
                                             monthCollapsed = !monthCollapsed; 
@@ -377,11 +453,11 @@
                                                 }
                                             }
                                         "
-                                        class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                        class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none block">
                                         <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                     </button>
                                     
-                                    <div class="relative" x-data="{ open: false }">
+                                    <div class="relative block" x-data="{ open: false }">
                                         <button @click="open = !open" class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
@@ -580,16 +656,16 @@
                                                     </template>
                                                 </div>
                                                 
-                                                <!-- Collapse/Expand Button with chevron -->
+                                                <!-- Collapse/Expand Button with chevron - Changed from hidden to visible on mobile -->
                                                 <button 
                                                     @click="collapsed = !collapsed" 
-                                                    class="hidden sm:flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none block">
                                                     <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                 </button>
                                                 
-                                                <!-- Dropdown Menu Button -->
+                                                <!-- Week Dropdown Menu Button - Changed from hidden sm:block to block -->
                                                 <div class="relative" x-data="{ open: false }">
-                                                    <button @click="open = !open" class="hidden sm:block py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    <button @click="open = !open" class="block py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     
@@ -602,7 +678,13 @@
                                                                         const button = $root.previousElementSibling;
                                                                         const rect = button.getBoundingClientRect();
                                                                         $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                                        $el.style.left = `${rect.left + rect.width}px`;
+                                                                        
+                                                                        // Positionnement mobile : décalé vers la gauche avec l'extrémité droite alignée sous le bouton
+                                                                        if (window.innerWidth < 640) { // sm breakpoint
+                                                                            $el.style.left = `${rect.right - $el.offsetWidth + 30}px`;
+                                                                        } else {
+                                                                            $el.style.left = `${rect.left + rect.width}px`;
+                                                                        }
                                                                     });
                                                                 }
                                                              "
