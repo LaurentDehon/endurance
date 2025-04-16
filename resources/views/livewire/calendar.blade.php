@@ -353,7 +353,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach                                        <!-- Dropdown Menu Button -->
+                                    @endforeach
                                     <!-- Collapse/Expand Month Button with chevron -->
                                     <button 
                                         @click="
@@ -442,6 +442,42 @@
                             
                             // Effet de bande colorée sur le côté gauche
                             $borderColor = $colorName . '-' . min(500, $colorWeight);
+                            
+                            // Vérifier si c'est une semaine de développement
+                            $isDevelopmentWeek = $week->type && strtolower($week->type->name) === 'development';
+                            
+                            // Variables pour stocker les stats de la semaine précédente
+                            $prevWeekPlannedDistance = null;
+                            $prevWeekPlannedDuration = null;
+                            $distanceIncrease = null;
+                            $durationIncrease = null;
+                            
+                            // Si c'est une semaine de développement, chercher la semaine précédente
+                            if ($isDevelopmentWeek) {
+                                // Récupérer l'index actuel de la semaine dans le mois
+                                $currentIndex = $loop->index;
+                                
+                                // Si ce n'est pas la première semaine du mois
+                                if ($currentIndex > 0) {
+                                    $prevWeek = $weeksInMonth[$currentIndex - 1];
+                                    $isPrevDevelopmentWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'development';
+                                    
+                                    // Si la semaine précédente est aussi une semaine de développement
+                                    if ($isPrevDevelopmentWeek) {
+                                        $prevWeekPlannedDistance = $prevWeek->planned_stats['distance'];
+                                        $prevWeekPlannedDuration = $prevWeek->planned_stats['duration'];
+                                        
+                                        // Calculer les pourcentages d'augmentation
+                                        if ($prevWeekPlannedDistance > 0 && $week->planned_stats['distance'] > 0) {
+                                            $distanceIncrease = (($week->planned_stats['distance'] - $prevWeekPlannedDistance) / $prevWeekPlannedDistance) * 100;
+                                        }
+                                        
+                                        if ($prevWeekPlannedDuration > 0 && $week->planned_stats['duration'] > 0) {
+                                            $durationIncrease = (($week->planned_stats['duration'] - $prevWeekPlannedDuration) / $prevWeekPlannedDuration) * 100;
+                                        }
+                                    }
+                                }
+                            }
                         @endphp
                         <!-- Week header avec style amélioré et plus marqué -->
                         <div x-data="{ 
@@ -517,7 +553,19 @@
                                                             class="p-2 w-44 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
                                                             x-cloak
                                                             style="position: absolute; z-index: 99999;">
-                                                            <div class="pb-1 max-h-60 overflow-y-auto">
+                                                            <div class="pb-1 max-h-80 overflow-y-auto">
+                                                                <!-- Option to set no week type -->
+                                                                <button 
+                                                                    wire:click="setWeekType({{ $week->id }}, null)" 
+                                                                    @click="typeMenuOpen = false"
+                                                                    class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                                                    <span class="w-4 h-4 rounded-full bg-gray-500 bg-opacity-30"></span>
+                                                                    <span class="text-sm">None</span>
+                                                                </button>
+                                                                
+                                                                <!-- Divider -->
+                                                                <div class="my-1 border-t border-white border-opacity-10"></div>
+                                                                
                                                                 @foreach($weekTypes as $weekType)
                                                                     <button 
                                                                         wire:click="setWeekType({{ $week->id }}, {{ $weekType->id }})" 
@@ -609,6 +657,61 @@
                                                                             {{ $stat === 'distance' ? number_format($week->planned_stats[$stat], 1) : $week->planned_stats[$stat] }}
                                                                         @endif
                                                                     </span>
+                                                                    
+                                                                    <!-- Affichage du pourcentage d'augmentation pour les semaines de développement -->
+                                                                    @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
+                                                                        @php
+                                                                            $increase = $stat === 'distance' ? $distanceIncrease : $durationIncrease;
+                                                                        @endphp
+                                                                        
+                                                                        @if($increase !== null)
+                                                                            @php
+                                                                                // Déterminer la couleur et l'icône en fonction du pourcentage
+                                                                                if ($increase > 10) {
+                                                                                    // Augmentation > 10% => Trop élevé (warning rouge)
+                                                                                    $increaseColor = 'text-red-400';
+                                                                                    $increaseIcon = 'fa-exclamation-triangle';
+                                                                                    $increaseStatus = 'Significant Increase';
+                                                                                    $increaseMessage = 'An increase greater than 10% may increase the risk of injury.';
+                                                                                } elseif ($increase < 0) {
+                                                                                    // Diminution < 0% => Pas idéal (warning orange)
+                                                                                    $increaseColor = 'text-amber-400';
+                                                                                    $increaseIcon = 'fa-exclamation-circle';
+                                                                                    $increaseStatus = 'Significant Decrease';
+                                                                                    $increaseMessage = 'A significant decrease may affect training progression and consistency.';
+                                                                                } elseif ($increase == 0) {
+                                                                                    // Pas de changement => Idéal (vert)
+                                                                                    $increaseColor = 'text-emerald-400';
+                                                                                    $increaseIcon = 'fa-check-circle';
+                                                                                    $increaseStatus = 'No Change';
+                                                                                    $increaseMessage = 'No change is ideal for maintaining a steady training load.';
+                                                                                } elseif ($increase > 0 && $increase <= 10) {
+                                                                                    // Entre 0% et +10% => Idéal (vert)
+                                                                                    $increaseColor = 'text-emerald-400';
+                                                                                    $increaseIcon = 'fa-check-circle';
+                                                                                    $increaseStatus = 'Ideal Progression';
+                                                                                    $increaseMessage = 'A increase below +10% is recommended for safe progression.';
+                                                                                }
+                                                                            @endphp
+                                                                            
+                                                                            <span class="relative group ml-2 cursor-help">
+                                                                                <span class="{{ $increaseColor }} text-xs font-semibold">
+                                                                                    <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
+                                                                                </span>
+                                                                                
+                                                                                <!-- Tooltip explicatif -->
+                                                                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-1 px-3 py-2 rounded bg-gray-800 text-white text-xs whitespace-normal shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] w-48">
+                                                                                    <p class="mb-1 font-medium">
+                                                                                        <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatus }}
+                                                                                    </p>
+                                                                                    <p class="text-gray-300 text-2xs">
+                                                                                        {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous week.
+                                                                                        <span class="block mt-1 {{ $increaseColor }}">{{ $increaseMessage }}</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </span>
+                                                                        @endif
+                                                                    @endif
                                                                 </span>
                                                             @endif
                                                         </div>

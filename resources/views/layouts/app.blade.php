@@ -84,10 +84,10 @@
                                                     <i class="fas fa-user-edit w-5 mr-3 text-cyan-200"></i>
                                                     <span>Profile</span>
                                                 </a>
-                                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
+                                                {{-- <a href="#" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
                                                     <i class="fas fa-cog w-5 mr-3 text-cyan-200"></i>
                                                     <span>Settings</span>
-                                                </a>
+                                                </a> --}}
                                                 <form method="POST" action="{{ route('logout') }}">
                                                     @csrf
                                                     <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-white hover:bg-red-500 hover:bg-opacity-50 transition-colors rounded-lg">
@@ -161,9 +161,9 @@
                                                         <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Profile</span>
                                                         </a>
-                                                        <a href="#" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
+                                                        {{-- <a href="#" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
                                                             <span>Settings</span>
-                                                        </a>
+                                                        </a> --}}
                                                         <form method="POST" action="{{ route('logout') }}">
                                                             @csrf
                                                             <button type="submit" class="w-full text-left flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
