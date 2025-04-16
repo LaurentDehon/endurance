@@ -4,13 +4,13 @@
     <!-- Header Section -->
     <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6 border">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">User Guide</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">FAQ - Frequently Asked Questions</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
-                Discover how to get the most out of your workout calendar
+                All the answers to your questions about Zone 2
             </p>
             <div class="flex flex-wrap justify-center gap-4 mt-6">
-                <a href="#overview" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
-                    <i class="fas fa-play"></i> Get Started
+                <a href="#general" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
+                    <i class="fas fa-question-circle"></i> General Questions
                 </a>
                 <a href="{{ route('calendar') }}" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
                     <i class="fas fa-calendar"></i> Go to Calendar
@@ -22,26 +22,23 @@
     <!-- Navigation Pills -->
     <div class="mb-8 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-lg border">
         <div class="flex flex-wrap justify-center gap-2">
-            <a href="#overview" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-bullseye"></i> Overview
+            <a href="#general" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
+                <i class="fas fa-info-circle"></i> General
             </a>
-            <a href="#workout-plan" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-tasks"></i> Create Your Plan
+            <a href="#plan" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
+                <i class="fas fa-tasks"></i> Planning
             </a>
             <a href="#metrics" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-chart-bar"></i> Metrics
             </a>
             <a href="#strava" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-sync"></i> Strava
+                <i class="fab fa-strava"></i> Strava
             </a>
-            <a href="#week" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
+            <a href="#weeks" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-calendar-week"></i> Weeks
             </a>
-            <a href="#visual" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-palette"></i> Visual Guide
-            </a>
             <a href="#tips" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-lightbulb"></i> Pro Tips
+                <i class="fas fa-lightbulb"></i> Tips
             </a>
             <a href="#data" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-database"></i> Data
@@ -52,114 +49,182 @@
     <!-- Features Quick Access -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
-            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25">
+            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
                 <i class="fab fa-strava text-orange-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Strava Sync</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
-            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25">
+            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-calendar text-teal-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Weekly Planning</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
-            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25">
+            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-chart-line text-purple-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Performance Tracking</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
-            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25">
+            <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-lightbulb text-blue-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Pro Tips</h3>
         </div>
     </div>
 
-    <!-- Main Content Sections -->
-    <div class="space-y-16">
-        <!-- Overview Section -->
-        <section id="overview" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+    <!-- FAQ Accordion -->
+    <div class="space-y-6">
+        <!-- General Section -->
+        <section id="general" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-bullseye text-xl"></i>
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <i class="fas fa-info-circle text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Overview</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">General Questions</h2>
             </div>
             
-            <p class="text-cyan-200 text-lg mb-6">
-                This calendar combines your actual sports activities (synced from Strava) 
-                with your planned workout sessions.
-            </p>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <ul class="list-none space-y-4">
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">View your weekly/monthly/yearly workout load</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Compare planned and actual performances</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Organize workout cycles with week types</span>
-                    </li>
-                </ul>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>What is Zone 2?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Zone 2 is an interactive training calendar that combines your actual sports activities (synced from Strava) with your planned workout sessions.</p>
+                            <p class="mt-2">It's a tool designed for athletes who want to structure their progression and methodically track their performance.</p>
+                        </div>
+                    </div>
+                </div>
                 
-                <ul class="list-none space-y-4">
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Drag and drop workout sessions</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Track progress with visual indicators</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                        <span class="text-white">Adapt your schedule based on your goals</span>
-                    </li>
-                </ul>
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>What are the main features of Zone 2?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Visualization of weekly/monthly/yearly training loads</li>
+                                <li>Comparison between planned and actual performances</li>
+                                <li>Organization of training cycles with different week types</li>
+                                <li>Drag and drop workout sessions</li>
+                                <li>Track progress with visual indicators</li>
+                                <li>Adapt your schedule based on your goals</li>
+                                <li>Strava synchronization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Is Zone 2 free?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Zone 2 is currently in beta and free to access.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Does Zone 2 work on mobile?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Yes, Zone 2 is designed to be fully responsive and work on all devices, from mobile phones to desktop computers. However some functionalities may be limited on smaller screens at the moment.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Creating Workout Plan Section -->
-        <section id="workout-plan" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <!-- Planning Section -->
+        <section id="plan" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-tasks text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Create Your Workout Plan</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Training Planning</h2>
             </div>
             
-            <div class="aspect-video rounded-lg overflow-hidden mb-6">
-                <iframe 
-                    class="w-full h-full"
-                    src="https://www.youtube.com/embed/cNzBhZSOe78" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How do I create my training plan?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>To create your training plan in Zone 2:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Go to the calendar</li>
+                                <li>Set your main goal (marathon, trail running, etc.)</li>
+                                <li>Structure your training weeks in appropriate blocks</li>
+                                <li>Plan your weekly sessions with details on type, distance, duration, and elevation</li>
+                                <li>Sync with Strava or manually enter your completed activities</li>
+                            </ol>
+                            {{-- <div class="mt-4">
+                                <a href="#" class="text-cyan-400 underline">Watch the tutorial video</a>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Can I plan different types of workouts?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Yes, Zone 2 allows you to plan various types of workouts:</p>
+                            <ul class="space-y-2 mt-2">
+                                <li><span class="font-medium">Easy Run:</span> Low intensity to develop aerobic endurance without excessive fatigue</li>
+                                <li><span class="font-medium">Recovery Run:</span> Very light run after intense effort to promote muscle recovery</li>
+                                <li><span class="font-medium">Intervals:</span> Intense periods followed by rest to improve speed and cardiovascular condition</li>
+                                <li><span class="font-medium">Long Run:</span> Sustained run at moderate pace to develop endurance</li>
+                                <li><span class="font-medium">Fartlek:</span> Mix of fast and slow running with spontaneous speed variations</li>
+                                <li><span class="font-medium">Tempo:</span> Sustained, moderate effort to improve lactate threshold</li>
+                                <li><span class="font-medium">Hill Repeats:</span> Intense uphill sprints followed by recovery jogs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How do I modify a planned session?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>To modify a session:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Click on the session in the calendar</li>
+                                <li>Edit the details in the form that opens</li>
+                                <li>Save your changes</li>
+                            </ol>
+                            <p class="mt-2">You can also move a session by drag-and-drop directly in the calendar. You can also copy a session by holding the <strong>Ctrl</strong> key (or <strong>Cmd</strong> on Mac) while dragging it to another date.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <p class="text-white text-lg">
-                Watch this video for useful tips on creating your own workout plan.
-                This is the approach I personally use to structure my workout sessions, but of course, it's just one method among many.
-                Feel free to use it for inspiration or adapt it to your own needs!
-            </p>
         </section>
 
-        <!-- Performance Metrics Section -->
+        <!-- Metrics Section -->
         <section id="metrics" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-chart-bar text-xl"></i>
                 </div>
                 <h2 class="text-2xl md:text-3xl font-bold text-white">Performance Metrics</h2>
@@ -167,270 +232,221 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                    <div class="w-16 h-16 mx-auto bg-blue-300 bg-opacity-25 backdrop-filter backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-route text-blue-800 text-2xl"></i>
-                    </div>
+                    <i class="fas fa-route text-blue-400 text-4xl py-3"></i>                    
                     <h3 class="text-lg font-semibold text-white">Distance</h3>
                     <p class="text-sm text-cyan-200 mt-2">Complete tracking of distance covered compared to your goals</p>
                 </div>
                 
                 <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                    <div class="w-16 h-16 mx-auto bg-red-300 bg-opacity-25 backdrop-filter backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-mountain text-red-800 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white">Elevation</h3>
-                    <p class="text-sm text-cyan-200 mt-2">Precise analysis of climbs and positive elevation gain</p>
-                </div>
-                
-                <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                    <div class="w-16 h-16 mx-auto bg-green-300 bg-opacity-25 backdrop-filter backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-stopwatch text-green-800 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white">Time</h3>
+                    <i class="fas fa-stopwatch text-green-400 text-4xl py-3"></i>                    
+                    <h3 class="text-lg font-semibold text-white">Duration</h3>
                     <p class="text-sm text-cyan-200 mt-2">Workout time management and comparison with planned sessions</p>
                 </div>
+
+                <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
+                    <i class="fas fa-mountain text-red-400 text-4xl py-3"></i>
+                    <h3 class="text-lg font-semibold text-white">Elevation</h3>
+                    <p class="text-sm text-cyan-200 mt-2">Precise analysis of climbs and positive elevation gain</p>
+                </div>                
             </div>
             
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                <h3 class="text-lg font-semibold text-white mb-3">Metric Color Coding</h3>
-                <p class="text-white">
-                    <span class="font-semibold text-blue-500">Blue</span> = Distance,
-                    <span class="font-semibold text-red-500 ms-1">Red</span> = Elevation, 
-                    <span class="font-semibold text-green-500 ms-1">Green</span> = Duration<br>
-                    Format: <span class="font-semibold">Actual / Planned</span>
-                </p>
-                
-                <div class="mt-4 p-3 bg-black bg-opacity-20 rounded-lg">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm text-white">Progress Example</span>
-                        <span class="text-xs text-cyan-200">70%</span>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How do I interpret the metric colors?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>The color code for metrics is as follows:</p>
+                            <ul class="space-y-2 mt-2">
+                                <li><span class="font-semibold text-blue-500">Blue</span> = Distance</li>
+                                <li><span class="font-semibold text-red-500">Red</span> = Elevation</li>
+                                <li><span class="font-semibold text-green-500">Green</span> = Duration</li>
+                            </ul>
+                            <p class="mt-2">Display format: <span class="font-semibold">Actual / Planned</span></p>
+                        </div>
                     </div>
-                    <div class="w-full h-2 bg-gray-700 rounded-full">
-                        <div class="h-2 bg-green-400 rounded-full" style="width: 70%"></div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How can I see my progress over time? (not yet implemented)</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>To see your progress over time:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Go to the dashboard</li>
+                                <li>Check the charts showing the progression of your metrics (distance, elevation, time)</li>
+                                <li>Use filters to display different periods (week, month, year)</li>
+                                <li>Compare your actual performances with your planned goals</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Strava Sync Section -->
+        <!-- Strava Section -->
         <section id="strava" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-sync text-xl"></i>
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <i class="fab fa-strava text-xl"></i>
                 </div>
                 <h2 class="text-2xl md:text-3xl font-bold text-white">Strava Synchronization</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2">
-                    <p class="text-white mb-4">
-                        Click to sync your latest Strava activities. A loading indicator appears during synchronization.
-                    </p>
-                    <p class="text-white mb-4">
-                        When connecting to the site, users are prompted to consent to connecting with Strava and authorize access to their activities.
-                    </p>
-                    <div class="bg-yellow-900 bg-opacity-20 border border-yellow-600 border-opacity-20 p-4 rounded-lg mt-4">
-                        <p class="text-sm text-yellow-300 flex items-start gap-2">
-                            <i class="fas fa-exclamation-triangle mt-1"></i>
-                            <span>Only "Run" type activities are imported</span>
-                        </p>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How do I connect my Strava account?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li>By clicking on the dashboard, calendar or activities page, you will be prompted to connect your Strava account</li>
+                                <li>Click on "Connect to Strava"</li>
+                                <li>Authorize Zone 2 to access your Strava data</li>
+                                <li>Once connected, you will be able to synchronize your activities from the calendar</li>
+                                <li>Your activities will automatically appear on the days they were performed</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="flex flex-col items-center justify-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                    <div class="w-16 h-16 bg-orange-500 bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
-                        <i class="fab fa-strava text-3xl text-orange-400"></i>
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>What should I do if my Strava activities aren't syncing?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>If your activities aren't syncing:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Make sure you're properly connected to Strava</li>
+                                <li>Click the "Sync" button in the calendar</li>
+                                <li>If the problem persists, disconnect and reconnect your Strava account</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Can I use Zone 2 without Strava?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>No, Zone 2 is designed to work with Strava data for optimal performance tracking.</p>                            
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Week Management Section -->
-        <section id="week" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <!-- Week Types Section -->
+        <section id="weeks" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-calendar-week text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Week Management</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Week Types</h2>
             </div>
             
-            <div class="mb-6 relative">
-                <div class="border rounded-lg overflow-hidden">
-                    <div class="week-header px-3 py-2 bg-gradient-to-bl from-blue-800 via-blue-700 to-blue-800 border-b flex items-center gap-4 flex-wrap">
-                        <div class="flex flex-col gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="inline-block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                    Week 16
-                                </span>                                        
-                                <span class="text-sm text-gray-100">
-                                    14 Apr - 20 Apr
-                                </span>
+            <div class="mb-6">
+                <div class="bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-5 rounded-xl mb-4">
+                    <h3 class="font-semibold text-white mb-3">Available Week Types</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-blue-600 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Development</span>
+                                <p class="text-sm text-cyan-200">High-load week designed to improve endurance, speed, or strength</p>
                             </div>
+                        </div>
                         
-                            <div class="h-9">
-                                <div class="flex items-center gap-2">
-                                    <div class="relative">
-                                        <select class="bg-gray-100 appearance-none block pl-8 pr-10 py-1.5 text-sm rounded-md border focus:outline-none focus:ring-0 focus:border-gray-300">
-                                            <option value="">Development</option>
-                                        </select>
-                                        <div class="absolute inset-y-0 left-2 flex items-center">
-                                            <i class="fas fa-tag text-gray-400"></i>
-                                        </div>
-                                    </div>
-                                    <button class="mx-2 text-gray-100 hover:text-gray-300">
-                                        <i class="fas fa-trash-alt"></i>                                      
-                                    </button>
-                                </div>
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-amber-700 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Maintenance</span>
+                                <p class="text-sm text-cyan-200">Balanced week that maintains fitness without excessive stress</p>
                             </div>
-                        </div>                                                      
-
-                        <!-- Week stats -->
-                        <div class="flex flex-col md:flex-row gap-4 md:gap-6 mt-4 md:ml-auto">
-                            @foreach(['distance', 'elevation', 'time'] as $stat)
-                                <div class="text-center min-w-[120px] md:min-w-[160px]">
-                                    @php
-                                        $icon = match($stat) {
-                                            'distance' => 'route',
-                                            'elevation' => 'mountain',
-                                            'time' => 'stopwatch',
-                                        };
-                                    @endphp
-                                    <p class="text-s text-gray-300 mb-1">
-                                        <i class="fas fa-{{ $icon }} mr-1"></i>{{ ucfirst($stat) }}
-                                    </p>
-                                    <p class="text-xl font-bold text-gray-100 mb-1">
-                                        @if($stat === 'distance')
-                                            43.2
-                                        @elseif($stat === 'time')
-                                            4h15
-                                        @else
-                                            332
-                                        @endif
-                                        
-                                        @if($stat === 'time')
-                                            <span class="text-sm">/ 
-                                                @if($stat === 'time')
-                                                    4h35
-                                                @endif
-                                            </span>
-                                        @endif
-                                        @if($stat === 'time')
-                                            <div class="w-full h-1.5 bg-gray-200 rounded-full">
-                                                <div class="h-1.5 bg-green-300 rounded-full" 
-                                                    style="width: 90%"></div>
-                                            </div>
-                                        @endif
-                                    </p>
-                                </div>
-                            @endforeach
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-emerald-400 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Reduced</span>
+                                <p class="text-sm text-cyan-200">Week with reduced volume to prevent burnout and promote adaptation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-pink-600 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Recovery</span>
+                                <p class="text-sm text-cyan-200">Low-intensity week focused on rest and active recovery</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-fuchsia-600 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Tapering</span>
+                                <p class="text-sm text-cyan-200">Progressive reduction of training volume before a competition</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-rose-600 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Race</span>
+                                <p class="text-sm text-cyan-200">Competition and recovery week</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">Main Features</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-mouse-pointer"></i></div>
-                            <span class="text-white">Click on any day to add workout sessions</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-edit"></i></div>
-                            <span class="text-white">Click on a workout badge to edit session details</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-tag"></i></div>
-                            <span class="text-white">Use week types to categorize workout phases</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-arrows-alt"></i></div>
-                            <span class="text-white">Drag and drop sessions between days</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">Advanced Tips</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-clone"></i></div>
-                            <span class="text-white">Use Ctrl + drag and drop to copy sessions</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-trash"></i></div>
-                            <span class="text-white">Use the trash icon to delete entire weeks</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-info-circle"></i></div>
-                            <span class="text-white">Hover over icons for detailed tooltips</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-cyan-400"><i class="fas fa-calendar-day"></i></div>
-                            <span class="text-white">Double-click on a day to quickly see details</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Visual Guide Section -->
-        <section id="visual" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-palette text-xl"></i>
-                </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Visual Guide</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-5">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-orange-500 rounded-full flex-shrink-0 flex items-center justify-center">
-                            <i class="fas fa-running text-white"></i>
-                        </div>
-                        <h3 class="font-medium text-white">Recorded Strava Activity</h3>
-                    </div>
-                    <p class="text-sm text-cyan-200">
-                        Indicates an activity you've completed and synced from Strava
-                    </p>
-                </div>
-                
-                <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-5">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center">
-                            <i class="fas fa-running text-white"></i>
-                        </div>
-                        <h3 class="font-medium text-white">Planned Workout Session</h3>
-                    </div>
-                    <p class="text-sm text-cyan-200">
-                        Represents a planned session (color and icon varies by workout type)
-                    </p>
-                </div>
-                
-                <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-5">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 border-2 border-blue-300 bg-blue-900 bg-opacity-30 rounded-lg flex-shrink-0"></div>
-                        <h3 class="font-medium text-white">Current Day</h3>
-                    </div>
-                    <p class="text-sm text-cyan-200">
-                        Shows the present day in the calendar for easy orientation
-                    </p>
-                </div>
-                
-                <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-5">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-full flex flex-col gap-1 flex-shrink-0">
-                            <div class="h-2 bg-gray-700 rounded-full">
-                                <div class="h-2 bg-blue-400 rounded-full" style="width: 60%"></div>
-                            </div>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to choose the right week type?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>The choice of week type depends on your overall training plan and the phase you're in:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li>Use <strong>Development</strong> weeks during intensive training periods</li>
+                                <li>Alternate with <strong>Reduced</strong> weeks every 3-4 weeks to promote recovery</li>
+                                <li>Use <strong>Maintenance</strong> weeks between intensive training blocks</li>
+                                <li>Schedule a <strong>Recovery</strong> week after a competition or an intense training block</li>
+                                <li>Include 1-3 <strong>Tapering</strong> weeks before an important competition</li>
+                                <li>Mark your competitions as <strong>Race</strong> weeks</li>
+                            </ul>
                         </div>
                     </div>
-                    <h3 class="font-medium text-white mb-2">Goal Progress</h3>
-                    <p class="text-sm text-cyan-200">
-                        Visually indicates your progress toward set goals
-                    </p>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to change a week type?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li>Go to the calendar view</li>
+                                <li>Click on the week header</li>
+                                <li>Select the desired week type from the dropdown menu</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -438,165 +454,122 @@
         <!-- Pro Tips Section -->
         <section id="tips" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-lightbulb text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Pro Tips</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Expert Tips</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                <div class="bg-green-900 bg-opacity-20 border border-green-600 border-opacity-20 p-5 rounded-xl">
-                    <h3 class="font-semibold text-white mb-3">Best Practices</h3>
-                    <ul class="space-y-2 text-white">
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Sync with Strava after each run</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Use color-coded week types for workout phases</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Build your workout weeks starting from your race goal</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Use a reduced week every 3 or 4 weeks</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Listen to your body and adjust plans accordingly</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>80% easy runs, 20% hard efforts for optimal results</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Recovery is as important as workout sessions</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-green-400"></i>
-                            <span>Consistency beats intensity for long-term progress</span>
-                        </li>
-                    </ul>
-                </div>      
-                
-                <div class="bg-blue-900 bg-opacity-20 border border-blue-600 border-opacity-20 p-5 rounded-xl">
-                    <h3 class="font-semibold text-white mb-3">Workout Types</h3>
-                    <ul class="space-y-2 text-white">
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Easy Run:</span> A comfortable run, low intensity to develop aerobic endurance without excessive fatigue</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Recovery Run:</span> A very light run performed after intense workout to promote muscle recovery</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Intervals:</span> Intense periods of running followed by rest or slow jogging to improve speed and cardiovascular condition</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Long Run:</span> A sustained run at moderate pace to develop endurance and mental resilience</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Fartlek:</span> A mix of fast and slow running, with spontaneous speed variations to improve adaptability</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Tempo Run:</span> A sustained, moderately intense effort to improve lactate threshold and race performance</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-blue-400"></i>
-                            <span><span class="font-medium">Hill Repeats:</span> Short intense uphill sprints followed by recovery jogs to develop strength and power</span>
-                        </li>
-                    </ul>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to structure my training effectively?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>For an effective training structure:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li>Follow the 10% rule (don't increase your volume by more than 10% per week)</li>
+                                <li>Follow a cycle of 3-4 weeks of increasing load followed by a recovery week</li>
+                                <li>Vary the types of training (endurance, speed, strength)</li>
+                                <li>Include at least one complete rest day per week</li>
+                                <li>Plan your intensive sessions after recovery days</li>
+                                <li>Adapt your plan according to how you feel and your actual performances</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-5 rounded-xl">
-                    <h3 class="font-semibold text-white mb-3">Week Types</h3>
-                    <ul class="space-y-2 text-white">
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Reduced:</span> A week with reduced volume to prevent burnout and allow adaptation</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Recovery:</span> A light intensity week focused on rest and active recovery</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Development:</span> A high-load week designed to improve endurance, speed, or strength</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Maintenance:</span> A balanced week that maintains fitness without excessive stress</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-circle text-xs mt-1.5 text-red-400"></i>
-                            <span><span class="font-medium">Taper:</span> A progressive reduction in workout volume before a race</span>
-                        </li>
-                    </ul>
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>What pitfalls should be avoided in planning?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Avoid increasing volume or intensity too quickly</li>
+                                <li>Don't neglect recovery weeks</li>
+                                <li>Don't do multiple intense sessions consecutively</li>
+                                <li>Don't ignore signs of excessive fatigue or injury</li>
+                                <li>Don't copy another athlete's plan without adapting it to your level</li>
+                                <li>Avoid planning sessions that are too specific too early in your preparation</li>
+                                <li>Remember that consistency takes precedence over intensity for long-term progress</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Data Controls Section -->
+        <!-- Data Management Section -->
         <section id="data" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-database text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Data Control</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Data Management</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <p class="text-white mb-4">
-                        Use deletion options with caution:
-                    </p>
-                    <ul class="space-y-3">
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-red-400"><i class="fas fa-trash-alt"></i></div>
-                            <span class="text-white">Delete individual sessions from the workout session view</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-red-400"><i class="fas fa-calendar-times"></i></div>
-                            <span class="text-white">Clear entire weeks/months/years using the trash icons</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 text-red-400"><i class="fas fa-running"></i></div>
-                            <span class="text-white">Remove activities from the activities menu</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="flex flex-col gap-4">
-                    <div class="bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-5 rounded-xl flex items-center gap-4">
-                        <div class="text-red-400 text-3xl">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-white mb-1">Warning</h3>
-                            <p class="text-sm text-cyan-200">
-                                Deleted data cannot be recovered
-                            </p>
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to delete data?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Use deletion options with caution:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li>To delete an individual session, go to the session view and use the trash icon</li>
+                                <li>To delete entire weeks/months/years, use the corresponding menu</li>
+                                <li>To delete activities, go to the Activities menu and use the delete option</li>
+                            </ul>
+                            <div class="mt-4 bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-3 rounded-lg">
+                                <p class="flex items-center gap-2">
+                                    <i class="fas fa-exclamation-triangle text-red-400"></i>
+                                    <span>Warning: deleted data cannot be recovered</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                        <h3 class="font-medium text-white mb-3">Advanced Actions</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
-                                <i class="fas fa-file-export"></i> Export
-                            </button>
-                            <button class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
-                                <i class="fas fa-trash"></i> Clear All
-                            </button>
+                </div>
+                
+                {{-- <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Can I export my data?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Yes, you can export your data:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Go to Settings</li>
+                                <li>Go to the "Data" section</li>
+                                <li>Click on "Export my data"</li>
+                                <li>Choose the format (CSV, JSON) and the period</li>
+                            </ol>
+                            <p class="mt-2">You can export all your data or select specific periods.</p>
+                        </div>
+                    </div>
+                </div> --}}
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>Is my data secure?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>Yes, your data is secure:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li>All data is stored securely and confidentially</li>
+                                <li>We only use your information to provide and improve the service</li>
+                                <li>You maintain complete control over your data</li>
+                                <li>You can request deletion of your data at any time</li>
+                            </ul>
+                            <p class="mt-2">For more information, see our <a href="#" class="text-cyan-400 underline">privacy policy</a>.</p>
                         </div>
                     </div>
                 </div>
@@ -678,6 +651,14 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
     
+    .faq-item {
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
     @media (min-width: 1024px) {
         .two-columns {
             column-count: 2;
@@ -685,4 +666,16 @@
         }
     }
 </style>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('collapse', () => ({
+            open: false,
+            
+            toggle() {
+                this.open = !this.open;
+            }
+        }));
+    });
+</script>
 @endsection

@@ -347,66 +347,66 @@
                 </div>
                 
                 <!-- Timeline -->
-                <div class="timeline-container mb-10 relative overflow-hidden">
+                <div class="timeline-container mb-10 relative overflow-hidden pt-5 pb-4">
                     <div class="h-1 bg-gray-700 absolute left-0 right-0 top-1/2 transform -translate-y-1/2"></div>
                     
-                    <div class="flex justify-between relative">
+                    <div class="flex justify-between relative pt-4">
                         <!-- Week 1 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-6 h-6 rounded-full bg-green-500 mb-3"></div>
-                            <div class="timeline-week text-xs font-bold text-white bg-green-900 px-2 py-1 rounded mb-2">Week 1</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-600 mb-3 flex items-center justify-center text-white font-bold text-xs">1-3</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-blue-600 px-2 py-1 rounded mb-2">Week 1-3</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-green-300">Development</div>
+                                <div class="text-xs text-blue-300">Development</div>
                                 <div class="text-xs text-white">Startup</div>
                             </div>
                         </div>
                         
                         <!-- Week 2 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-6 h-6 rounded-full bg-yellow-500 mb-3"></div>
-                            <div class="timeline-week text-xs font-bold text-white bg-yellow-900 px-2 py-1 rounded mb-2">Week 2</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-emerald-400 mb-3"></div>
+                            <div class="timeline-week text-xs font-bold text-white bg-emerald-600 px-2 py-1 rounded mb-2">Week 4</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-yellow-300">Recovery</div>
-                                <div class="text-xs text-white">Active Rest</div>
+                                <div class="text-xs text-pink-300">Reduced</div>
+                                <div class="text-xs text-white">Reduced Volume</div>
                             </div>
                         </div>
                         
                         <!-- Weeks 3-9 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-green-500 mb-3 flex items-center justify-center text-white font-bold text-xs">3-9</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-green-900 px-2 py-1 rounded mb-2">Weeks 3-9</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-600 mb-3 flex items-center justify-center text-white font-bold text-xs">5-9</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-blue-600 px-2 py-1 rounded mb-2">Weeks 5-9</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-green-300">Development</div>
+                                <div class="text-xs text-blue-300">Development</div>
                                 <div class="text-xs text-white">Progressive Load</div>
                             </div>
                         </div>
                         
                         <!-- Weeks 10-13 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-500 mb-3 flex items-center justify-center text-white font-bold text-xs">10-13</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-blue-900 px-2 py-1 rounded mb-2">Weeks 10-13</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-amber-700 mb-3 flex items-center justify-center text-white font-bold text-xs">10-13</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-amber-600 px-2 py-1 rounded mb-2">Weeks 10-13</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-blue-300">Maintenance</div>
+                                <div class="text-xs text-amber-300">Maintenance</div>
                                 <div class="text-xs text-white">Stable Volume</div>
                             </div>
                         </div>
                         
                         <!-- Weeks 14-15 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-purple-500 mb-3 flex items-center justify-center text-white font-bold text-xs">14-15</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-purple-900 px-2 py-1 rounded mb-2">Weeks 14-15</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-fuchsia-600 mb-3 flex items-center justify-center text-white font-bold text-xs">14-15</div>
+                            <div class="timeline-week text-xs font-bold text-white bg-fuchsia-600 px-2 py-1 rounded mb-2">Weeks 14-15</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-purple-300">Taper</div>
+                                <div class="text-xs text-fuchsia-300">Taper</div>
                                 <div class="text-xs text-white">Reduction</div>
                             </div>
                         </div>
                         
                         <!-- Week 16 -->
                         <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-6 h-6 rounded-full bg-red-500 mb-3"></div>
-                            <div class="timeline-week text-xs font-bold text-white bg-red-900 px-2 py-1 rounded mb-2">Week 16</div>
+                            <div class="timeline-dot w-8 h-8 rounded-full bg-rose-600 mb-3"></div>
+                            <div class="timeline-week text-xs font-bold text-white bg-rose-600 px-2 py-1 rounded mb-2">Week 16</div>
                             <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-red-300">Competition</div>
+                                <div class="text-xs text-rose-300">Competition</div>
                                 <div class="text-xs text-white">Marathon!</div>
                             </div>
                         </div>
@@ -415,37 +415,37 @@
                 
                 <div class="flex flex-col md:flex-row gap-8 mt-8">
                     <div class="md:w-1/2">
-                        <h3 class="text-xl font-bold text-white mb-4">📅 My Week Organization</h3>
+                        <h3 class="text-xl font-bold text-white mb-4">My Week Organization</h3>
                         <ul class="space-y-3">
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-red-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-rose-600 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Week 16:</span> Competition</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-purple-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-fuchsia-600 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Weeks 14–15:</span> Taper – Progressive load reduction</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-amber-700 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Weeks 10–13:</span> Maintenance – Stable volume and controlled intensity</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-600 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Weeks 3–9:</span> Development – Progressive increase in training load</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-yellow-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-pink-600 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Week 2:</span> Recovery – Active rest</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0"></div>
+                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-600 flex-shrink-0"></div>
                                 <span class="text-white"><span class="font-semibold">Week 1:</span> Development – Gentle start</span>
                             </li>
                         </ul>
                     </div>
                     
                     <div class="md:w-1/2">
-                        <h3 class="text-xl font-bold text-white mb-4">⚙️ My Method</h3>
+                        <h3 class="text-xl font-bold text-white mb-4">My Method</h3>
                         <ul class="space-y-3">
                             <li class="flex items-start gap-3">
                                 <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>

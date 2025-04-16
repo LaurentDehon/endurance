@@ -71,7 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', function() { 
             return view('admin'); 
         })->name('admin');
-        
+
         Route::get('/user/{userId}', function($userId) {
             return view('user-detail', ['userId' => $userId]);
         })->name('user.detail');

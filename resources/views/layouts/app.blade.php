@@ -245,6 +245,7 @@
         </div>
         
         <livewire:custom-modal />
+        <livewire:confirmation-modal />
         <livewire:toast />
         
         @livewireScripts        

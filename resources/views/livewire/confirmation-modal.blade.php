@@ -3,7 +3,7 @@
     <div 
         class="fixed inset-0 z-[9999]"
         x-data
-        x-init="$el.click = (e) => { if(e.target === e.currentTarget) $wire.cancel() }"
+        x-on:click="(e) => { if(e.target === $el) $wire.cancel() }"
     >
         <!-- La partie semi-transparente ne couvre que la modale -->
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true"></div>

@@ -89,10 +89,14 @@
             </button>
             
             <!-- Admin toggle -->
-            <button wire:click="toggleAdmin" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
+            <button 
+                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
+                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'text-white bg-cyan-600 hover:bg-cyan-500 transition-colors' }}"
+                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
+            >
                 @if($user->is_admin)
-                    <i class="fas fa-user-minus text-red-500 mr-3"></i>
-                    <span>Revoke Admin</span>
+                    <i class="fas fa-user-minus {{ ($user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i>
+                    <span>{{ ($user->name === 'admin') ? 'Cannot Revoke Admin' : 'Revoke Admin' }}</span>
                 @else
                     <i class="fas fa-user-plus text-blue-500 mr-3"></i>
                     <span>Make Admin</span>
@@ -125,22 +129,13 @@
             
             <!-- Delete user - Désactivé pour les administrateurs -->
             <button 
-                wire:click="{{ $user->is_admin ? '' : 'deleteUser' }}" 
-                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ $user->is_admin ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }} col-span-1 md:col-span-2 lg:col-span-3"
-                {{ $user->is_admin ? 'disabled' : '' }}
+                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
+                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }} col-span-1 md:col-span-2 lg:col-span-3"
+                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
             >
-                <i class="fas fa-trash {{ $user->is_admin ? 'text-gray-400' : 'text-red-500' }} mr-3"></i>
-                <span>{{ $user->is_admin ? 'Cannot Delete Admin User' : 'Delete User' }}</span>
+                <i class="fas fa-trash {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i>
+                <span>{{ ($user->is_admin && $user->name === 'admin') ? 'Cannot Delete Admin User' : 'Delete User' }}</span>
             </button>
-        </div>
-        
-        <!-- User data tabs (optional expansion for activities, workouts, etc) -->
-        <!-- You could add tabs here to show the user's data -->
+        </div>        
     </div>
-    
-    <!-- Confirmation Modal Component -->
-    <livewire:confirmation-modal />
-    
-    <!-- Custom Modal Component pour le formulaire d'e-mail -->
-    <livewire:custom-modal />
 </div>

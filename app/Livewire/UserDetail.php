@@ -25,7 +25,7 @@ class UserDetail extends Component
         $this->refreshUserData($userId);
     }
     
-    // New method to refresh user data with counts
+    // Method to refresh user data with counts
     private function refreshUserData($userId = null)
     {
         $query = User::with(['activities', 'workouts', 'weeks'])
@@ -33,15 +33,17 @@ class UserDetail extends Component
             
         if ($userId) {
             $this->user = $query->where('id', $userId)->firstOrFail();
-        } else {
+        } else if (isset($this->user->id)) {
             $this->user = $query->where('id', $this->user->id)->firstOrFail();
+        } else {
+            abort(404, 'User not found');
         }
     }
     
     public function toggleEmailForm()
     {
         // Make sure user data is fresh before opening modal
-        $this->refreshUserData();
+        //$this->refreshUserData();
         
         $this->email = [
             'subject' => 'Message from ' . config('app.name'),

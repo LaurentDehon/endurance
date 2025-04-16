@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class ConfirmationModal extends Component
 {
@@ -16,8 +17,7 @@ class ConfirmationModal extends Component
     public $icon = 'exclamation-triangle';
     public $iconColor = 'red';
     
-    protected $listeners = ['openConfirmModal' => 'open'];
-    
+    #[On('openConfirmModal')]
     public function open($options = [])
     {
         $this->showModal = true;
