@@ -716,39 +716,78 @@ class Calendar extends Component
             'isValid' => false
         ];
         
-        if (strtolower($currentWeek->type->name ?? '') !== 'development') {
-            return $result;
-        }
-        
-        // Chercher la semaine de développement précédente
-        $prevDevWeek = null;
-        for ($i = $currentIndex - 1; $i >= 0; $i--) {
-            $prevWeek = $weeksInMonth[$i];
-            if ($prevWeek->type && strtolower($prevWeek->type->name) === 'development') {
-                $prevDevWeek = $prevWeek;
-                break;
+        try {
+            // 1. Check that the current week is of development type
+            if (!$currentWeek->type || strtolower($currentWeek->type->name) !== 'development') {
+                return $result;
             }
-        }
-        
-        if (!$prevDevWeek) {
-            return $result;
-        }
-        
-        // Calculer les pourcentages d'augmentation
-        $result['isValid'] = true;
-        
-        if ($prevDevWeek->planned_stats['distance'] > 0 && $currentWeek->planned_stats['distance'] > 0) {
-            $result['distance'] = [
-                'value' => (($currentWeek->planned_stats['distance'] - $prevDevWeek->planned_stats['distance']) / $prevDevWeek->planned_stats['distance']) * 100,
-                'previous' => $prevDevWeek->planned_stats['distance']
-            ];
-        }
-        
-        if ($prevDevWeek->planned_stats['duration'] > 0 && $currentWeek->planned_stats['duration'] > 0) {
-            $result['duration'] = [
-                'value' => (($currentWeek->planned_stats['duration'] - $prevDevWeek->planned_stats['duration']) / $prevDevWeek->planned_stats['duration']) * 100,
-                'previous' => $prevDevWeek->planned_stats['duration']
-            ];
+            
+            // 2. Get the start and end dates of the current week
+            $year = $currentWeek->year;
+            $weekNumber = $currentWeek->week_number;
+            $startDate = Carbon::createFromDate($year, 1, 1)->setISODate($year, $weekNumber, 1)->startOfWeek();
+            $endDate = $startDate->copy()->endOfWeek();
+            
+            // 3. Calculate the dates of the previous week
+            $prevWeekStart = $startDate->copy()->subDays(7);
+            $prevWeekEnd = $prevWeekStart->copy()->endOfWeek();
+            
+            // 4. Retrieve the previous week from the database
+            $prevWeek = Week::where('user_id', Auth::id())
+                ->where(function($query) use ($prevWeekStart) {
+                    $query->where('year', $prevWeekStart->year)
+                          ->where('week_number', $prevWeekStart->isoWeek);
+                })
+                ->with('type')
+                ->first();
+            
+            // 5. Check that the previous week exists and is also of development type
+            if (!$prevWeek || !$prevWeek->type || strtolower($prevWeek->type->name) !== 'development') {
+                return $result;
+            }
+            
+            // 6. Calculate statistics directly using calculateWeekStats
+            $currentWeekStats = $this->calculateWeekStats(
+                $startDate,
+                $endDate,
+                $this->activities,
+                $this->workouts
+            );
+            
+            $prevWeekStats = $this->calculateWeekStats(
+                $prevWeekStart,
+                $prevWeekEnd,
+                $this->activities,
+                $this->workouts
+            );
+            
+            // 7. Calculate the percentage increases
+            $result['isValid'] = true;
+            
+            // 8. Calculate progression for distance if both weeks have planned values > 0
+            if ((float)$prevWeekStats['planned']['distance'] > 0 && (float)$currentWeekStats['planned']['distance'] > 0) {
+                $difference = (float)$currentWeekStats['planned']['distance'] - (float)$prevWeekStats['planned']['distance'];
+                if ($difference != 0) {  // Only display if there is a difference
+                    $result['distance'] = [
+                        'value' => ($difference / (float)$prevWeekStats['planned']['distance']) * 100,
+                        'previous' => (float)$prevWeekStats['planned']['distance']
+                    ];
+                }
+            }
+            
+            // 9. Calculate progression for duration if both weeks have planned values > 0
+            if ((float)$prevWeekStats['planned']['duration'] > 0 && (float)$currentWeekStats['planned']['duration'] > 0) {
+                $difference = (float)$currentWeekStats['planned']['duration'] - (float)$prevWeekStats['planned']['duration'];
+                if ($difference != 0) {  // Only display if there is a difference
+                    $result['duration'] = [
+                        'value' => ($difference / (float)$prevWeekStats['planned']['duration']) * 100,
+                        'previous' => (float)$prevWeekStats['planned']['duration']
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            // In case of an error, we simply return the default result
+            // without displaying an error to the user
         }
         
         return $result;

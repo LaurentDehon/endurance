@@ -124,7 +124,7 @@
                 <!-- Stats section -->
                 <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
                     <!-- Stats wrapper -->
-                    <div class="hidden sm:flex justify-between lg:justify-start gap-4 lg:gap-16">
+                    <div class="hidden sm:flex justify-between lg:justify-start gap-4 lg:gap-16 cursor-default">
                         @foreach(['distance', 'duration', 'elevation'] as $stat)
                         <div class="flex items-center gap-4">
                             <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400 text-4xl"></i>
@@ -368,7 +368,7 @@
                             </div>
                             
                             <!-- Month stats - Only visible on desktop -->
-                            <div class="ml-auto hidden sm:flex">
+                            <div class="ml-auto hidden sm:flex cursor-default">
                                 <div class="flex items-center gap-3 px-4 bg-white bg-opacity-10 border-white border-opacity-20 border rounded-lg shadow-lg">                                    
                                     @foreach(['distance', 'duration', 'elevation'] as $stat)
                                         <div class="flex flex-row items-center gap-2 py-2">
@@ -632,9 +632,36 @@
                                         </div>
 
                                         <!-- Week stats -->
-                                        <div class="flex justify-between mb-1 sm:gap-4 md:gap-6">
+                                        <div class="flex justify-between mb-1 sm:gap-4 md:gap-6 cursor-default">
                                             @foreach(['distance', 'duration', 'elevation'] as $stat)
+                                            <!-- Structure for all stat displays with consistent height regardless of content -->
                                                 <div class="flex flex-col md:w-36 lg:w-36">
+                                                    <!-- Stat increase display -->
+                                                    <div class="flex justify-center h-5">
+                                                        @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
+                                                            @php
+                                                                $progressData = $this->calculateDevelopmentWeekProgress($week, $weeksInMonth, $loop->index);
+                                                                $statProgressData = $progressData[$stat] ?? null;
+                                                            @endphp
+                                                            
+                                                            @if($progressData['isValid'] && isset($statProgressData) && is_array($statProgressData))
+                                                                @php
+                                                                    $increase = $statProgressData['value'];
+                                                                @endphp
+                                                                @if($increase > 10)
+                                                                    <span class="text-red-500 text-xs font-semibold">
+                                                                        <i class="fas fa-exclamation-triangle text-2xs mr-1"></i>+{{ number_format($increase, 1) }}%
+                                                                    </span>
+                                                                @elseif($increase != 0)
+                                                                    <span class="text-emerald-400 text-xs font-semibold">
+                                                                        <i class="fas fa-circle-check text-2xs mr-1"></i>+{{ number_format($increase, 1) }}%
+                                                                    </span>
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    </div>
+
+                                                    <!-- Stat value display -->
                                                     <div class="flex items-center justify-center gap-2 px-1 md:px-2">
                                                         <p class="text-xs flex items-center">
                                                             <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400 text-lg"></i>
@@ -664,50 +691,12 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <!-- Structure for all stat displays with consistent height regardless of content -->
-                                                    <div class="flex justify-center h-5"> <!-- Fixed height container for increase percentage -->
-                                                        @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
-                                                            @php
-                                                                $progressData = $this->calculateDevelopmentWeekProgress($week, $weeksInMonth, $loop->index);
-                                                                $statProgressData = $progressData[$stat] ?? null;
-                                                                
-                                                                if ($statProgressData && $progressData['isValid']) {
-                                                                    $increase = $statProgressData['value'];
-                                                                    $increaseStatus = $this->getIncreaseStatus($increase);
-                                                                    $increaseColor = $increaseStatus['color'];
-                                                                    $increaseIcon = $increaseStatus['icon'];
-                                                                    $increaseStatusText = $increaseStatus['status'];
-                                                                    $increaseMessage = $increaseStatus['message'];
-                                                                }
-                                                            @endphp
-                                                            
-                                                            @if(isset($increase))
-                                                                <span class="relative group cursor-default sm:cursor-help flex items-start">
-                                                                    <span class="{{ $increaseColor }} text-xs font-semibold">
-                                                                        <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
-                                                                    </span>
-                                                                    
-                                                                    <!-- Tooltip explicatif -->
-                                                                    <div class="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-1 px-3 py-2 rounded bg-gray-800 text-white text-xs whitespace-normal shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] w-48">
-                                                                        <p class="mb-1 font-medium">
-                                                                            <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatusText }}
-                                                                        </p>
-                                                                        <p class="text-gray-300 text-2xs">
-                                                                            {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous development week.
-                                                                            <span class="block mt-1 {{ $increaseColor }}">{{ $increaseMessage }}</span>
-                                                                        </p>
-                                                                    </div>
-                                                                </span>
-                                                            @endif
-                                                        @endif
-                                                    </div>
-                                                    
+                                                    <!-- Stat progress bar -->
                                                     @if($week->planned_stats[$stat] > 0)                                
                                                         @php 
                                                             $percentage = $this->calculateCompletionPercentage($week->actual_stats[$stat], $week->planned_stats[$stat]);
                                                         @endphp
-                                                        <!-- Progress bar showing completion percentage of planned stats -->
-                                                        <div class="w-full h-2 bg-gray-800 bg-opacity-50 rounded-full">
+                                                        <div class="w-full mt-1 h-2 bg-gray-800 bg-opacity-50 rounded-full">
                                                             <div class="h-2 bg-{{ $statColors[$stat] }}-500 rounded-full" 
                                                                 style="width: {{ $percentage }}%"></div>
                                                         </div>
