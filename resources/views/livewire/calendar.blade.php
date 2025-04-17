@@ -99,17 +99,8 @@
                                 if(substr($monthKey, 0, 4) != $year) {
                                     continue;
                                 }
-                                
-                                try {
-                                    // Parse the month key to get the correct month
-                                    list($yearPart, $monthPart) = explode('-', $monthKey);
-                                    
-                                    // Get correct month name using PHP's date function directly
-                                    $monthNumber = (int)$monthPart;
-                                    $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
-                                } catch (\Exception $e) {
-                                    $monthName = "Month $monthKey";
-                                }
+                                $monthInfo = $this->getMonthInfo($monthKey);
+                                $monthName = $monthInfo['name'];
                             @endphp
                             <a href="#{{ Str::slug($monthName) }}" 
                             class="flex items-center justify-between px-3 py-1 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">
@@ -163,11 +154,9 @@
 
                     <!-- Controls wrapper -->
                     <div class="flex flex-row justify-between lg:justify-end lg:ml-10 gap-4 items-center w-full">
-                        <div class="relative flex-grow" x-data="{ 
-                            isLoading: false
-                        }" 
-                        x-on:livewire:navigating="isLoading = true"
-                        x-on:livewire:navigated="isLoading = false">
+                        <div class="relative flex-grow" x-data="{ isLoading: false }" 
+                            x-on:livewire:navigating="isLoading = true"
+                            x-on:livewire:navigated="isLoading = false">
                             <div class="flex items-center justify-between gap-2 py-2 px-4 bg-white bg-opacity-10 border-white border-opacity-20 rounded-xl shadow-lg w-full">
                                 <button 
                                     wire:click="previousYear" 
@@ -267,31 +256,10 @@
             <!-- Months -->
             @foreach ($months as $monthKey => $weeksInMonth)
                 @php
-                    try {
-                        // Parse the month key to get the correct month
-                        list($yearPart, $monthPart) = explode('-', $monthKey);
-                        
-                        // Create the correct date object
-                        $monthDate = Carbon::createFromDate($yearPart, (int)$monthPart, 1);
-                        $monthName = $monthDate->format('F');
-                        
-                        // For validation and debugging
-                        $monthNumber = (int)$monthPart; 
-                        $expectedMonthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
-                        
-                        // Double check if month name matches the expected month
-                        $hasMismatch = ($monthName !== $expectedMonthName);
-                        
-                        // Force correct month name if needed
-                        if ($hasMismatch) {
-                            $monthName = $expectedMonthName;
-                        }
-                    } catch (\Exception $e) {
-                        // Fallback in case of parsing error
-                        $monthName = "Month $monthKey";
-                        $hasMismatch = true;
-                        $monthNumber = 0;
-                    }
+                    $monthInfo = $this->getMonthInfo($monthKey);
+                    $monthName = $monthInfo['name'];
+                    $monthNumber = $monthInfo['number'];
+                    $hasMismatch = $monthInfo['hasMismatch'];
                 @endphp
                 <section id="{{ Str::slug($monthName) }}" 
                         x-data="{ 
@@ -504,56 +472,8 @@
                     @foreach ($weeksInMonth as $week)
                         @php
                             $baseColor = $week->type->color ?? 'bg-slate-500';
-                            $color = str_replace('bg-', '', $baseColor);
-                            
-                            // Extraire la teinte de couleur et la luminosité
-                            preg_match('/(.*)-(\d{3})$/', $color, $matches);
-                            $colorName = $matches[1] ?? 'slate';
-                            $colorWeight = isset($matches[2]) ? intval($matches[2]) : 500;
-                            
-                            // Créer une palette de couleurs plus marquée
-                            $darkShade = $colorName . '-' . min(900, $colorWeight + 200);
-                            $midShade = $color;
-                            $lightShade = $colorName . '-' . max(100, $colorWeight - 200);
-                            
-                            // Effet de bande colorée sur le côté gauche
-                            $borderColor = $colorName . '-' . min(500, $colorWeight);
-                            
-                            // Vérifier si c'est une semaine de développement
                             $isDevelopmentWeek = $week->type && strtolower($week->type->name) === 'development';
-                            
-                            // Variables pour stocker les stats de la semaine précédente
-                            $prevWeekPlannedDistance = null;
-                            $prevWeekPlannedDuration = null;
-                            $distanceIncrease = null;
-                            $durationIncrease = null;
-                            
-                            // Si c'est une semaine de développement, chercher la semaine précédente
-                            if ($isDevelopmentWeek) {
-                                // Récupérer l'index actuel de la semaine dans le mois
-                                $currentIndex = $loop->index;
-                                
-                                // Si ce n'est pas la première semaine du mois
-                                if ($currentIndex > 0) {
-                                    $prevWeek = $weeksInMonth[$currentIndex - 1];
-                                    $isPrevDevelopmentWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'development';
-                                    
-                                    // Si la semaine précédente est aussi une semaine de développement
-                                    if ($isPrevDevelopmentWeek) {
-                                        $prevWeekPlannedDistance = $prevWeek->planned_stats['distance'];
-                                        $prevWeekPlannedDuration = $prevWeek->planned_stats['duration'];
-                                        
-                                        // Calculer les pourcentages d'augmentation
-                                        if ($prevWeekPlannedDistance > 0 && $week->planned_stats['distance'] > 0) {
-                                            $distanceIncrease = (($week->planned_stats['distance'] - $prevWeekPlannedDistance) / $prevWeekPlannedDistance) * 100;
-                                        }
-                                        
-                                        if ($prevWeekPlannedDuration > 0 && $week->planned_stats['duration'] > 0) {
-                                            $durationIncrease = (($week->planned_stats['duration'] - $prevWeekPlannedDuration) / $prevWeekPlannedDuration) * 100;
-                                        }
-                                    }
-                                }
-                            }
+                            $colorPalette = $this->getWeekColorPalette($baseColor);
                         @endphp
                         <!-- Week header avec style amélioré et plus marqué -->
                         <div x-data="{ 
@@ -568,10 +488,10 @@
                              @expand-all-year.window="collapsed = false"
                              class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20">
                             <!-- Background overlay plus visible -->
-                            <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $lightShade }} via-{{ $midShade }} to-{{ $darkShade }}"></div>
+                            <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $colorPalette['lightShade'] }} via-{{ $colorPalette['midShade'] }} to-{{ $colorPalette['darkShade'] }}"></div>
                             
                             <!-- Bande colorée à gauche pour une identification plus marquée -->
-                            <div class="absolute left-0 top-0 bottom-0 w-2 bg-{{ $midShade }} rounded-l-xl"></div>
+                            <div class="absolute left-0 top-0 bottom-0 w-2 bg-{{ $colorPalette['midShade'] }} rounded-l-xl"></div>
                             
                             <!-- Contenu de la semaine -->
                             <div class="relative z-10 week-header pt-2 pb-1 px-2 rounded-t-xl">
@@ -748,70 +668,20 @@
                                                     <div class="flex justify-center h-5"> <!-- Fixed height container for increase percentage -->
                                                         @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
                                                             @php
-                                                                // Variables pour stocker les stats de la semaine de développement précédente
-                                                                $prevDevWeekPlannedStat = null;
-                                                                $increase = null;
+                                                                $progressData = $this->calculateDevelopmentWeekProgress($week, $weeksInMonth, $loop->index);
+                                                                $statProgressData = $progressData[$stat] ?? null;
                                                                 
-                                                                // Si c'est une semaine de développement, rechercher la dernière semaine de développement
-                                                                if ($isDevelopmentWeek) {
-                                                                    // Récupérer l'index actuel de la semaine dans le mois
-                                                                    $currentIndex = $loop->index;
-                                                                    
-                                                                    // Parcourir les semaines précédentes à rebours jusqu'à trouver une semaine de développement
-                                                                    for ($i = $currentIndex - 1; $i >= 0; $i--) {
-                                                                        $prevWeek = $weeksInMonth[$i];
-                                                                        $isPrevDevWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'development';
-                                                                        $isPrevReducedWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'reduced';
-                                                                        
-                                                                        // Si on trouve une semaine de développement, on l'utilise pour comparer
-                                                                        if ($isPrevDevWeek) {
-                                                                            $prevDevWeekPlannedStat = $prevWeek->planned_stats[$stat];
-                                                                            
-                                                                            // Calculer le pourcentage d'augmentation
-                                                                            if ($prevDevWeekPlannedStat > 0 && $week->planned_stats[$stat] > 0) {
-                                                                                $increase = (($week->planned_stats[$stat] - $prevDevWeekPlannedStat) / $prevDevWeekPlannedStat) * 100;
-                                                                            }
-                                                                            
-                                                                            // On a trouvé une semaine de développement, on arrête la recherche
-                                                                            break;
-                                                                        }
-                                                                        
-                                                                        // Si on trouve une semaine de type "reduced", on continue à chercher
-                                                                        // la semaine de développement précédente
-                                                                    }
-                                                                }
-                                                                
-                                                                // Déterminer la couleur et l'icône en fonction du pourcentage
-                                                                if ($increase !== null) {
-                                                                    if ($increase > 10) {
-                                                                        // Augmentation > 10% => Trop élevé (warning rouge)
-                                                                        $increaseColor = 'text-red-400';
-                                                                        $increaseIcon = 'fa-exclamation-triangle';
-                                                                        $increaseStatus = 'Significant Increase';
-                                                                        $increaseMessage = 'An increase greater than 10% may increase the risk of injury.';
-                                                                    } elseif ($increase < 0) {
-                                                                        // Diminution < 0% => Pas idéal (warning orange)
-                                                                        $increaseColor = 'text-amber-400';
-                                                                        $increaseIcon = 'fa-exclamation-circle';
-                                                                        $increaseStatus = 'Significant Decrease';
-                                                                        $increaseMessage = 'A significant decrease may affect training progression and consistency.';
-                                                                    } elseif ($increase == 0) {
-                                                                        // Pas de changement => Idéal (vert)
-                                                                        $increaseColor = 'text-emerald-400';
-                                                                        $increaseIcon = 'fa-check-circle';
-                                                                        $increaseStatus = 'No Change';
-                                                                        $increaseMessage = 'No change is ideal for maintaining a steady training load.';
-                                                                    } elseif ($increase > 0 && $increase <= 10) {
-                                                                        // Entre 0% et +10% => Idéal (vert)
-                                                                        $increaseColor = 'text-emerald-400';
-                                                                        $increaseIcon = 'fa-check-circle';
-                                                                        $increaseStatus = 'Ideal Progression';
-                                                                        $increaseMessage = 'A increase below +10% is recommended for safe progression.';
-                                                                    }
+                                                                if ($statProgressData && $progressData['isValid']) {
+                                                                    $increase = $statProgressData['value'];
+                                                                    $increaseStatus = $this->getIncreaseStatus($increase);
+                                                                    $increaseColor = $increaseStatus['color'];
+                                                                    $increaseIcon = $increaseStatus['icon'];
+                                                                    $increaseStatusText = $increaseStatus['status'];
+                                                                    $increaseMessage = $increaseStatus['message'];
                                                                 }
                                                             @endphp
                                                             
-                                                            @if($increase !== null)
+                                                            @if(isset($increase))
                                                                 <span class="relative group cursor-default sm:cursor-help flex items-start">
                                                                     <span class="{{ $increaseColor }} text-xs font-semibold">
                                                                         <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
@@ -820,7 +690,7 @@
                                                                     <!-- Tooltip explicatif -->
                                                                     <div class="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-1 px-3 py-2 rounded bg-gray-800 text-white text-xs whitespace-normal shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] w-48">
                                                                         <p class="mb-1 font-medium">
-                                                                            <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatus }}
+                                                                            <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatusText }}
                                                                         </p>
                                                                         <p class="text-gray-300 text-2xs">
                                                                             {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous development week.
@@ -834,8 +704,7 @@
                                                     
                                                     @if($week->planned_stats[$stat] > 0)                                
                                                         @php 
-                                                            $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;
-                                                            $percentage = min($percentage, 100);
+                                                            $percentage = $this->calculateCompletionPercentage($week->actual_stats[$stat], $week->planned_stats[$stat]);
                                                         @endphp
                                                         <!-- Progress bar showing completion percentage of planned stats -->
                                                         <div class="w-full h-2 bg-gray-800 bg-opacity-50 rounded-full">
@@ -967,17 +836,8 @@
                                     if(substr($monthKey, 0, 4) != $year) {
                                         continue;
                                     }
-                                    
-                                    try {
-                                        // Parse the month key to get the correct month
-                                        list($yearPart, $monthPart) = explode('-', $monthKey);
-                                        
-                                        // Get correct month name using PHP's date function directly
-                                        $monthNumber = (int)$monthPart;
-                                        $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
-                                    } catch (\Exception $e) {
-                                        $monthName = "Month $monthKey";
-                                    }
+                                    $monthInfo = $this->getMonthInfo($monthKey);
+                                    $monthName = $monthInfo['name'];
                                 @endphp
                                 <a href="#{{ Str::slug($monthName) }}" 
                                 class="flex items-center justify-between px-3 py-1 gap-2 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">

@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {    
+    /**
+     * Event listeners for the component.
+     * 
+     * @var array
+     */
     protected $listeners = [
         'refresh' => '$refresh',
         'confirmDeleteAll',
@@ -22,30 +27,93 @@ class Calendar extends Component
         'confirmDeleteWeek'
     ];
 
+    /**
+     * The current year being displayed.
+     * 
+     * @var int
+     */
     public $year;
+    
+    /**
+     * Collection of user activities for the displayed year.
+     * 
+     * @var \Illuminate\Support\Collection
+     */
     public $activities;
+    
+    /**
+     * Collection of user workouts for the displayed year.
+     * 
+     * @var \Illuminate\Support\Collection
+     */
     public $workouts;
+    
+    /**
+     * Collection of weeks in the displayed year.
+     * 
+     * @var \Illuminate\Support\Collection
+     */
     public $weeks;
+    
+    /**
+     * Collection of months with associated weeks.
+     * 
+     * @var \Illuminate\Support\Collection
+     */
     public $months;
+    
+    /**
+     * Monthly statistics for the displayed year.
+     * 
+     * @var array
+     */
     public $monthStats;
+    
+    /**
+     * Yearly statistics aggregation.
+     * 
+     * @var array
+     */
     public $yearStats;
 
+    /**
+     * Icons used for different statistics.
+     * 
+     * @var array
+     */
     public $statIcons = [
         'distance' => 'route',
         'elevation' => 'mountain', 
         'duration' => 'stopwatch'
     ];    
+    
+    /**
+     * Colors used for different statistics.
+     * 
+     * @var array
+     */
     public $statColors = [
         'distance' => 'blue',
         'elevation' => 'red',
         'duration' => 'green'
     ];
 
+    /**
+     * Initialize the component with the given year.
+     *
+     * @param int|null $year The year to display, defaults to current year
+     * @return void
+     */
     public function mount($year = null)
     {
         $this->year = $year ?: now()->year;
     }
 
+    /**
+     * Render the calendar component.
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
         $this->activities = $this->getActivities();
@@ -68,6 +136,11 @@ class Calendar extends Component
         ]);
     }
 
+    /**
+     * Get a list of available years for the calendar view based on user data and date range.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     private function getAvailableYears()
     {
         $user = Auth::user();
@@ -90,26 +163,45 @@ class Calendar extends Component
         ->values();
     }
 
+    /**
+     * Set the current year for the calendar view and update URL.
+     *
+     * @param int $selectedYear The year to display
+     * @return void
+     */
     public function setYear(int $selectedYear): void
     {
         $this->year = $selectedYear;
         $this->dispatch('update-url', year: $selectedYear);
     }
 
-    // Méthode pour naviguer à l'année précédente
+    /**
+     * Navigate to the previous year.
+     *
+     * @return void
+     */
     public function previousYear()
     {
         $this->year--;
         $this->dispatch('update-url', year: $this->year);
     }
 
-    // Méthode pour naviguer à l'année suivante
+    /**
+     * Navigate to the next year.
+     *
+     * @return void
+     */
     public function nextYear()
     {
         $this->year++;
         $this->dispatch('update-url', year: $this->year);
     }
 
+    /**
+     * Get activities for the current year.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getActivities()
     {
         $year = $this->year;
@@ -123,6 +215,11 @@ class Calendar extends Component
             ->get();
     }
 
+    /**
+     * Get workouts for the current year.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getWorkouts()
     {
         $year = $this->year;
@@ -136,6 +233,13 @@ class Calendar extends Component
             ->get();
     }
 
+    /**
+     * Generate all weeks for the selected year and calculate their statistics.
+     *
+     * @param Collection $activities Collection of user activities
+     * @param Collection $workouts Collection of user workouts
+     * @return Collection Collection of week objects with calculated statistics
+     */
     private function getWeeks(Collection $activities, Collection $workouts): Collection
     {
         $weeks = collect();
@@ -173,6 +277,15 @@ class Calendar extends Component
         return $weeks;
     }
 
+    /**
+     * Calculate statistics for a specific week.
+     *
+     * @param Carbon $start Start date of the week
+     * @param Carbon $end End date of the week
+     * @param Collection $activities Collection of user activities
+     * @param Collection $workouts Collection of user workouts
+     * @return array Array containing actual and planned statistics
+     */
     private function calculateWeekStats(Carbon $start, Carbon $end, Collection $activities, Collection $workouts): array
     {
         // Activités réelles
@@ -201,6 +314,12 @@ class Calendar extends Component
         ];
     }
 
+    /**
+     * Calculate monthly statistics from weekly data.
+     *
+     * @param Collection $weeks Collection of weeks with their statistics
+     * @return array Array of monthly statistics organized by month key
+     */
     private function calculateMonthStats(Collection $weeks): array
     {
         $monthStats = [];
@@ -225,6 +344,12 @@ class Calendar extends Component
         return $monthStats;
     }
 
+    /**
+     * Calculate yearly statistics from weekly data.
+     *
+     * @param Collection $weeks Collection of weeks with their statistics
+     * @return array Array of yearly statistics for actual and planned values
+     */
     private function calculateYearStats(Collection $weeks): array
     {
         $yearStats = [
@@ -244,10 +369,10 @@ class Calendar extends Component
     }
     
     /**
-     * Met à jour le type de semaine.
+     * Updates the type of a week.
      *
-     * @param int $weekId L'identifiant de la semaine
-     * @param int $weekTypeId L'identifiant du type de semaine
+     * @param int $weekId The week identifier
+     * @param int|null $weekTypeId The week type identifier
      * @return void
      */
     public function setWeekType($weekId, $weekTypeId)
@@ -266,6 +391,12 @@ class Calendar extends Component
         $this->dispatch('refresh');
     }
 
+    /**
+     * Generates an array of day information for each day in a week.
+     *
+     * @param Carbon $start The first day of the week
+     * @return array Array of day information for the week
+     */
     private function generateWeekDays(Carbon $start): array
     {
         return collect(range(0, 6))->map(function ($day) use ($start) {
@@ -280,6 +411,12 @@ class Calendar extends Component
         })->toArray();
     }  
 
+    /**
+     * Groups weeks by month for the selected year.
+     *
+     * @param Collection $weeks Collection of weeks to group
+     * @return Collection Collection of weeks grouped by month
+     */
     private function groupWeeksByMonth(Collection $weeks): Collection
     {
         return $weeks->filter(function ($week) {
@@ -287,6 +424,13 @@ class Calendar extends Component
         })->groupBy('month');    
     }
     
+    /**
+     * Updates a week's type and sends a success notification.
+     *
+     * @param int $weekId The week identifier
+     * @param int|null $weekTypeId The week type identifier (null to clear)
+     * @return void
+     */
     public function updateWeekType($weekId, $weekTypeId = null)
     {
         $week = Week::findOrFail($weekId);
@@ -299,6 +443,13 @@ class Calendar extends Component
         $this->dispatch('toast', 'Week type updated successfully', 'success');
     }  
 
+    /**
+     * Updates the date of a workout when it's moved in the calendar.
+     *
+     * @param int $workoutId The workout identifier
+     * @param string $newDate The new date for the workout
+     * @return void
+     */
     #[On('workout-moved')]
     public function updateWorkoutDate($workoutId, $newDate)
     {
@@ -312,6 +463,13 @@ class Calendar extends Component
         $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
+    /**
+     * Creates a copy of a workout on a new date.
+     *
+     * @param int $workoutId The workout identifier to copy
+     * @param string $newDate The date for the new copy
+     * @return void
+     */
     #[On('workout-copied')]
     public function copyWorkout($workoutId, $newDate)
     {
@@ -325,12 +483,23 @@ class Calendar extends Component
         $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
+    /**
+     * Refreshes the workouts after creating a new one.
+     *
+     * @return void
+     */
     #[On('workout-created')]
     public function refreshCalendar()
     {
         $this->workouts = $this->getWorkouts();
     }
     
+    /**
+     * Synchronizes activities from Strava.
+     *
+     * @param StravaSyncService $syncService The Strava synchronization service
+     * @return void
+     */
     public function startSync(StravaSyncService $syncService)
     {
         try {
@@ -359,6 +528,11 @@ class Calendar extends Component
         $this->dispatch('refresh');
     }
 
+    /**
+     * Shows a confirmation dialog for deleting all workouts in the current year.
+     *
+     * @return void
+     */
     public function deleteAll()
     {
         $count = Workout::where('user_id', Auth::id())
@@ -376,6 +550,11 @@ class Calendar extends Component
         ]);
     }
 
+    /**
+     * Deletes all workouts for the current year after confirmation.
+     *
+     * @return void
+     */
     public function confirmDeleteAll()
     {
         $workouts = Workout::where('user_id', Auth::id())
@@ -387,6 +566,12 @@ class Calendar extends Component
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
+    /**
+     * Shows a confirmation dialog for deleting workouts in a specific month.
+     *
+     * @param string $monthKey The month identifier in YYYY-MM format
+     * @return void
+     */
     public function deleteMonth($monthKey)
     {
         $month = Carbon::createFromFormat('Y-m', $monthKey);
@@ -409,6 +594,12 @@ class Calendar extends Component
         ]);
     }
 
+    /**
+     * Deletes all workouts for a specific month after confirmation.
+     *
+     * @param array $params Parameters passed from the confirmation dialog
+     * @return void
+     */
     public function confirmDeleteMonth($params)
     {
         $monthKey = $params[0];
@@ -424,6 +615,12 @@ class Calendar extends Component
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
+    /**
+     * Shows a confirmation dialog for deleting workouts in a specific week.
+     *
+     * @param int $weekId The week identifier
+     * @return void
+     */
     public function deleteWeek($weekId)
     {
         $week = Week::findOrFail($weekId);
@@ -448,6 +645,12 @@ class Calendar extends Component
         ]);
     }
 
+    /**
+     * Deletes all workouts for a specific week after confirmation.
+     *
+     * @param array $params Parameters passed from the confirmation dialog
+     * @return void
+     */
     public function confirmDeleteWeek(array $params)
     {
         $weekId = $params[0];
@@ -464,5 +667,210 @@ class Calendar extends Component
         $workouts->delete(); 
 
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
+    }
+    
+    /**
+     * Formats time in seconds to a readable format (h:mm:ss or mm:ss).
+     *
+     * @param int $seconds Time in seconds
+     * @return string Formatted time string
+     */
+    public function formatTime(int $seconds): string
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+
+        if ($hours > 0) {
+            return sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);
+        } else {
+            return sprintf('%d:%02d', $minutes, $seconds);
+        }
+    }
+
+    /**
+     * Formats a distance in kilometers with specified precision.
+     *
+     * @param float $distance Distance in kilometers
+     * @param int $precision Number of decimal places
+     * @return string Formatted distance string with km unit
+     */
+    public function formatDistance(float $distance, int $precision = 1): string
+    {
+        return number_format($distance, $precision) . ' km';
+    }
+
+    /**
+     * Calculates progression statistics between two development weeks.
+     *
+     * @param \App\Models\Week $currentWeek Current week
+     * @param Collection $weeksInMonth All weeks in the month
+     * @param int $currentIndex Index of the current week
+     * @return array Result with distance and duration progression data
+     */
+    public function calculateDevelopmentWeekProgress(Week $currentWeek, Collection $weeksInMonth, int $currentIndex): array
+    {
+        $result = [
+            'distance' => null,
+            'duration' => null,
+            'isValid' => false
+        ];
+        
+        if (strtolower($currentWeek->type->name ?? '') !== 'development') {
+            return $result;
+        }
+        
+        // Chercher la semaine de développement précédente
+        $prevDevWeek = null;
+        for ($i = $currentIndex - 1; $i >= 0; $i--) {
+            $prevWeek = $weeksInMonth[$i];
+            if ($prevWeek->type && strtolower($prevWeek->type->name) === 'development') {
+                $prevDevWeek = $prevWeek;
+                break;
+            }
+        }
+        
+        if (!$prevDevWeek) {
+            return $result;
+        }
+        
+        // Calculer les pourcentages d'augmentation
+        $result['isValid'] = true;
+        
+        if ($prevDevWeek->planned_stats['distance'] > 0 && $currentWeek->planned_stats['distance'] > 0) {
+            $result['distance'] = [
+                'value' => (($currentWeek->planned_stats['distance'] - $prevDevWeek->planned_stats['distance']) / $prevDevWeek->planned_stats['distance']) * 100,
+                'previous' => $prevDevWeek->planned_stats['distance']
+            ];
+        }
+        
+        if ($prevDevWeek->planned_stats['duration'] > 0 && $currentWeek->planned_stats['duration'] > 0) {
+            $result['duration'] = [
+                'value' => (($currentWeek->planned_stats['duration'] - $prevDevWeek->planned_stats['duration']) / $prevDevWeek->planned_stats['duration']) * 100,
+                'previous' => $prevDevWeek->planned_stats['duration']
+            ];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Gets status information for a statistical increase.
+     *
+     * @param float $increase Percentage increase
+     * @return array Status information with color, icon, status text and message
+     */
+    public function getIncreaseStatus(float $increase): array
+    {
+        if ($increase > 10) {
+            return [
+                'color' => 'text-red-400',
+                'icon' => 'fa-exclamation-triangle',
+                'status' => 'Significant Increase',
+                'message' => 'An increase greater than 10% may increase the risk of injury.'
+            ];
+        } elseif ($increase < 0) {
+            return [
+                'color' => 'text-amber-400',
+                'icon' => 'fa-exclamation-circle',
+                'status' => 'Significant Decrease',
+                'message' => 'A significant decrease may affect training progression and consistency.'
+            ];
+        } elseif ($increase == 0) {
+            return [
+                'color' => 'text-emerald-400',
+                'icon' => 'fa-check-circle',
+                'status' => 'No Change',
+                'message' => 'No change is ideal for maintaining a steady training load.'
+            ];
+        } else {
+            return [
+                'color' => 'text-emerald-400',
+                'icon' => 'fa-check-circle',
+                'status' => 'Ideal Progression',
+                'message' => 'A increase below +10% is recommended for safe progression.'
+            ];
+        }
+    }
+    
+    /**
+     * Verifies and corrects a month name from its key.
+     *
+     * @param string $monthKey Month key in YYYY-MM format
+     * @return array Month information with name, number and mismatch flag
+     */
+    public function getMonthInfo(string $monthKey): array
+    {
+        try {
+            list($yearPart, $monthPart) = explode('-', $monthKey);
+            
+            // Créer l'objet date correct
+            $monthDate = Carbon::createFromDate($yearPart, (int)$monthPart, 1);
+            $monthName = $monthDate->format('F');
+            
+            // Pour validation
+            $monthNumber = (int)$monthPart;
+            $expectedMonthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+            
+            // Vérifier si le nom du mois correspond à celui attendu
+            $hasMismatch = ($monthName !== $expectedMonthName);
+            
+            // Forcer le nom correct du mois si nécessaire
+            if ($hasMismatch) {
+                $monthName = $expectedMonthName;
+            }
+            
+            return [
+                'name' => $monthName,
+                'number' => $monthNumber,
+                'hasMismatch' => $hasMismatch
+            ];
+        } catch (\Exception $e) {
+            return [
+                'name' => "Month $monthKey",
+                'number' => 0,
+                'hasMismatch' => true
+            ];
+        }
+    }
+    
+    /**
+     * Gets color palette information for a week.
+     * 
+     * @param string $baseColor Base color
+     * @return array Color palette with dark, mid, light shades and border color
+     */
+    public function getWeekColorPalette(string $baseColor): array
+    {
+        $color = str_replace('bg-', '', $baseColor);
+        
+        // Extraire la teinte de couleur et la luminosité
+        preg_match('/(.*)-(\d{3})$/', $color, $matches);
+        $colorName = $matches[1] ?? 'slate';
+        $colorWeight = isset($matches[2]) ? intval($matches[2]) : 500;
+        
+        // Créer une palette de couleurs plus marquée
+        return [
+            'darkShade' => $colorName . '-' . min(900, $colorWeight + 200),
+            'midShade' => $color,
+            'lightShade' => $colorName . '-' . max(100, $colorWeight - 200),
+            'borderColor' => $colorName . '-' . min(500, $colorWeight)
+        ];
+    }
+    
+    /**
+     * Calculates the completion percentage of a statistic.
+     *
+     * @param float $actual Actual value
+     * @param float $planned Planned value
+     * @return float Completion percentage (capped at 100%)
+     */
+    public function calculateCompletionPercentage(float $actual, float $planned): float
+    {
+        if ($planned <= 0) {
+            return 0;
+        }
+        
+        return min(($actual / $planned) * 100, 100);
     }
 }
