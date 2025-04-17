@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\StravaAuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class StravaController extends Controller
 {
@@ -11,11 +12,7 @@ class StravaController extends Controller
 
     public function redirect()
     {
-        // S'assurer que l'URL de redirection est bien préservée pendant le processus d'authentification
-        if (!session()->has('strava_redirect_url')) {
-            session(['strava_redirect_url' => route('dashboard')]);
-        }
-        
+        // L'URL de redirection est déjà stockée par le middleware
         return redirect($this->authService->getRedirectUrl());
     }
 
@@ -35,18 +32,15 @@ class StravaController extends Controller
             ]);
         }
 
-        // Récupérer l'URL d'origine depuis la session et y rediriger l'utilisateur
-        $redirectUrl = session('strava_redirect_url', route('home'));
-        session()->forget('strava_redirect_url'); // Nettoyer la session
+        // Récupérer l'URL intentionnelle stockée par le middleware
+        $redirectUrl = Session::pull('url.intended', route('home'));
         
         return redirect($redirectUrl);
     }
 
     public function showConnect(Request $request)
     {
-        // Stocker l'URL précédente dans la session
-        session(['strava_redirect_url' => url()->previous()]);
-        
+        // L'URL est déjà stockée par le middleware dans Session::put('url.intended')
         return view('strava.connect');
     }
 }
