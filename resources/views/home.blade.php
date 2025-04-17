@@ -353,10 +353,10 @@
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
                     </h3>
                     <p class="text-blue-200 mb-3">Development phase focused on building aerobic foundation</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Progressive volume increase week by week</li>
-                        <li>Low-intensity foundation work to build endurance</li>
-                        <li>Establishing running routine and consistency</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-chart-line mr-2"></i> Progressive volume increase week by week</li>
+                        <li><i class="fas fa-heartbeat mr-2"></i> Low-intensity foundation work to build endurance</li>
+                        <li><i class="fas fa-clock mr-2"></i> Establishing running routine and consistency</li>
                     </ul>
                 </div>
                 
@@ -367,10 +367,10 @@
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
                     </h3>
                     <p class="text-emerald-200 mb-3">Planned reduction in volume to allow adaptation</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>20-30% volume reduction from previous weeks</li>
-                        <li>Focus on active recovery sessions</li>
-                        <li>Extra rest and sleep emphasis</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-tachometer-alt mr-2"></i> 20-30% volume reduction from previous weeks</li>
+                        <li><i class="fas fa-walking mr-2"></i> Focus on active recovery sessions</li>
+                        <li><i class="fas fa-bed mr-2"></i> Extra rest and sleep emphasis</li>
                     </ul>
                 </div>
                 
@@ -381,10 +381,10 @@
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
                     </h3>
                     <p class="text-blue-200 mb-3">Progressive development with increasing intensity</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Introduction of tempo runs and some speedwork</li>
-                        <li>Longer weekend runs to build endurance</li>
-                        <li>Building weekly mileage at a controlled rate</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-fire mr-2"></i> Introduction of tempo runs and some speedwork</li>
+                        <li><i class="fas fa-road mr-2"></i> Longer weekend runs to build endurance</li>
+                        <li><i class="fas fa-chart-bar mr-2"></i> Building weekly mileage at a controlled rate</li>
                     </ul>
                 </div>
                 
@@ -395,10 +395,10 @@
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
                     </h3>
                     <p class="text-emerald-200 mb-3">Strategic recovery to consolidate fitness gains</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Reduced mileage week to prevent overtraining</li>
-                        <li>Maintain frequency, lower intensity</li>
-                        <li>Preparation for peak training phase</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-battery-half mr-2"></i> Reduced mileage week to prevent overtraining</li>
+                        <li><i class="fas fa-sync mr-2"></i> Maintain frequency, lower intensity</li>
+                        <li><i class="fas fa-battery-three-quarters mr-2"></i> Preparation for peak training phase</li>
                     </ul>
                 </div>
                 
@@ -409,10 +409,10 @@
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
                     </h3>
                     <p class="text-blue-200 mb-3">Highest volume and intensity weeks of the plan</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Longest runs of training cycle (up to 20 miles)</li>
-                        <li>Race-specific workout intensity</li>
-                        <li>Mental toughness development</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-mountain mr-2"></i> Longest runs of training cycle (up to 20 miles)</li>
+                        <li><i class="fas fa-tachometer-alt mr-2"></i> Race-specific workout intensity</li>
+                        <li><i class="fas fa-brain mr-2"></i> Mental toughness development</li>
                     </ul>
                 </div>
                 
@@ -423,10 +423,10 @@
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintenance Recovery (Reduced)
                     </h3>
                     <p class="text-emerald-200 mb-3">Final recovery before maintenance phase</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Strategic volume reduction to absorb peak weeks</li>
-                        <li>Reset for final preparation phase</li>
-                        <li>Assessment of progress and adjustments</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-battery-quarter mr-2"></i> Strategic volume reduction to absorb peak weeks</li>
+                        <li><i class="fas fa-redo mr-2"></i> Reset for final preparation phase</li>
+                        <li><i class="fas fa-search mr-2"></i> Assessment of progress and adjustments</li>
                     </ul>
                 </div>
                 
@@ -437,10 +437,10 @@
                         <i class="fas fa-equals text-amber-300 mr-2"></i> Maintenance Phase
                     </h3>
                     <p class="text-amber-200 mb-3">Holding fitness while preparing for taper</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Consistent volume at 80-90% of peak</li>
-                        <li>Race pace work integration</li>
-                        <li>Race day strategy refinement</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-balance-scale mr-2"></i> Consistent volume at 80-90% of peak</li>
+                        <li><i class="fas fa-stopwatch mr-2"></i> Race pace work integration</li>
+                        <li><i class="fas fa-chess mr-2"></i> Race day strategy refinement</li>
                     </ul>
                 </div>
                 
@@ -451,10 +451,10 @@
                         <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
                     </h3>
                     <p class="text-fuchsia-200 mb-3">Strategic reduction to maximize race day performance</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Progressive volume reduction (40-60%)</li>
-                        <li>Maintaining intensity while reducing volume</li>
-                        <li>Recovery optimization and glycogen loading</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-sort-amount-down mr-2"></i> Progressive volume reduction (40-60%)</li>
+                        <li><i class="fas fa-bolt mr-2"></i> Maintaining intensity while reducing volume</li>
+                        <li><i class="fas fa-battery-full mr-2"></i> Recovery optimization and glycogen loading</li>
                     </ul>
                 </div>
                 
@@ -465,10 +465,10 @@
                         <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
                     </h3>
                     <p class="text-rose-200 mb-3">Final preparation and race execution</p>
-                    <ul class="text-white space-y-2 ml-6 list-disc">
-                        <li>Minimal running with rest focus</li>
-                        <li>Race day logistics preparation</li>
-                        <li>Marathon day!</li>
+                    <ul class="text-white space-y-2 ml-6">
+                        <li><i class="fas fa-feather mr-2"></i> Minimal running with rest focus</li>
+                        <li><i class="fas fa-clipboard-check mr-2"></i> Race day logistics preparation</li>
+                        <li><i class="fas fa-medal mr-2"></i> Marathon day!</li>
                     </ul>
                 </div>
             </div>
