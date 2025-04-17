@@ -748,12 +748,41 @@
                                                     <div class="flex justify-center h-5"> <!-- Fixed height container for increase percentage -->
                                                         @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
                                                             @php
-                                                                $increase = $stat === 'distance' ? $distanceIncrease : $durationIncrease;
-                                                            @endphp
-                                                            
-                                                            @if($increase !== null)
-                                                                @php
-                                                                    // Déterminer la couleur et l'icône en fonction du pourcentage
+                                                                // Variables pour stocker les stats de la semaine de développement précédente
+                                                                $prevDevWeekPlannedStat = null;
+                                                                $increase = null;
+                                                                
+                                                                // Si c'est une semaine de développement, rechercher la dernière semaine de développement
+                                                                if ($isDevelopmentWeek) {
+                                                                    // Récupérer l'index actuel de la semaine dans le mois
+                                                                    $currentIndex = $loop->index;
+                                                                    
+                                                                    // Parcourir les semaines précédentes à rebours jusqu'à trouver une semaine de développement
+                                                                    for ($i = $currentIndex - 1; $i >= 0; $i--) {
+                                                                        $prevWeek = $weeksInMonth[$i];
+                                                                        $isPrevDevWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'development';
+                                                                        $isPrevReducedWeek = $prevWeek->type && strtolower($prevWeek->type->name) === 'reduced';
+                                                                        
+                                                                        // Si on trouve une semaine de développement, on l'utilise pour comparer
+                                                                        if ($isPrevDevWeek) {
+                                                                            $prevDevWeekPlannedStat = $prevWeek->planned_stats[$stat];
+                                                                            
+                                                                            // Calculer le pourcentage d'augmentation
+                                                                            if ($prevDevWeekPlannedStat > 0 && $week->planned_stats[$stat] > 0) {
+                                                                                $increase = (($week->planned_stats[$stat] - $prevDevWeekPlannedStat) / $prevDevWeekPlannedStat) * 100;
+                                                                            }
+                                                                            
+                                                                            // On a trouvé une semaine de développement, on arrête la recherche
+                                                                            break;
+                                                                        }
+                                                                        
+                                                                        // Si on trouve une semaine de type "reduced", on continue à chercher
+                                                                        // la semaine de développement précédente
+                                                                    }
+                                                                }
+                                                                
+                                                                // Déterminer la couleur et l'icône en fonction du pourcentage
+                                                                if ($increase !== null) {
                                                                     if ($increase > 10) {
                                                                         // Augmentation > 10% => Trop élevé (warning rouge)
                                                                         $increaseColor = 'text-red-400';
@@ -779,8 +808,10 @@
                                                                         $increaseStatus = 'Ideal Progression';
                                                                         $increaseMessage = 'A increase below +10% is recommended for safe progression.';
                                                                     }
-                                                                @endphp
-                                                                
+                                                                }
+                                                            @endphp
+                                                            
+                                                            @if($increase !== null)
                                                                 <span class="relative group cursor-default sm:cursor-help flex items-start">
                                                                     <span class="{{ $increaseColor }} text-xs font-semibold">
                                                                         <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
@@ -792,7 +823,7 @@
                                                                             <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatus }}
                                                                         </p>
                                                                         <p class="text-gray-300 text-2xs">
-                                                                            {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous week.
+                                                                            {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous development week.
                                                                             <span class="block mt-1 {{ $increaseColor }}">{{ $increaseMessage }}</span>
                                                                         </p>
                                                                     </div>
