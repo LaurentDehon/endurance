@@ -125,27 +125,27 @@
 
                                                 <!-- Main navigation -->
                                                 <nav>
-                                                    <div class="space-y-4">
-                                                        <a href="{{ route('home') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('home') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                    <div class="space-y-3">
+                                                        <a href="{{ route('home') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('home') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Home</span>
                                                         </a>
-                                                        <a href="{{ route('dashboard') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('dashboard') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('dashboard') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('dashboard') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Dashboard</span>
                                                         </a>
-                                                        <a href="{{ route('calendar') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('calendar') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('calendar') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('calendar') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Calendar</span>
                                                         </a>
-                                                        <a href="{{ route('activities') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('activities') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('activities') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('activities') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Activities</span>
                                                         </a>
-                                                        <a href="{{ route('help') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('help') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('help') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('help') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Help</span>
                                                         </a>
-                                                        <a href="{{ route('contact.show') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('contact.show') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('contact.show') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('contact.show') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Contact</span>
                                                         </a>
                                                         @if (auth()->user()->is_admin)
-                                                        <a href="{{ route('admin') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('admin') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                        <a href="{{ route('admin') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('admin') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Admin</span>
                                                         </a>
                                                         @endif
@@ -157,16 +157,16 @@
                                             <div class="mt-auto p-4 border-t border-white border-opacity-20">
                                                 <h3 class="text-xs uppercase text-slate-300 mb-4 px-3">Account</h3>
                                                 <nav>
-                                                    <div class="space-y-4">
-                                                        <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                                                    <div class="space-y-3">
+                                                        <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                                                             <span>Profile</span>
                                                         </a>
-                                                        {{-- <a href="#" class="flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
+                                                        {{-- <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
                                                             <span>Settings</span>
                                                         </a> --}}
                                                         <form method="POST" action="{{ route('logout') }}">
                                                             @csrf
-                                                            <button type="submit" class="w-full text-left flex items-center justify-between px-3 py-1 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
+                                                            <button type="submit" class="w-full text-left flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">
                                                                 <span>Logout</span>
                                                             </button>
                                                         </form>

@@ -659,7 +659,7 @@
                                                 <!-- Collapse/Expand Button with chevron - Changed from hidden to visible on mobile -->
                                                 <button 
                                                     @click="collapsed = !collapsed" 
-                                                    class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none block">
+                                                    class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                                     <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                 </button>
                                                 
@@ -714,10 +714,10 @@
                                         <!-- Week stats -->
                                         <div class="flex justify-between mb-1 sm:gap-4 md:gap-6">
                                             @foreach(['distance', 'duration', 'elevation'] as $stat)
-                                                <div class="flex flex-col md:w-28 lg:w-36">
-                                                    <div class="flex items-center justify-center mb-1 gap-2">
+                                                <div class="flex flex-col md:w-36 lg:w-36">
+                                                    <div class="flex items-center justify-center gap-2 px-1 md:px-2">
                                                         <p class="text-xs flex items-center">
-                                                            <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400 text-lg mr-1"></i>
+                                                            <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400 text-lg"></i>
                                                         </p>
                                                         <div class="flex items-end">
                                                             <span class="text-lg font-bold text-slate-300">
@@ -731,7 +731,7 @@
                                                             </span>
                                                             
                                                             @if($week->planned_stats[$stat] > 0)
-                                                                <span class="text-sm text-gray-400 ml-1 whitespace-nowrap flex items-end mb-0.5">
+                                                                <span class="text-sm text-gray-400 ml-0.5 whitespace-nowrap flex items-end mb-0.5">
                                                                     /&nbsp;<span>
                                                                         @if($stat === 'duration')
                                                                             {{ formatTime($week->planned_stats[$stat]) }}
@@ -739,65 +739,68 @@
                                                                             {{ $stat === 'distance' ? number_format($week->planned_stats[$stat], 1) : $week->planned_stats[$stat] }}
                                                                         @endif
                                                                     </span>
-                                                                    
-                                                                    <!-- Affichage du pourcentage d'augmentation pour les semaines de développement -->
-                                                                    @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
-                                                                        @php
-                                                                            $increase = $stat === 'distance' ? $distanceIncrease : $durationIncrease;
-                                                                        @endphp
-                                                                        
-                                                                        @if($increase !== null)
-                                                                            @php
-                                                                                // Déterminer la couleur et l'icône en fonction du pourcentage
-                                                                                if ($increase > 10) {
-                                                                                    // Augmentation > 10% => Trop élevé (warning rouge)
-                                                                                    $increaseColor = 'text-red-400';
-                                                                                    $increaseIcon = 'fa-exclamation-triangle';
-                                                                                    $increaseStatus = 'Significant Increase';
-                                                                                    $increaseMessage = 'An increase greater than 10% may increase the risk of injury.';
-                                                                                } elseif ($increase < 0) {
-                                                                                    // Diminution < 0% => Pas idéal (warning orange)
-                                                                                    $increaseColor = 'text-amber-400';
-                                                                                    $increaseIcon = 'fa-exclamation-circle';
-                                                                                    $increaseStatus = 'Significant Decrease';
-                                                                                    $increaseMessage = 'A significant decrease may affect training progression and consistency.';
-                                                                                } elseif ($increase == 0) {
-                                                                                    // Pas de changement => Idéal (vert)
-                                                                                    $increaseColor = 'text-emerald-400';
-                                                                                    $increaseIcon = 'fa-check-circle';
-                                                                                    $increaseStatus = 'No Change';
-                                                                                    $increaseMessage = 'No change is ideal for maintaining a steady training load.';
-                                                                                } elseif ($increase > 0 && $increase <= 10) {
-                                                                                    // Entre 0% et +10% => Idéal (vert)
-                                                                                    $increaseColor = 'text-emerald-400';
-                                                                                    $increaseIcon = 'fa-check-circle';
-                                                                                    $increaseStatus = 'Ideal Progression';
-                                                                                    $increaseMessage = 'A increase below +10% is recommended for safe progression.';
-                                                                                }
-                                                                            @endphp
-                                                                            
-                                                                            <span class="relative group ml-2 cursor-help">
-                                                                                <span class="{{ $increaseColor }} text-xs font-semibold">
-                                                                                    <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
-                                                                                </span>
-                                                                                
-                                                                                <!-- Tooltip explicatif -->
-                                                                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-1 px-3 py-2 rounded bg-gray-800 text-white text-xs whitespace-normal shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] w-48">
-                                                                                    <p class="mb-1 font-medium">
-                                                                                        <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatus }}
-                                                                                    </p>
-                                                                                    <p class="text-gray-300 text-2xs">
-                                                                                        {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous week.
-                                                                                        <span class="block mt-1 {{ $increaseColor }}">{{ $increaseMessage }}</span>
-                                                                                    </p>
-                                                                                </div>
-                                                                            </span>
-                                                                        @endif
-                                                                    @endif
                                                                 </span>
                                                             @endif
                                                         </div>
                                                     </div>
+                                                    
+                                                    <!-- Structure for all stat displays with consistent height regardless of content -->
+                                                    <div class="flex justify-center h-5"> <!-- Fixed height container for increase percentage -->
+                                                        @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
+                                                            @php
+                                                                $increase = $stat === 'distance' ? $distanceIncrease : $durationIncrease;
+                                                            @endphp
+                                                            
+                                                            @if($increase !== null)
+                                                                @php
+                                                                    // Déterminer la couleur et l'icône en fonction du pourcentage
+                                                                    if ($increase > 10) {
+                                                                        // Augmentation > 10% => Trop élevé (warning rouge)
+                                                                        $increaseColor = 'text-red-400';
+                                                                        $increaseIcon = 'fa-exclamation-triangle';
+                                                                        $increaseStatus = 'Significant Increase';
+                                                                        $increaseMessage = 'An increase greater than 10% may increase the risk of injury.';
+                                                                    } elseif ($increase < 0) {
+                                                                        // Diminution < 0% => Pas idéal (warning orange)
+                                                                        $increaseColor = 'text-amber-400';
+                                                                        $increaseIcon = 'fa-exclamation-circle';
+                                                                        $increaseStatus = 'Significant Decrease';
+                                                                        $increaseMessage = 'A significant decrease may affect training progression and consistency.';
+                                                                    } elseif ($increase == 0) {
+                                                                        // Pas de changement => Idéal (vert)
+                                                                        $increaseColor = 'text-emerald-400';
+                                                                        $increaseIcon = 'fa-check-circle';
+                                                                        $increaseStatus = 'No Change';
+                                                                        $increaseMessage = 'No change is ideal for maintaining a steady training load.';
+                                                                    } elseif ($increase > 0 && $increase <= 10) {
+                                                                        // Entre 0% et +10% => Idéal (vert)
+                                                                        $increaseColor = 'text-emerald-400';
+                                                                        $increaseIcon = 'fa-check-circle';
+                                                                        $increaseStatus = 'Ideal Progression';
+                                                                        $increaseMessage = 'A increase below +10% is recommended for safe progression.';
+                                                                    }
+                                                                @endphp
+                                                                
+                                                                <span class="relative group cursor-default sm:cursor-help flex items-start">
+                                                                    <span class="{{ $increaseColor }} text-xs font-semibold">
+                                                                        <i class="fas {{ $increaseIcon }} text-2xs mr-1"></i>{{ number_format($increase, 1) }}%
+                                                                    </span>
+                                                                    
+                                                                    <!-- Tooltip explicatif -->
+                                                                    <div class="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-1 px-3 py-2 rounded bg-gray-800 text-white text-xs whitespace-normal shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] w-48">
+                                                                        <p class="mb-1 font-medium">
+                                                                            <i class="fas {{ $increaseIcon }} {{ $increaseColor }} mr-1"></i>{{ $increaseStatus }}
+                                                                        </p>
+                                                                        <p class="text-gray-300 text-2xs">
+                                                                            {{ $increase >= 0 ? 'Increase' : 'Decrease' }} of {{ number_format(abs($increase), 1) }}% compared to previous week.
+                                                                            <span class="block mt-1 {{ $increaseColor }}">{{ $increaseMessage }}</span>
+                                                                        </p>
+                                                                    </div>
+                                                                </span>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                    
                                                     @if($week->planned_stats[$stat] > 0)                                
                                                         @php 
                                                             $percentage = ($week->actual_stats[$stat] / $week->planned_stats[$stat]) * 100;

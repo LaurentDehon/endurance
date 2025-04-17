@@ -102,7 +102,7 @@
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="structureSection">
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-cube text-xl"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-white">A Structure Designed for Progression</h2>
@@ -204,7 +204,7 @@
         <section id="features" class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out">
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-tools text-xl"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-white">Key Features</h2>
@@ -268,7 +268,7 @@
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="howSection">
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-question text-xl"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-white">How It Works</h2>
@@ -328,158 +328,157 @@
                     </div> --}}
                 </div>
             </div>
-        </section>
+        </section>        
 
-        <!-- Example Section -->
-        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="exampleSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
-                        <i class="fas fa-running text-xl"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-white">Real Example – Preparing for a Marathon in 16 Weeks</h2>
+        <!-- Training Blocks Section -->
+        <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border mb-10">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-route text-xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white">16-Week Marathon Training Plan Example</h2>
+            </div>
+            
+            <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
+                <p class="text-lg italic text-white">
+                    "A strategic progression from initial development to race day, with regular recovery periods to optimize adaptation."
+                </p>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Weeks 1-3: Development -->
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 1-3</span>
+                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
+                    </h3>
+                    <p class="text-blue-200 mb-3">Development phase focused on building aerobic foundation</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Progressive volume increase week by week</li>
+                        <li>Low-intensity foundation work to build endurance</li>
+                        <li>Establishing running routine and consistency</li>
+                    </ul>
                 </div>
                 
-                <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
-                    <p class="text-lg italic text-white">
-                        "I'm preparing for a marathon on October 6th. I've created my training plan in Zone 2 spanning 16 weeks."
-                    </p>
+                <!-- Week 4: Reduced -->
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 4</span>
+                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
+                    </h3>
+                    <p class="text-emerald-200 mb-3">Planned reduction in volume to allow adaptation</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>20-30% volume reduction from previous weeks</li>
+                        <li>Focus on active recovery sessions</li>
+                        <li>Extra rest and sleep emphasis</li>
+                    </ul>
                 </div>
                 
-                <!-- Timeline -->
-                <div class="timeline-container mb-10 relative overflow-hidden pt-5 pb-4">
-                    <div class="h-1 bg-gray-700 absolute left-0 right-0 top-1/2 transform -translate-y-1/2"></div>
-                    
-                    <div class="flex justify-between relative pt-4">
-                        <!-- Week 1 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-600 mb-3 flex items-center justify-center text-white font-bold text-xs">1-3</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-blue-600 px-2 py-1 rounded mb-2">Week 1-3</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-blue-300">Development</div>
-                                <div class="text-xs text-white">Startup</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Week 2 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-emerald-400 mb-3"></div>
-                            <div class="timeline-week text-xs font-bold text-white bg-emerald-600 px-2 py-1 rounded mb-2">Week 4</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-pink-300">Reduced</div>
-                                <div class="text-xs text-white">Reduced Volume</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Weeks 3-9 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-blue-600 mb-3 flex items-center justify-center text-white font-bold text-xs">5-9</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-blue-600 px-2 py-1 rounded mb-2">Weeks 5-9</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-blue-300">Development</div>
-                                <div class="text-xs text-white">Progressive Load</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Weeks 10-13 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-amber-700 mb-3 flex items-center justify-center text-white font-bold text-xs">10-13</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-amber-600 px-2 py-1 rounded mb-2">Weeks 10-13</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-amber-300">Maintenance</div>
-                                <div class="text-xs text-white">Stable Volume</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Weeks 14-15 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-fuchsia-600 mb-3 flex items-center justify-center text-white font-bold text-xs">14-15</div>
-                            <div class="timeline-week text-xs font-bold text-white bg-fuchsia-600 px-2 py-1 rounded mb-2">Weeks 14-15</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-fuchsia-300">Taper</div>
-                                <div class="text-xs text-white">Reduction</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Week 16 -->
-                        <div class="timeline-item flex flex-col items-center relative z-10">
-                            <div class="timeline-dot w-8 h-8 rounded-full bg-rose-600 mb-3"></div>
-                            <div class="timeline-week text-xs font-bold text-white bg-rose-600 px-2 py-1 rounded mb-2">Week 16</div>
-                            <div class="timeline-content max-w-[100px] text-center">
-                                <div class="text-xs text-rose-300">Competition</div>
-                                <div class="text-xs text-white">Marathon!</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Weeks 5-7: Development -->
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 5-7</span>
+                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
+                    </h3>
+                    <p class="text-blue-200 mb-3">Progressive development with increasing intensity</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Introduction of tempo runs and some speedwork</li>
+                        <li>Longer weekend runs to build endurance</li>
+                        <li>Building weekly mileage at a controlled rate</li>
+                    </ul>
                 </div>
                 
-                <div class="flex flex-col md:flex-row gap-8 mt-8">
-                    <div class="md:w-1/2">
-                        <h3 class="text-xl font-bold text-white mb-4">My Week Organization</h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-rose-600 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Week 16:</span> Competition</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-fuchsia-600 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Weeks 14–15:</span> Taper – Progressive load reduction</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-amber-700 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Weeks 10–13:</span> Maintenance – Stable volume and controlled intensity</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-600 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Weeks 3–9:</span> Development – Progressive increase in training load</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-pink-600 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Week 2:</span> Recovery – Active rest</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 w-5 h-5 rounded-full bg-blue-600 flex-shrink-0"></div>
-                                <span class="text-white"><span class="font-semibold">Week 1:</span> Development – Gentle start</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="md:w-1/2">
-                        <h3 class="text-xl font-bold text-white mb-4">My Method</h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                                <span class="text-white">Weekly goals defined <span class="font-semibold">in time</span></span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                                <span class="text-white"><span class="font-semibold">3 to 5 sessions</span> per week based on my availability</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                                <span class="text-white">Weekly review to adjust training load</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="mt-1 text-cyan-400"><i class="fas fa-check-circle"></i></div>
-                                <span class="text-white">Zone 2 alerts me if I increase too quickly (>10%)</span>
-                            </li>
-                        </ul>
-                        
-                        <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mt-6">
-                            <p class="text-lg italic text-white">
-                                "Thanks to Zone 2, I maintain a clear vision of my journey and approach the race with confidence."
-                            </p>
-                        </div>
-                    </div>
+                <!-- Week 8: Reduced -->
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 8</span>
+                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
+                    </h3>
+                    <p class="text-emerald-200 mb-3">Strategic recovery to consolidate fitness gains</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Reduced mileage week to prevent overtraining</li>
+                        <li>Maintain frequency, lower intensity</li>
+                        <li>Preparation for peak training phase</li>
+                    </ul>
+                </div>
+                
+                <!-- Weeks 9-10: Development -->
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 9-10</span>
+                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
+                    </h3>
+                    <p class="text-blue-200 mb-3">Highest volume and intensity weeks of the plan</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Longest runs of training cycle (up to 20 miles)</li>
+                        <li>Race-specific workout intensity</li>
+                        <li>Mental toughness development</li>
+                    </ul>
+                </div>
+                
+                <!-- Week 11: Reduced -->
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 11</span>
+                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintenance Recovery (Reduced)
+                    </h3>
+                    <p class="text-emerald-200 mb-3">Final recovery before maintenance phase</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Strategic volume reduction to absorb peak weeks</li>
+                        <li>Reset for final preparation phase</li>
+                        <li>Assessment of progress and adjustments</li>
+                    </ul>
+                </div>
+                
+                <!-- Weeks 12-13: Maintain -->
+                <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl border border-amber-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-amber-600 text-white text-sm rounded-full flex-shrink-0">Weeks 12-13</span>
+                        <i class="fas fa-equals text-amber-300 mr-2"></i> Maintenance Phase
+                    </h3>
+                    <p class="text-amber-200 mb-3">Holding fitness while preparing for taper</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Consistent volume at 80-90% of peak</li>
+                        <li>Race pace work integration</li>
+                        <li>Race day strategy refinement</li>
+                    </ul>
+                </div>
+                
+                <!-- Weeks 14-15: Taper -->
+                <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl border border-fuchsia-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full flex-shrink-0">Weeks 14-15</span>
+                        <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
+                    </h3>
+                    <p class="text-fuchsia-200 mb-3">Strategic reduction to maximize race day performance</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Progressive volume reduction (40-60%)</li>
+                        <li>Maintaining intensity while reducing volume</li>
+                        <li>Recovery optimization and glycogen loading</li>
+                    </ul>
+                </div>
+                
+                <!-- Week 16: Race -->
+                <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl border border-rose-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
+                        <span class="mr-3 px-3 py-1 bg-rose-600 text-white text-sm rounded-full flex-shrink-0">Week 16</span>
+                        <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
+                    </h3>
+                    <p class="text-rose-200 mb-3">Final preparation and race execution</p>
+                    <ul class="text-white space-y-2 ml-6 list-disc">
+                        <li>Minimal running with rest focus</li>
+                        <li>Race day logistics preparation</li>
+                        <li>Marathon day!</li>
+                    </ul>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Beta Notice Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="betaSection">
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full text-white bg-amber-600 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full text-white bg-amber-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-flask text-xl"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-white">Beta Version</h2>
@@ -548,16 +547,6 @@
     .feature-card:hover .feature-icon {
         transform: scale(1.1);
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    }
-    
-    .timeline-dot {
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-    }
-    
-    @media (max-width: 768px) {
-        .timeline-content {
-            max-width: 60px;
-        }
     }
 </style>
 
