@@ -21,7 +21,8 @@
                 x-transition:leave="ease-in duration-200" 
                 x-transition:leave-start="opacity-100" 
                 x-transition:leave-end="opacity-0"
-                class="fixed inset-0 backdrop-blur-sm transition-opacity"
+                class="fixed inset-0 backdrop-blur-sm transition-opacity bg-black bg-opacity-50"
+                style="pointer-events: auto;"
                 aria-hidden="true"
             ></div>
             <!-- Modal panel -->
@@ -33,7 +34,7 @@
                 x-transition:leave="ease-in duration-200" 
                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                class="inline-block align-bottom bg-transparent rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle {{ $this->getMaxWidthClass() }}"
+                class="inline-block align-bottom bg-transparent rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle {{ $this->getMaxWidthClass() }} relative z-[60]"
                 x-on:click.stop
                 role="dialog" 
                 aria-modal="true" 

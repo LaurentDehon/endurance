@@ -11,6 +11,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
         
+        <!-- Tippy.js -->
+        <script src="https://unpkg.com/@popperjs/core@2"></script>
+        <script src="https://unpkg.com/tippy.js@6"></script>
+        <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+        
         <!-- Scripts -->
         @livewireStyles 
         @vite(['resources/css/app.css', 'resources/js/app.js'])

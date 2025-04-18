@@ -75,6 +75,12 @@ class WorkoutModal extends Component
         }
     }
 
+    // Méthode pour définir le type d'entraînement sélectionné dans le dropdown
+    public function setWorkoutType($id)
+    {
+        $this->workoutTypeId = $id;
+    }
+
     public function save()
     {
         $this->validate();

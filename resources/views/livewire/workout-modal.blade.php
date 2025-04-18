@@ -2,6 +2,30 @@
     <!-- Top decorative bar -->
     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
     
+    <!-- Hide number input spinners -->
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+    
+    <!-- Script pour initialiser Alpine.js spécifiquement dans ce composant -->
+    <script>
+        document.addEventListener('livewire:load', function() {
+            if (window.Alpine) {
+                // Force Alpine à évaluer cette section après le chargement du composant
+                window.Alpine.initTree(document.getElementById('workout-type-dropdown'));
+            }
+        });
+    </script>
+    
     <!-- Header with improved styles -->
     <div class="p-6 pb-2">
         <div class="flex justify-between items-start mb-4">
@@ -39,19 +63,68 @@
             <!-- Workout Type -->
             <div class="space-y-1.5">
                 <label for="workout_type_id" class="text-sm font-medium text-white">Workout Type</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-tag text-slate-300 text-sm"></i>
-                    </div>
-                    <select wire:model="workoutTypeId" id="workout_type_id" 
-                        class="pl-10 pr-8 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 appearance-none transition-all">
-                        @foreach($workoutTypes as $type)
-                            <option value="{{ $type->id }}">{{ $type->name }}</option>
-                        @endforeach
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                        <i class="fas fa-chevron-down text-slate-300 text-sm"></i>
-                    </div>
+                <div class="relative" x-data="{ typeMenuOpen: false }">
+                    <button 
+                        @click="typeMenuOpen = !typeMenuOpen" 
+                        type="button"
+                        class="relative w-full flex items-center pl-10 pr-8 py-2.5 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-tag text-slate-300 text-sm"></i>
+                        </div>
+                        <span class="block truncate text-left">
+                            @foreach($workoutTypes as $type)
+                                @if($workoutTypeId == $type->id)
+                                    {{ $type->name }}
+                                @endif
+                            @endforeach
+                        </span>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-chevron-down text-slate-300 text-sm"></i>
+                        </div>
+                    </button>
+                    
+                    <!-- Menu déroulant avec teleport -->
+                    <template x-teleport="body">
+                        <div 
+                            x-show="typeMenuOpen" 
+                            x-effect="
+                                if (typeMenuOpen) {
+                                    $nextTick(() => {
+                                        const button = $root.querySelector('button');
+                                        const rect = button.getBoundingClientRect();
+                                        $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                                        $el.style.left = `${rect.left}px`;
+                                        $el.style.width = `${rect.width}px`;
+                                    });
+                                }
+                            "
+                            @click.away="typeMenuOpen = false" 
+                            x-transition:enter="transition ease-out duration-200" 
+                            x-transition:enter-start="opacity-0 scale-95" 
+                            x-transition:enter-end="opacity-100 scale-100" 
+                            x-transition:leave="transition ease-in duration-175" 
+                            x-transition:leave-start="opacity-100 scale-100" 
+                            x-transition:leave-end="opacity-0 scale-95" 
+                            class="p-2 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
+                            x-cloak
+                            style="position: absolute; z-index: 99999;">
+                            <div class="py-1 max-h-60 overflow-y-auto">
+                                @foreach($workoutTypes as $type)
+                                    <button 
+                                        wire:click="setWorkoutType({{ $type->id }})" 
+                                        @click="typeMenuOpen = false"
+                                        type="button"
+                                        class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
+                                        <span class="text-sm">{{ $type->name }}</span>
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- Input caché pour conserver la valeur sélectionnée -->
+                    <input type="hidden" wire:model="workoutTypeId" id="workout_type_id">
+                    
                     @error('workoutTypeId')
                         <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('workoutTypeId') }}</span>
                     @enderror

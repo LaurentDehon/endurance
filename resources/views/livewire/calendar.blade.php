@@ -737,14 +737,12 @@
                                             @if($dayActivities->isNotEmpty())
                                                 <div class="absolute top-2 right-2 flex flex-wrap justify-end gap-1.5">
                                                     @foreach($dayActivities as $activity)
-                                                    <div class="relative group">
+                                                    <div class="relative">
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
-                                                            class="relative cursor-pointer block">
+                                                            class="relative cursor-pointer block"
+                                                            data-tippy-content="{{ $activity->name }}">
                                                             <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                                 <i class="fas fa-running text-sm"></i>
-                                                            </div>
-                                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-2 px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-[9999] hidden md:block">
-                                                                {{ $activity->name }}
                                                             </div>
                                                         </a>
                                                     </div>
@@ -761,32 +759,23 @@
                                             @if($dayWorkouts->isNotEmpty())
                                                 <div class="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[80%]">
                                                     @foreach($dayWorkouts as $workout)
-                                                        <div class="relative group">
+                                                        <div class="relative">
                                                             <a wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { id: '{{ $workout->id }}' }})" 
                                                                 class="relative cursor-pointer block"
                                                                 draggable="true" 
-                                                                ondragstart="onDragStart(event, {{ $workout->id }})">
+                                                                ondragstart="onDragStart(event, {{ $workout->id }})"
+                                                                data-tippy-content="{{ 
+                                                                    '<div class=\'font-medium mb-0.5\'>' . $workout->type->name . '</div>' . 
+                                                                    '<div class=\'flex flex-wrap gap-x-2 text-gray-300 text-xs\'>' . 
+                                                                        ($workout->duration > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-stopwatch mr-1\'></i>' . formatTime($workout->duration * 60) . '</span>' : '') . 
+                                                                        ($workout->distance > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-route mr-1\'></i>' . formatDistance($workout->distance) . '</span>' : '') .
+                                                                        ($workout->elevation > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-mountain mr-1\'></i>' . $workout->elevation . 'm</span>' : '') .
+                                                                    '</div>' . 
+                                                                    ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
+                                                                }}">
                                                                 <!-- Workout icon with drag and drop functionality -->
                                                                 <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                                     <i class="fas fa-{{ $workout->type->icon }} text-sm"></i>
-                                                                </div>
-                                                                <!-- Workout details tooltip - Appears on hover -->
-                                                                <div class="absolute top-full left-1/2 -translate-x-1/2 translate-y-2 px-2.5 py-1.5 rounded bg-gray-800 text-white text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-[9999] hidden md:block w-max max-w-[150px]">
-                                                                    <div class="font-medium mb-0.5">{{ $workout->type->name }}</div>
-                                                                    <div class="flex flex-wrap gap-x-2 text-gray-300 text-2xs">
-                                                                        @if($workout->duration > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-stopwatch mr-1"></i>{{ formatTime($workout->duration * 60) }}</span>
-                                                                        @endif
-                                                                        @if($workout->distance > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-route mr-1"></i>{{ formatDistance($workout->distance) }}</span>
-                                                                        @endif
-                                                                        @if($workout->elevation > 0)
-                                                                            <span class="whitespace-nowrap"><i class="fas fa-mountain mr-1"></i>{{ $workout->elevation }}m</span>
-                                                                        @endif
-                                                                    </div>
-                                                                    @if($workout->notes != '')
-                                                                        <div class="mt-1 text-gray-200 text-2xs line-clamp-2">{{ $workout->notes }}</div>
-                                                                    @endif
                                                                 </div>
                                                             </a>
                                                         </div>
@@ -856,6 +845,28 @@
         .p-4.relative.h-full.overflow-y-auto::-webkit-scrollbar {
             display: none;
         }
+
+        /* Tippy.js theme customization */
+        .tippy-box[data-theme~='calendar'] {
+            background-color: rgba(15, 23, 42, 0.95);
+            color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem;
+            max-width: 350px !important;
+            width: max-content !important;
+        }
+
+        .tippy-box[data-theme~='calendar'][data-placement^='top'] .tippy-arrow {
+            bottom: -7px;
+            border-top-color: rgba(15, 23, 42, 0.95);
+        }
+
+        .tippy-box[data-theme~='calendar'][data-placement^='bottom'] .tippy-arrow {
+            top: -7px;
+            border-bottom-color: rgba(15, 23, 42, 0.95);
+        }
     </style>
     
     <!-- Confirmation dialog component for delete operations -->
@@ -863,10 +874,89 @@
 </div>
 @script
 <script>
+    // URL update handling
     Livewire.on('update-url', ({ year }) => {
         const url = new URL(window.location);
         url.pathname = `/calendar/${year}`;
         window.history.pushState(null, '', url);
-    });    
+    });
+
+    // Drag and Drop functionality
+    function onDragStart(event, workoutId) {
+        event.dataTransfer.setData('text/plain', workoutId);
+        event.currentTarget.classList.add('opacity-50');
+    }
+
+    function onDragOver(event) {
+        event.preventDefault();
+        event.currentTarget.classList.add('bg-cyan-600', 'bg-opacity-20');
+    }
+
+    function onDragLeave(event) {
+        event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
+    }
+
+    function onDrop(event, date) {
+        event.preventDefault();
+        const workoutId = event.dataTransfer.getData('text/plain');
+        event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
+        
+        // Call Livewire method to update workout date
+        Livewire.dispatch('moveWorkout', { workoutId: workoutId, date: date });
+    }
+
+    // Initialize Tippy.js tooltips
+    document.addEventListener('livewire:navigated', () => initTippyTooltips());
+    document.addEventListener('livewire:init', () => initTippyTooltips());
+    document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
+    
+    // Réinitialiser les tooltips après les opérations Livewire
+    document.addEventListener('livewire:load', () => {
+        Livewire.hook('message.processed', () => {
+            // Petite temporisation pour s'assurer que le DOM est bien mis à jour
+            setTimeout(() => initTippyTooltips(), 100);
+        });
+    });
+    
+    // Écouter l'événement personnalisé qui peut être déclenché après la fermeture d'un modal
+    document.addEventListener('reload-tooltips', () => {
+        initTippyTooltips();
+    });
+
+    function initTippyTooltips() {
+        // Destroy existing tooltips first to prevent duplicates
+        if (typeof tippy.hideAll === 'function') {
+            tippy.hideAll();
+        }
+        
+        // Initialize Tippy.js for activity tooltips
+        if (typeof tippy !== 'undefined') {
+            // Activity tooltips (simple text)
+            tippy('[data-tippy-content]:not([data-tippy-content*="<"])', {
+                theme: 'calendar',
+                placement: 'top',
+                arrow: true,
+                animation: 'scale',
+                duration: [200, 100],
+                delay: [300, 0],
+                offset: [0, 8]
+            });
+
+            // Workout tooltips (HTML content)
+            tippy('[data-tippy-content*="<"]', {
+                theme: 'calendar',
+                placement: 'top',
+                arrow: true,
+                animation: 'scale',
+                allowHTML: true,
+                interactive: true,
+                duration: [200, 100],
+                delay: [300, 0],
+                offset: [0, 8]
+            });
+        } else {
+            console.warn('Tippy.js not loaded. Tooltips will not function properly.');
+        }
+    }
 </script>
 @endscript
