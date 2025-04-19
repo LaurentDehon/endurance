@@ -64,7 +64,9 @@
             <div class="space-y-1.5">
                 <label for="workout_type_id" class="text-sm font-medium text-white">Workout Type</label>
                 <div class="relative" x-data="{ typeMenuOpen: false }">
+                    <!-- Bouton du dropdown -->
                     <button 
+                        x-ref="toggleBtn"
                         @click="typeMenuOpen = !typeMenuOpen" 
                         type="button"
                         class="relative w-full flex items-center pl-10 pr-8 py-2.5 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all">
@@ -82,23 +84,23 @@
                             <i class="fas fa-chevron-down text-slate-300 text-sm"></i>
                         </div>
                     </button>
-                    
-                    <!-- Menu déroulant avec teleport -->
+
+                    <!-- Menu dropdown téléporté dans le body -->
                     <template x-teleport="body">
                         <div 
+                            x-data
                             x-show="typeMenuOpen" 
-                            x-effect="
-                                if (typeMenuOpen) {
+                            x-init="$watch('typeMenuOpen', value => {
+                                if (value) {
                                     $nextTick(() => {
-                                        const button = $root.querySelector('button');
-                                        const rect = button.getBoundingClientRect();
+                                        const rect = $refs.toggleBtn.getBoundingClientRect();
                                         $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
                                         $el.style.left = `${rect.left}px`;
                                         $el.style.width = `${rect.width}px`;
                                     });
                                 }
-                            "
-                            @click.away="typeMenuOpen = false" 
+                            })"
+                            @mousedown.window="!$refs.toggleBtn.contains($event.target) && !$el.contains($event.target) && (typeMenuOpen = false)"
                             x-transition:enter="transition ease-out duration-200" 
                             x-transition:enter-start="opacity-0 scale-95" 
                             x-transition:enter-end="opacity-100 scale-100" 
@@ -121,10 +123,10 @@
                             </div>
                         </div>
                     </template>
-                    
-                    <!-- Input caché pour conserver la valeur sélectionnée -->
+
+                    <!-- Input caché pour synchroniser le modèle -->
                     <input type="hidden" wire:model="workoutTypeId" id="workout_type_id">
-                    
+
                     @error('workoutTypeId')
                         <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('workoutTypeId') }}</span>
                     @enderror

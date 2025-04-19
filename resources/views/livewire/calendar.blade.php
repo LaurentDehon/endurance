@@ -305,16 +305,8 @@
                                     "
                                     x-effect="
                                         // Mettre à jour l'icône du bouton quand monthCollapsed change
-                                        const icon = $el.querySelector('i');
-                                        if (icon) {
-                                            if (monthCollapsed) {
-                                                icon.classList.add('fa-chevron-down');
-                                                icon.classList.remove('fa-chevron-up');
-                                            } else {
-                                                icon.classList.add('fa-chevron-up');
-                                                icon.classList.remove('fa-chevron-down');
-                                            }
-                                        }
+                                        $el.querySelector('i')?.classList.add(monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up');
+                                        $el.querySelector('i')?.classList.remove(monthCollapsed ? 'fa-chevron-up' : 'fa-chevron-down');
                                     "
                                     class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
                                     <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
@@ -410,16 +402,8 @@
                                         "
                                         x-effect="
                                             // Mettre à jour l'icône du bouton quand monthCollapsed change
-                                            const icon = $el.querySelector('i');
-                                            if (icon) {
-                                                if (monthCollapsed) {
-                                                    icon.classList.add('fa-chevron-down');
-                                                    icon.classList.remove('fa-chevron-up');
-                                                } else {
-                                                    icon.classList.add('fa-chevron-up');
-                                                    icon.classList.remove('fa-chevron-down');
-                                                }
-                                            }
+                                            $el.querySelector('i')?.classList.add(monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up');
+                                            $el.querySelector('i')?.classList.remove(monthCollapsed ? 'fa-chevron-up' : 'fa-chevron-down');
                                         "
                                         class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none block">
                                         <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
@@ -851,7 +835,7 @@
             background-color: rgba(15, 23, 42, 0.95);
             color: #fff;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 0.75rem;
             max-width: 350px !important;
@@ -868,9 +852,6 @@
             border-bottom-color: rgba(15, 23, 42, 0.95);
         }
     </style>
-    
-    <!-- Confirmation dialog component for delete operations -->
-    <livewire:confirmation-modal />
 </div>
 @script
 <script>
@@ -920,6 +901,7 @@
     
     // Écouter l'événement personnalisé qui peut être déclenché après la fermeture d'un modal
     document.addEventListener('reload-tooltips', () => {
+        location.reload();
         initTippyTooltips();
     });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\StravaAuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class StravaController extends Controller
@@ -20,6 +21,12 @@ class StravaController extends Controller
     {
         try {
             $this->authService->handleAuthorizationCode($request->code);
+            
+            // Vérifier si l'utilisateur est connecté et le réauthentifier si nécessaire
+            if (!Auth::check() && Session::has('auth_user_id')) {
+                Auth::loginUsingId(Session::get('auth_user_id'));
+            }
+            
             session()->flash('toast', [
                 'message' => 'Strava connected successfully',
                 'type' => 'success'
