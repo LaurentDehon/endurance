@@ -764,8 +764,12 @@
                                                                     ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
                                                                 }}">
                                                                 <!-- Workout icon with drag and drop functionality -->
-                                                                <div class="w-8 rounded-full px-1 py-1.5 flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                                                    <span class="text-sm">{{ $workout->type ? $workout->type->short : 'W' }}</span>
+                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                                    @if($workout->type && $workout->type->name === 'Race')
+                                                                        <i class="{{ $workout->type->icon }} text-sm"></i>
+                                                                    @else
+                                                                        <span class="text-sm">{{ $workout->type ? $workout->type->short : 'W' }}</span>
+                                                                    @endif
                                                                 </div>
                                                             </a>
                                                         </div>
