@@ -22,6 +22,7 @@ class WorkoutTypesTableSeeder extends Seeder
             ['name' => 'Tempo Run', 'color' => 'bg-slate-800', 'icon' => 'fas fa-tachometer-alt', 'short' => 'T'],
             ['name' => 'Hill Repeats', 'color' => 'bg-purple-500', 'icon' => 'fas fa-mountain', 'short' => 'H'],
             ['name' => 'Intervals', 'color' => 'bg-red-500', 'icon' => 'fas fa-people-arrows',  'short' => 'I'],
+            ['name' => 'Back to Back', 'color' => 'bg-cyan-600', 'icon' => 'fas fa-bolt', 'short' => 'B'],
         ];
 
         foreach ($types as $type) {
