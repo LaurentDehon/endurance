@@ -110,7 +110,7 @@
                             class="p-2 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
                             x-cloak
                             style="position: absolute; z-index: 99999;">
-                            <div class="py-1 max-h-60 overflow-y-auto">
+                            <div class="py-1 overflow-y-auto">
                                 @foreach($workoutTypes as $type)
                                     <button 
                                         wire:click="setWorkoutType({{ $type->id }})" 

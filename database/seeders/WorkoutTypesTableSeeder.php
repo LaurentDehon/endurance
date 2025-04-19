@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\WorkoutType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,64 +10,22 @@ class WorkoutTypesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('workout_types')->insert([
-            [
-                'name' => 'Easy Run',
-                'color' => 'bg-blue-500',
-                'icon' => 'fas fa-running',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Intervals',
-                'color' => 'bg-red-500',
-                'icon' => 'fas fa-people-arrows',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Long Run',
-                'color' => 'bg-green-500',
-                'icon' => 'fas fa-road',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Recovery Run',
-                'color' => 'bg-teal-500',
-                'icon' => 'fas fa-walking',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Fartlek',
-                'color' => 'bg-pink-500',
-                'icon' => 'fas fa-random',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Tempo Run',
-                'color' => 'bg-yellow-500',
-                'icon' => 'fas fa-tachometer-alt',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Hill Repeats',
-                'color' => 'bg-purple-500',
-                'icon' => 'fas fa-mountain',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Race',
-                'color' => 'bg-indigo-500',
-                'icon' => 'fas fa-trophy',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
-        
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('workout_types')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $types = [
+            ['name' => 'Easy Run', 'color' => 'bg-blue-500', 'icon' => 'fas fa-running', 'short' => 'E'],
+            ['name' => 'Long Run', 'color' => 'bg-green-500', 'icon' => 'fas fa-road', 'short' => 'L'],
+            ['name' => 'Recovery Run', 'color' => 'bg-stone-500', 'icon' => 'fas fa-walking', 'short' => 'R'],
+            ['name' => 'Fartlek', 'color' => 'bg-pink-500', 'icon' => 'fas fa-random', 'short' => 'F'],
+            ['name' => 'Tempo Run', 'color' => 'bg-slate-800', 'icon' => 'fas fa-tachometer-alt', 'short' => 'T'],
+            ['name' => 'Hill Repeats', 'color' => 'bg-purple-500', 'icon' => 'fas fa-mountain', 'short' => 'H'],
+            ['name' => 'Intervals', 'color' => 'bg-red-500', 'icon' => 'fas fa-people-arrows',  'short' => 'I'],
+        ];
+
+        foreach ($types as $type) {
+            WorkoutType::create($type);
+        }        
     }
 }

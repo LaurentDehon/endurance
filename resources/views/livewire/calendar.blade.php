@@ -633,7 +633,7 @@
                                                                     $increase = $statProgressData['value'];
                                                                 @endphp
                                                                 @if($increase > 10)
-                                                                    <span class="text-red-500 text-xs font-semibold">
+                                                                    <span class="text-red-400 text-xs font-semibold">
                                                                         <i class="fas fa-exclamation-triangle text-2xs mr-1"></i>+{{ number_format($increase, 1) }}%
                                                                     </span>
                                                                 @elseif($increase != 0)
@@ -681,7 +681,7 @@
                                                             $percentage = $this->calculateCompletionPercentage($week->actual_stats[$stat], $week->planned_stats[$stat]);
                                                         @endphp
                                                         <div class="w-full mt-1 h-2 bg-gray-800 bg-opacity-50 rounded-full">
-                                                            <div class="h-2 bg-{{ $statColors[$stat] }}-500 rounded-full" 
+                                                            <div class="h-2 bg-{{ $statColors[$stat] }}-400 rounded-full" 
                                                                 style="width: {{ $percentage }}%"></div>
                                                         </div>
                                                     @endif
@@ -725,7 +725,7 @@
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
                                                             class="relative cursor-pointer block"
                                                             data-tippy-content="{{ $activity->name }}">
-                                                            <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                                 <i class="fas fa-running text-sm"></i>
                                                             </div>
                                                         </a>
@@ -758,8 +758,8 @@
                                                                     ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
                                                                 }}">
                                                                 <!-- Workout icon with drag and drop functionality -->
-                                                                <div class="w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                                                    <i class="fas fa-{{ $workout->type->icon }} text-sm"></i>
+                                                                <div class="w-8 rounded-full px-1 py-1.5 flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                                    <span class="text-sm">{{ $workout->type->short }}</span>
                                                                 </div>
                                                             </a>
                                                         </div>

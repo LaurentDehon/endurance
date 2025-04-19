@@ -13,6 +13,7 @@ class WorkoutType extends Model
         'name',
         'color',
         'icon',
+        'short',
         'description'
     ];
 }
