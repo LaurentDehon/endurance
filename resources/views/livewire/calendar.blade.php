@@ -731,8 +731,12 @@
                                                         <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
                                                             class="relative cursor-pointer block"
                                                             data-tippy-content="{{ $activity->name }}">
-                                                            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                                                <i class="fas fa-running text-sm"></i>
+                                                            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white 
+                                                                shadow-[0_3px_6px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_2px_2px_rgba(255,255,255,0.2)] 
+                                                                hover:shadow-[0_4px_8px_rgba(0,0,0,0.4),inset_0_-2px_6px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.3)] 
+                                                                hover:transform hover:scale-110 hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-[0_2px_3px_rgba(0,0,0,0.2)] 
+                                                                transition-all duration-150 backdrop-blur-sm">
+                                                                <i class="fas fa-running text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
                                                             </div>
                                                         </a>
                                                     </div>
@@ -763,14 +767,26 @@
                                                                     '</div>' . 
                                                                     ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
                                                                 }}">
-                                                                <!-- Workout icon with drag and drop functionality -->
-                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                                <!-- Workout icon with enhanced 3D effect -->
+                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white 
+                                                                    shadow-[0_3px_6px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_2px_2px_rgba(255,255,255,0.2)] 
+                                                                    hover:shadow-[0_4px_8px_rgba(0,0,0,0.4),inset_0_-2px_6px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.3)] 
+                                                                    hover:transform hover:scale-110 hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-[0_2px_3px_rgba(0,0,0,0.2)] 
+                                                                    transition-all duration-150 backdrop-blur-sm"
+                                                                    >
                                                                     @if($workout->type && $workout->type->name === 'Race')
-                                                                        <i class="{{ $workout->type->icon }} text-sm"></i>
+                                                                        <i class="{{ $workout->type->icon }} text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
                                                                     @else
-                                                                        <span class="text-sm">{{ $workout->type ? $workout->type->short : 'W' }}</span>
+                                                                        <span class="text-sm font-semibold drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{{ $workout->type ? $workout->type->short : 'W' }}</span>
                                                                     @endif
                                                                 </div>
+                                                                <!-- Pulsating dot for new or important workouts (optional) -->
+                                                                @if($workout->is_important ?? false)
+                                                                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                                                                </span>
+                                                                @endif
                                                             </a>
                                                         </div>
                                                     @endforeach
