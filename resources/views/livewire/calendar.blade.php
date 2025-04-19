@@ -163,7 +163,8 @@
                                     type="button"
                                     :disabled="isLoading"
                                     :class="{ 'opacity-30 cursor-not-allowed': isLoading }"
-                                    class="flex items-center justify-center w-10 h-10 text-white bg-cyan-600 hover:bg-cyan-500 bg-opacity-70 rounded-lg hover:bg-opacity-100 transition-all transform">
+                                    class="flex items-center justify-center w-10 h-10 text-white bg-cyan-600 hover:bg-cyan-500 bg-opacity-70 rounded-lg hover:bg-opacity-100 transition-all transform"
+                                    data-tippy-content="Previous year">
                                     <span x-show="isLoading" class="absolute inset-0 flex items-center justify-center">
                                         <i class="fas fa-spinner fa-spin"></i>
                                     </span>
@@ -183,7 +184,8 @@
                                     type="button"
                                     :disabled="isLoading"
                                     :class="{ 'opacity-30 cursor-not-allowed': isLoading }"
-                                    class="flex items-center justify-center w-10 h-10 text-white bg-cyan-600 hover:bg-cyan-500 bg-opacity-70 rounded-lg hover:bg-opacity-100 transition-all transform">
+                                    class="flex items-center justify-center w-10 h-10 text-white bg-cyan-600 hover:bg-cyan-500 bg-opacity-70 rounded-lg hover:bg-opacity-100 transition-all transform"
+                                    data-tippy-content="Next year">
                                     <span x-show="isLoading" class="absolute inset-0 flex items-center justify-center">
                                         <i class="fas fa-spinner fa-spin"></i>
                                     </span>
@@ -193,18 +195,19 @@
                         </div>
                         
                         <div class="flex gap-2 flex-shrink-0">
-                            <button wire:click.prevent="startSync" class="relative group py-3 px-4 bg-amber-600 text-white hover:bg-amber-500 rounded-xl transition-colors">
+                            <button 
+                                wire:click.prevent="startSync" 
+                                class="relative group py-3 px-4 bg-amber-600 text-white hover:bg-amber-500 rounded-xl transition-colors"
+                                data-tippy-content="Synchronize with Strava">
                                 <i class="fab fa-strava text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
-                                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">
-                                    Synchronize with Strava
-                                </div>
                             </button>
                             
                             <!-- Collapse/Expand Year Button with chevron -->
                             <div class="relative block" x-data="{ allYearCollapsed: false }">
                                 <button 
                                     @click="allYearCollapsed = !allYearCollapsed; $dispatch(allYearCollapsed ? 'collapse-all-year' : 'expand-all-year')" 
-                                    class="pt-4 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
+                                    class="pt-4 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none collapse-toggle"
+                                    data-tippy-content="Toggle year">
                                     <i class="fas" :class="allYearCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                 </button>
                             </div>
@@ -308,7 +311,8 @@
                                         $el.querySelector('i')?.classList.add(monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up');
                                         $el.querySelector('i')?.classList.remove(monthCollapsed ? 'fa-chevron-up' : 'fa-chevron-down');
                                     "
-                                    class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                    class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none collapse-toggle"
+                                    data-tippy-content="Toggle month">
                                     <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                 </button>
                                 
@@ -405,7 +409,8 @@
                                             $el.querySelector('i')?.classList.add(monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up');
                                             $el.querySelector('i')?.classList.remove(monthCollapsed ? 'fa-chevron-up' : 'fa-chevron-down');
                                         "
-                                        class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none block">
+                                        class="py-3 ps-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none block collapse-toggle"
+                                        data-tippy-content="Toggle month">
                                         <i class="fas" :class="monthCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                     </button>
                                     
@@ -563,7 +568,8 @@
                                                 <!-- Collapse/Expand Button with chevron - Changed from hidden to visible on mobile -->
                                                 <button 
                                                     @click="collapsed = !collapsed" 
-                                                    class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
+                                                    class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none collapse-toggle"
+                                                    data-tippy-content="Toggle week">
                                                     <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                 </button>
                                                 
@@ -905,6 +911,18 @@
         initTippyTooltips();
     });
 
+    document.addEventListener('livewire:navigated', () => initTippyTooltips());
+    document.addEventListener('livewire:init', () => initTippyTooltips());
+    document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
+    
+    // Réinitialiser les tooltips après les opérations Livewire
+    document.addEventListener('livewire:load', () => {
+        Livewire.hook('message.processed', () => {
+            // Petite temporisation pour s'assurer que le DOM est bien mis à jour
+            setTimeout(() => initTippyTooltips(), 100);
+        });
+    });
+
     function initTippyTooltips() {
         // Destroy existing tooltips first to prevent duplicates
         if (typeof tippy.hideAll === 'function') {
@@ -921,7 +939,20 @@
                 animation: 'scale',
                 duration: [200, 100],
                 delay: [300, 0],
-                offset: [0, 8]
+                offset: [0, 8],
+                onShow(instance) {
+                    // Mettre à jour dynamiquement le contenu des tooltips pour les boutons collapse/expand
+                    const element = instance.reference;
+                    if (element.classList.contains('collapse-toggle')) {
+                        // Vérifier l'état du bouton pour les boutons collapse/expand
+                        const icon = element.querySelector('i');
+                        if (icon.classList.contains('fa-chevron-down')) {
+                            instance.setContent('Expand');
+                        } else if (icon.classList.contains('fa-chevron-up')) {
+                            instance.setContent('Collapse');
+                        }
+                    }
+                }
             });
 
             // Workout tooltips (HTML content)
