@@ -749,7 +749,7 @@
                                                                 draggable="true" 
                                                                 ondragstart="onDragStart(event, {{ $workout->id }})"
                                                                 data-tippy-content="{{ 
-                                                                    '<div class=\'font-medium mb-0.5\'>' . $workout->type->name . '</div>' . 
+                                                                    ($workout->type ? '<div class=\'font-medium mb-0.5\'>' . $workout->type->name . '</div>' : '<div class=\'font-medium mb-0.5\'>Workout</div>') . 
                                                                     '<div class=\'flex flex-wrap gap-x-2 text-gray-300 text-xs\'>' . 
                                                                         ($workout->duration > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-stopwatch mr-1\'></i>' . formatTime($workout->duration * 60) . '</span>' : '') . 
                                                                         ($workout->distance > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-route mr-1\'></i>' . formatDistance($workout->distance) . '</span>' : '') .
@@ -758,8 +758,8 @@
                                                                     ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
                                                                 }}">
                                                                 <!-- Workout icon with drag and drop functionality -->
-                                                                <div class="w-8 rounded-full px-1 py-1.5 flex items-center justify-center {{ $workout->type->color }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                                                    <span class="text-sm">{{ $workout->type->short }}</span>
+                                                                <div class="w-8 rounded-full px-1 py-1.5 flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                                    <span class="text-sm">{{ $workout->type ? $workout->type->short : 'W' }}</span>
                                                                 </div>
                                                             </a>
                                                         </div>
