@@ -51,7 +51,7 @@
                 
                 <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
                     <p class="text-xl text-center font-semibold text-white">
-                        Zone 2 isn't just a plan generator, it's your smart training companion that evolves with you.
+                        Zone 2 isn't a plan generator, it's your smart training companion that evolves with you.
                     </p>
                 </div>
                 

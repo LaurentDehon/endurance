@@ -46,6 +46,7 @@ class ChangelogController extends Controller
             'Weekly training goals',
             'Integration with Coros, Suunto, and Garmin',
             'French translations',
+            'AI features for training plans',
         ];
 
         return view('changelog', compact('changelog', 'roadmap'));

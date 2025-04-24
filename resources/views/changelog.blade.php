@@ -64,16 +64,16 @@
         </div>
         
         <div class="space-y-6">
-            @foreach($roadmap as $feature)
-                <div class="bg-white bg-opacity-5 rounded-lg overflow-hidden p-4 border border-white border-opacity-10 transition-all duration-300 hover:transform hover:scale-[1.01] hover:shadow-md">
-                    <ul class="space-y-2 text-cyan-200">
-                        <li class="flex items-start gap-2">
-                            <i class="fas fa-star text-amber-400 mt-1 flex-shrink-0"></i>
-                            <span>{{ $feature }}</span>
-                        </li>
-                    </ul>
-                </div>
-            @endforeach
+            <div class="space-y-2 bg-white bg-opacity-5 rounded-lg overflow-hidden p-4 border border-white border-opacity-10 transition-all duration-300 hover:transform hover:scale-[1.01] hover:shadow-md">
+                @foreach($roadmap as $feature)
+                <ul class="text-cyan-200">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-star text-amber-400 mt-1 flex-shrink-0"></i>
+                        <span>{{ $feature }}</span>
+                    </li>
+                </ul>
+                @endforeach
+            </div>
         </div>
     </section>
 </div>
