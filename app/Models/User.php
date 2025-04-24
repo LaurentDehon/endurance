@@ -59,6 +59,27 @@ class User extends Authenticatable implements MustVerifyEmail
         return json_decode($value, true);
     }
 
+    /**
+     * Get the user settings
+     * 
+     * @return array
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Set the user settings
+     * 
+     * @param array $settings
+     * @return void
+     */
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
+    }
+
     public function workouts()
     {
         return $this->hasMany(Workout::class);
