@@ -204,12 +204,8 @@
                             
                             <!-- Collapse/Expand Year Button with chevron -->
                             <div class="relative block" x-data="{ 
-                                allYearCollapsed: localStorage.getItem('all-year-collapsed') === 'true',
+                                allYearCollapsed: false,
                                 init() {
-                                    // Mise à jour du localStorage lorsque l'état change
-                                    this.$watch('allYearCollapsed', value => {
-                                        localStorage.setItem('all-year-collapsed', value);
-                                    });
                                     // Dispatch l'événement initial pour synchroniser les semaines au chargement
                                     if (this.allYearCollapsed) {
                                         this.$nextTick(() => {
@@ -280,7 +276,7 @@
                 @endphp
                 <section id="{{ Str::slug($monthName) }}" 
                         x-data="{ 
-                            monthCollapsed: localStorage.getItem('month-{{ $monthKey }}-collapsed') === 'true',
+                            monthCollapsed: false,
                             monthKey: '{{ $monthKey }}' 
                         }"
                         @toggle-month-collapse.window="if ($event.detail.monthKey === monthKey) { 
@@ -294,7 +290,6 @@
                         }"
                         @collapse-all-year.window="monthCollapsed = true"
                         @expand-all-year.window="monthCollapsed = false"
-                        x-effect="localStorage.setItem('month-{{ $monthKey }}-collapsed', monthCollapsed)"
                         class="mb-4 sm:mb-5" 
                         data-month-key="{{ $monthKey }}" 
                         data-month-number="{{ $monthNumber }}"
@@ -457,16 +452,15 @@
                                                  class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
                                                  x-cloak
                                                  style="position: absolute; z-index: 99999;">
-                                                <div class="py-1">
-                                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                        <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                        <span class="text-sm">Delete monthly workouts</span>
-                                                    </button>
-                                                    <!-- Other actions can be added here later -->
-                                                </div>
+                                            <div class="py-1">
+                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
+                                                    <span class="text-sm">Delete monthly workouts</span>
+                                                </button>
+                                                <!-- Other actions can be added here later -->
                                             </div>
-                                        </template>
-                                    </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -479,19 +473,18 @@
                             $isDevelopmentWeek = $week->type && strtolower($week->type->name) === 'development';
                             $colorPalette = $this->getWeekColorPalette($baseColor);
                         @endphp
-                        <!-- Week header avec style amélioré et plus marqué -->
-                        <div x-data="{ 
-                                collapsed: localStorage.getItem('week-{{ $week->id }}-collapsed') === 'true',
-                                weekId: '{{ $week->id }}',
-                                monthKey: '{{ $monthKey }}'
-                             }"
-                             @toggle-week-collapse.window="if ($event.detail.weekId === weekId) collapsed = !collapsed"
-                             @collapse-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = true"
-                             @expand-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = false"
-                             @collapse-all-year.window="collapsed = true"
-                             @expand-all-year.window="collapsed = false"
-                             x-effect="localStorage.setItem('week-{{ $week->id }}-collapsed', collapsed)"
-                             class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
+                        <div wire:key="week-{{ $week->id }}" x-data="{
+                            collapsed: false,
+                            weekId: '{{ $week->id }}',
+                            monthKey: '{{ $monthKey }}'
+                        }"
+                        x-init="$nextTick(() => { collapsed = false; })"
+                        @toggle-week-collapse.window="if ($event.detail.weekId === weekId) collapsed = !collapsed"
+                        @collapse-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = true"
+                        @expand-all-weeks.window="if ($event.detail.monthKey === monthKey) collapsed = false"
+                        @collapse-all-year.window="collapsed = true"
+                        @expand-all-year.window="collapsed = false"
+                        class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
                             <!-- Background overlay plus visible -->
                             <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $colorPalette['lightShade'] }} via-{{ $colorPalette['midShade'] }} to-{{ $colorPalette['darkShade'] }}"></div>
                             
@@ -713,8 +706,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Days grid - Calendar view organized by days of the week -->
-                            <div class="p-2" x-show="!collapsed" x-cloak x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                            <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                 <div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
                                     @foreach ($week->days as $day)
                                         @php
@@ -943,35 +935,22 @@
         Livewire.dispatch('moveWorkout', { workoutId: workoutId, date: date });
     }
 
-    // Initialize Tippy.js tooltips
+    // Initialize Tippy.js tooltips - Event listeners
     document.addEventListener('livewire:navigated', () => initTippyTooltips());
     document.addEventListener('livewire:init', () => initTippyTooltips());
     document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
     
-    // Réinitialiser les tooltips après les opérations Livewire
+    // Reinitialize tooltips after Livewire operations
     document.addEventListener('livewire:load', () => {
         Livewire.hook('message.processed', () => {
-            // Petite temporisation pour s'assurer que le DOM est bien mis à jour
             setTimeout(() => initTippyTooltips(), 100);
         });
     });
     
-    // Écouter l'événement personnalisé qui peut être déclenché après la fermeture d'un modal
+    // Listen for custom event that can be triggered after closing a modal
     document.addEventListener('reload-tooltips', () => {
         location.reload();
         initTippyTooltips();
-    });
-
-    document.addEventListener('livewire:navigated', () => initTippyTooltips());
-    document.addEventListener('livewire:init', () => initTippyTooltips());
-    document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
-    
-    // Réinitialiser les tooltips après les opérations Livewire
-    document.addEventListener('livewire:load', () => {
-        Livewire.hook('message.processed', () => {
-            // Petite temporisation pour s'assurer que le DOM est bien mis à jour
-            setTimeout(() => initTippyTooltips(), 100);
-        });
     });
 
     function initTippyTooltips() {
@@ -980,7 +959,7 @@
             tippy.hideAll();
         }
         
-        // Vérifier si on est sur mobile ou tablette (écran < 1024px)
+        // Check if on mobile or tablet (screen < 1024px)
         const isMobileOrTablet = window.innerWidth < 1024;
         
         // Initialize Tippy.js for activity tooltips only on desktop
@@ -995,10 +974,10 @@
                 delay: [300, 0],
                 offset: [0, 8],
                 onShow(instance) {
-                    // Mettre à jour dynamiquement le contenu des tooltips pour les boutons collapse/expand
+                    // Dynamically update tooltip content for collapse/expand buttons
                     const element = instance.reference;
                     if (element.classList.contains('collapse-toggle')) {
-                        // Vérifier l'état du bouton pour les boutons collapse/expand
+                        // Check button state for collapse/expand buttons
                         const icon = element.querySelector('i');
                         if (icon.classList.contains('fa-chevron-down')) {
                             instance.setContent('Expand');
@@ -1026,15 +1005,15 @@
         }
     }
     
-    // Ajouter un événement pour vérifier le redimensionnement de la fenêtre
+    // Add event to check window resize
     window.addEventListener('resize', () => {
         const isMobileOrTablet = window.innerWidth < 1024;
         
-        // Si on passe de mobile à desktop, initialiser les tooltips
+        // If transitioning from mobile to desktop, initialize tooltips
         if (!isMobileOrTablet) {
             initTippyTooltips();
         } 
-        // Si on passe de desktop à mobile, détruire les tooltips
+        // If transitioning from desktop to mobile, destroy tooltips
         else if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
             tippy.hideAll();
         }

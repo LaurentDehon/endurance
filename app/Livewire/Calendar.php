@@ -4,14 +4,15 @@ namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Week;
+use App\Models\Workout;
 use Livewire\Component;
 use App\Models\Activity;
-use App\Models\Workout;
 use App\Models\WeekType;
 use Livewire\Attributes\On;
 use Illuminate\Support\Collection;
 use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class Calendar extends Component
 {    
@@ -116,19 +117,28 @@ class Calendar extends Component
      */
     public function render()
     {
-        $this->activities = $this->getActivities();
-        $this->workouts = $this->getWorkouts();
-
-        $this->weeks = $this->getWeeks($this->activities, $this->workouts);
-        $this->months = $this->groupWeeksByMonth($this->weeks);
-        $this->monthStats = $this->calculateMonthStats($this->weeks);
-        $this->yearStats = $this->calculateYearStats($this->weeks);
-        
+        $userId = Auth::id();
+        $cacheKey = "calendar-{$userId}-{$this->year}";
+        $data = Cache::remember($cacheKey, 60, function () {
+            $activities = $this->getActivities();
+            $workouts = $this->getWorkouts();
+            $weeks = $this->getWeeks($activities, $workouts);
+            $months = $this->groupWeeksByMonth($weeks);
+            $monthStats = $this->calculateMonthStats($weeks);
+            $yearStats = $this->calculateYearStats($weeks);
+            return compact('activities', 'workouts', 'weeks', 'months', 'monthStats', 'yearStats');
+        });
+        $this->activities = $data['activities'];
+        $this->workouts = $data['workouts'];
+        $this->weeks = $data['weeks'];
+        $this->months = $data['months'];
+        $this->monthStats = $data['monthStats'];
+        $this->yearStats = $data['yearStats'];
         return view('livewire.calendar', [
             'months' => $this->months,
             'monthStats' => $this->monthStats,
             'yearStats' => $this->yearStats,
-            'weekTypes' => WeekType::all(),
+            'weekTypes' => \App\Models\WeekType::all(),
             'activities' => $this->activities,
             'workouts' => $this->workouts,
             'year' => $this->year,
@@ -369,6 +379,13 @@ class Calendar extends Component
         return $yearStats;
     }
     
+    private function invalidateCache()
+    {
+        $userId = Auth::id();
+        $cacheKey = "calendar-{$userId}-{$this->year}";
+        Cache::forget($cacheKey);
+    }
+
     /**
      * Updates the type of a week.
      *
@@ -379,16 +396,12 @@ class Calendar extends Component
     public function setWeekType($weekId, $weekTypeId)
     {
         $week = Week::findOrFail($weekId);
-        
-        // Vérifier que l'utilisateur actuel est le propriétaire de cette semaine
         if ($week->user_id !== Auth::id()) {
             return;
         }
-        
         $week->week_type_id = $weekTypeId;
         $week->save();
-        
-        // Rafraîchir la page pour afficher les modifications
+        $this->invalidateCache();
         $this->dispatch('refresh');
     }
 
@@ -505,6 +518,7 @@ class Calendar extends Component
     #[On('workout-created')]
     public function refreshCalendar()
     {
+        $this->invalidateCache();
         $this->workouts = $this->getWorkouts();
     }
     
@@ -576,7 +590,7 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-
+        $this->invalidateCache();
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
@@ -625,7 +639,7 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-
+        $this->invalidateCache();
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
@@ -679,7 +693,7 @@ class Calendar extends Component
             
         $count = $workouts->count();
         $workouts->delete(); 
-
+        $this->invalidateCache();
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
     
