@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Allow access to all search engine robots
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /password
+Disallow: /profile
+Disallow: /admin
+
+# Sitemap location
+Sitemap: https://www.zone2.be/sitemap.xml
