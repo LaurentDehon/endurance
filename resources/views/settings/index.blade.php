@@ -70,14 +70,14 @@
                         @csrf
                         @method('PATCH')
                         
-                        <div class="flex items-center">
+                        {{-- <div class="flex items-center">
                             <input type="checkbox" id="auto_sync_activities" name="auto_sync_activities" value="1" 
                                    class="rounded bg-slate-700 border-slate-600 text-amber-400 focus:ring-amber-400"
                                    {{ isset($user->settings['auto_sync_activities']) && $user->settings['auto_sync_activities'] ? 'checked' : '' }}>
                             <label for="auto_sync_activities" class="ml-2 text-slate-300">
                                 Automatically sync activities upon Strava connection
                             </label>
-                        </div>
+                        </div> --}}
                         
                         <div class="flex items-center">
                             <input type="checkbox" id="auto_renew_token" name="auto_renew_token" value="1" 

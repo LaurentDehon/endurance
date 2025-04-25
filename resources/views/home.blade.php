@@ -45,7 +45,7 @@
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
                 <h2 class="text-3xl font-bold text-white mb-6">Why Zone 2?</h2>
                 <p class="text-lg text-cyan-200 mb-6">
-                    Many runners still plan their workouts in Excel spreadsheets.<br>
+                    Many runners still plan their workouts in Excel spreadsheets or on paper.<br>
                     Zone 2 offers an interactive and structured alternative, designed for those who want to track their progress methodically.
                 </p>
                 
@@ -53,58 +53,7 @@
                     <p class="text-xl text-center font-semibold text-white">
                         Zone 2 isn't a plan generator, it's your smart training companion that evolves with you.
                     </p>
-                </div>
-                
-                <h3 class="text-xl font-bold text-white mb-4">What Zone 2 Offers You:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-cyan-500 bg-opacity-25 rounded-full">
-                            <i class="fas fa-calendar-alt text-cyan-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Clear Annual Planning</h4>
-                        <p class="text-cyan-200">Visualize and organize your training year in just a few clicks</p>
-                    </div>
-                    
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
-                            <i class="fab fa-strava text-orange-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Automatic Strava Connection</h4>
-                        <p class="text-cyan-200">Import your activities with one click and compare them to your plan</p>
-                    </div>
-                    
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
-                            <i class="fas fa-puzzle-piece text-teal-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Coherent Block Structure</h4>
-                        <p class="text-cyan-200">Organize your weeks based on your specific goals</p>
-                    </div>
-                    
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
-                            <i class="fas fa-chart-line text-purple-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Performance Analysis</h4>
-                        <p class="text-cyan-200">Track your progress and compare goals to results</p>
-                    </div>
-                    
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
-                            <i class="fas fa-pencil-alt text-blue-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">100% Customized Plans</h4>
-                        <p class="text-cyan-200">Create and adapt your plan according to your specific needs</p>
-                    </div>
-                    
-                    <div class="benefit-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="benefit-icon mb-4 w-12 h-12 flex items-center justify-center bg-red-500 bg-opacity-25 rounded-full">
-                            <i class="fas fa-brain text-red-400 text-xl"></i>
-                        </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Training Intelligence</h4>
-                        <p class="text-cyan-200">Overload alerts and advice to optimize your progression</p>
-                    </div>
-                </div>
+                </div>   
             </div>
         </section>
 
@@ -270,6 +219,30 @@
                         <h4 class="text-xl font-semibold text-white mb-2">Overload Alert</h4>
                         <p class="text-cyan-200">Receive notifications if you exceed the 10% increase rule</p>
                     </div>
+
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-indigo-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-puzzle-piece text-indigo-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Coherent Block Structure</h4>
+                        <p class="text-cyan-200">Organize your weeks based on your specific goals</p>
+                    </div>
+
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-pencil-alt text-blue-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">100% Customized Plans</h4>
+                        <p class="text-cyan-200">Create and adapt your plan according to your specific needs</p>
+                    </div>
+
+                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-pink-500 bg-opacity-25 rounded-full">
+                            <i class="fas fa-eye text-pink-400 text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Clear Annual Planning</h4>
+                        <p class="text-cyan-200">Visualize and organize your training year in just a few clicks</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -289,7 +262,7 @@
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <div class="md:w-full">
                         <div class="steps-container relative">
-                            <div class="steps-line absolute left-6 top-8 bottom-0 w-0.5 bg-cyan-500 z-0"></div>
+                            <div class="steps-line absolute left-6 top-8 bottom-11 w-0.5 bg-cyan-500 z-0"></div>
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">1</div>
@@ -430,9 +403,9 @@
                 <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 11</span>
-                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintenance Recovery (Reduced)
+                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintain Recovery (Reduced)
                     </h3>
-                    <p class="text-emerald-200 mb-3">Final recovery before maintenance phase</p>
+                    <p class="text-emerald-200 mb-3">Final recovery before maintain phase</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-battery-quarter mr-2"></i> Strategic volume reduction to absorb peak weeks</li>
                         <li><i class="fas fa-redo mr-2"></i> Reset for final preparation phase</li>
@@ -444,7 +417,7 @@
                 <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl border border-amber-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-amber-600 text-white text-sm rounded-full flex-shrink-0">Weeks 12-13</span>
-                        <i class="fas fa-equals text-amber-300 mr-2"></i> Maintenance Phase
+                        <i class="fas fa-equals text-amber-300 mr-2"></i> Maintain Phase
                     </h3>
                     <p class="text-amber-200 mb-3">Holding fitness while preparing for taper</p>
                     <ul class="text-white space-y-2 ml-6">
@@ -529,6 +502,15 @@
                 @endguest
             </div>
         </section>
+
+        <!-- Logos Section -->
+        <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="stravaSection">
+            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg border flex justify-center items-center">
+                <div class="w-60 h-60">
+                    <img src="{{ asset('storage/images/strava-powered.svg') }}" alt="Strava Powered" class="w-full h-full">
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
@@ -579,7 +561,8 @@
             document.getElementById('howSection'),
             document.getElementById('exampleSection'),
             document.getElementById('betaSection'),
-            document.getElementById('ctaSection')
+            document.getElementById('ctaSection'),
+            document.getElementById('stravaSection')
         ];
         
         // Function to check if element is in viewport
