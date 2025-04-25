@@ -265,9 +265,19 @@
                                              x-cloak
                                              style="position: absolute; z-index: 99999;">
                                             <div class="py-1">
+                                                <div class="border-b border-white border-opacity-10 pb-2 mb-2">
+                                                    <button @click="toggleAllWeeks(true); open = false" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                        <i class="fas fa-chevron-down w-5 text-cyan-400"></i>
+                                                        <span class="text-sm">Collapse all weeks</span>
+                                                    </button>
+                                                    <button @click="toggleAllWeeks(false); open = false" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
+                                                        <i class="fas fa-chevron-up w-5 text-cyan-400"></i>
+                                                        <span class="text-sm">Expand all weeks</span>
+                                                    </button>
+                                                </div>
                                                 <button wire:click.prevent="deleteAll" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
                                                     <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                    <span class="text-sm">Delete yearly workouts</span>
+                                                    <span class="text-sm">Delete all the workouts</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -988,5 +998,25 @@
             tippy.hideAll();
         }
     });
+
+    // Function to collapse or expand all weeks
+    function toggleAllWeeks(shouldCollapse) {
+        // Get all week elements
+        const weekElements = document.querySelectorAll('[wire\\:key^="week-"]');
+        
+        weekElements.forEach(weekEl => {
+            // Get the Alpine component instance for this week
+            const weekComponent = Alpine.$data(weekEl);
+            
+            // Set the collapsed state according to the parameter
+            if (weekComponent.collapsed !== shouldCollapse) {
+                weekComponent.collapsed = shouldCollapse;
+                weekComponent.saveState();
+            }
+        });
+    }
+
+    // Make toggleAllWeeks available to Alpine components
+    window.toggleAllWeeks = toggleAllWeeks;
 </script>
 @endscript
