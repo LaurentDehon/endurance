@@ -57,6 +57,10 @@ class StravaAuthService
         }
 
         $tokens = $this->refreshToken($user->strava_refresh_token);
+        session()->flash('toast', [
+            'message' => 'Strava connected successfully',
+            'type' => 'success'
+        ]);
         return $this->updateOrCreateUser($tokens, $user);
     }
 
