@@ -125,8 +125,6 @@ class WorkoutModal extends Component
             }
 
             $this->dispatch('workout-created');
-            $this->dispatch('reload-tooltips');
-
             $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'workout-modal');
 

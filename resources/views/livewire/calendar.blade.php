@@ -919,7 +919,7 @@
     document.addEventListener('livewire:navigated', () => initTippyTooltips());
     document.addEventListener('livewire:init', () => initTippyTooltips());
     document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
-    
+
     // Reinitialize tooltips after Livewire operations
     document.addEventListener('livewire:load', () => {
         Livewire.hook('message.processed', () => {
@@ -927,15 +927,23 @@
         });
     });
     
-    // Listen for custom event that can be triggered after closing a modal
-    document.addEventListener('reload-tooltips', () => {
-        location.reload();
-        initTippyTooltips();
+    // Reinitialize tooltips on Livewire events
+    Livewire.on('reload-tooltips', () => {
+        console.log('Reinitializing tooltips');
+        // Delay tooltip initialization to ensure DOM is updated
+        setTimeout(() => {
+            if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
+                console.log('Destroying existing tooltips');
+                tippy.hideAll({ duration: 0 });
+            }
+            console.log('Creating new tooltips');
+            initTippyTooltips();
+        }, 500);
     });
-
+    
     function initTippyTooltips() {
         // Destroy existing tooltips first to prevent duplicates
-        if (typeof tippy.hideAll === 'function') {
+        if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
             tippy.hideAll();
         }
         

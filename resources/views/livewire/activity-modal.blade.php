@@ -25,7 +25,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4">
             <!-- Basic Info Column -->
             <div class="space-y-3 md:space-y-4">
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-blue-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-route text-blue-500 text-lg"></i>
                     </div>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-green-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-stopwatch text-green-500 text-lg"></i>
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                 </div>            
 
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-purple-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-mountain text-purple-500 text-lg"></i>
                     </div>
@@ -65,7 +65,7 @@
             <!-- Advanced Stats Column -->
             <div class="space-y-3 md:space-y-4">
                 <!-- Average Pace -->
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-yellow-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-tachometer-alt text-yellow-500 text-lg"></i>
                     </div>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-red-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-heartbeat text-red-500 text-lg"></i>
                     </div>
@@ -101,7 +101,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border border-opacity-10 rounded-xl">
+                <div class="flex items-center gap-3 p-3 bg-white bg-opacity-10 border-white shadow-sm border border-opacity-10 rounded-xl">
                     <div class="p-2.5 bg-indigo-500/10 rounded-lg flex items-center justify-center w-10 h-10">
                         <i class="fas fa-sync-alt text-indigo-500 text-lg"></i>
                     </div>
@@ -118,12 +118,18 @@
         <!-- Modal footer -->
         <div class="flex flex-col sm:flex-row gap-3 mt-6 border-t border-white border-opacity-20 pt-5">
             <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" 
-                class="flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-medium text-white bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl hover:from-amber-600 hover:to-orange-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:shadow-lg">
-                <i class="fab fa-strava text-lg"></i>
-                View on Strava
+                class="flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-medium text-white bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl hover:from-amber-600 hover:to-orange-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 flex-1 hover:shadow-md">
+                <i class="fab fa-strava mr-1.5"></i>
+                View
             </a>
+            <button type="button" wire:click.prevent="delete" 
+                class="bg-red-600 hover:bg-red-500 text-white flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300/50 hover:shadow-md flex items-center justify-center gap-2">
+                <i class="fas fa-trash-alt mr-1.5"></i>
+                Delete
+            </button>
             <button type="button" wire:click.prevent="close" 
-                class="text-white bg-cyan-600 hover:bg-cyan-500 py-2.5 px-4 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300/50 sm:ml-auto">
+                class="text-white bg-cyan-600 hover:bg-cyan-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300/50">
+                <i class="fas fa-times mr-1.5"></i>
                 Close
             </button>
         </div>

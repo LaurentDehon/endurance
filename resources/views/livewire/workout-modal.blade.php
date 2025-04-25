@@ -282,7 +282,7 @@
                 <button type="button" wire:click.prevent="delete" 
                     class="bg-red-600 hover:bg-red-500 text-white flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300/50 hover:shadow-md">
                     <i class="fas fa-trash-alt mr-1.5"></i>
-                    Delete session
+                    Delete
                 </button>
             @endif
             
@@ -290,7 +290,7 @@
             <button type="submit" 
                 class="bg-amber-600 text-white hover:bg-amber-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 hover:shadow-md">
                 <i class="fas fa-{{ $workoutId ? 'save' : 'plus' }} mr-1.5"></i>
-                {{ $workoutId ? 'Save Changes' : 'Create Session' }}
+                {{ $workoutId ? 'Save' : 'Create' }}
             </button>
         </div>
     </form>

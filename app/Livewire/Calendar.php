@@ -23,6 +23,7 @@ class Calendar extends Component
      */
     protected $listeners = [
         'refresh' => '$refresh',
+        'refresh-calendar' => 'refreshCalendar',
         'confirmDeleteAll',
         'confirmDeleteMonth',
         'confirmDeleteWeek'
@@ -520,6 +521,7 @@ class Calendar extends Component
     {
         $this->invalidateCache();
         $this->workouts = $this->getWorkouts();
+        $this->dispatch('reload-tooltips');
     }
     
     /**
@@ -542,6 +544,9 @@ class Calendar extends Component
             if ($result['success']) {
                 if ($result['count'] > 0) {
                     $this->dispatch('toast', $result['message'], 'success');
+                    $this->refreshCalendar();
+                    $this->activities = $this->getActivities();                    
+                    $this->dispatch('reload-tooltips');
                 } else {
                     $this->dispatch('toast', $result['message'], 'info');
                 }
@@ -552,8 +557,6 @@ class Calendar extends Component
         } catch (\Exception $e) {
             $this->dispatch('toast', $e->getMessage(), 'error');
         }
-
-        $this->dispatch('refresh');
     }
 
     /**

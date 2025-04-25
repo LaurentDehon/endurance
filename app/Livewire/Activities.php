@@ -11,7 +11,10 @@ class Activities extends Component
 {
     use WithPagination;
     
-    protected $listeners = ['confirmDeleteAll', 'confirmDelete'];
+    protected $listeners = [
+        'confirmDeleteAll', 
+        'confirmDelete',
+    ];
 
     public $search = '';
     public $sortField = 'start_date';

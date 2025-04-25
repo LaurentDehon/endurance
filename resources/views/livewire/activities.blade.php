@@ -33,12 +33,6 @@
                         </div>
                     </div>
                 </div>
-        
-                <button wire:click="deleteAll" 
-                        class="h-full bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-                        data-tippy-content="Delete all activities">
-                    Delete all
-                </button>
             </div>
         </div>
     </div>
@@ -86,8 +80,6 @@
                             Elevation
                             @include('components.sort-icon', ['field' => 'total_elevation_gain'])
                         </th>
-
-                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">Actions</th>
                     </tr>
                 </thead>
                 
@@ -127,17 +119,6 @@
                                 <span class="text-sm font-medium text-cyan-200">
                                     {{ $activity->total_elevation_gain }}m
                                 </span>
-                            </td>
-
-                            <!-- Actions -->
-                            <td class="px-4 py-4 whitespace-nowrap text-center">
-                                <div class="flex justify-center items-center gap-3">
-                                    <button wire:click.prevent="delete({{ $activity->id }})" 
-                                            class="text-red-400 hover:text-red-500 transition-colors"
-                                            data-tippy-content="Delete this activity">
-                                        <i class="fas fa-trash text-base"></i>
-                                    </button>
-                                </div>
                             </td>
                         </tr>
                     @empty
