@@ -36,66 +36,64 @@
                         </div>
                         <div class="text-center px-4 py-2 rounded-lg">
                         </div>
-                        <div class="text-center px-4 py-2 rounded-lg">
-                            <div class="text-sm text-white">Last Login</div>
-                            <div class="text-sm text-cyan-200">
-                                @if($user->last_login_at && $user->last_login_at != '')
-                                    {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
-                                @else
-                                    Never
-                                @endif
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row sm:gap-20 justify-start mt-6">
+                    <!-- Strava Information -->
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-white mb-2">Connection Information</h3>
+                        <div class="flex flex-col text-cyan-200">
+                            <!-- Adresse IP -->
+                            <div class="inline-flex items-center py-1 rounded-lg">
+                                <span class="text-sm">Last IP Address: </span>
+                                <span class="ml-1 font-mono text-sm">
+                                    @if($user->last_ip_address)
+                                        {{ $user->last_ip_address }}
+                                    @else
+                                        Not available
+                                    @endif
+                                </span>
+                            </div>
+                            
+                            <div class="inline-flex items-center py-1 rounded-lg">
+                                <span class="text-sm">Last Login: </span>
+                                <span class="ml-1 font-mono text-sm">
+                                    @if($user->last_login_at && $user->last_login_at != '')
+                                        {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
+                                    @else
+                                        Never
+                                    @endif
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Strava Information -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-white mb-2">Connection Information</h3>
-                    <div class="flex flex-wrap gap-2 text-cyan-200">
-                        <!-- Adresse IP -->
-                        <div class="inline-flex items-center py-1 rounded-lg">
-                            <span class="text-sm">Last IP Address: </span>
-                            <span class="ml-1 font-mono text-sm">
-                                @if($user->last_ip_address)
-                                    {{ $user->last_ip_address }}
-                                @else
-                                    Not available
-                                @endif
-                            </span>
-                        </div>
-                        
-                        <div class="inline-flex items-center px-3 py-1 rounded-lg">
-                            <span class="text-sm">Last Login: </span>
-                            <span class="ml-1 font-mono text-sm">
-                                @if($user->last_login_at && $user->last_login_at != '')
-                                    {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
-                                @else
-                                    Never
-                                @endif
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Strava Information -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-white mb-2">Strava Connection</h3>
-                    <div class="flex flex-wrap gap-2 text-cyan-200">
-                        <div class="inline-flex items-center py-1 rounded-lg">
-                            <span class="text-sm">Token: </span>
-                            <span class="ml-1 font-mono text-sm">{{ $user->strava_token ? 'Connected' : 'Not Connected' }}</span>
-                        </div>
-                        
-                        <div class="inline-flex items-center px-3 py-1 rounded-lg">
-                            <span class="text-sm">Expires: </span>
-                            <span class="ml-1 font-mono text-sm">
-                                @if($user->strava_expires_at)
-                                    {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->diffForHumans() }}
-                                @else
-                                    N/A
-                                @endif
-                            </span>
+                    
+                    <!-- Strava Information -->
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-white mb-2">Strava Connection</h3>
+                        <div class="flex flex-col text-cyan-200">
+                            <div class="inline-flex items-center py-1 rounded-lg">
+                                <span class="text-sm">Token: </span>
+                                <span class="ml-1 font-mono text-sm">
+                                    @if($user->strava_token && $user->strava_expires_at && $user->strava_expires_at > time())
+                                        Connected
+                                    @else
+                                        Not Connected
+                                    @endif
+                                </span>
+                            </div>
+                            
+                            <div class="inline-flex items-center py-1 rounded-lg">
+                                <span class="text-sm">Expires: </span>
+                                <span class="ml-1 font-mono text-sm">
+                                    @if($user->strava_expires_at)
+                                        {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->diffForHumans() }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,17 +101,7 @@
         </div>
         
         <!-- Action Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <!-- Delete user - Désactivé pour les administrateurs -->
-            <button 
-                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
-                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }}"
-                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
-            >
-                <i class="fas fa-trash {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i>
-                <span>{{ ($user->is_admin && $user->name === 'admin') ? 'Cannot Delete Admin User' : 'Delete User' }}</span>
-            </button>            
-            
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <!-- Admin toggle -->
             <button 
                 wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
@@ -158,20 +146,38 @@
                 <span>Reset Strava Connection</span>
             </button>
             
-            <!-- Ban IP Address - Désactivé si l'adresse IP n'est pas disponible -->
-            <button 
-                wire:click="{{ $user->last_ip_address ? 'banIpAddress' : '' }}" 
-                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ $user->last_ip_address ? 'text-white bg-red-600 hover:bg-red-500' : 'bg-gray-200 text-gray-500 cursor-not-allowed' }} transition-colors"
-                {{ $user->last_ip_address ? '' : 'disabled' }}
-            >
-                <i class="fas fa-ban text-white mr-3"></i>
-                <span>{{ $user->last_ip_address ? 'Ban IP Address' : 'No IP Available' }}</span>
-            </button>
-            
             <!-- Send email - Utilise maintenant CustomModal -->
             <button wire:click="toggleEmailForm" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
                 <i class="fas fa-paper-plane text-blue-500 mr-3"></i>
                 <span>Send Email</span>
+            </button>
+            
+            <!-- Delete user - Occupe toute la largeur -->
+            <button 
+                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
+                class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }}"
+                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
+            >
+                <i class="fas fa-trash {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i>
+                <span>{{ ($user->is_admin && $user->name === 'admin') ? 'Cannot Delete Admin User' : 'Delete User' }}</span>
+            </button>            
+            
+            <!-- Ban IP Address - Occupe toute la largeur -->
+            <button 
+                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : ($user->last_ip_address ? 'banIpAddress' : '') }}" 
+                class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : ($user->last_ip_address ? 'text-white bg-red-600 hover:bg-red-500' : 'bg-gray-200 text-gray-500 cursor-not-allowed') }} transition-colors"
+                {{ ($user->is_admin && $user->name === 'admin') || !$user->last_ip_address ? 'disabled' : '' }}
+            >
+                <i class="fas fa-ban {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-white' }} mr-3"></i>
+                <span>
+                    @if($user->is_admin && $user->name === 'admin')
+                        Cannot Ban Admin IP
+                    @elseif($user->last_ip_address)
+                        Ban IP Address
+                    @else
+                        No IP Available
+                    @endif
+                </span>
             </button>
         </div>        
     </div>
