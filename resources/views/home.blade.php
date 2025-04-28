@@ -330,11 +330,15 @@
             
             <div class="space-y-6">
                 <!-- Weeks 1-3: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 1-3</span>
-                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
-                    </h3>
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 1-3</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
+                        </h3>
+                    </div>
                     <p class="text-blue-200 mb-3">Development phase focused on building aerobic foundation</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-chart-line mr-2"></i> Progressive volume increase week by week</li>
@@ -344,11 +348,15 @@
                 </div>
                 
                 <!-- Week 4: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 4</span>
-                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
-                    </h3>
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 4</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
+                        </h3>
+                    </div>
                     <p class="text-emerald-200 mb-3">Planned reduction in volume to allow adaptation</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-tachometer-alt mr-2"></i> 20-30% volume reduction from previous weeks</li>
@@ -358,11 +366,15 @@
                 </div>
                 
                 <!-- Weeks 5-7: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 5-7</span>
-                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
-                    </h3>
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 5-7</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
+                        </h3>
+                    </div>
                     <p class="text-blue-200 mb-3">Progressive development with increasing intensity</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-fire mr-2"></i> Introduction of tempo runs and some speedwork</li>
@@ -372,11 +384,15 @@
                 </div>
                 
                 <!-- Week 8: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 8</span>
-                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
-                    </h3>
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 8</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
+                        </h3>
+                    </div>
                     <p class="text-emerald-200 mb-3">Strategic recovery to consolidate fitness gains</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-battery-half mr-2"></i> Reduced mileage week to prevent overtraining</li>
@@ -386,11 +402,15 @@
                 </div>
                 
                 <!-- Weeks 9-10: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 9-10</span>
-                        <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
-                    </h3>
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 9-10</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
+                        </h3>
+                    </div>
                     <p class="text-blue-200 mb-3">Highest volume and intensity weeks of the plan</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-mountain mr-2"></i> Longest runs of training cycle (up to 20 miles)</li>
@@ -400,11 +420,15 @@
                 </div>
                 
                 <!-- Week 11: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 11</span>
-                        <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintain Recovery (Reduced)
-                    </h3>
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 11</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintain Recovery (Reduced)
+                        </h3>
+                    </div>
                     <p class="text-emerald-200 mb-3">Final recovery before maintain phase</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-battery-quarter mr-2"></i> Strategic volume reduction to absorb peak weeks</li>
@@ -414,11 +438,15 @@
                 </div>
                 
                 <!-- Weeks 12-13: Maintain -->
-                <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-amber-600 text-white text-sm rounded-full flex-shrink-0">Weeks 12-13</span>
-                        <i class="fas fa-equals text-amber-300 mr-2"></i> Maintain Phase
-                    </h3>
+                <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-amber-600 text-white text-sm rounded-full inline-block">Weeks 12-13</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-equals text-amber-300 mr-2"></i> Maintain Phase
+                        </h3>
+                    </div>
                     <p class="text-amber-200 mb-3">Holding fitness while preparing for taper</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-balance-scale mr-2"></i> Consistent volume at 80-90% of peak</li>
@@ -428,11 +456,15 @@
                 </div>
                 
                 <!-- Weeks 14-15: Taper -->
-                <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full flex-shrink-0">Weeks 14-15</span>
-                        <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
-                    </h3>
+                <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full inline-block">Weeks 14-15</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
+                        </h3>
+                    </div>
                     <p class="text-fuchsia-200 mb-3">Strategic reduction to maximize race day performance</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-sort-amount-down mr-2"></i> Progressive volume reduction (40-60%)</li>
@@ -442,11 +474,15 @@
                 </div>
                 
                 <!-- Week 16: Race -->
-                <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2">
-                        <span class="mr-3 px-3 py-1 bg-rose-600 text-white text-sm rounded-full flex-shrink-0">Week 16</span>
-                        <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
-                    </h3>
+                <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <div class="mb-2 lg:mb-0 lg:mr-4">
+                            <span class="px-3 py-1 bg-rose-600 text-white text-sm rounded-full inline-block">Week 16</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
+                            <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
+                        </h3>
+                    </div>
                     <p class="text-rose-200 mb-3">Final preparation and race execution</p>
                     <ul class="text-white space-y-2 ml-6">
                         <li><i class="fas fa-feather mr-2"></i> Minimal running with rest focus</li>
