@@ -18,11 +18,11 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Legal pages - Terms of Service and Privacy Policy
 Route::get('/terms', function() {
-    return view('terms');
+    return view('footer.terms');
 })->name('terms');
 
 Route::get('/privacy', function() {
-    return view('privacy');
+    return view('footer.privacy');
 })->name('privacy');
 
 // Help - Documentation and user guide

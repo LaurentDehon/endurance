@@ -49,6 +49,6 @@ class ChangelogController extends Controller
             'AI features for training plans',
         ];
 
-        return view('changelog', compact('changelog', 'roadmap'));
+        return view('footer.changelog', compact('changelog', 'roadmap'));
     }
 }
