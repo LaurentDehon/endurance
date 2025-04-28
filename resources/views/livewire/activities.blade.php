@@ -41,8 +41,8 @@
 
     <!-- Table -->
     <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
-        <div class="overflow-x-auto border rounded-t-xl border-white border-opacity-20">
-            <table class="min-w-full divide-y bg-white bg-opacity-10">
+        <div class="overflow-x-auto {{ $activities->hasPages() ? 'rounded-t-xl' : 'rounded-xl' }}">
+            <table class="min-w-full divide-y divide-cyan-200 divide-opacity-20 bg-white bg-opacity-10">
                 <thead>
                     <tr>
                         <!-- Headings -->

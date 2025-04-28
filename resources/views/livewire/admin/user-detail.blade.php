@@ -40,11 +40,11 @@
                 </div>
                 
                 <div class="flex flex-col sm:flex-row sm:gap-20 justify-start mt-6">
-                    <!-- Strava Information -->
+                    <!-- Connection Information -->
                     <div class="mt-6">
                         <h3 class="text-lg font-semibold text-white mb-2">Connection Information</h3>
                         <div class="flex flex-col text-cyan-200">
-                            <!-- Adresse IP -->
+                            <!-- IP Address -->
                             <div class="inline-flex items-center py-1 rounded-lg">
                                 <span class="text-sm">Last IP Address: </span>
                                 <span class="ml-1 font-mono text-sm">
@@ -101,7 +101,7 @@
         </div>
         
         <!-- Action Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-8">
             <!-- Admin toggle -->
             <button 
                 wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
@@ -146,13 +146,13 @@
                 <span>Reset Strava Connection</span>
             </button>
             
-            <!-- Send email - Utilise maintenant CustomModal -->
+            <!-- Send email -->
             <button wire:click="toggleEmailForm" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
                 <i class="fas fa-paper-plane text-blue-500 mr-3"></i>
                 <span>Send Email</span>
             </button>
             
-            <!-- Delete user - Occupe toute la largeur -->
+            <!-- Delete user - Full width -->
             <button 
                 wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
                 class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }}"
@@ -162,7 +162,7 @@
                 <span>{{ ($user->is_admin && $user->name === 'admin') ? 'Cannot Delete Admin User' : 'Delete User' }}</span>
             </button>            
             
-            <!-- Ban IP Address - Occupe toute la largeur -->
+            <!-- Ban IP Address - Full width -->
             <button 
                 wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : ($user->last_ip_address ? 'banIpAddress' : '') }}" 
                 class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : ($user->last_ip_address ? 'text-white bg-red-600 hover:bg-red-500' : 'bg-gray-200 text-gray-500 cursor-not-allowed') }} transition-colors"

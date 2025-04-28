@@ -93,11 +93,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Protected by AdminMiddleware to ensure only admins can access
     Route::prefix('admin')->middleware(AdminMiddleware::class)->group(function () {
         Route::get('/', function() { 
-            return view('admin'); 
+            return view('admin.index'); 
         })->name('admin');
+        
+        Route::get('/users', function() {
+            return view('admin.users');
+        })->name('admin.users');
+        
+        Route::get('/visits', function() {
+            return view('admin.visits');
+        })->name('admin.visits');
 
         Route::get('/user/{userId}', function($userId) {
-            return view('user-detail', ['userId' => $userId]);
+            return view('admin.user-detail', ['userId' => $userId]);
         })->name('user.detail');
     });
 });

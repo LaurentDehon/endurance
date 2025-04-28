@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use App\Models\User;
 use Livewire\Component;
@@ -43,15 +43,12 @@ class UserDetail extends Component
     
     public function toggleEmailForm()
     {
-        // Make sure user data is fresh before opening modal
-        //$this->refreshUserData();
-        
         $this->email = [
             'subject' => 'Message from ' . config('app.name'),
             'message' => "Hello {$this->user->name},\n\n",
         ];
 
-        // Utiliser CustomModal au lieu de showEmailForm
+        // Use CustomModal
         $this->dispatch('openModal', 'email-form', ['userId' => $this->user->id, 'email' => $this->email]);
     }
     
@@ -105,7 +102,7 @@ class UserDetail extends Component
     
     public function deleteUser()
     {
-        // Vérifier si l'utilisateur est administrateur
+        // Check if user is admin
         if ($this->user->is_admin) {
             $this->dispatch('toast', 'Cannot delete admin users', 'error');
             return;
@@ -125,7 +122,7 @@ class UserDetail extends Component
     
     public function confirmDeleteUser()
     {
-        // Vérification supplémentaire pour éviter la suppression d'administrateurs
+        // Additional verification to avoid deleting administrators
         if ($this->user->is_admin) {
             $this->dispatch('toast', 'Cannot delete admin users', 'error');
             return;
@@ -172,7 +169,7 @@ class UserDetail extends Component
 
     public function banIpAddress()
     {
-        // Vérifier si l'utilisateur a une adresse IP enregistrée
+        // Check if the user has a registered IP address
         if (!$this->user->last_ip_address) {
             $this->dispatch('toast', 'No IP address available for this user', 'error');
             return;
@@ -192,19 +189,19 @@ class UserDetail extends Component
     
     public function confirmBanIp()
     {
-        // Vérification supplémentaire que l'adresse IP existe
+        // Additional verification that the IP address exists
         if (!$this->user->last_ip_address) {
             $this->dispatch('toast', 'No IP address available for this user', 'error');
             return;
         }
         
-        // Vérifier si l'IP est déjà bannie
+        // Check if the IP is already banned
         if (\App\Models\BannedIp::isIpBanned($this->user->last_ip_address)) {
             $this->dispatch('toast', 'This IP address is already banned', 'warning');
             return;
         }
         
-        // Créer l'enregistrement de bannissement
+        // Create ban record
         \App\Models\BannedIp::create([
             'ip_address' => $this->user->last_ip_address,
             'reason' => 'Banned from user profile by administrator',
@@ -221,6 +218,6 @@ class UserDetail extends Component
             $this->refreshUserData();
         }
         
-        return view('livewire.user-detail');
+        return view('livewire.admin.user-detail');
     }
 }
