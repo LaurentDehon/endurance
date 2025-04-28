@@ -2,7 +2,7 @@
 @section('content')
 <div class="help-container mx-auto p-4 md:p-8 max-w-7xl">
     <!-- Header Section -->
-    <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6 border">
+    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6">
         <div class="container mx-auto px-6 text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">FAQ - Frequently Asked Questions</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Navigation Pills -->
-    <div class="mb-8 p-3 bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-lg border">
+    <div class="mb-8 p-3 bg-white bg-opacity-10 shadow-sm rounded-lg">
         <div class="flex flex-wrap justify-center gap-2">
             <a href="#general" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-info-circle"></i> General
@@ -48,28 +48,28 @@
 
     <!-- Features Quick Access -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
                 <i class="fab fa-strava text-orange-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Strava Sync</h3>
         </div>
         
-        <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-calendar text-teal-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Weekly Planning</h3>
         </div>
         
-        <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-chart-line text-purple-400"></i>
             </div>
             <h3 class="text-sm font-medium text-white">Performance Tracking</h3>
         </div>
         
-        <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
+        <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-lightbulb text-blue-400"></i>
             </div>
@@ -80,7 +80,7 @@
     <!-- FAQ Accordion -->
     <div class="space-y-6">
         <!-- General Section -->
-        <section id="general" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="general" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-info-circle text-xl"></i>
@@ -149,7 +149,7 @@
         </section>
 
         <!-- Planning Section -->
-        <section id="plan" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="plan" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-tasks text-xl"></i>
@@ -222,7 +222,7 @@
         </section>
 
         <!-- Metrics Section -->
-        <section id="metrics" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="metrics" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-chart-bar text-xl"></i>
@@ -231,19 +231,19 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
+                <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-route text-blue-400 text-4xl py-3"></i>                    
                     <h3 class="text-lg font-semibold text-white">Distance</h3>
                     <p class="text-sm text-cyan-200 mt-2">Complete tracking of distance covered compared to your goals</p>
                 </div>
                 
-                <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
+                <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-stopwatch text-green-400 text-4xl py-3"></i>                    
                     <h3 class="text-lg font-semibold text-white">Duration</h3>
                     <p class="text-sm text-cyan-200 mt-2">Workout time management and comparison with planned sessions</p>
                 </div>
 
-                <div class="text-center bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
+                <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-mountain text-red-400 text-4xl py-3"></i>
                     <h3 class="text-lg font-semibold text-white">Elevation</h3>
                     <p class="text-sm text-cyan-200 mt-2">Precise analysis of climbs and positive elevation gain</p>
@@ -290,7 +290,7 @@
         </section>
 
         <!-- Strava Section -->
-        <section id="strava" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="strava" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fab fa-strava text-xl"></i>
@@ -349,7 +349,7 @@
         </section>
 
         <!-- Week Types Section -->
-        <section id="weeks" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="weeks" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-calendar-week text-xl"></i>
@@ -358,7 +358,7 @@
             </div>
             
             <div class="mb-6">
-                <div class="bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-5 rounded-xl mb-4">
+                <div class="bg-red-900 bg-opacity-20 p-5 rounded-xl mb-4">
                     <h3 class="font-semibold text-white mb-3">Available Week Types</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-2">
@@ -452,7 +452,7 @@
         </section>
 
         <!-- Pro Tips Section -->
-        <section id="tips" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="tips" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-lightbulb text-xl"></i>
@@ -504,7 +504,7 @@
         </section>
 
         <!-- Data Management Section -->
-        <section id="data" class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+        <section id="data" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-database text-xl"></i>
@@ -526,7 +526,7 @@
                                 <li>To delete entire weeks/months/years, use the corresponding menu</li>
                                 <li>To delete activities, go to the Activities menu and use the delete option</li>
                             </ul>
-                            <div class="mt-4 bg-red-900 bg-opacity-20 border border-red-600 border-opacity-20 p-3 rounded-lg">
+                            <div class="mt-4 bg-red-900 bg-opacity-20 p-3 rounded-lg">
                                 <p class="flex items-center gap-2">
                                     <i class="fas fa-exclamation-triangle text-red-400"></i>
                                     <span>Warning: deleted data cannot be recovered</span>

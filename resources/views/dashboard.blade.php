@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <div class="dashboard-content-container">
-    <div class="container mx-auto p-4">        
+    <div class="container mx-auto p-4 md:p-8">        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Next Workouts Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300 opacity-0" id="nextWorkoutCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -50,7 +50,7 @@
             </div>
             
             <!-- Race Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="raceCard">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="raceCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
@@ -116,7 +116,7 @@
             </div>
             
             <!-- Statistics Card -->
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 shadow-lg border transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="statsCard">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300 opacity-0 flex flex-col" id="statsCard">
                 <h2 class="text-2xl font-bold mb-4 flex items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -207,93 +207,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Welcome Modal -->
-    <div id="welcomeModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 items-center justify-center z-50 hidden">
-        <div class="bg-slate-900 bg-opacity-90 border-white border-opacity-20 rounded-lg shadow-xl p-8 max-w-5xl w-full mx-auto max-h-[90vh] overflow-y-auto modal-content">
-            <h2 class="text-2xl text-center font-bold text-cyan-200 mb-10">Bienvenue sur Zone 2</h2>
-            <p class="text-white mb-4">
-                Merci de participer à la phase de bêta-test de Zone 2.  
-                Votre rôle est essentiel pour nous aider à améliorer l'expérience utilisateur grâce à vos retours et suggestions.
-            </p>
-            <p class="text-white mb-4">
-                Zone 2 est conçu comme un outil permettant de créer des plans d'entraînement personnalisés.<br>
-                Beaucoup de coureurs utilisent des fichiers Excel pour planifier leurs entraînements.  
-                Notre solution propose une alternative automatisée et interactive avec des fonctionnalités avancées.  
-                Il ne s'agit donc pas seulement d'un générateur de plans, mais plutôt d'un journal d'entraînement intelligent.
-            </p>
-            <p class="text-white mb-4">
-                L'application repose sur une approche structurée en blocs, où chaque semaine a un rôle précis et s'intègre dans un cycle global.  
-                Cette organisation permet de mieux gérer la charge d'entraînement, d'optimiser la progression et d'éviter le surentraînement.  
-                Chaque bloc est conçu pour vous préparer progressivement à votre objectif, afin d'être prêt(e) le jour de votre course ou événement.
-            </p>
-
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Pourquoi une approche par blocs ?</h3>
-                <p class="text-white mb-4">
-                    Un entraînement efficace ne se limite pas à une simple accumulation de séances. Il repose sur une périodisation structurée, où chaque semaine joue un rôle spécifique dans votre progression.  
-                    Zone 2 s'inspire de cette méthode et vous permet de :
-                </p>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Planifier vos semaines d'entraînement en fonction d'un objectif précis (développement, maintien, récupération…).</li>
-                    <li>Structurer votre charge d'entraînement sur plusieurs semaines pour optimiser la progression et éviter le surentraînement.</li>
-                    <li>Adapter chaque séance à son rôle dans le cycle global, plutôt que de la voir comme un événement isolé.</li>
-                </ul>
-            </div>
-
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Principales fonctionnalités :</h3>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Calendrier annuel interactif pour visualiser et organiser vos semaines d'entraînement.</li>
-                    <li>Définition des objectifs (distance, durée, dénivelé) pour chaque séance.</li>
-                    <li>Synchronisation automatique avec Strava pour importer vos activités.</li>
-                    <li>Tableaux de bord comparant vos performances réelles avec vos objectifs.</li>
-                    <li>Possibilité de définir des types de semaines d'entraînement (récupération, développement, maintien, etc.).</li>
-                </ul>
-            </div>
-            <p class="text-white mb-4">
-                <strong>Note importante :</strong> L'application est actuellement en version bêta en anglais.  
-                Une traduction complète en français est prévue pour la version finale.  
-                Certaines fonctionnalités sont encore en développement et des bugs peuvent subsister.
-            </p>
-            <div class="mb-4">
-                <h3 class="font-semibold text-cyan-200 mb-2">Exemple d'utilisation :</h3>
-                <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Je commence par créer un "entraînement" le 14 juin, qui représente mon objectif (ma course).</li>
-                    <li>Pour m'y préparer, je définis mes semaines d'entraînement en remontant dans le temps :</li>
-                    <ul class="list-disc pl-6 text-white space-y-2">
-                        <li>La semaine de la course est marquée comme "Compétition".</li>
-                        <li>Les deux semaines précédentes sont des semaines de "Taper", où je réduis progressivement la charge.</li>
-                        <li>Les quatre semaines précédentes sont des semaines de "Maintien", correspondant au pic d'entraînement.</li>
-                        <li>Les semaines antérieures sont des semaines de "Développement" pour construire ma condition physique.</li>
-                        <li>Une semaine sur trois ou quatre est une semaine "Allégée" pour éviter le surentraînement.</li>
-                        <li>Pendant les semaines de développement, je veille à ne pas augmenter ma charge d'entraînement de plus de 10% par semaine.</li>
-                    </ul>
-                    <li>En fonction de mon objectif (marathon, trail, 10 km…), je répartis mes séances chaque semaine pour atteindre mes objectifs hebdomadaires.</li>
-                    <li>Personnellement, je préfère fixer mes objectifs hebdomadaires en temps plutôt qu'en distance.</li>
-                </ul>
-            </div>            
-            <p class="text-white mb-4 mt-10">
-                Nous attendons vos retours sur :<br>
-                - L'ergonomie de l'interface<br>
-                - L'utilité des fonctionnalités existantes<br>
-                - Toute suggestion d'amélioration
-            </p>
-            <p class="text-white mb-2 font-medium">
-                Utilisez le formulaire de contact intégré pour nous faire part de vos remarques à tout moment.
-            </p>
-            <p class="text-white">
-                Merci pour votre participation et votre confiance !<br>
-                Laurent
-            </p>
-            <div class="text-center mt-8">
-                <button id="closeWelcomeModal" class="text-white bg-cyan-600 hover:bg-cyan-500 py-2 px-6 rounded-lg">
-                    J'ai compris
-                </button>
-            </div>
-        </div>
-    </div>
+    </div> 
 </div>
 
 <style>
@@ -314,7 +228,7 @@
         display: none;
     }
     
-    .modal-content {
+    /* .modal-content {
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -322,7 +236,7 @@
     .modal-content::-webkit-scrollbar {
         width: 0;
         display: none;
-    }
+    } */
 </style>
 
 <script>

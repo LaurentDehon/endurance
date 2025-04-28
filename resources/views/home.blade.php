@@ -10,7 +10,7 @@
 <div class="welcome-container overflow-y-auto w-full">
     <div class="mx-auto px-4 py-8 max-w-7xl">
         <!-- Hero Section -->
-        <div class="hero-section bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-12 p-8 border">
+        <div class="hero-section bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg mb-12 p-8">
             <div class="container mx-auto">
                 <div class="flex flex-col md:flex-row items-center gap-12">
                     <div class="md:w-full">
@@ -42,14 +42,14 @@
 
         <!-- Why Zone 2 Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="whySection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
                 <h2 class="text-3xl font-bold text-white mb-6">Why Zone 2?</h2>
                 <p class="text-lg text-cyan-200 mb-6">
                     Many runners still plan their workouts in Excel spreadsheets or on paper.<br>
                     Zone 2 offers an interactive and structured alternative, designed for those who want to track their progress methodically.
                 </p>
                 
-                <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
+                <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
                     <p class="text-xl text-center font-semibold text-white">
                         Zone 2 isn't a plan generator, it's your smart training companion that evolves with you.
                     </p>
@@ -59,7 +59,7 @@
 
         <!-- Structure Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="structureSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-cube text-xl"></i>
@@ -78,7 +78,7 @@
                         </p>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-pink-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-bed text-white"></i>
@@ -90,7 +90,7 @@
                                 </p>
                             </div>
 
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-arrow-up text-white"></i>
@@ -102,7 +102,7 @@
                                 </p>
                             </div>
                             
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-amber-700 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-equals text-white"></i>
@@ -114,7 +114,7 @@
                                 </p>
                             </div>
                             
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-emerald-400 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-arrow-down text-white"></i>
@@ -126,7 +126,7 @@
                                 </p>
                             </div>
                             
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-fuchsia-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-compress-alt text-white"></i>
@@ -138,7 +138,7 @@
                                 </p>
                             </div>
                             
-                            <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4">
+                            <div class="bg-white bg-opacity-10 shadow-sm rounded-xl p-4">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="w-8 h-8 bg-rose-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-flag-checkered text-white"></i>
@@ -161,7 +161,7 @@
 
         <!-- Features Section -->
         <section id="features" class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-tools text-xl"></i>
@@ -172,7 +172,7 @@
                 <h3 class="text-2xl font-bold text-white mb-6">Everything You Need to Plan, Track, and Adjust</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-cyan-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-calendar-alt text-cyan-400 text-2xl"></i>
                         </div>
@@ -180,7 +180,7 @@
                         <p class="text-cyan-200">View your plan by week and month with an intuitive interface</p>
                     </div>
                     
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-yellow-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-bullseye text-yellow-400 text-2xl"></i>
                         </div>
@@ -188,7 +188,7 @@
                         <p class="text-cyan-200">Set your targets in duration, distance, and elevation for each session</p>
                     </div>
                     
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
                             <i class="fab fa-strava text-orange-400 text-2xl"></i>
                         </div>
@@ -196,7 +196,7 @@
                         <p class="text-cyan-200">Automatically import your activities to compare with your plan</p>
                     </div>
                     
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-chart-bar text-purple-400 text-2xl"></i>
                         </div>
@@ -204,7 +204,7 @@
                         <p class="text-cyan-200">Analyze your performance and compare planned vs. actual results</p>
                     </div>
                     
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-dumbbell text-teal-400 text-2xl"></i>
                         </div>
@@ -212,7 +212,7 @@
                         <p class="text-cyan-200">Adapt your weeks according to your specific training phases</p>
                     </div>
                     
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-red-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
                         </div>
@@ -220,7 +220,7 @@
                         <p class="text-cyan-200">Receive notifications if you exceed the 10% increase rule</p>
                     </div>
 
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-indigo-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-puzzle-piece text-indigo-400 text-xl"></i>
                         </div>
@@ -228,7 +228,7 @@
                         <p class="text-cyan-200">Organize your weeks based on your specific goals</p>
                     </div>
 
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-pencil-alt text-blue-400 text-xl"></i>
                         </div>
@@ -236,7 +236,7 @@
                         <p class="text-cyan-200">Create and adapt your plan according to your specific needs</p>
                     </div>
 
-                    <div class="feature-card bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm border backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-pink-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-eye text-pink-400 text-xl"></i>
                         </div>
@@ -249,7 +249,7 @@
 
         <!-- How It Works Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="howSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-question text-xl"></i>
@@ -266,7 +266,7 @@
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">1</div>
-                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Create Your Goal</h4>
                                     <p class="text-cyan-200">Define your main objective (e.g., Marathon, 50K Trail) and the event date</p>
                                 </div>
@@ -274,7 +274,7 @@
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">2</div>
-                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Organize Your Weeks</h4>
                                     <p class="text-cyan-200">Structure your weeks in blocks adapted to your goal (development, maintenance, recovery...)</p>
                                 </div>
@@ -282,7 +282,7 @@
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">3</div>
-                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Add Your Sessions</h4>
                                     <p class="text-cyan-200">Plan your weekly sessions with details (type, distance, duration, elevation)</p>
                                 </div>
@@ -290,7 +290,7 @@
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">4</div>
-                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Sync with Strava</h4>
                                     <p class="text-cyan-200">Connect your Strava account or manually enter your completed activities</p>
                                 </div>
@@ -298,7 +298,7 @@
                             
                             <div class="step-item relative z-10 flex items-start gap-4">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">5</div>
-                                <div class="step-content bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm rounded-xl p-4 flex-grow">
+                                <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Track and Adjust</h4>
                                     <p class="text-cyan-200">Modify your plan based on how you feel and your actual performance</p>
                                 </div>
@@ -314,7 +314,7 @@
         </section>        
 
         <!-- Training Blocks Section -->
-        <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border mb-10">
+        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg mb-10">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-route text-xl"></i>
@@ -322,7 +322,7 @@
                 <h2 class="text-3xl font-bold text-white">16-Week Marathon Training Plan Example</h2>
             </div>
             
-            <div class="bg-blue-900 bg-opacity-30 border border-blue-400 border-opacity-20 p-5 rounded-xl mb-8">
+            <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
                 <p class="text-lg italic text-white">
                     "A strategic progression from initial development to race day, with regular recovery periods to optimize adaptation."
                 </p>
@@ -330,7 +330,7 @@
             
             <div class="space-y-6">
                 <!-- Weeks 1-3: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 1-3</span>
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
@@ -344,7 +344,7 @@
                 </div>
                 
                 <!-- Week 4: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 4</span>
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
@@ -358,7 +358,7 @@
                 </div>
                 
                 <!-- Weeks 5-7: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 5-7</span>
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
@@ -372,7 +372,7 @@
                 </div>
                 
                 <!-- Week 8: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 8</span>
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
@@ -386,7 +386,7 @@
                 </div>
                 
                 <!-- Weeks 9-10: Development -->
-                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl border border-blue-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-blue-600 text-white text-sm rounded-full flex-shrink-0">Weeks 9-10</span>
                         <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
@@ -400,7 +400,7 @@
                 </div>
                 
                 <!-- Week 11: Reduced -->
-                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl border border-emerald-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-emerald-600 text-white text-sm rounded-full flex-shrink-0">Week 11</span>
                         <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintain Recovery (Reduced)
@@ -414,7 +414,7 @@
                 </div>
                 
                 <!-- Weeks 12-13: Maintain -->
-                <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl border border-amber-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-amber-600 text-white text-sm rounded-full flex-shrink-0">Weeks 12-13</span>
                         <i class="fas fa-equals text-amber-300 mr-2"></i> Maintain Phase
@@ -428,7 +428,7 @@
                 </div>
                 
                 <!-- Weeks 14-15: Taper -->
-                <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl border border-fuchsia-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full flex-shrink-0">Weeks 14-15</span>
                         <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
@@ -442,7 +442,7 @@
                 </div>
                 
                 <!-- Week 16: Race -->
-                <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl border border-rose-500 border-opacity-30 shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
+                <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl shadow-lg md:w-3/4 lg:w-2/3 mx-auto">
                     <h3 class="text-xl font-bold text-white flex items-center mb-2">
                         <span class="mr-3 px-3 py-1 bg-rose-600 text-white text-sm rounded-full flex-shrink-0">Week 16</span>
                         <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
@@ -459,7 +459,7 @@
 
         <!-- Beta Notice Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="betaSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-amber-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-flask text-xl"></i>
@@ -467,7 +467,7 @@
                     <h2 class="text-3xl font-bold text-white">Beta Version</h2>
                 </div>
                 
-                <div class="flex items-center gap-6 bg-amber-900 bg-opacity-30 border border-amber-500 border-opacity-20 p-5 rounded-xl mb-8">
+                <div class="flex items-center gap-6 bg-amber-900 bg-opacity-30 p-5 rounded-xl mb-8">
                     <div class="text-amber-400 text-4xl">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
@@ -481,7 +481,7 @@
 
         <!-- Call to Action Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="ctaSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border text-center">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg text-center">
                 <h2 class="text-3xl font-bold text-white mb-6">Ready to Structure Your Progress?</h2>
                 
                 <div class="flex flex-wrap justify-center gap-4 mb-8">
@@ -505,7 +505,7 @@
 
         <!-- Logos Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="stravaSection">
-            <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg border flex justify-center items-center">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg flex justify-center items-center">
                 <div class="w-60 h-60">
                     <img src="{{ asset('storage/images/strava-powered.svg') }}" alt="Strava Powered" class="w-full h-full">
                 </div>

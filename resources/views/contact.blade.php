@@ -2,7 +2,7 @@
 @section('content')
 <div class="contact-container mx-auto p-4 md:p-8 max-w-7xl">
     <!-- Header Section -->
-    <div class="bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6 border">
+    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6">
         <div class="container mx-auto px-6 text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Contact Us</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
@@ -15,7 +15,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Main Contact Form -->
         <div class="md:col-span-2">
-            <div class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+            <div class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-envelope text-xl text-white"></i>
@@ -65,7 +65,7 @@
         
         <!-- Contact Info Sidebar -->
         <div class="md:col-span-1">
-            <div class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border mb-6">
+            <div class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg mb-6">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-info text-xl text-white"></i>
@@ -89,7 +89,7 @@
                 </ul>
             </div>
             
-            <div class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border">
+            <div class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-share-alt text-xl text-white"></i>
@@ -113,7 +113,7 @@
     </div>
     
     <!-- FAQ Section -->
-    <div class="section-card bg-white bg-opacity-10 border-white border-opacity-20 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg border mt-8">
+    <div class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg mt-8">
         <div class="flex items-center gap-4 mb-6">
             <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                 <i class="fas fa-question text-xl text-white"></i>
