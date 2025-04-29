@@ -1,6 +1,6 @@
 <div class="py-4 border-t bg-slate-800 bg-opacity-90 text-white text-opacity-80 border-white border-opacity-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-between">
             <div class="flex items-center gap-2 text-xs">
                 <span class="font-medium">{{ config('app.name') }}</span>
                 <span>•</span>
