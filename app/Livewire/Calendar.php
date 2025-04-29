@@ -1021,9 +1021,9 @@ class Calendar extends Component
     }
 
     /**
-     * Calcule la progression entre la semaine courante et la semaine précédente avec des données planifiées.
-     * Si la semaine actuelle est de type "development" et la précédente est de type "reduced",
-     * alors on compare avec la semaine de développement précédente.
+     * Calcule la progression entre la semaine courante et une semaine précédente valide avec des données planifiées.
+     * On cherche la semaine précédente (avec des données planifiées) qui n'est pas "reduced", "recovery" ou "race".
+     * Si une telle semaine n'est pas trouvée immédiatement, on continue à remonter jusqu'à trouver une semaine valide.
      * 
      * @param \App\Models\Week $currentWeek La semaine courante
      * @return array Résultats de progression pour distance et durée
@@ -1052,50 +1052,36 @@ class Calendar extends Component
             if ($previousWeeks->isEmpty()) {
                 return $result;
             }
-
-            // Vérifier si la semaine courante est de type "development"
-            $isCurrentWeekDev = $currentWeek->type && strtolower($currentWeek->type->name) === 'development';
             
-            // Trouver la première semaine précédente avec des données planifiées
-            $previousWeek = null;
-            $previousDevWeek = null;
+            // Types de semaines à ignorer pour la comparaison
+            $ignoredWeekTypes = ['reduced', 'recovery', 'race'];
+            
+            // Trouver la première semaine précédente valide avec des données planifiées
+            $comparisonWeek = null;
             
             foreach ($previousWeeks as $week) {
-                // Si c'est la première semaine avec des données, on la garde comme référence
-                if (!$previousWeek && ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0)) {
-                    $previousWeek = $week;
-                    
-                    // Si on ne cherche pas spécifiquement une semaine de développement, on peut s'arrêter ici
-                    if (!$isCurrentWeekDev) {
-                        break;
-                    }
+                // Vérifier si la semaine a des données planifiées
+                $hasPlannedData = $week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0;
+                
+                if (!$hasPlannedData) {
+                    // Ignorer les semaines sans données planifiées
+                    continue;
                 }
                 
-                // Si la semaine courante est de type "development", on cherche aussi la semaine de développement précédente
-                if ($isCurrentWeekDev && $week->type && strtolower($week->type->name) === 'development' && 
-                    ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0)) {
-                    $previousDevWeek = $week;
-                    // On a trouvé une semaine de développement précédente, on peut s'arrêter
+                // Vérifier si le type de semaine doit être ignoré
+                $weekTypeName = $week->type ? strtolower($week->type->name) : '';
+                $isIgnoredType = in_array($weekTypeName, $ignoredWeekTypes);
+                
+                if (!$isIgnoredType) {
+                    // On a trouvé une semaine valide pour la comparaison
+                    $comparisonWeek = $week;
                     break;
                 }
             }
 
-            // Si aucune semaine précédente avec des données n'a été trouvée
-            if (!$previousWeek) {
+            // Si aucune semaine valide n'a été trouvée
+            if (!$comparisonWeek) {
                 return $result;
-            }
-            
-            // Si la semaine courante est de type "development" et la semaine précédente est de type "reduced"
-            // ET qu'on a trouvé une semaine de développement antérieure, on compare avec celle-là
-            if ($isCurrentWeekDev && 
-                $previousWeek->type && 
-                strtolower($previousWeek->type->name) === 'reduced' && 
-                $previousDevWeek) {
-                // On utilise la semaine de développement précédente pour la comparaison
-                $comparisonWeek = $previousDevWeek;
-            } else {
-                // Sinon, on utilise la semaine la plus récente
-                $comparisonWeek = $previousWeek;
             }
 
             // Calculer la progression de distance
