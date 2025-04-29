@@ -117,16 +117,17 @@ class WorkoutModal extends Component
                     $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
                     $workout->update($baseData);
                     $message = 'Workout successfully updated';
+                    $this->dispatch('workout-updated');
                 } 
                 else {
                     Workout::create($baseData); // Simplified since baseData already includes date
                     $message = 'Workout successfully created';
+                    $this->dispatch('workout-created');
                 }
             }
 
             $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'workout-modal');
-            $this->dispatch('workout-created');
 
         } catch (\Exception $e) {
             $this->dispatch('toast', $e->getMessage(), 'error');

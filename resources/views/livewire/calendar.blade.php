@@ -314,7 +314,7 @@
                                                 </div>
                                             </div>
                                         @endforeach      
-                                        <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none" align="right">
+                                        <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-lg transition-colors focus:outline-none" align="right">
                                             <div class="py-1">
                                                 <x-dropdown-item wire:click.prevent="deleteMonth('{{ $monthKey }}')" icon="trash-alt" iconColor="red">
                                                     Delete monthly workouts
@@ -330,7 +330,6 @@
                         @foreach ($weeksInMonth as $week)
                             @php
                                 $baseColor = $week->type->color ?? 'bg-slate-500';
-                                $isDevelopmentWeek = $week->type && strtolower($week->type->name) === 'development';
                                 $colorPalette = $this->getWeekColorPalette($baseColor);
                             @endphp
                             <div wire:key="week-{{ $week->id }}" x-data="{
@@ -441,9 +440,9 @@
                                                     <div class="flex flex-col md:w-36 lg:w-36">
                                                         <!-- Stat increase display -->
                                                         <div class="flex justify-center h-5">
-                                                            @if($isDevelopmentWeek && ($stat === 'distance' || $stat === 'duration'))
+                                                            @if($stat === 'distance' || $stat === 'duration')
                                                                 @php
-                                                                    $progressData = $this->calculateDevelopmentWeekProgress($week, $weeksInMonth, $loop->index);
+                                                                    $progressData = $this->calculateDevelopmentWeekProgress($week);
                                                                     $statProgressData = $progressData[$stat] ?? null;
                                                                 @endphp
                                                                 
@@ -660,6 +659,37 @@
             display: none;
         }
 
+        /* Tippy.js theme customization */
+        .tippy-box[data-theme~='light-border'] {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px !important;
+            max-width: 350px !important;
+        }
+
+        .tippy-box[data-theme~='light-border'] .tippy-content {
+            padding: 8px 12px;
+        }
+
+        .tippy-box[data-theme~='light-border'][data-placement^='top'] .tippy-arrow:before {
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .tippy-box[data-theme~='light-border'][data-placement^='bottom'] .tippy-arrow:before {
+            border-bottom-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .tippy-box[data-theme~='light-border'][data-placement^='left'] .tippy-arrow:before {
+            border-left-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .tippy-box[data-theme~='light-border'][data-placement^='right'] .tippy-arrow:before {
+            border-right-color: rgba(0, 0, 0, 0.9);
+        }
+
         /* Hide elements until Alpine.js is initialized */
         [x-cloak] {
             display: none !important;
@@ -803,78 +833,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Tippy Tooltips
             var tippyInstances = [];
-            function initTippyTooltips(targets) {
-                if (typeof tippy === 'undefined' || window.innerWidth < 1024) return;
-                // Only initialize on new elements
-                var selector = targets || '[data-tippy-content]';
-                document.querySelectorAll(selector).forEach(function(el) {
-                    if (!el._tippy) {
-                        var opts = {
-                            theme: 'calendar',
-                            placement: 'top',
-                            arrow: true,
-                            animation: 'scale',
-                            duration: [200, 100],
-                            delay: [300, 0],
-                            offset: [0, 8]
-                        };
-                        
-                        var content = el.getAttribute('data-tippy-content');
-                        if (content && content.includes('<')) {
-                            opts.allowHTML = true;
-                            opts.interactive = true;
-                        } else {
-                            opts.onShow = function(instance) {
-                                var element = instance.reference;
-                                if (element.classList.contains('collapse-toggle')) {
-                                    var icon = element.querySelector('i');
-                                    if (icon && icon.classList.contains('fa-chevron-down')) instance.setContent('Expand');
-                                    else if (icon && icon.classList.contains('fa-chevron-up')) instance.setContent('Collapse');
-                                }
-                            };
+            function initTippyTooltips() {
+                if (typeof tippy !== 'undefined') {
+                    // Destroy existing tooltips first to avoid duplicates
+                    const existingInstances = document.querySelectorAll('[data-tippy-root]');
+                    existingInstances.forEach(instance => {
+                        const tippyInstance = instance._tippy;
+                        if (tippyInstance) {
+                            tippyInstance.destroy();
                         }
-                        tippyInstances.push(tippy(el, opts));
-                    }
-                });
+                    });
+                    
+                    // Initialize tooltips for all elements with data-tippy-content attribute
+                    tippy('[data-tippy-content]', {
+                        allowHTML: true,
+                        theme: 'light-border',
+                        interactive: true,
+                        appendTo: document.body,
+                        maxWidth: 350,
+                    });
+                    
+                    console.log('Tooltips initialized successfully');
+                } else {
+                    console.error('Tippy.js not loaded');
+                }
             }
             
-            // MutationObserver for new tooltips
-            if (typeof MutationObserver !== 'undefined') {
-                var observer = new MutationObserver(function(mutations) {
-                    for (var i = 0; i < mutations.length; i++) {
-                        var m = mutations[i];
-                        if (m.addedNodes) {
-                            m.addedNodes.forEach(function(node) {
-                                if (node.nodeType === 1 && node.hasAttribute && node.hasAttribute('data-tippy-content')) {
-                                    initTippyTooltips('[data-tippy-content]');
-                                }
-                            });
-                        }
-                    }
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-            }
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                initTippyTooltips();
+            });
             
-            // Livewire/Alpine hooks
-            document.addEventListener('livewire:navigated', function() { initTippyTooltips(); });
-            document.addEventListener('livewire:init', function() { initTippyTooltips(); });
-            document.addEventListener('DOMContentLoaded', function() { initTippyTooltips(); });
+            // Initialize when Livewire updates the DOM
+            document.addEventListener('livewire:initialized', function() {
+                initTippyTooltips();
+            });
             
-            if (typeof Livewire !== 'undefined') {
-                Livewire.on('reload-tooltips', function() { setTimeout(function() { initTippyTooltips(); }, 500); });
-                
-                // URL update
-                Livewire.on('update-url', function(params) {
-                    var year = params.year;
-                    var url = new URL(window.location);
-                    url.pathname = '/calendar/' + year;
-                    window.history.pushState(null, '', url);
-                });
-            }
-            
-            window.addEventListener('resize', function() {
-                if (window.innerWidth < 1024 && typeof tippy !== 'undefined') tippy.hideAll();
-                else initTippyTooltips();
+            // Reload tooltips when requested
+            Livewire.on('reload-tooltips', function() { 
+                // Use a slight delay to ensure DOM is updated
+                setTimeout(function() { 
+                    console.log('Reloading tooltips...');
+                    initTippyTooltips(); 
+                }, 500); 
             });
             
             // Collapse/Expand all weeks

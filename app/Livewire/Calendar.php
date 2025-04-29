@@ -325,12 +325,28 @@ class Calendar extends Component
         $weeks = collect();
         $date = \Carbon\CarbonImmutable::create($this->year, 1, 1)->startOfYear();
 
+        // Récupérer la première semaine de l'année (qui peut débuter en décembre de l'année précédente)
+        $firstWeekStart = $date->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+        
+        // Récupérer la dernière semaine de l'année (qui peut finir en janvier de l'année suivante)
+        $lastWeekStart = $date->endOfYear()->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+        $lastWeekNumber = $lastWeekStart->weekOfYear;
+
+        // Ajuster pour les années où la dernière semaine est la semaine 1 de l'année suivante
+        if ($lastWeekStart->weekOfYear === 1) {
+            $lastPrevWeek = $lastWeekStart->subWeek();
+            $lastWeekNumber = $lastPrevWeek->weekOfYear;
+        }
+
         for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
-            $start = $date->addWeeks($weekNumber - 1)->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
-            if ($start->year > $this->year) 
+            $start = $date->setISODate($this->year, $weekNumber)->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+            
+            // Sortir de la boucle si on dépasse la dernière semaine de l'année
+            if ($start->year > $this->year && $weekNumber > 1) 
                 break;
+                
             $end = $start->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
-            $thursday = $start->addDays(3);
+            $thursday = $start->addDays(3);  // Le jeudi détermine l'année à laquelle appartient la semaine ISO
 
             // Récupérer le Week de la collection, sinon en créer un nouveau en mémoire
             $week = $weeksFromDb->get($weekNumber);
@@ -344,23 +360,64 @@ class Calendar extends Component
                 $week->setRelation('type', null);
             }
 
+            // Pour les semaines qui chevauchent l'année, on doit récupérer les statistiques correctement
+            $weekActualStats = [
+                'distance' => 0,
+                'elevation' => 0,
+                'duration' => 0,
+            ];
+            
+            $weekPlannedStats = [
+                'distance' => 0,
+                'elevation' => 0,
+                'duration' => 0,
+            ];
+            
             // Utiliser les stats groupées pour cette semaine
-            $actual = [
-                'distance' => isset($activityStats[$weekNumber]) ? round($activityStats[$weekNumber]->dist / 1000, 1) : 0,
-                'elevation' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->ele : 0,
-                'duration' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->time : 0,
-            ];
-            $planned = [
-                'distance' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0,
-                'elevation' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->ele : 0,
-                'duration' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0,
-            ];
+            if (isset($activityStats[$weekNumber])) {
+                $weekActualStats['distance'] = round($activityStats[$weekNumber]->dist / 1000, 1);
+                $weekActualStats['elevation'] = $activityStats[$weekNumber]->ele;
+                $weekActualStats['duration'] = $activityStats[$weekNumber]->time;
+            }
+            
+            if (isset($workoutStats[$weekNumber])) {
+                $weekPlannedStats['distance'] = $workoutStats[$weekNumber]->dist;
+                $weekPlannedStats['elevation'] = $workoutStats[$weekNumber]->ele;
+                $weekPlannedStats['duration'] = $workoutStats[$weekNumber]->time * 60;
+            }
+            
+            // Pour les semaines qui chevauchent deux années, on doit aussi récupérer les stats de l'autre année
+            // Première semaine de l'année pouvant avoir des jours en décembre de l'année précédente
+            if ($weekNumber === 1 && $start->year < $this->year) {
+                // Récupérer les statistiques de la dernière semaine de l'année précédente
+                $lastWeekPrevYearStats = $this->getWeekStatsFromRange($start, $end->copy()->startOfYear()->subDay());
+                $weekActualStats['distance'] += round($lastWeekPrevYearStats['actual']['distance'] / 1000, 1);
+                $weekActualStats['elevation'] += $lastWeekPrevYearStats['actual']['elevation'];
+                $weekActualStats['duration'] += $lastWeekPrevYearStats['actual']['duration'];
+                
+                $weekPlannedStats['distance'] += $lastWeekPrevYearStats['planned']['distance'];
+                $weekPlannedStats['elevation'] += $lastWeekPrevYearStats['planned']['elevation'];
+                $weekPlannedStats['duration'] += $lastWeekPrevYearStats['planned']['duration'] * 60;
+            }
+            
+            // Dernière semaine de l'année pouvant avoir des jours en janvier de l'année suivante
+            if ($weekNumber === $lastWeekNumber && $end->year > $this->year) {
+                // Récupérer les statistiques de la première semaine de l'année suivante
+                $firstWeekNextYearStats = $this->getWeekStatsFromRange($end->copy()->startOfYear(), $end);
+                $weekActualStats['distance'] += round($firstWeekNextYearStats['actual']['distance'] / 1000, 1);
+                $weekActualStats['elevation'] += $firstWeekNextYearStats['actual']['elevation'];
+                $weekActualStats['duration'] += $firstWeekNextYearStats['actual']['duration'];
+                
+                $weekPlannedStats['distance'] += $firstWeekNextYearStats['planned']['distance'];
+                $weekPlannedStats['elevation'] += $firstWeekNextYearStats['planned']['elevation'];
+                $weekPlannedStats['duration'] += $firstWeekNextYearStats['planned']['duration'] * 60;
+            }
 
             $week->start = $start->format('d M');
             $week->end = $end->format('d M');
             $week->month = $thursday->format('Y-m');
-            $week->actual_stats = $actual;
-            $week->planned_stats = $planned;
+            $week->actual_stats = $weekActualStats;
+            $week->planned_stats = $weekPlannedStats;
             $week->days = $this->generateWeekDays($start);
             $week->is_current_week = $this->isCurrentWeek($start, $end);
 
@@ -368,6 +425,40 @@ class Calendar extends Component
         }
 
         return $weeks;
+    }
+    
+    /**
+     * Récupère les statistiques d'activities et workouts pour une plage de dates spécifique
+     * Utilisé pour les semaines qui chevauchent deux années
+     *
+     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $startDate
+     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $endDate
+     * @return array
+     */
+    private function getWeekStatsFromRange($startDate, $endDate): array
+    {
+        $activities = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->where('user_id', Auth::id())
+            ->whereBetween('start_date', [$startDate, $endDate])
+            ->first();
+            
+        $workouts = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->where('user_id', Auth::id())
+            ->whereBetween('date', [$startDate, $endDate])
+            ->first();
+        
+        return [
+            'actual' => [
+                'distance' => $activities ? $activities->dist : 0,
+                'elevation' => $activities ? $activities->ele : 0,
+                'duration' => $activities ? $activities->time : 0,
+            ],
+            'planned' => [
+                'distance' => $workouts ? $workouts->dist : 0,
+                'elevation' => $workouts ? $workouts->ele : 0,
+                'duration' => $workouts ? $workouts->time : 0,
+            ]
+        ];
     }
 
     /**
@@ -694,6 +785,7 @@ class Calendar extends Component
      */
     #[On('workout-created')]
     #[On('workout-deleted')]
+    #[On('workout-updated')]
     public function refreshWorkouts()
     {
         $this->invalidateCache('workout');
@@ -923,12 +1015,10 @@ class Calendar extends Component
     }
 
     /**
-     * Calculates progression statistics between two development weeks.
-     *
-     * @param \App\Models\Week $currentWeek Current week
-     * @param Collection $weeksInMonth All weeks in the month
-     * @param int $currentIndex Index of the current week
-     * @return array Result with distance and duration progression data
+     * Calcule la progression entre la semaine courante et la semaine précédente avec des données planifiées.
+     * 
+     * @param \App\Models\Week $currentWeek La semaine courante
+     * @return array Résultats de progression pour distance et durée
      */
     public function calculateDevelopmentWeekProgress(Week $currentWeek): array
     {
@@ -937,52 +1027,63 @@ class Calendar extends Component
             'duration' => null,
             'isValid' => false
         ];
+
         try {
-            if (!$currentWeek->type || strtolower($currentWeek->type->name) !== 'development') {
+            // Récupérer toutes les semaines (déjà calculées avec les bons stats même pour les semaines à cheval)
+            $allWeeks = $this->weeks;
+            if ($allWeeks->isEmpty()) {
                 return $result;
             }
-            $year = $currentWeek->year;
-            $weekNumber = $currentWeek->week_number;
-            $prevWeekNumber = $weekNumber - 1;
-            if ($prevWeekNumber < 1) return $result;
 
-            // Stats groupées pour les semaines de l'année
-            $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(duration) as time')
-                ->whereYear('date', $year)
-                ->where('user_id', Auth::id())
-                ->groupBy('week')
-                ->get()
-                ->keyBy('week');
+            // Filtrer les semaines pour ne garder que celles qui précèdent la semaine courante
+            $previousWeeks = $allWeeks->filter(function($week) use ($currentWeek) {
+                return $week->week_number < $currentWeek->week_number;
+            })->sortByDesc('week_number');
 
-            // Semaine courante
-            $currentPlanned = isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0;
-            $currentDuration = isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0;
-            // Semaine précédente
-            $prevPlanned = isset($workoutStats[$prevWeekNumber]) ? $workoutStats[$prevWeekNumber]->dist : 0;
-            $prevDuration = isset($workoutStats[$prevWeekNumber]) ? $workoutStats[$prevWeekNumber]->time * 60 : 0;
+            // Si aucune semaine précédente n'existe
+            if ($previousWeeks->isEmpty()) {
+                return $result;
+            }
 
-            $result['isValid'] = true;
-            if ($prevPlanned > 0 && $currentPlanned > 0) {
-                $diff = $currentPlanned - $prevPlanned;
-                if ($diff != 0) {
-                    $percent = ($diff / $prevPlanned) * 100;
-                    $result['distance'] = [
-                        'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
-                        'previous' => $prevPlanned
-                    ];
+            // Trouver la première semaine précédente avec des données planifiées
+            $previousWeek = null;
+            foreach ($previousWeeks as $week) {
+                if ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0) {
+                    $previousWeek = $week;
+                    break;
                 }
             }
-            if ($prevDuration > 0 && $currentDuration > 0) {
-                $diff = $currentDuration - $prevDuration;
-                if ($diff != 0) {
-                    $percent = ($diff / $prevDuration) * 100;
-                    $result['duration'] = [
-                        'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
-                        'previous' => $prevDuration
-                    ];
-                }
+
+            // Si aucune semaine précédente avec des données n'a été trouvée
+            if (!$previousWeek) {
+                return $result;
             }
-        } catch (\Exception $e) {}
+
+            // Calculer la progression de distance
+            if ($previousWeek->planned_stats['distance'] > 0 && $currentWeek->planned_stats['distance'] > 0) {
+                $diff = $currentWeek->planned_stats['distance'] - $previousWeek->planned_stats['distance'];
+                $percent = ($diff / $previousWeek->planned_stats['distance']) * 100;
+                $result['distance'] = [
+                    'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
+                    'previous' => $previousWeek->planned_stats['distance']
+                ];
+                $result['isValid'] = true;
+            }
+
+            // Calculer la progression de durée
+            if ($previousWeek->planned_stats['duration'] > 0 && $currentWeek->planned_stats['duration'] > 0) {
+                $diff = $currentWeek->planned_stats['duration'] - $previousWeek->planned_stats['duration'];
+                $percent = ($diff / $previousWeek->planned_stats['duration']) * 100;
+                $result['duration'] = [
+                    'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
+                    'previous' => $previousWeek->planned_stats['duration']
+                ];
+                $result['isValid'] = true;
+            }
+        } catch (\Exception $e) {
+            // En cas d'erreur, retourner le résultat par défaut
+        }
+
         return $result;
     }
     
