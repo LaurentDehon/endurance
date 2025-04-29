@@ -37,6 +37,9 @@
             <a href="#weeks" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-calendar-week"></i> Weeks
             </a>
+            <a href="#workouts" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
+                <i class="fas fa-running"></i> Workouts
+            </a>
             <a href="#tips" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
                 <i class="fas fa-lightbulb"></i> Tips
             </a>
@@ -452,7 +455,7 @@
         </section>
 
         <!-- Workout Types Section -->
-        <section id="workout-types" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
+        <section id="workouts" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-running text-xl"></i>
