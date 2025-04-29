@@ -124,9 +124,9 @@ class WorkoutModal extends Component
                 }
             }
 
-            $this->dispatch('workout-created');
             $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'workout-modal');
+            $this->dispatch('workout-created');
 
         } catch (\Exception $e) {
             $this->dispatch('toast', $e->getMessage(), 'error');
@@ -155,7 +155,7 @@ class WorkoutModal extends Component
 
         $this->dispatch('toast', 'Workout deleted successfully', 'success');
         $this->dispatch('closeModal', 'workout-modal');
-        $this->dispatch('workout-created');
+        $this->dispatch('workout-deleted');
     }
 
     private function validateNumeric($value)

@@ -17,13 +17,31 @@ use Illuminate\Support\Facades\Cache;
 class Calendar extends Component
 {    
     /**
+     * Cache TTL constants in seconds
+     */
+    private const CACHE_TTL_YEARS = 24 * 60 * 60; // 24 heures pour les années disponibles
+    private const CACHE_TTL_ACTIVITIES = 60 * 60; // 60 minutes pour les activités
+    private const CACHE_TTL_WORKOUTS = 5 * 60; // 5 minutes pour les workouts (modifiés souvent)
+    private const CACHE_TTL_WEEKS = 30 * 60; // 30 minutes pour les semaines
+    private const CACHE_TTL_STATS = 15 * 60; // 15 minutes pour les statistiques
+
+    /**
+     * Cache key prefixes
+     */
+    private const CACHE_KEY_YEARS = 'calendar-years-';
+    private const CACHE_KEY_ACTIVITIES = 'calendar-activities-';
+    private const CACHE_KEY_WORKOUTS = 'calendar-workouts-';
+    private const CACHE_KEY_WEEKS = 'calendar-weeks-';
+    private const CACHE_KEY_MONTH_STATS = 'calendar-month-stats-';
+    private const CACHE_KEY_YEAR_STATS = 'calendar-year-stats-';
+    
+    /**
      * Event listeners for the component.
      * 
      * @var array
      */
     protected $listeners = [
         'refresh' => '$refresh',
-        'refresh-calendar' => 'refreshCalendar',
         'confirmDeleteAll',
         'confirmDeleteMonth',
         'confirmDeleteWeek'
@@ -119,22 +137,52 @@ class Calendar extends Component
     public function render()
     {
         $userId = Auth::id();
-        $cacheKey = "calendar-{$userId}-{$this->year}";
-        $data = Cache::remember($cacheKey, 60, function () {
-            $activities = $this->getActivities();
-            $workouts = $this->getWorkouts();
-            $weeks = $this->getWeeks($activities, $workouts);
-            $months = $this->groupWeeksByMonth($weeks);
-            $monthStats = $this->calculateMonthStatsFromDb();
-            $yearStats = $this->calculateYearStatsFromDb();
-            return compact('activities', 'workouts', 'weeks', 'months', 'monthStats', 'yearStats');
-        });
-        $this->activities = $data['activities'];
-        $this->workouts = $data['workouts'];
-        $this->weeks = $data['weeks'];
-        $this->months = $data['months'];
-        $this->monthStats = $data['monthStats'];
-        $this->yearStats = $data['yearStats'];
+        
+        // Cache pour les années disponibles (longue durée)
+        $years = Cache::remember(
+            self::CACHE_KEY_YEARS . $userId, 
+            self::CACHE_TTL_YEARS, 
+            fn() => $this->getAvailableYears()
+        );
+        
+        // Cache pour les activités (durée moyenne)
+        $this->activities = Cache::remember(
+            self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year, 
+            self::CACHE_TTL_ACTIVITIES, 
+            fn() => $this->getActivities()
+        );
+        
+        // Cache pour les workouts (durée courte car fréquemment modifiés)
+        $this->workouts = Cache::remember(
+            self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year, 
+            self::CACHE_TTL_WORKOUTS, 
+            fn() => $this->getWorkouts()
+        );
+        
+        // Cache pour les semaines
+        $this->weeks = Cache::remember(
+            self::CACHE_KEY_WEEKS . $userId . '-' . $this->year, 
+            self::CACHE_TTL_WEEKS, 
+            fn() => $this->getWeeks()
+        );
+        
+        // Groupement des semaines par mois (pas besoin de cacher car c'est une opération de mémoire)
+        $this->months = $this->groupWeeksByMonth($this->weeks);
+        
+        // Cache pour les statistiques mensuelles
+        $this->monthStats = Cache::remember(
+            self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year, 
+            self::CACHE_TTL_STATS, 
+            fn() => $this->calculateMonthStatsFromDb()
+        );
+        
+        // Cache pour les statistiques annuelles
+        $this->yearStats = Cache::remember(
+            self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year, 
+            self::CACHE_TTL_STATS, 
+            fn() => $this->calculateYearStatsFromDb()
+        );
+        
         return view('livewire.calendar', [
             'months' => $this->months,
             'monthStats' => $this->monthStats,
@@ -143,7 +191,7 @@ class Calendar extends Component
             'activities' => $this->activities,
             'workouts' => $this->workouts,
             'year' => $this->year,
-            'years' => $this->getAvailableYears()
+            'years' => $years
         ]);
     }
 
@@ -423,11 +471,53 @@ class Calendar extends Component
         return $monthStats;
     }    
     
-    private function invalidateCache()
+    /**
+     * Invalide les caches pertinents de manière sélective
+     * 
+     * @param string $type Type de données modifiées (workout, activity, week)
+     * @param int|null $weekNumber Numéro de semaine modifiée (optionnel)
+     * @param int|null $month Mois modifié (optionnel)
+     * @return void
+     */
+    private function invalidateCache($type = 'all', $weekNumber = null, $month = null)
     {
         $userId = Auth::id();
-        $cacheKey = "calendar-{$userId}-{$this->year}";
-        Cache::forget($cacheKey);
+        
+        // Invalidation sélective selon le type de données modifiées
+        switch ($type) {
+            case 'workout':
+                // Invalide le cache des workouts
+                Cache::forget(self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year);
+                // Invalide les stats de la semaine, du mois et de l'année 
+                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                break;
+                
+            case 'activity':
+                // Invalide le cache des activités
+                Cache::forget(self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year);
+                // Invalide les stats hebdomadaires, mensuelles et annuelles
+                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                break;
+                
+            case 'week':
+                // Invalide le cache des semaines
+                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                break;
+                
+            case 'all':
+            default:
+                // Invalide tous les caches liés à l'année courante
+                Cache::forget(self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
+                Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                break;
+        }
     }
 
     /**
@@ -511,7 +601,7 @@ class Calendar extends Component
      * @param int|null $weekTypeId The week type identifier (null to clear)
      * @return void
      */
-    public function updateWeekType($weekId, $weekTypeId = null)
+    public function updateWeekType($weekId, $weekTypeId)
     {
         $week = Week::findOrFail($weekId);
         $weekTypeId = $weekTypeId === '' ? null : $weekTypeId;
@@ -539,7 +629,8 @@ class Calendar extends Component
             'date' => Carbon::parse($newDate)
         ]);
         
-        $this->refreshCalendar();
+        // Utilisation de l'invalidation sélective du cache
+        $this->invalidateCache('workout');
         $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
@@ -559,20 +650,33 @@ class Calendar extends Component
         $newWorkout->date = Carbon::parse($newDate);
         $newWorkout->save();
 
-        $this->refreshCalendar();
+        // Utilisation de l'invalidation sélective du cache
+        $this->invalidateCache('workout');
         $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
     }
 
     /**
-     * Refreshes the workouts after creating a new one.
+     * Refreshes the workouts.
      *
      * @return void
      */
     #[On('workout-created')]
-    public function refreshCalendar()
+    #[On('workout-deleted')]
+    public function refreshWorkouts()
     {
-        $this->invalidateCache();
-        $this->workouts = $this->getWorkouts();
+        $this->invalidateCache('workout');
+        $this->dispatch('reload-tooltips');
+    }
+    
+    /**
+     * Refreshes the activities.
+     *
+     * @return void
+     */
+    #[On('activity-deleted')]
+    public function refreshActivities()
+    {
+        $this->invalidateCache('activity');
         $this->dispatch('reload-tooltips');
     }
     
@@ -596,12 +700,15 @@ class Calendar extends Component
             if ($result['success']) {
                 if ($result['count'] > 0) {
                     $this->dispatch('toast', $result['message'], 'success');
-                    $this->refreshCalendar();
-                    $this->activities = $this->getActivities();                    
+                    // Invalider le cache des activités avant de les récupérer à nouveau
+                    $this->invalidateCache('activity');
+                    $this->activities = $this->getActivities();
                     $this->dispatch('reload-tooltips');
                 } else {
                     $this->dispatch('toast', $result['message'], 'info');
                 }
+                $this->invalidateCache('activity');
+                $this->dispatch('reload-tooltips');
             } else {
                 $this->dispatch('toast', $result['message'], 'error');
             }
@@ -645,7 +752,8 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-        $this->invalidateCache();
+        // Invalidation de tous les caches liés à l'année
+        $this->invalidateCache('all');
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 
@@ -694,7 +802,8 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-        $this->invalidateCache();
+        // Invalidation des caches liés aux workouts
+        $this->invalidateCache('workout');
         $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
     }
 

@@ -38,7 +38,7 @@ class ActivityModal extends Component
 
         $this->dispatch('toast', 'Activity deleted successfully', 'success');
         $this->dispatch('closeModal', 'activity-modal');
-        $this->dispatch('refresh-calendar');
+        $this->dispatch('activity-deleted');
     }
 
     public function close()
