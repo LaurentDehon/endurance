@@ -365,7 +365,7 @@
                                         <!-- Week info and controls -->
                                         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                                             <div class="flex justify-between sm:flex-col gap-2">
-                                                <div class="flex flex-wrap items-center gap-2 ps-1">
+                                                <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
                                                         Week {{ $week->week_number }}
                                                     </span>                                        
@@ -666,7 +666,7 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px !important;
+            padding: 12px !important;
             max-width: 350px !important;
         }
 
@@ -690,31 +690,16 @@
             border-right-color: rgba(0, 0, 0, 0.9);
         }
 
+        /* Hide tooltips on mobile and tablet devices */
+        @media (max-width: 1023px) {
+            .tippy-box {
+                display: none !important;
+            }
+        }
+
         /* Hide elements until Alpine.js is initialized */
         [x-cloak] {
             display: none !important;
-        }
-
-        /* Tippy.js theme customization */
-        .tippy-box[data-theme~='calendar'] {
-            background-color: rgba(15, 23, 42, 0.95);
-            color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.75rem;
-            max-width: 350px !important;
-            width: max-content !important;
-        }
-
-        .tippy-box[data-theme~='calendar'][data-placement^='top'] .tippy-arrow {
-            bottom: -7px;
-            border-top-color: rgba(15, 23, 42, 0.95);
-        }
-
-        .tippy-box[data-theme~='calendar'][data-placement^='bottom'] .tippy-arrow {
-            top: -7px;
-            border-bottom-color: rgba(15, 23, 42, 0.95);
         }
     </style>
 </div>
