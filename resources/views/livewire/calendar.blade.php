@@ -295,23 +295,15 @@
                         $monthInfo = $this->getMonthInfo($monthKey);
                         $monthName = $monthInfo['name'];
                         $monthNumber = $monthInfo['number'];
-                        $hasMismatch = $monthInfo['hasMismatch'];
                     @endphp
                     <section id="{{ Str::slug($monthName) }}"                         
                             class="mb-4 sm:mb-5" 
                             data-month-key="{{ $monthKey }}" 
-                            data-month-number="{{ $monthNumber }}"
-                            @if($hasMismatch) style="border: 2px solid red; padding: 1rem;" @endif>
+                            data-month-number="{{ $monthNumber }}">
                         <!-- Month header -->
                         <h2>
                             <div class="flex flex-row items-center gap-3 py-2">
                                 <span class="text-2xl font-bold text-white ms-2">{{ $monthName }}</span>
-                                @if($hasMismatch)
-                                    <span class="text-xs text-red-500 font-normal">
-                                        Corrected month name
-                                    </span>
-                                @endif
-                                
                                 <!-- Mobile Month Controls - Now on same line as month name, visible only on mobile -->
                                 <div class="flex sm:hidden items-center gap-2 ml-auto">   
                                     <!-- Month menu contextuel for mobile -->
@@ -377,7 +369,6 @@
                                                             {{ $monthStats[$monthKey]['actual'][$stat] }}
                                                         @endif
                                                     </span>
-                                                    
                                                     @if($monthStats[$monthKey]['planned'][$stat] > 0)
                                                         <span class="text-xs text-gray-400 ml-1 whitespace-nowrap flex items-end mb-0.5">
                                                             /&nbsp;<span>

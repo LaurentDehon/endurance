@@ -275,14 +275,14 @@ class Calendar extends Component
             ->keyBy('week_number');
 
         $weeks = collect();
-        $date = Carbon::createFromDate($this->year, 1, 1)->startOfYear();
+        $date = \Carbon\CarbonImmutable::create($this->year, 1, 1)->startOfYear();
 
         for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
-            $start = $date->copy()->setISODate($this->year, $weekNumber, 1)->startOfWeek();
+            $start = $date->addWeeks($weekNumber - 1)->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
             if ($start->year > $this->year) 
                 break;
-            $end = $start->copy()->endOfWeek();
-            $thursday = $start->copy()->addDays(3);
+            $end = $start->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
+            $thursday = $start->addDays(3);
 
             // Récupérer le Week de la collection, sinon en créer un nouveau en mémoire
             $week = $weeksFromDb->get($weekNumber);
@@ -450,16 +450,19 @@ class Calendar extends Component
     }
 
     /**
-     * Generates an array of day information for each day in a week.
+     * Génère un tableau d'informations pour chaque jour de la semaine.
      *
-     * @param Carbon $start The first day of the week
-     * @return array Array of day information for the week
+     * @param Carbon|\Carbon\CarbonImmutable $start Premier jour de la semaine
+     * @return array
      */
-    private function generateWeekDays(Carbon $start): array
+    private function generateWeekDays($start): array
     {
+        // S'assurer d'avoir un objet mutable pour les opérations
+        if ($start instanceof \Carbon\CarbonImmutable) {
+            $start = $start->toMutable();
+        }
         return collect(range(0, 6))->map(function ($day) use ($start) {
-            $date = $start->clone()->addDays($day);
-
+            $date = $start->copy()->addDays($day);
             return [
                 'name' => $date->isoFormat('ddd'),
                 'number' => $date->day,
@@ -470,14 +473,20 @@ class Calendar extends Component
     }  
 
     /**
-     * Check if a week contains the current day.
+     * Vérifie si une semaine contient le jour courant.
      *
-     * @param Carbon $start The first day of the week
-     * @param Carbon $end The last day of the week
-     * @return bool True if the week contains the current day
+     * @param Carbon|\Carbon\CarbonImmutable $start Premier jour de la semaine
+     * @param Carbon|\Carbon\CarbonImmutable $end Dernier jour de la semaine
+     * @return bool
      */
-    private function isCurrentWeek(Carbon $start, Carbon $end): bool
+    private function isCurrentWeek($start, $end): bool
     {
+        if ($start instanceof \Carbon\CarbonImmutable) {
+            $start = $start->toMutable();
+        }
+        if ($end instanceof \Carbon\CarbonImmutable) {
+            $end = $end->toMutable();
+        }
         $today = Carbon::today();
         return $today->greaterThanOrEqualTo($start) && $today->lessThanOrEqualTo($end);
     }
@@ -878,42 +887,30 @@ class Calendar extends Component
     }
     
     /**
-     * Verifies and corrects a month name from its key.
+     * Retourne les informations du mois à partir de la clé (YYYY-MM).
      *
-     * @param string $monthKey Month key in YYYY-MM format
-     * @return array Month information with name, number and mismatch flag
+     * @param string $monthKey Mois au format YYYY-MM
+     * @return array Informations du mois : name et number
      */
     public function getMonthInfo(string $monthKey): array
     {
+        static $months = [
+            '01' => 'January', '02' => 'February', '03' => 'March', '04' => 'April',
+            '05' => 'May', '06' => 'June', '07' => 'July', '08' => 'August',
+            '09' => 'September', '10' => 'October', '11' => 'November', '12' => 'December',
+        ];
         try {
             list($yearPart, $monthPart) = explode('-', $monthKey);
-            
-            // Créer l'objet date correct
-            $monthDate = Carbon::createFromDate($yearPart, (int)$monthPart, 1);
-            $monthName = $monthDate->format('F');
-            
-            // Pour validation
+            $monthName = $months[$monthPart] ?? 'Month ' . $monthKey;
             $monthNumber = (int)$monthPart;
-            $expectedMonthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
-            
-            // Vérifier si le nom du mois correspond à celui attendu
-            $hasMismatch = ($monthName !== $expectedMonthName);
-            
-            // Forcer le nom correct du mois si nécessaire
-            if ($hasMismatch) {
-                $monthName = $expectedMonthName;
-            }
-            
             return [
                 'name' => $monthName,
-                'number' => $monthNumber,
-                'hasMismatch' => $hasMismatch
+                'number' => $monthNumber
             ];
         } catch (\Exception $e) {
             return [
-                'name' => "Month $monthKey",
-                'number' => 0,
-                'hasMismatch' => true
+                'name' => 'Month ' . $monthKey,
+                'number' => 0
             ];
         }
     }
