@@ -111,6 +111,7 @@ class WorkoutModal extends Component
                     $currentDate = $currentDate->addDays((int)$interval);
                 }
 
+                $this->dispatch('workout-created');
                 $message = 'Recurring workouts created successfully';
             } else {
                 if ($this->workoutId) {
