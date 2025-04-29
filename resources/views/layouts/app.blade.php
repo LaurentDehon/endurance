@@ -231,53 +231,20 @@
                     </div>
                 </main>
             </div>
-
-            <!-- Footer -->
-            <footer class="py-4 border-t bg-slate-800 bg-opacity-90 text-white text-opacity-80 border-white border-opacity-20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="font-medium">{{ config('app.name') }}</span>
-                            <span>•</span>
-                            <span>© {{ date('Y') }} All rights reserved</span>
-                        </div>
-                        
-                        <div class="flex items-center gap-4 text-xs">
-                            <a href="{{ route('changelog') }}" class="text-cyan-400 transition-colors">Changelog</a>
-                            <a href="{{ route('terms') }}" class="text-cyan-400 transition-colors">Terms</a>
-                            <a href="{{ route('privacy') }}" class="text-cyan-400 transition-colors">Privacy</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         @endauth
 
         @guest
-            <div class="min-h-screen flex flex-col">
+            <div class="flex-grow bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
                 <div class="flex-grow">
                     @yield('content')
                 </div>
-                
-                <!-- Footer for guest pages -->
-                <footer class="py-4 border-t bg-slate-800 bg-opacity-90 text-white text-opacity-80 border-white border-opacity-20">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div class="flex items-center gap-2 text-xs">
-                                <span class="font-medium">{{ config('app.name') }}</span>
-                                <span>•</span>
-                                <span>© {{ date('Y') }} All rights reserved</span>
-                            </div>
-                            
-                            <div class="flex items-center gap-4 text-xs">
-                                <a href="{{ route('changelog') }}" class="text-cyan-400 transition-colors">Changelog</a>
-                                <a href="{{ route('terms') }}" class="text-cyan-400 transition-colors">Terms</a>
-                                <a href="{{ route('privacy') }}" class="text-cyan-400 transition-colors">Privacy</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
         @endguest
+        
+        <!-- Footer -->
+        <footer>
+            <x-footer />
+        </footer>
         
         <!-- Modals and other UI components -->
         <div id="workout-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">

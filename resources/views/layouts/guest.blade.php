@@ -15,8 +15,15 @@
     </head>
 
     <body>
-        <div class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex flex-col justify-center items-center px-4 sm:px-0">
-            @yield('content')
+        <div class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex flex-col justify-between">
+            <div class="flex-grow flex items-center justify-center px-4 sm:px-0">
+                @yield('content')
+            </div>
+            
+            <!-- Footer -->
+            <footer>
+                <x-footer />
+            </footer>
         </div>
     </body>
 </html>
