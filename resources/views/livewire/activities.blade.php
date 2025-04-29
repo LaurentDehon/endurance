@@ -80,6 +80,21 @@
                             Elevation
                             @include('components.sort-icon', ['field' => 'total_elevation_gain'])
                         </th>
+                        
+                        <!-- Nouvelles colonnes pour lg et plus -->
+                        <th class="hidden lg:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
+                            wire:click="sortBy('average_heartrate')"
+                            data-tippy-content="Sort by average heart rate">
+                            Average HR
+                            @include('components.sort-icon', ['field' => 'average_heartrate'])
+                        </th>
+                        
+                        <th class="hidden lg:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
+                            wire:click="sortBy('average_speed')"
+                            data-tippy-content="Sort by average pace">
+                            Average Pace
+                            @include('components.sort-icon', ['field' => 'average_speed'])
+                        </th>
                     </tr>
                 </thead>
                 
@@ -118,6 +133,29 @@
                             <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium text-cyan-200">
                                     {{ $activity->total_elevation_gain }}m
+                                </span>
+                            </td>
+
+                            <!-- Average Heart Rate -->
+                            <td class="hidden lg:table-cell px-4 py-4 whitespace-nowrap text-center">
+                                <span class="text-sm font-medium text-cyan-200">
+                                    {{ $activity->average_heartrate ? round($activity->average_heartrate) : 'N/A' }}
+                                </span>
+                            </td>
+
+                            <!-- Average Pace -->
+                            <td class="hidden lg:table-cell px-4 py-4 whitespace-nowrap text-center">
+                                <span class="text-sm font-medium text-cyan-200">
+                                    @if($activity->average_speed > 0)
+                                        @php
+                                            $secondsPerKm = 1000 / $activity->average_speed;
+                                            $minutes = floor($secondsPerKm / 60);
+                                            $seconds = floor($secondsPerKm % 60);
+                                        @endphp
+                                        {{ $minutes }}:{{ str_pad($seconds, 2, '0', STR_PAD_LEFT) }}/km
+                                    @else
+                                        N/A
+                                    @endif
                                 </span>
                             </td>
                         </tr>
