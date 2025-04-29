@@ -17,6 +17,7 @@
         "vite": "^6.2.1"
     },
     "dependencies": {
-        "@tailwindcss/typography": "^0.5.16"
+        "@tailwindcss/typography": "^0.5.16",
+        "tippy.js": "^6.3.7"
     }
 }

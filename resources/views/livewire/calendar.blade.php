@@ -692,14 +692,14 @@
                                                 ondragover="onDragOver(event)" 
                                                 ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
                                                 ondragleave="onDragLeave(event)" 
-                                                wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
+                                                wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
                                                 class="relative block p-2 rounded-xl shadow-lg {{ $day['is_today'] ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }} min-h-24 cursor-pointer 
                                                 bg-gradient-to-b from-slate-800/40 to-slate-900/40 {{ $shouldTakeFullWidth ? 'col-span-2 lg:col-span-1' : '' }}">
                                                 <!-- Day date display in calendar cell -->
                                                 <div class="absolute top-2 left-2">
                                                     <div>
-                                                        <span class="text-sm text-cyan-200 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{{ $day['name'] }}</span>
-                                                        <span class="text-sm font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{{ $day['number'] }}</span>
+                                                        <span class="text-sm text-cyan-200">{{ $day['name'] }}</span>
+                                                        <span class="text-sm font-bold text-white">{{ $day['number'] }}</span>
                                                     </div>
                                                 </div>
                                                 
@@ -713,11 +713,11 @@
                                                     <div class="absolute top-2 right-2 flex flex-wrap justify-end gap-1.5">
                                                         @foreach($dayActivities as $activity)
                                                         <div class="relative">
-                                                            <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
+                                                            <a wire:click.stop="$dispatch('openModal', { component: 'modal.activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
                                                                 class="relative cursor-pointer block"
                                                                 data-tippy-content="{{ $activity->name }}">
                                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white">
-                                                                    <i class="fas fa-running text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
+                                                                    <i class="fas fa-running text-sm"></i>
                                                                 </div>
                                                             </a>
                                                         </div>
@@ -735,7 +735,7 @@
                                                     <div class="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[80%]">
                                                         @foreach($dayWorkouts as $workout)
                                                             <div class="relative">
-                                                                <a wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { id: '{{ $workout->id }}' }})" 
+                                                                <a wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { id: '{{ $workout->id }}' }})" 
                                                                     class="relative cursor-pointer block"
                                                                     draggable="true" 
                                                                     ondragstart="onDragStart(event, {{ $workout->id }})"
@@ -751,9 +751,9 @@
                                                                 <!-- Workout icon -->
                                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
                                                                     @if($workout->type && $workout->type->name === 'Race')
-                                                                        <i class="{{ $workout->type->icon }} text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
+                                                                        <i class="{{ $workout->type->icon }} text-sm"></i>
                                                                     @else
-                                                                        <span class="text-sm font-semibold drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{{ $workout->type ? $workout->type->short : 'W' }}</span>
+                                                                        <span class="text-sm font-semibold">{{ $workout->type ? $workout->type->short : 'W' }}</span>
                                                                     @endif
                                                                 </div>
                                                             </a>
@@ -854,149 +854,158 @@
         }
     </style>
 </div>
-@script
 <script>
-    // URL update handling
-    Livewire.on('update-url', ({ year }) => {
-        const url = new URL(window.location);
-        url.pathname = `/calendar/${year}`;
-        window.history.pushState(null, '', url);
-    });
-
-    // Drag and Drop functionality
-    function onDragStart(event, workoutId) {
-        event.dataTransfer.setData('text/plain', workoutId);
-        event.currentTarget.classList.add('opacity-50');
+// --- Drag & Drop & Tippy Module ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Make sure Livewire is available before creating the CalendarUI
+    if (typeof Livewire === 'undefined') {
+        // Wait for Livewire to load
+        document.addEventListener('livewire:init', initCalendarUI);
+    } else {
+        initCalendarUI();
     }
 
-    function onDragOver(event) {
-        event.preventDefault();
-        event.currentTarget.classList.add('bg-cyan-600', 'bg-opacity-20');
-    }
-
-    function onDragLeave(event) {
-        event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
-    }
-
-    function onDrop(event, date) {
-        event.preventDefault();
-        const workoutId = event.dataTransfer.getData('text/plain');
-        event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
-        
-        // Call Livewire method to update workout date
-        Livewire.dispatch('moveWorkout', { workoutId: workoutId, date: date });
-    }
-
-    // Initialize Tippy.js tooltips - Event listeners
-    document.addEventListener('livewire:navigated', () => initTippyTooltips());
-    document.addEventListener('livewire:init', () => initTippyTooltips());
-    document.addEventListener('DOMContentLoaded', () => initTippyTooltips());
-
-    // Reinitialize tooltips after Livewire operations
-    document.addEventListener('livewire:load', () => {
-        Livewire.hook('message.processed', () => {
-            setTimeout(() => initTippyTooltips(), 100);
-        });
-    });
-    
-    // Reinitialize tooltips on Livewire events
-    Livewire.on('reload-tooltips', () => {
-        console.log('Reinitializing tooltips');
-        // Delay tooltip initialization to ensure DOM is updated
-        setTimeout(() => {
-            if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
-                console.log('Destroying existing tooltips');
-                tippy.hideAll({ duration: 0 });
+    function initCalendarUI() {
+        window.CalendarUI = (function() {
+            // Drag & Drop
+            var dragListenersAdded = false;
+            function onDragStart(event, workoutId) {
+                event.dataTransfer.setData('text/plain', workoutId);
+                event.currentTarget.classList.add('opacity-50');
+                if (!dragListenersAdded) {
+                    document.querySelectorAll('[ondragover], [ondrop], [ondragleave]').forEach(function(el) {
+                        el.addEventListener('dragover', onDragOver, { passive: false });
+                        el.addEventListener('drop', onDropWrapper, { passive: false });
+                        el.addEventListener('dragleave', onDragLeave, { passive: false });
+                    });
+                    dragListenersAdded = true;
+                }
             }
-            console.log('Creating new tooltips');
-            initTippyTooltips();
-        }, 500);
-    });
-    
-    function initTippyTooltips() {
-        // Destroy existing tooltips first to prevent duplicates
-        if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
-            tippy.hideAll();
-        }
-        
-        // Check if on mobile or tablet (screen < 1024px)
-        const isMobileOrTablet = window.innerWidth < 1024;
-        
-        // Initialize Tippy.js for activity tooltips only on desktop
-        if (typeof tippy !== 'undefined' && !isMobileOrTablet) {
-            // Activity tooltips (simple text)
-            tippy('[data-tippy-content]:not([data-tippy-content*="<"])', {
-                theme: 'calendar',
-                placement: 'top',
-                arrow: true,
-                animation: 'scale',
-                duration: [200, 100],
-                delay: [300, 0],
-                offset: [0, 8],
-                onShow(instance) {
-                    // Dynamically update tooltip content for collapse/expand buttons
-                    const element = instance.reference;
-                    if (element.classList.contains('collapse-toggle')) {
-                        // Check button state for collapse/expand buttons
-                        const icon = element.querySelector('i');
-                        if (icon.classList.contains('fa-chevron-down')) {
-                            instance.setContent('Expand');
-                        } else if (icon.classList.contains('fa-chevron-up')) {
-                            instance.setContent('Collapse');
+            
+            function onDragOver(event) {
+                event.preventDefault();
+                event.currentTarget.classList.add('bg-cyan-600', 'bg-opacity-20');
+            }
+            
+            function onDragLeave(event) {
+                event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
+            }
+            
+            function onDropWrapper(event) {
+                event.preventDefault();
+                var date = event.currentTarget.getAttribute('ondrop').match(/'(.*?)'/)[1];
+                var workoutId = event.dataTransfer.getData('text/plain');
+                event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
+                // Call Livewire method to update workout date
+                if (typeof Livewire !== 'undefined') {
+                    Livewire.dispatch('moveWorkout', { workoutId: workoutId, date: date });
+                }
+            }
+            
+            // Expose drag functions globally for blade inline events
+            window.onDragStart = onDragStart;
+            window.onDragOver = onDragOver;
+            window.onDragLeave = onDragLeave;
+            window.onDrop = function(event, date) { return onDropWrapper(event); };
+
+            // Tippy Tooltips
+            var tippyInstances = [];
+            function initTippyTooltips(targets) {
+                if (typeof tippy === 'undefined' || window.innerWidth < 1024) return;
+                // Only initialize on new elements
+                var selector = targets || '[data-tippy-content]';
+                document.querySelectorAll(selector).forEach(function(el) {
+                    if (!el._tippy) {
+                        var opts = {
+                            theme: 'calendar',
+                            placement: 'top',
+                            arrow: true,
+                            animation: 'scale',
+                            duration: [200, 100],
+                            delay: [300, 0],
+                            offset: [0, 8]
+                        };
+                        
+                        var content = el.getAttribute('data-tippy-content');
+                        if (content && content.includes('<')) {
+                            opts.allowHTML = true;
+                            opts.interactive = true;
+                        } else {
+                            opts.onShow = function(instance) {
+                                var element = instance.reference;
+                                if (element.classList.contains('collapse-toggle')) {
+                                    var icon = element.querySelector('i');
+                                    if (icon && icon.classList.contains('fa-chevron-down')) instance.setContent('Expand');
+                                    else if (icon && icon.classList.contains('fa-chevron-up')) instance.setContent('Collapse');
+                                }
+                            };
+                        }
+                        tippyInstances.push(tippy(el, opts));
+                    }
+                });
+            }
+            
+            // MutationObserver for new tooltips
+            if (typeof MutationObserver !== 'undefined') {
+                var observer = new MutationObserver(function(mutations) {
+                    for (var i = 0; i < mutations.length; i++) {
+                        var m = mutations[i];
+                        if (m.addedNodes) {
+                            m.addedNodes.forEach(function(node) {
+                                if (node.nodeType === 1 && node.hasAttribute && node.hasAttribute('data-tippy-content')) {
+                                    initTippyTooltips('[data-tippy-content]');
+                                }
+                            });
                         }
                     }
-                }
-            });
-
-            // Workout tooltips (HTML content)
-            tippy('[data-tippy-content*="<"]', {
-                theme: 'calendar',
-                placement: 'top',
-                arrow: true,
-                animation: 'scale',
-                allowHTML: true,
-                interactive: true,
-                duration: [200, 100],
-                delay: [300, 0],
-                offset: [0, 8]
-            });
-        } else if (typeof tippy === 'undefined') {
-            console.warn('Tippy.js not loaded. Tooltips will not function properly.');
-        }
-    }
-    
-    // Add event to check window resize
-    window.addEventListener('resize', () => {
-        const isMobileOrTablet = window.innerWidth < 1024;
-        
-        // If transitioning from mobile to desktop, initialize tooltips
-        if (!isMobileOrTablet) {
-            initTippyTooltips();
-        } 
-        // If transitioning from desktop to mobile, destroy tooltips
-        else if (typeof tippy !== 'undefined' && typeof tippy.hideAll === 'function') {
-            tippy.hideAll();
-        }
-    });
-
-    // Function to collapse or expand all weeks
-    function toggleAllWeeks(shouldCollapse) {
-        // Get all week elements
-        const weekElements = document.querySelectorAll('[wire\\:key^="week-"]');
-        
-        weekElements.forEach(weekEl => {
-            // Get the Alpine component instance for this week
-            const weekComponent = Alpine.$data(weekEl);
-            
-            // Set the collapsed state according to the parameter
-            if (weekComponent.collapsed !== shouldCollapse) {
-                weekComponent.collapsed = shouldCollapse;
-                weekComponent.saveState();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
             }
-        });
+            
+            // Livewire/Alpine hooks
+            document.addEventListener('livewire:navigated', function() { initTippyTooltips(); });
+            document.addEventListener('livewire:init', function() { initTippyTooltips(); });
+            document.addEventListener('DOMContentLoaded', function() { initTippyTooltips(); });
+            
+            if (typeof Livewire !== 'undefined') {
+                Livewire.on('reload-tooltips', function() { setTimeout(function() { initTippyTooltips(); }, 500); });
+                
+                // URL update
+                Livewire.on('update-url', function(params) {
+                    var year = params.year;
+                    var url = new URL(window.location);
+                    url.pathname = '/calendar/' + year;
+                    window.history.pushState(null, '', url);
+                });
+            }
+            
+            window.addEventListener('resize', function() {
+                if (window.innerWidth < 1024 && typeof tippy !== 'undefined') tippy.hideAll();
+                else initTippyTooltips();
+            });
+            
+            // Collapse/Expand all weeks
+            window.toggleAllWeeks = function(shouldCollapse) {
+                document.querySelectorAll('[wire\\:key^="week-"]').forEach(function(weekEl) {
+                    var weekComponent = Alpine.$data(weekEl);
+                    if (weekComponent && weekComponent.collapsed !== shouldCollapse) {
+                        weekComponent.collapsed = shouldCollapse;
+                        weekComponent.saveState();
+                    }
+                });
+            };
+            
+            // Initialize tooltips when setup is complete
+            initTippyTooltips();
+            
+            return { 
+                onDragStart: onDragStart, 
+                onDragOver: onDragOver, 
+                onDragLeave: onDragLeave, 
+                onDropWrapper: onDropWrapper, 
+                initTippyTooltips: initTippyTooltips 
+            };
+        })();
     }
-
-    // Make toggleAllWeeks available to Alpine components
-    window.toggleAllWeeks = toggleAllWeeks;
+});
 </script>
-@endscript

@@ -48,8 +48,8 @@ class UserDetail extends Component
             'message' => "Hello {$this->user->name},\n\n",
         ];
 
-        // Use CustomModal
-        $this->dispatch('openModal', 'email-form', ['userId' => $this->user->id, 'email' => $this->email]);
+        // Use EmailModal
+        $this->dispatch('openModal', 'modal.email-modal', ['userId' => $this->user->id, 'email' => $this->email]);
     }
     
     public function sendEmail()

@@ -37,7 +37,7 @@
         </div>
     </div>
     
-    <livewire:confirmation-modal />
+    <livewire:modal.confirmation-modal />
 
     <!-- Table -->
     <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modal;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -46,6 +46,6 @@ class ConfirmationModal extends Component
     
     public function render()
     {
-        return view('livewire.confirmation-modal');
+        return view('livewire.modal.confirmation-modal');
     }
 }

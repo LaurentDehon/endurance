@@ -253,5 +253,5 @@
     </style>
 
     <!-- Confirmation Modal Component -->
-    <livewire:confirmation-modal />
+    <livewire:modal.confirmation-modal />
 </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modal;
 
 use Illuminate\View\View;
 use Livewire\Component;
@@ -50,6 +50,6 @@ class CustomModal extends Component
     
     public function render(): View
     {
-        return view('livewire.custom-modal');
+        return view('livewire.modal.custom-modal');
     }
 }

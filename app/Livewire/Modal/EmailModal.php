@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modal;
 
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Mail;
 
-class EmailForm extends Component
+class EmailModal extends Component
 {    
     public $userId;
     public $user;
@@ -54,6 +54,6 @@ class EmailForm extends Component
     public function render()
     {
         $name = $this->user->name;
-        return view('livewire.email-form', compact('name'));
+        return view('livewire.modal.email-modal', compact('name'));
     }
 }

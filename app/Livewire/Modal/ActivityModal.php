@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modal;
 
 use Livewire\Component;
 use App\Models\Activity;
@@ -48,6 +48,6 @@ class ActivityModal extends Component
 
     public function render()
     {        
-        return view('livewire.activity-modal');
+        return view('livewire.modal.activity-modal');
     }
 }

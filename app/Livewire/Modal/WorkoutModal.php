@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modal;
 
 use Carbon\Carbon;
 use Livewire\Component;
@@ -170,6 +170,6 @@ class WorkoutModal extends Component
 
     public function render()
     {
-        return view('livewire.workout-modal');
+        return view('livewire.modal.workout-modal');
     }
 }
