@@ -276,7 +276,7 @@
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">2</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
                                     <h4 class="text-lg font-semibold text-white mb-2">Organize Your Weeks</h4>
-                                    <p class="text-cyan-200">Structure your weeks in blocks adapted to your goal (development, maintenance, recovery...)</p>
+                                    <p class="text-cyan-200">Structure your weeks in blocks adapted to your goal (development, maintain, recovery...)</p>
                                 </div>
                             </div>
                             

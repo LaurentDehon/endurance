@@ -372,7 +372,7 @@
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-amber-700 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Maintenance</span>
+                                <span class="font-medium text-white">Maintain</span>
                                 <p class="text-sm text-cyan-200">Balanced week that maintains fitness without excessive stress</p>
                             </div>
                         </div>
@@ -424,7 +424,7 @@
                             <ul class="list-disc pl-5 space-y-2 mt-2">
                                 <li>Use <strong>Development</strong> weeks during intensive training periods</li>
                                 <li>Alternate with <strong>Reduced</strong> weeks every 3-4 weeks to promote recovery</li>
-                                <li>Use <strong>Maintenance</strong> weeks between intensive training blocks</li>
+                                <li>Use <strong>Maintain</strong> weeks between intensive training blocks</li>
                                 <li>Schedule a <strong>Recovery</strong> week after a competition or an intense training block</li>
                                 <li>Include 1-3 <strong>Tapering</strong> weeks before an important competition</li>
                                 <li>Mark your competitions as <strong>Race</strong> weeks</li>
@@ -445,6 +445,160 @@
                                 <li>Click on the week header</li>
                                 <li>Select the desired week type from the dropdown menu</li>
                             </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workout Types Section -->
+        <section id="workout-types" class="section-card bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-lg">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
+                    <i class="fas fa-running text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">Workout Types</h2>
+            </div>
+            
+            <div class="mb-6">
+                <div class="bg-blue-900 bg-opacity-20 p-5 rounded-xl mb-4">
+                    <h3 class="font-semibold text-white mb-3">Available Workout Types</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-blue-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Easy Run (E)</span>
+                                <p class="text-sm text-cyan-200">Low intensity run to develop aerobic endurance without excessive fatigue</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Long Run (L)</span>
+                                <p class="text-sm text-cyan-200">Sustained run at moderate pace to develop endurance over longer distances</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-stone-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Recovery Run (R)</span>
+                                <p class="text-sm text-cyan-200">Very light run after intense effort to promote muscle recovery</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-pink-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Fartlek (F)</span>
+                                <p class="text-sm text-cyan-200">Mix of fast and slow running with spontaneous speed variations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-slate-800 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Tempo Run (T)</span>
+                                <p class="text-sm text-cyan-200">Sustained, moderate-to-high effort to improve lactate threshold</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Hill Repeats (H)</span>
+                                <p class="text-sm text-cyan-200">Intense uphill sprints followed by recovery jogs to build strength and power</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-red-500 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Intervals (I)</span>
+                                <p class="text-sm text-cyan-200">Intense periods followed by rest to improve speed and cardiovascular capacity</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-cyan-600 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Back to Back (B)</span>
+                                <p class="text-sm text-cyan-200">Two challenging workouts in close succession to build endurance and mental toughness</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-2">
+                            <div class="mt-1 w-4 h-4 rounded-full bg-red-700 flex-shrink-0"></div>
+                            <div>
+                                <span class="font-medium text-white">Race (R)</span>
+                                <p class="text-sm text-cyan-200">Competition event - give it your all!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to choose the right workout type?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>The choice of workout type depends on your training goals and the current phase of your plan:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li>Use <strong>Easy Runs</strong> for building base aerobic fitness and recovery between harder sessions</li>
+                                <li>Include <strong>Long Runs</strong> weekly to build endurance, especially when preparing for longer distance races</li>
+                                <li>Schedule <strong>Recovery Runs</strong> after intense workouts or races to promote active recovery</li>
+                                <li>Add <strong>Tempo Runs</strong> to improve your lactate threshold and sustainable race pace</li>
+                                <li>Incorporate <strong>Intervals</strong> and <strong>Fartlek</strong> sessions to improve speed and VO2 max</li>
+                                <li>Use <strong>Hill Repeats</strong> to build strength and power with lower impact than speed work</li>
+                                <li>Include <strong>Back to Back</strong> workouts strategically when training for ultra distance events</li>
+                                <li>Mark your competitions as <strong>Race</strong> to distinguish them from training sessions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>How to create a workout with a specific type?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li>Go to the calendar view</li>
+                                <li>Click on the day you want to add a workout</li>
+                                <li>In the workout modal, select the desired workout type from the dropdown menu</li>
+                                <li>Fill in the details (distance, duration, elevation, notes)</li>
+                                <li>Save your workout</li>
+                            </ol>
+                            <p class="mt-2">You can also create recurring workouts of the same type for consistent training blocks.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
+                    <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
+                        <span>What do the letters in parentheses mean?</span>
+                        <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="open" x-collapse>
+                        <div class="p-4 pt-0 text-cyan-200">
+                            <p>The letters in parentheses are short codes used to quickly identify the workout type in the calendar view and during planning:</p>
+                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                <li><strong>E</strong> = Easy Run</li>
+                                <li><strong>L</strong> = Long Run</li>
+                                <li><strong>R</strong> = Recovery Run or Race (context dependent)</li>
+                                <li><strong>F</strong> = Fartlek</li>
+                                <li><strong>T</strong> = Tempo Run</li>
+                                <li><strong>H</strong> = Hill Repeats</li>
+                                <li><strong>I</strong> = Intervals</li>
+                                <li><strong>B</strong> = Back to Back</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
