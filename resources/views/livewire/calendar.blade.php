@@ -704,8 +704,24 @@ document.addEventListener('DOMContentLoaded', function() {
             // Drag & Drop
             var dragListenersAdded = false;
             function onDragStart(event, workoutId) {
-                event.dataTransfer.setData('text/plain', workoutId);
-                event.currentTarget.classList.add('opacity-50');
+                const isCopy = event.ctrlKey || event.metaKey;
+                
+                // Set data in the format expected by the app-wide handlers
+                event.dataTransfer.setData('text/plain', JSON.stringify({
+                    workoutId,
+                    isCopy
+                }));
+                
+                // Set the drag effect (copy or move)
+                event.dataTransfer.effectAllowed = isCopy ? 'copy' : 'move';
+                
+                // Visual feedback
+                if(isCopy) {
+                    event.currentTarget.classList.add('dragging-copy');
+                } else {
+                    event.currentTarget.classList.add('opacity-50');
+                }
+                
                 if (!dragListenersAdded) {
                     document.querySelectorAll('[ondragover], [ondrop], [ondragleave]').forEach(function(el) {
                         el.addEventListener('dragover', onDragOver, { passive: false });
@@ -717,22 +733,65 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             function onDragOver(event) {
+                // Prevent default to allow drop
                 event.preventDefault();
-                event.currentTarget.classList.add('bg-cyan-600', 'bg-opacity-20');
+                
+                // Set the drop effect based on mode (copy or move)
+                if (event.dataTransfer.getData('text/plain')) {
+                    try {
+                        const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+                        event.dataTransfer.dropEffect = data.isCopy ? 'copy' : 'move';
+                    } catch (error) {
+                        event.dataTransfer.dropEffect = 'move';
+                    }
+                }
+                
+                // Add visual feedback class
+                event.currentTarget.classList.add('bg-cyan-600', 'bg-opacity-20', 'drag-over');
             }
             
             function onDragLeave(event) {
-                event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
+                event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20', 'drag-over');
             }
             
             function onDropWrapper(event) {
+                // Prevent default actions
                 event.preventDefault();
+                event.stopPropagation();
+                
+                // Get the target date from the element's ondrop attribute
                 var date = event.currentTarget.getAttribute('ondrop').match(/'(.*?)'/)[1];
-                var workoutId = event.dataTransfer.getData('text/plain');
-                event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20');
-                // Call Livewire method to update workout date
-                if (typeof Livewire !== 'undefined') {
-                    Livewire.dispatch('moveWorkout', { workoutId: workoutId, date: date });
+                
+                try {
+                    // Extract workout data
+                    const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+                    const workoutId = data.workoutId;
+                    const isCopy = data.isCopy;
+                    
+                    // Remove visual feedback
+                    event.currentTarget.classList.remove('bg-cyan-600', 'bg-opacity-20', 'drag-over');
+                    
+                    // Remove opacity from original element
+                    document.querySelectorAll('.opacity-50, .dragging-copy').forEach(el => {
+                        el.classList.remove('opacity-50', 'dragging-copy');
+                    });
+                    
+                    // Call Livewire method based on whether this is a copy or move
+                    if (typeof Livewire !== 'undefined') {
+                        if(isCopy) {
+                            Livewire.dispatch('workout-copied', {
+                                workoutId: parseInt(workoutId),
+                                newDate: date
+                            });
+                        } else {
+                            Livewire.dispatch('workout-moved', {
+                                workoutId: parseInt(workoutId),
+                                newDate: date
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error during drop:', error);
                 }
             }
             

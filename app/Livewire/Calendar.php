@@ -623,15 +623,27 @@ class Calendar extends Component
     #[On('workout-moved')]
     public function updateWorkoutDate($workoutId, $newDate)
     {
-        $workout = Workout::with('type')->findOrFail($workoutId);
+        try {
+            // Vérifier si un déplacement similaire a été effectué récemment
+            // pour éviter le traitement en double du même événement
+            $workout = Workout::with('type')->findOrFail($workoutId);
+            $parsedDate = Carbon::parse($newDate);
+            
+            // Si le workout est déjà à cette date, ne rien faire
+            if ($workout->date->isSameDay($parsedDate)) {
+                return;
+            }
 
-        $workout->update([
-            'date' => Carbon::parse($newDate)
-        ]);
-        
-        // Utilisation de l'invalidation sélective du cache
-        $this->invalidateCache('workout');
-        $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            $workout->update([
+                'date' => $parsedDate
+            ]);
+            
+            // Utilisation de l'invalidation sélective du cache
+            $this->invalidateCache('workout');
+            $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+        } catch (\Exception $e) {
+            $this->dispatch('toast', 'Error moving workout: ' . $e->getMessage(), 'error');
+        }
     }
 
     /**
@@ -644,15 +656,35 @@ class Calendar extends Component
     #[On('workout-copied')]
     public function copyWorkout($workoutId, $newDate)
     {
-        $originalWorkout = Workout::with('type')->findOrFail($workoutId);
-        
-        $newWorkout = $originalWorkout->replicate();
-        $newWorkout->date = Carbon::parse($newDate);
-        $newWorkout->save();
+        try {
+            // Vérifier si ce workout a déjà été copié sur cette date pour éviter les doublons
+            $existingWorkout = Workout::where('user_id', Auth::id())
+                ->where('date', Carbon::parse($newDate))
+                ->where('workout_type_id', function($query) use ($workoutId) {
+                    $query->select('workout_type_id')
+                        ->from('workouts')
+                        ->where('id', $workoutId);
+                })
+                ->where('created_at', '>=', now()->subSeconds(5)) // Vérifie si créé dans les 5 dernières secondes
+                ->exists();
 
-        // Utilisation de l'invalidation sélective du cache
-        $this->invalidateCache('workout');
-        $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            if ($existingWorkout) {
+                // Un workout identique a déjà été créé très récemment à cette date
+                return;
+            }
+            
+            $originalWorkout = Workout::with('type')->findOrFail($workoutId);
+            
+            $newWorkout = $originalWorkout->replicate();
+            $newWorkout->date = Carbon::parse($newDate);
+            $newWorkout->save();
+
+            // Utilisation de l'invalidation sélective du cache
+            $this->invalidateCache('workout');
+            $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+        } catch (\Exception $e) {
+            $this->dispatch('toast', 'Error copying workout: ' . $e->getMessage(), 'error');
+        }
     }
 
     /**
@@ -707,8 +739,6 @@ class Calendar extends Component
                 } else {
                     $this->dispatch('toast', $result['message'], 'info');
                 }
-                $this->invalidateCache('activity');
-                $this->dispatch('reload-tooltips');
             } else {
                 $this->dispatch('toast', $result['message'], 'error');
             }
