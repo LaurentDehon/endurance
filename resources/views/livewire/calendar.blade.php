@@ -236,53 +236,21 @@
                                 </button>  
 
                                 <!-- Year Options Dropdown Menu Button -->
-                                <div class="relative block" x-data="{ open: false }">
-                                    <button @click="open = !open" class="py-3 ps-5 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
-                                        <i class="fas fa-ellipsis-v text-2xl"></i>
-                                    </button>
-                                    
-                                    <!-- Dropdown menu using teleport -->
-                                    <template x-teleport="body">
-                                        <div x-show="open" 
-                                             x-effect="
-                                                if (open) {
-                                                    $nextTick(() => {
-                                                        const button = $root.previousElementSibling;
-                                                        const rect = button.getBoundingClientRect();
-                                                        $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                        $el.style.left = `${rect.left - 210 + rect.width}px`;
-                                                    });
-                                                }
-                                             "
-                                             @click.away="open = false" 
-                                             x-transition:enter="transition ease-out duration-200" 
-                                             x-transition:enter-start="opacity-0 scale-95" 
-                                             x-transition:enter-end="opacity-100 scale-100" 
-                                             x-transition:leave="transition ease-in duration-175" 
-                                             x-transition:leave-start="opacity-100 scale-100" 
-                                             x-transition:leave-end="opacity-0 scale-95" 
-                                             class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
-                                             x-cloak
-                                             style="position: absolute; z-index: 99999;">
-                                            <div class="py-1">
-                                                <div class="border-b border-white border-opacity-10 pb-2 mb-2">
-                                                    <button @click="toggleAllWeeks(true); open = false" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                        <i class="fas fa-chevron-down w-5 text-cyan-400"></i>
-                                                        <span class="text-sm">Collapse all weeks</span>
-                                                    </button>
-                                                    <button @click="toggleAllWeeks(false); open = false" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                        <i class="fas fa-chevron-up w-5 text-cyan-400"></i>
-                                                        <span class="text-sm">Expand all weeks</span>
-                                                    </button>
-                                                </div>
-                                                <button wire:click.prevent="deleteAll" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                    <span class="text-sm">Delete all the workouts</span>
-                                                </button>
-                                            </div>
+                                <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 ps-5 px-2 text-2xl" align="right">
+                                    <div class="py-1">
+                                        <div class="border-b border-white border-opacity-10 pb-2 mb-2">
+                                            <x-dropdown-item icon="chevron-down" iconColor="cyan" @click="toggleAllWeeks(true); open = false">
+                                                Collapse all weeks
+                                            </x-dropdown-item>
+                                            <x-dropdown-item icon="chevron-up" iconColor="cyan" @click="toggleAllWeeks(false); open = false">
+                                                Expand all weeks
+                                            </x-dropdown-item>
                                         </div>
-                                    </template>
-                                </div>
+                                        <x-dropdown-item wire:click.prevent="deleteAll" icon="trash-alt" iconColor="red">
+                                            Delete all the workouts
+                                        </x-dropdown-item>
+                                    </div>
+                                </x-dropdown>
                                 
                             </div>
                         </div>
@@ -307,50 +275,13 @@
                                 <!-- Mobile Month Controls - Now on same line as month name, visible only on mobile -->
                                 <div class="flex sm:hidden items-center gap-2 ml-auto">   
                                     <!-- Month menu contextuel for mobile -->
-                                    <div class="relative" x-data="{ open: false }">
-                                        <button @click="open = !open" class="py-2 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        
-                                        <!-- Dropdown menu using teleport -->
-                                        <template x-teleport="body">
-                                            <div x-show="open" 
-                                                 x-effect="
-                                                    if (open) {
-                                                        $nextTick(() => {
-                                                            const button = $root.previousElementSibling;
-                                                            const rect = button.getBoundingClientRect();
-                                                            $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                            
-                                                            // Positionnement mobile : décalé vers la gauche avec l'extrémité droite alignée sous le bouton
-                                                            if (window.innerWidth < 640) { // sm breakpoint
-                                                                $el.style.left = `${rect.right - $el.offsetWidth + 25}px`;
-                                                            } else {
-                                                                $el.style.left = `${rect.left + rect.width}px`;
-                                                            }
-                                                        });
-                                                    }
-                                                 "
-                                                 @click.away="open = false" 
-                                                 x-transition:enter="transition ease-out duration-200" 
-                                                 x-transition:enter-start="opacity-0 scale-95" 
-                                                 x-transition:enter-end="opacity-100 scale-100" 
-                                                 x-transition:leave="transition ease-in duration-175" 
-                                                 x-transition:leave-start="opacity-100 scale-100" 
-                                                 x-transition:leave-end="opacity-0 scale-95" 
-                                                 class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
-                                                 x-cloak
-                                                 style="position: absolute; z-index: 99999;">
-                                            <div class="py-1">
-                                                <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                    <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                    <span class="text-sm">Delete monthly workouts</span>
-                                                </button>
-                                                <!-- Other actions can be added here later -->
-                                            </div>
+                                    <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none" align="right">
+                                        <div class="py-1">
+                                            <x-dropdown-item wire:click.prevent="deleteMonth('{{ $monthKey }}')" icon="trash-alt" iconColor="red">
+                                                Delete monthly workouts
+                                            </x-dropdown-item>
                                         </div>
-                                        </template>
-                                    </div>
+                                    </x-dropdown>
                                 </div>
                                 
                                 <!-- Month stats - Only visible on desktop -->
@@ -382,46 +313,14 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        @endforeach                                    
-                                        
-                                        <div class="relative block" x-data="{ open: false }">
-                                            <button @click="open = !open" class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            
-                                            <!-- Dropdown menu using teleport -->
-                                            <template x-teleport="body">
-                                                <div x-show="open" 
-                                                     x-effect="
-                                                        if (open) {
-                                                            $nextTick(() => {
-                                                                const button = $root.previousElementSibling;
-                                                                const rect = button.getBoundingClientRect();
-                                                                $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                                $el.style.left = `${rect.left - 210 + rect.width}px`;
-                                                            });
-                                                        }
-                                                     "
-                                                     @click.away="open = false" 
-                                                     x-transition:enter="transition ease-out duration-200" 
-                                                     x-transition:enter-start="opacity-0 scale-95" 
-                                                     x-transition:enter-end="opacity-100 scale-100" 
-                                                     x-transition:leave="transition ease-in duration-175" 
-                                                     x-transition:leave-start="opacity-100 scale-100" 
-                                                     x-transition:leave-end="opacity-0 scale-95" 
-                                                     class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
-                                                     x-cloak
-                                                     style="position: absolute; z-index: 99999;">
-                                                <div class="py-1">
-                                                    <button wire:click.prevent="deleteMonth('{{ $monthKey }}')" class="w-full rounded-lg text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 transition-colors">
-                                                        <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                        <span class="text-sm">Delete monthly workouts</span>
-                                                    </button>
-                                                    <!-- Other actions can be added here later -->
-                                                </div>
+                                        @endforeach      
+                                        <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none" align="right">
+                                            <div class="py-1">
+                                                <x-dropdown-item wire:click.prevent="deleteMonth('{{ $monthKey }}')" icon="trash-alt" iconColor="red">
+                                                    Delete monthly workouts
+                                                </x-dropdown-item>
                                             </div>
-                                            </template>
-                                        </div>
+                                        </x-dropdown>
                                     </div>
                                 </div>
                             </div>
@@ -478,125 +377,60 @@
                                             
                                                 <div class="flex items-center gap-2">
                                                     <!-- Week Type Button with Dropdown -->
-                                                    <div class="relative" x-data="{ typeMenuOpen: false }">
-                                                        <button 
-                                                            @click="typeMenuOpen = !typeMenuOpen" 
-                                                            class="text-white bg-cyan-600 hover:bg-cyan-500 py-1.5 px-3 text-sm rounded-md flex items-center gap-2 w-40">
-                                                            <i class="fas fa-tag"></i>
-                                                            @if($week->type)
-                                                                <span class="flex items-center gap-2">
-                                                                    <span class="w-3 h-3 rounded-full {{ $week->type->color }}"></span>
-                                                                    {{ $week->type->name }}
-                                                                </span>
-                                                            @else
-                                                                <span>Set week type</span>
-                                                            @endif
-                                                        </button>
+                                                    <x-dropdown trigger="custom" align="left" width="w-44" teleport="true" :autoClose="false">
+                                                        <x-slot name="button">
+                                                            <button 
+                                                                class="text-white bg-cyan-600 hover:bg-cyan-500 py-1.5 px-3 text-sm rounded-md flex items-center gap-2 w-40">
+                                                                <i class="fas fa-tag"></i>
+                                                                @if($week->type)
+                                                                    <span class="flex items-center gap-2">
+                                                                        <span class="w-3 h-3 rounded-full {{ $week->type->color }}"></span>
+                                                                        {{ $week->type->name }}
+                                                                    </span>
+                                                                @else
+                                                                    <span>Set week type</span>
+                                                                @endif
+                                                            </button>
+                                                        </x-slot>
                                                         
-                                                        <!-- Week Type Dropdown Menu -->
-                                                        <template x-teleport="body">
-                                                            <div 
-                                                                x-show="typeMenuOpen" 
-                                                                x-effect="
-                                                                    if (typeMenuOpen) {
-                                                                        $nextTick(() => {
-                                                                            const button = $root.querySelector('button');
-                                                                            const rect = button.getBoundingClientRect();
-                                                                            $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                                            $el.style.left = `${rect.left}px`;
-                                                                        });
-                                                                    }
-                                                                "
-                                                                @click.away="typeMenuOpen = false" 
-                                                                x-transition:enter="transition ease-out duration-200" 
-                                                                x-transition:enter-start="opacity-0 scale-95" 
-                                                                x-transition:enter-end="opacity-100 scale-100" 
-                                                                x-transition:leave="transition ease-in duration-175" 
-                                                                x-transition:leave-start="opacity-100 scale-100" 
-                                                                x-transition:leave-end="opacity-0 scale-95" 
-                                                                class="p-2 w-44 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
-                                                                x-cloak
-                                                                style="position: absolute; z-index: 99999;">
-                                                                <div class="pb-1 max-h-80 overflow-y-auto">
-                                                                    <!-- Option to set no week type -->
-                                                                    <button 
-                                                                        wire:click="setWeekType({{ $week->id }}, null)" 
-                                                                        @click="typeMenuOpen = false"
-                                                                        class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                                        <span class="w-4 h-4 rounded-full bg-gray-500 bg-opacity-30"></span>
-                                                                        <span class="text-sm">None</span>
-                                                                    </button>
-                                                                    
-                                                                    <!-- Divider -->
-                                                                    <div class="my-1 border-t border-white border-opacity-10"></div>
-                                                                    
-                                                                    @foreach($weekTypes as $weekType)
-                                                                        <button 
-                                                                            wire:click="setWeekType({{ $week->id }}, {{ $weekType->id }})" 
-                                                                            @click="typeMenuOpen = false"
-                                                                            class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                                            <span class="w-4 h-4 rounded-full {{ $weekType->color }}"></span>
-                                                                            <span class="text-sm">{{ $weekType->name }}</span>
-                                                                        </button>
-                                                                    @endforeach
+                                                        <div class="pb-1 max-h-80 overflow-y-auto">
+                                                            <!-- Option to set no week type -->
+                                                            <x-dropdown-item wire:click="setWeekType({{ $week->id }}, null)">
+                                                                <div class="flex items-center gap-2">
+                                                                    <span class="w-4 h-4 rounded-full bg-gray-500 bg-opacity-30"></span>
+                                                                    <span>None</span>
                                                                 </div>
-                                                            </div>
-                                                        </template>
-                                                    </div>
+                                                            </x-dropdown-item>
+                                                            
+                                                            <!-- Divider -->
+                                                            <div class="my-1 border-t border-white border-opacity-10"></div>
+                                                            
+                                                            @foreach($weekTypes as $weekType)
+                                                                <x-dropdown-item wire:click="setWeekType({{ $week->id }}, {{ $weekType->id }})">
+                                                                    <div class="flex items-center gap-2">
+                                                                        <span class="w-4 h-4 rounded-full {{ $weekType->color }}"></span>
+                                                                        <span>{{ $weekType->name }}</span>
+                                                                    </div>
+                                                                </x-dropdown-item>
+                                                            @endforeach
+                                                        </div>
+                                                    </x-dropdown>
                                                     
-                                                    <!-- Collapse/Expand Button with chevron - Changed from hidden to visible on mobile -->
+                                                    <!-- Collapse/Expand Button with chevron -->
                                                     <button 
                                                         @click="collapsed = !collapsed; saveState()" 
                                                         class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none collapse-toggle"
                                                         data-tippy-content="Toggle week">
                                                         <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                     </button>
-                                                    
-                                                    <!-- Week Dropdown Menu Button - Changed from hidden sm:block to block -->
-                                                    <div class="relative" x-data="{ open: false }">
-                                                        <button @click="open = !open" class="block py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none">
-                                                            <i class="fas fa-ellipsis-v"></i>
-                                                        </button>
-                                                        
-                                                        <!-- Dropdown menu using teleport -->
-                                                        <template x-teleport="body">
-                                                            <div x-show="open" 
-                                                                 x-effect="
-                                                                    if (open) {
-                                                                        $nextTick(() => {
-                                                                            const button = $root.previousElementSibling;
-                                                                            const rect = button.getBoundingClientRect();
-                                                                            $el.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                                                                            
-                                                                            // Positionnement mobile : décalé vers la gauche avec l'extrémité droite alignée sous le bouton
-                                                                            if (window.innerWidth < 640) { // sm breakpoint
-                                                                                $el.style.left = `${rect.right - $el.offsetWidth + 30}px`;
-                                                                            } else {
-                                                                                $el.style.left = `${rect.left + rect.width}px`;
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                 "
-                                                                 @click.away="open = false" 
-                                                                 x-transition:enter="transition ease-out duration-200" 
-                                                                 x-transition:enter-start="opacity-0 scale-95" 
-                                                                 x-transition:enter-end="opacity-100 scale-100" 
-                                                                 x-transition:leave="transition ease-in duration-175" 
-                                                                 x-transition:leave-start="opacity-100 scale-100" 
-                                                                 x-transition:leave-end="opacity-0 scale-95" 
-                                                                 class="py-1 px-2 w-60 bg-slate-900 bg-opacity-90 border-white border-opacity-20 border rounded-xl shadow-lg" 
-                                                                 x-cloak
-                                                                 style="position: absolute; z-index: 99999;">
-                                                                 <div class="py-1">
-                                                                    <button wire:click.prevent="deleteWeek('{{ $week->id }}')" class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                                                        <i class="fas fa-trash-alt w-5 text-red-400"></i>
-                                                                        <span class="text-sm">Delete weekly workouts</span>
-                                                                    </button>
-                                                                    <!-- Other actions can be added here later -->
-                                                                </div>
-                                                            </div>
-                                                        </template>
-                                                    </div>
+
+                                                    <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none" align="right">
+                                                        <div class="py-1">
+                                                            <x-dropdown-item wire:click.prevent="deleteWeek('{{ $week->id }}')" icon="trash-alt" iconColor="red">
+                                                                Delete weekly workouts
+                                                            </x-dropdown-item>
+                                                        </div>
+                                                    </x-dropdown>
                                                 </div>
                                             </div>
 
@@ -613,7 +447,7 @@
                                                                     $statProgressData = $progressData[$stat] ?? null;
                                                                 @endphp
                                                                 
-                                                                @if($progressData['isValid'] && isset($statProgressData) && is_array($statProgressData))
+                                                                @if($statProgressData && isset($statProgressData['value']))
                                                                     @php
                                                                         $increase = $statProgressData['value'];
                                                                     @endphp
