@@ -732,6 +732,9 @@ class Calendar extends Component
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
             $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            
+            // Émettre l'événement pour recharger les tooltips
+            $this->dispatch('reload-tooltips');
         } catch (\Exception $e) {
             $this->dispatch('toast', 'Error moving workout: ' . $e->getMessage(), 'error');
         }
@@ -773,6 +776,9 @@ class Calendar extends Component
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
             $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            
+            // Émettre l'événement pour recharger les tooltips
+            $this->dispatch('reload-tooltips');
         } catch (\Exception $e) {
             $this->dispatch('toast', 'Error copying workout: ' . $e->getMessage(), 'error');
         }
@@ -1016,6 +1022,8 @@ class Calendar extends Component
 
     /**
      * Calcule la progression entre la semaine courante et la semaine précédente avec des données planifiées.
+     * Si la semaine actuelle est de type "development" et la précédente est de type "reduced",
+     * alors on compare avec la semaine de développement précédente.
      * 
      * @param \App\Models\Week $currentWeek La semaine courante
      * @return array Résultats de progression pour distance et durée
@@ -1045,11 +1053,29 @@ class Calendar extends Component
                 return $result;
             }
 
+            // Vérifier si la semaine courante est de type "development"
+            $isCurrentWeekDev = $currentWeek->type && strtolower($currentWeek->type->name) === 'development';
+            
             // Trouver la première semaine précédente avec des données planifiées
             $previousWeek = null;
+            $previousDevWeek = null;
+            
             foreach ($previousWeeks as $week) {
-                if ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0) {
+                // Si c'est la première semaine avec des données, on la garde comme référence
+                if (!$previousWeek && ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0)) {
                     $previousWeek = $week;
+                    
+                    // Si on ne cherche pas spécifiquement une semaine de développement, on peut s'arrêter ici
+                    if (!$isCurrentWeekDev) {
+                        break;
+                    }
+                }
+                
+                // Si la semaine courante est de type "development", on cherche aussi la semaine de développement précédente
+                if ($isCurrentWeekDev && $week->type && strtolower($week->type->name) === 'development' && 
+                    ($week->planned_stats['distance'] > 0 || $week->planned_stats['duration'] > 0)) {
+                    $previousDevWeek = $week;
+                    // On a trouvé une semaine de développement précédente, on peut s'arrêter
                     break;
                 }
             }
@@ -1058,25 +1084,42 @@ class Calendar extends Component
             if (!$previousWeek) {
                 return $result;
             }
+            
+            // Si la semaine courante est de type "development" et la semaine précédente est de type "reduced"
+            // ET qu'on a trouvé une semaine de développement antérieure, on compare avec celle-là
+            if ($isCurrentWeekDev && 
+                $previousWeek->type && 
+                strtolower($previousWeek->type->name) === 'reduced' && 
+                $previousDevWeek) {
+                // On utilise la semaine de développement précédente pour la comparaison
+                $comparisonWeek = $previousDevWeek;
+            } else {
+                // Sinon, on utilise la semaine la plus récente
+                $comparisonWeek = $previousWeek;
+            }
 
             // Calculer la progression de distance
-            if ($previousWeek->planned_stats['distance'] > 0 && $currentWeek->planned_stats['distance'] > 0) {
-                $diff = $currentWeek->planned_stats['distance'] - $previousWeek->planned_stats['distance'];
-                $percent = ($diff / $previousWeek->planned_stats['distance']) * 100;
+            if ($comparisonWeek->planned_stats['distance'] > 0 && $currentWeek->planned_stats['distance'] > 0) {
+                $diff = $currentWeek->planned_stats['distance'] - $comparisonWeek->planned_stats['distance'];
+                $percent = ($diff / $comparisonWeek->planned_stats['distance']) * 100;
                 $result['distance'] = [
                     'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
-                    'previous' => $previousWeek->planned_stats['distance']
+                    'previous' => $comparisonWeek->planned_stats['distance'],
+                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->name : 'Previous Week',
+                    'weekNumber' => $comparisonWeek->week_number
                 ];
                 $result['isValid'] = true;
             }
 
             // Calculer la progression de durée
-            if ($previousWeek->planned_stats['duration'] > 0 && $currentWeek->planned_stats['duration'] > 0) {
-                $diff = $currentWeek->planned_stats['duration'] - $previousWeek->planned_stats['duration'];
-                $percent = ($diff / $previousWeek->planned_stats['duration']) * 100;
+            if ($comparisonWeek->planned_stats['duration'] > 0 && $currentWeek->planned_stats['duration'] > 0) {
+                $diff = $currentWeek->planned_stats['duration'] - $comparisonWeek->planned_stats['duration'];
+                $percent = ($diff / $comparisonWeek->planned_stats['duration']) * 100;
                 $result['duration'] = [
                     'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
-                    'previous' => $previousWeek->planned_stats['duration']
+                    'previous' => $comparisonWeek->planned_stats['duration'],
+                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->name : 'Previous Week',
+                    'weekNumber' => $comparisonWeek->week_number
                 ];
                 $result['isValid'] = true;
             }
