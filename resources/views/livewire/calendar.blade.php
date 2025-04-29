@@ -153,7 +153,7 @@
             <!-- Main content area - Contains the calendar display -->
             <div class="flex-1">
                 <!-- Global stats panel - Shows yearly statistics -->
-                <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
                     <!-- Stats section -->
                     <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
                         <!-- Stats wrapper -->
@@ -363,7 +363,7 @@
                                 
                                 <!-- Month stats - Only visible on desktop -->
                                 <div class="ml-auto hidden sm:flex cursor-default">
-                                    <div class="flex items-center gap-3 px-4 bg-white bg-opacity-10 border-white border-opacity-20 border rounded-lg shadow-lg">                                    
+                                    <div class="flex items-center gap-3 px-4 bg-white bg-opacity-10 rounded-lg shadow-lg">                                    
                                         @foreach(['distance', 'duration', 'elevation'] as $stat)
                                             <div class="flex flex-row items-center gap-2 py-2">
                                                 <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400"></i>
@@ -463,15 +463,15 @@
                                 collapsed = !collapsed; 
                                 saveState();
                             }"                        
-                            class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible border bg-white bg-opacity-10 border-white border-opacity-20 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
+                            class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible bg-white bg-opacity-10 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
                                 <!-- Background overlay plus visible -->
-                                <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-{{ $colorPalette['lightShade'] }} via-{{ $colorPalette['midShade'] }} to-{{ $colorPalette['darkShade'] }}"></div>
+                                <div class="absolute inset-0 rounded-xl opacity-20 bg-gradient-to-br from-{{ $colorPalette['lightShade'] }} via-{{ $colorPalette['midShade'] }} to-{{ $colorPalette['darkShade'] }}"></div>
                                 
                                 <!-- Bande colorée à gauche pour une identification plus marquée -->
                                 <div class="absolute left-0 top-0 bottom-0 w-2 bg-{{ $colorPalette['midShade'] }} rounded-l-xl"></div>
                                 
                                 <!-- Contenu de la semaine -->
-                                <div class="relative z-10 week-header pt-2 pb-1 px-2 rounded-t-xl">
+                                <div class="relative z-10 week-header pt-2 pb-1 px-2">
                                     <div class="flex flex-col gap-4">
                                         <!-- Week info and controls -->
                                         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -628,11 +628,11 @@
                                                                     @endphp
                                                                     @if($increase > 10)
                                                                         <span class="text-red-400 text-xs font-semibold">
-                                                                            <i class="fas fa-exclamation-triangle text-2xs mr-1"></i>+{{ number_format($increase, 1) }}%
+                                                                            <i class="fas fa-exclamation-triangle text-2xs mr-1"></i>{{ $increase }}%
                                                                         </span>
                                                                     @elseif($increase != 0)
                                                                         <span class="text-emerald-400 text-xs font-semibold">
-                                                                            <i class="fas fa-circle-check text-2xs mr-1"></i>+{{ number_format($increase, 1) }}%
+                                                                            <i class="fas fa-circle-check text-2xs mr-1"></i>{{ $increase }}%
                                                                         </span>
                                                                     @endif
                                                                 @endif
@@ -702,12 +702,8 @@
                                                 ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
                                                 ondragleave="onDragLeave(event)" 
                                                 wire:click.stop="$dispatch('openModal', { component: 'workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
-                                                class="relative block p-2 rounded-lg {{ $day['is_today'] ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : 'border border-white/20' }} min-h-24 cursor-pointer hover:transform hover:scale-[1.02] transition-all duration-200
-                                                shadow-[0_2px_4px_rgba(0,0,0,0.2)] 
-                                                hover:shadow-[0_3px_6px_rgba(0,0,0,0.3)] 
-                                                bg-gradient-to-b from-slate-800/40 to-slate-900/40
-                                                {{ $shouldTakeFullWidth ? 'col-span-2 lg:col-span-1' : '' }}"
-                                                style="transform-style: preserve-3d; backface-visibility: hidden;">
+                                                class="relative block p-2 rounded-xl shadow-lg {{ $day['is_today'] ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }} min-h-24 cursor-pointer 
+                                                bg-gradient-to-b from-slate-800/40 to-slate-900/40 {{ $shouldTakeFullWidth ? 'col-span-2 lg:col-span-1' : '' }}">
                                                 <!-- Day date display in calendar cell -->
                                                 <div class="absolute top-2 left-2">
                                                     <div>
@@ -729,12 +725,8 @@
                                                             <a wire:click.stop="$dispatch('openModal', { component: 'activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
                                                                 class="relative cursor-pointer block"
                                                                 data-tippy-content="{{ $activity->name }}">
-                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white 
-                                                                    shadow-[0_2px_4px_rgba(0,0,0,0.3)] 
-                                                                    hover:shadow-[0_3px_5px_rgba(0,0,0,0.4)] 
-                                                                    hover:transform hover:scale-105 active:translate-y-[1px]
-                                                                    transition-all duration-150">
-                                                                <i class="fas fa-running text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
+                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white">
+                                                                    <i class="fas fa-running text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
                                                                 </div>
                                                             </a>
                                                         </div>
@@ -765,25 +757,14 @@
                                                                         '</div>' . 
                                                                         ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
                                                                     }}">
-                                                                <!-- Workout icon with enhanced 3D effect -->
-                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white 
-                                                                    shadow-[0_2px_4px_rgba(0,0,0,0.3)] 
-                                                                    hover:shadow-[0_3px_5px_rgba(0,0,0,0.4)] 
-                                                                    hover:transform hover:scale-105 hover:translate-y-[-1px] active:translate-y-[1px]
-                                                                    transition-all duration-150">
+                                                                <!-- Workout icon -->
+                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
                                                                     @if($workout->type && $workout->type->name === 'Race')
                                                                         <i class="{{ $workout->type->icon }} text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></i>
                                                                     @else
                                                                         <span class="text-sm font-semibold drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{{ $workout->type ? $workout->type->short : 'W' }}</span>
                                                                     @endif
                                                                 </div>
-                                                                <!-- Pulsating dot for new or important workouts (optional) -->
-                                                                @if($workout->is_important ?? false)
-                                                                <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-                                                                </span>
-                                                                @endif
                                                             </a>
                                                         </div>
                                                     @endforeach
@@ -805,7 +786,7 @@
                 <div class="xl:fixed">
                     <!-- Desktop navigation sidebar - Only visible on large screens -->
                     <div class="hidden lg:block">
-                        <div class="bg-white bg-opacity-10 border-white border-opacity-20 border backdrop-blur-lg rounded-xl shadow-lg p-4">
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg p-4">
                             <h3 class="font-bold text-white mt-1 pb-4 mb-4 border-b border-white border-opacity-20"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>
                                 Navigation
                             </h3>

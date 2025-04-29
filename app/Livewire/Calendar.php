@@ -109,7 +109,7 @@ class Calendar extends Component
     public function mount($year = null)
     {
         $this->year = $year ?: now()->year;
-    }
+    }    
 
     /**
      * Render the calendar component.
@@ -125,8 +125,8 @@ class Calendar extends Component
             $workouts = $this->getWorkouts();
             $weeks = $this->getWeeks($activities, $workouts);
             $months = $this->groupWeeksByMonth($weeks);
-            $monthStats = $this->calculateMonthStats($weeks);
-            $yearStats = $this->calculateYearStats($weeks);
+            $monthStats = $this->calculateMonthStatsFromDb();
+            $yearStats = $this->calculateYearStatsFromDb();
             return compact('activities', 'workouts', 'weeks', 'months', 'monthStats', 'yearStats');
         });
         $this->activities = $data['activities'];
@@ -247,41 +247,74 @@ class Calendar extends Component
     /**
      * Generate all weeks for the selected year and calculate their statistics.
      *
-     * @param Collection $activities Collection of user activities
-     * @param Collection $workouts Collection of user workouts
      * @return Collection Collection of week objects with calculated statistics
      */
-    private function getWeeks(Collection $activities, Collection $workouts): Collection
+    private function getWeeks(): Collection
     {
+        // Récupérer les stats groupées par semaine pour les activités réelles
+        $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->whereYear('start_date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+
+        // Récupérer les stats groupées par semaine pour les workouts planifiés
+        $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->whereYear('date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+
+        // Pré-charger tous les Week de l'année avec leur type
+        $weeksFromDb = Week::with('type')
+            ->where('user_id', Auth::id())
+            ->where('year', $this->year)
+            ->get()
+            ->keyBy('week_number');
+
         $weeks = collect();
         $date = Carbon::createFromDate($this->year, 1, 1)->startOfYear();
 
         for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
             $start = $date->copy()->setISODate($this->year, $weekNumber, 1)->startOfWeek();
-            
             if ($start->year > $this->year) 
                 break;
-
             $end = $start->copy()->endOfWeek();
-
-            // Determine the Thursday of the week for correct month assignment
             $thursday = $start->copy()->addDays(3);
 
-            $week = Week::with('type')->firstOrCreate(
-                ['year' => $this->year, 'week_number' => $weekNumber, 'user_id' => Auth::id()],
-                ['week_type_id' => null]
-            );
+            // Récupérer le Week de la collection, sinon en créer un nouveau en mémoire
+            $week = $weeksFromDb->get($weekNumber);
+            if (!$week) {
+                $week = new Week([
+                    'year' => $this->year,
+                    'week_number' => $weekNumber,
+                    'user_id' => Auth::id(),
+                    'week_type_id' => null
+                ]);
+                $week->setRelation('type', null);
+            }
 
-            // Calcul des stats
-            $weekStats = $this->calculateWeekStats($start, $end, $activities, $workouts);
+            // Utiliser les stats groupées pour cette semaine
+            $actual = [
+                'distance' => isset($activityStats[$weekNumber]) ? round($activityStats[$weekNumber]->dist / 1000, 1) : 0,
+                'elevation' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->ele : 0,
+                'duration' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->time : 0,
+            ];
+            $planned = [
+                'distance' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0,
+                'elevation' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->ele : 0,
+                'duration' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0,
+            ];
 
             $week->start = $start->format('d M');
             $week->end = $end->format('d M');
-            $week->month = $thursday->format('Y-m'); // Use Thursday's month
-            $week->actual_stats = $weekStats['actual'];
-            $week->planned_stats = $weekStats['planned'];
+            $week->month = $thursday->format('Y-m');
+            $week->actual_stats = $actual;
+            $week->planned_stats = $planned;
             $week->days = $this->generateWeekDays($start);
-            $week->is_current_week = $this->isCurrentWeek($start, $end); // Ajouter l'indicateur de semaine courante
+            $week->is_current_week = $this->isCurrentWeek($start, $end);
 
             $weeks->push($week);
         }
@@ -290,95 +323,105 @@ class Calendar extends Component
     }
 
     /**
-     * Calculate statistics for a specific week.
-     *
-     * @param Carbon $start Start date of the week
-     * @param Carbon $end End date of the week
-     * @param Collection $activities Collection of user activities
-     * @param Collection $workouts Collection of user workouts
-     * @return array Array containing actual and planned statistics
+     * Récupère les statistiques groupées par année pour Activity et Workout
      */
-    private function calculateWeekStats(Carbon $start, Carbon $end, Collection $activities, Collection $workouts): array
+    private function getYearlyStats(): array
     {
-        // Activités réelles
-        $actualActivities = $activities->filter(function ($activity) use ($start, $end) {
-            $date = Carbon::parse($activity->start_date);
-            return $date->between($start, $end);
-        });
+        $activityStats = Activity::selectRaw('YEAR(start_date) as year, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->where('user_id', Auth::id())
+            ->groupBy('year')
+            ->get()
+            ->keyBy('year');
 
-        // Entraînements planifiés
-        $plannedWorkouts = $workouts->filter(function ($workout) use ($start, $end) {
-            $date = Carbon::parse($workout->date);
-            return $date->between($start, $end);
-        });
+        $workoutStats = Workout::selectRaw('YEAR(date) as year, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->where('user_id', Auth::id())
+            ->groupBy('year')
+            ->get()
+            ->keyBy('year');
 
         return [
+            'activity' => $activityStats,
+            'workout' => $workoutStats
+        ];
+    }
+
+    /**
+     * Récupère les statistiques groupées par mois pour Activity et Workout
+     */
+    private function getMonthlyStats(): array
+    {
+        $activityStats = Activity::selectRaw('YEAR(start_date) as year, MONTH(start_date) as month, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->whereYear('start_date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('year', 'month')
+            ->get()
+            ->keyBy(function($item) { return sprintf('%04d-%02d', $item->year, $item->month); });
+
+        $workoutStats = Workout::selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->whereYear('date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('year', 'month')
+            ->get()
+            ->keyBy(function($item) { return sprintf('%04d-%02d', $item->year, $item->month); });
+
+        return [
+            'activity' => $activityStats,
+            'workout' => $workoutStats
+        ];
+    }
+
+    /**
+     * Calculate yearly statistics from SQL group by year.
+     *
+     * @return array Array of yearly statistics for actual and planned values
+     */
+    private function calculateYearStatsFromDb(): array
+    {
+        $yearly = $this->getYearlyStats();
+        $activity = $yearly['activity'][$this->year] ?? null;
+        $workout = $yearly['workout'][$this->year] ?? null;
+        return [
             'actual' => [
-                'distance' => round($actualActivities->sum('distance') / 1000, 1),
-                'elevation' => $actualActivities->sum('total_elevation_gain'),
-                'duration' => $actualActivities->sum('moving_time')
+                'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
+                'elevation' => $activity ? $activity->ele : 0,
+                'duration' => $activity ? $activity->time : 0,
             ],
             'planned' => [
-                'distance' => $plannedWorkouts->sum('distance'),
-                'elevation' => $plannedWorkouts->sum('elevation'),
-                'duration' => $plannedWorkouts->sum('duration') * 60
+                'distance' => $workout ? $workout->dist : 0,
+                'elevation' => $workout ? $workout->ele : 0,
+                'duration' => $workout ? $workout->time * 60 : 0,
             ]
         ];
     }
 
     /**
-     * Calculate monthly statistics from weekly data.
+     * Calculate monthly statistics from SQL group by month.
      *
-     * @param Collection $weeks Collection of weeks with their statistics
      * @return array Array of monthly statistics organized by month key
      */
-    private function calculateMonthStats(Collection $weeks): array
+    private function calculateMonthStatsFromDb(): array
     {
+        $monthly = $this->getMonthlyStats();
         $monthStats = [];
-
-        foreach ($weeks as $week) {
-            $monthKey = $week->month;
-
-            if (!isset($monthStats[$monthKey])) {
-                $monthStats[$monthKey] = [
-                    'actual' => ['distance' => 0, 'elevation' => 0, 'duration' => 0],
-                    'planned' => ['distance' => 0, 'elevation' => 0, 'duration' => 0]
-                ];
-            }
-
-            foreach (['actual', 'planned'] as $type) {
-                foreach (['distance', 'elevation', 'duration'] as $metric) {
-                    $monthStats[$monthKey][$type][$metric] += $week->{$type . '_stats'}[$metric];
-                }
-            }
+        for ($m = 1; $m <= 12; $m++) {
+            $monthKey = sprintf('%04d-%02d', $this->year, $m);
+            $activity = $monthly['activity'][$monthKey] ?? null;
+            $workout = $monthly['workout'][$monthKey] ?? null;
+            $monthStats[$monthKey] = [
+                'actual' => [
+                    'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
+                    'elevation' => $activity ? $activity->ele : 0,
+                    'duration' => $activity ? $activity->time : 0,
+                ],
+                'planned' => [
+                    'distance' => $workout ? $workout->dist : 0,
+                    'elevation' => $workout ? $workout->ele : 0,
+                    'duration' => $workout ? $workout->time * 60 : 0,
+                ]
+            ];
         }
-
         return $monthStats;
-    }
-
-    /**
-     * Calculate yearly statistics from weekly data.
-     *
-     * @param Collection $weeks Collection of weeks with their statistics
-     * @return array Array of yearly statistics for actual and planned values
-     */
-    private function calculateYearStats(Collection $weeks): array
-    {
-        $yearStats = [
-            'actual' => ['distance' => 0, 'elevation' => 0, 'duration' => 0],
-            'planned' => ['distance' => 0, 'elevation' => 0, 'duration' => 0]
-        ];
-
-        foreach ($weeks as $week) {
-            foreach (['actual', 'planned'] as $type) {
-                foreach (['distance', 'elevation', 'duration'] as $metric) {
-                    $yearStats[$type][$metric] += $week->{$type . '_stats'}[$metric];
-                }
-            }
-        }
-
-        return $yearStats;
-    }
+    }    
     
     private function invalidateCache()
     {
@@ -739,88 +782,59 @@ class Calendar extends Component
      * @param int $currentIndex Index of the current week
      * @return array Result with distance and duration progression data
      */
-    public function calculateDevelopmentWeekProgress(Week $currentWeek, Collection $weeksInMonth, int $currentIndex): array
+    public function calculateDevelopmentWeekProgress(Week $currentWeek): array
     {
         $result = [
             'distance' => null,
             'duration' => null,
             'isValid' => false
         ];
-        
         try {
-            // 1. Check that the current week is of development type
             if (!$currentWeek->type || strtolower($currentWeek->type->name) !== 'development') {
                 return $result;
             }
-            
-            // 2. Get the start and end dates of the current week
             $year = $currentWeek->year;
             $weekNumber = $currentWeek->week_number;
-            $startDate = Carbon::createFromDate($year, 1, 1)->setISODate($year, $weekNumber, 1)->startOfWeek();
-            $endDate = $startDate->copy()->endOfWeek();
-            
-            // 3. Calculate the dates of the previous week
-            $prevWeekStart = $startDate->copy()->subDays(7);
-            $prevWeekEnd = $prevWeekStart->copy()->endOfWeek();
-            
-            // 4. Retrieve the previous week from the database
-            $prevWeek = Week::where('user_id', Auth::id())
-                ->where(function($query) use ($prevWeekStart) {
-                    $query->where('year', $prevWeekStart->year)
-                          ->where('week_number', $prevWeekStart->isoWeek);
-                })
-                ->with('type')
-                ->first();
-            
-            // 5. Check that the previous week exists and is also of development type
-            if (!$prevWeek || !$prevWeek->type || strtolower($prevWeek->type->name) !== 'development') {
-                return $result;
-            }
-            
-            // 6. Calculate statistics directly using calculateWeekStats
-            $currentWeekStats = $this->calculateWeekStats(
-                $startDate,
-                $endDate,
-                $this->activities,
-                $this->workouts
-            );
-            
-            $prevWeekStats = $this->calculateWeekStats(
-                $prevWeekStart,
-                $prevWeekEnd,
-                $this->activities,
-                $this->workouts
-            );
-            
-            // 7. Calculate the percentage increases
+            $prevWeekNumber = $weekNumber - 1;
+            if ($prevWeekNumber < 1) return $result;
+
+            // Stats groupées pour les semaines de l'année
+            $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(duration) as time')
+                ->whereYear('date', $year)
+                ->where('user_id', Auth::id())
+                ->groupBy('week')
+                ->get()
+                ->keyBy('week');
+
+            // Semaine courante
+            $currentPlanned = isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0;
+            $currentDuration = isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0;
+            // Semaine précédente
+            $prevPlanned = isset($workoutStats[$prevWeekNumber]) ? $workoutStats[$prevWeekNumber]->dist : 0;
+            $prevDuration = isset($workoutStats[$prevWeekNumber]) ? $workoutStats[$prevWeekNumber]->time * 60 : 0;
+
             $result['isValid'] = true;
-            
-            // 8. Calculate progression for distance if both weeks have planned values > 0
-            if ((float)$prevWeekStats['planned']['distance'] > 0 && (float)$currentWeekStats['planned']['distance'] > 0) {
-                $difference = (float)$currentWeekStats['planned']['distance'] - (float)$prevWeekStats['planned']['distance'];
-                if ($difference != 0) {  // Only display if there is a difference
+            if ($prevPlanned > 0 && $currentPlanned > 0) {
+                $diff = $currentPlanned - $prevPlanned;
+                if ($diff != 0) {
+                    $percent = ($diff / $prevPlanned) * 100;
                     $result['distance'] = [
-                        'value' => ($difference / (float)$prevWeekStats['planned']['distance']) * 100,
-                        'previous' => (float)$prevWeekStats['planned']['distance']
+                        'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
+                        'previous' => $prevPlanned
                     ];
                 }
             }
-            
-            // 9. Calculate progression for duration if both weeks have planned values > 0
-            if ((float)$prevWeekStats['planned']['duration'] > 0 && (float)$currentWeekStats['planned']['duration'] > 0) {
-                $difference = (float)$currentWeekStats['planned']['duration'] - (float)$prevWeekStats['planned']['duration'];
-                if ($difference != 0) {  // Only display if there is a difference
+            if ($prevDuration > 0 && $currentDuration > 0) {
+                $diff = $currentDuration - $prevDuration;
+                if ($diff != 0) {
+                    $percent = ($diff / $prevDuration) * 100;
                     $result['duration'] = [
-                        'value' => ($difference / (float)$prevWeekStats['planned']['duration']) * 100,
-                        'previous' => (float)$prevWeekStats['planned']['duration']
+                        'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
+                        'previous' => $prevDuration
                     ];
                 }
             }
-        } catch (\Exception $e) {
-            // In case of an error, we simply return the default result
-            // without displaying an error to the user
-        }
-        
+        } catch (\Exception $e) {}
         return $result;
     }
     
