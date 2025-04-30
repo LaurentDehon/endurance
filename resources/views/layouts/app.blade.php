@@ -52,9 +52,21 @@
             "description": "Running training plan application. Create personalized and structured plans."
         }
         </script>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KSTCWSRP');</script>
+        <!-- End Google Tag Manager -->
     </head>
 
     <body class="min-h-screen flex flex-col @guest bg-gradient-fix @endguest">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KSTCWSRP"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
         @auth
             <div class="flex-grow bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
                 <nav class="top-0 w-full" x-data="{ isMobileMenuOpen: false }">
