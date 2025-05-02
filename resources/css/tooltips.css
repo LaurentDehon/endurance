@@ -1,0 +1,41 @@
+/**
+ * Styles centralisés pour les tooltips de l'application
+ */
+
+/* Style unique pour tous les tooltips avec spécificité augmentée */
+.tippy-box[data-theme~='custom'] {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    border-radius: 4px !important;
+    padding: 2px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    backdrop-filter: blur(4px) !important;
+    border: none !important;
+}
+
+.tippy-box[data-theme~='custom'] .tippy-arrow {
+    color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Contenu des tooltips */
+.tippy-box[data-theme~='custom'] .tippy-content {
+    padding: 8px 10px !important;
+    font-size: 0.875rem !important;
+}
+
+/* Animation au survol pour les éléments tooltips */
+.tooltip {
+    transition: transform 0.2s ease;
+}
+
+.tooltip:hover {
+    transform: translateY(-2px);
+}
+
+/* Masquer les tooltips sur les appareils mobiles et tablettes */
+@media (max-width: 1023px) {
+    /* Caché sur tablettes et mobiles (< lg dans Tailwind) */
+    [data-tippy-root] {
+        display: none !important;
+    }
+}

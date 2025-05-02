@@ -14,6 +14,7 @@ class Activities extends Component
     protected $listeners = [
         'confirmDeleteAll', 
         'confirmDelete',
+        'activity-deleted' => '$refresh',
     ];
 
     public $search = '';
@@ -37,6 +38,23 @@ class Activities extends Component
         }
 
         $this->sortField = $field;
+        
+        // Dispatch event to reload tooltips after sorting
+        $this->dispatch('reload-tooltips');
+    }
+    
+    // Intercept search model updates to reload tooltips
+    public function updatedSearch()
+    {
+        $this->resetPage();
+        $this->dispatch('reload-tooltips');
+    }
+    
+    // Intercept perPage model updates to reload tooltips
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+        $this->dispatch('reload-tooltips');
     }
 
     public function render()

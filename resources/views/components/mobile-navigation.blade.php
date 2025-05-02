@@ -23,7 +23,7 @@
 
                 <!-- Main navigation -->
                 <nav>
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         <a href="{{ route('home') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('home') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                             <span>Home</span>
                         </a>
@@ -55,7 +55,7 @@
             <div class="mt-auto p-4 border-t border-white border-opacity-20">
                 <h3 class="text-xs uppercase text-slate-300 mb-4 px-3">Account</h3>
                 <nav>
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                             <span>Profile</span>
                         </a>

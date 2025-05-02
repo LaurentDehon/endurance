@@ -40,7 +40,7 @@
     <livewire:modal.confirmation-modal />
 
     <!-- Table -->
-    <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
+    <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden reload-tooltips" wire:key="activities-table-{{ now() }}">
         <div class="overflow-x-auto {{ $activities->hasPages() ? 'rounded-t-xl' : 'rounded-xl' }}">
             <table class="min-w-full divide-y divide-cyan-200 divide-opacity-20 bg-white bg-opacity-10">
                 <thead>
@@ -104,8 +104,8 @@
                             <!-- Name -->
                             <td class="w-1/4 px-4 py-4 truncate">
                                 <div class="text-sm font-medium text-amber-300">
-                                    <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" data-tippy-content="{{ $activity->name }}">
-                                        <span class="cursor-pointer hover:underline">{{ Str::limit($activity->name, 25) }}</span>
+                                    <a wire:click.prevent="$dispatch('openModal', { component: 'modal.activity-modal', attributes: { id: '{{ $activity->id }}' }})" class="cursor-pointer hover:underline" data-tippy-content="{{ $activity->name }}">
+                                        <span>{{ Str::limit($activity->name, 25) }}</span>
                                     </a>
                                 </div>
                             </td>
@@ -266,20 +266,6 @@
             width: 0;
             display: none;
         }        
-        
-        /* Tippy.js theme customization for activities */
-        .tippy-box[data-theme~='activities'] {
-            background-color: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-            backdrop-filter: blur(12px);
-            border-radius: 0.375rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        
-        .tippy-box[data-theme~='activities'] .tippy-arrow {
-            color: rgba(15, 23, 42, 0.9);
-        }
     </style>
     
     <script>
@@ -304,28 +290,6 @@
                     }
                 }, 100);
             });
-        });
-        
-        // Initialize Tippy.js tooltips for activities
-        function initActivityTooltips() {
-            tippy('[data-tippy-content]', {
-                theme: 'activities',
-                allowHTML: true,
-                arrow: true,
-                placement: 'top',
-                duration: [200, 100],
-                delay: [100, 0]
-            });
-        }
-        
-        // Initialize tooltips on page load and after Livewire updates
-        document.addEventListener('livewire:navigated', () => initActivityTooltips());
-        document.addEventListener('livewire:init', () => initActivityTooltips());
-        document.addEventListener('DOMContentLoaded', () => initActivityTooltips());
-        
-        // Re-initialize tooltips after Livewire updates
-        Livewire.hook('message.processed', () => {
-            setTimeout(() => initActivityTooltips(), 100);
         });
     </script>
 </div>

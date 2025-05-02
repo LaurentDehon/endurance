@@ -659,44 +659,6 @@
             display: none;
         }
 
-        /* Tippy.js theme customization */
-        .tippy-box[data-theme~='light-border'] {
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px !important;
-            max-width: 350px !important;
-        }
-
-        .tippy-box[data-theme~='light-border'] .tippy-content {
-            padding: 8px 12px;
-        }
-
-        .tippy-box[data-theme~='light-border'][data-placement^='top'] .tippy-arrow:before {
-            border-top-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .tippy-box[data-theme~='light-border'][data-placement^='bottom'] .tippy-arrow:before {
-            border-bottom-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .tippy-box[data-theme~='light-border'][data-placement^='left'] .tippy-arrow:before {
-            border-left-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .tippy-box[data-theme~='light-border'][data-placement^='right'] .tippy-arrow:before {
-            border-right-color: rgba(0, 0, 0, 0.9);
-        }
-
-        /* Hide tooltips on mobile and tablet devices */
-        @media (max-width: 1023px) {
-            .tippy-box {
-                display: none !important;
-            }
-        }
-
         /* Hide elements until Alpine.js is initialized */
         [x-cloak] {
             display: none !important;
@@ -815,53 +777,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.onDragOver = onDragOver;
             window.onDragLeave = onDragLeave;
             window.onDrop = function(event, date) { return onDropWrapper(event); };
-
-            // Tippy Tooltips
-            var tippyInstances = [];
-            function initTippyTooltips() {
-                if (typeof tippy !== 'undefined') {
-                    // Destroy existing tooltips first to avoid duplicates
-                    const existingInstances = document.querySelectorAll('[data-tippy-root]');
-                    existingInstances.forEach(instance => {
-                        const tippyInstance = instance._tippy;
-                        if (tippyInstance) {
-                            tippyInstance.destroy();
-                        }
-                    });
-                    
-                    // Initialize tooltips for all elements with data-tippy-content attribute
-                    tippy('[data-tippy-content]', {
-                        allowHTML: true,
-                        theme: 'light-border',
-                        interactive: true,
-                        appendTo: document.body,
-                        maxWidth: 350,
-                    });
-                    
-                    console.log('Tooltips initialized successfully');
-                } else {
-                    console.error('Tippy.js not loaded');
-                }
-            }
-            
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function() {
-                initTippyTooltips();
-            });
-            
-            // Initialize when Livewire updates the DOM
-            document.addEventListener('livewire:initialized', function() {
-                initTippyTooltips();
-            });
-            
-            // Reload tooltips when requested
-            Livewire.on('reload-tooltips', function() { 
-                // Use a slight delay to ensure DOM is updated
-                setTimeout(function() { 
-                    console.log('Reloading tooltips...');
-                    initTippyTooltips(); 
-                }, 500); 
-            });
             
             // Collapse/Expand all weeks
             window.toggleAllWeeks = function(shouldCollapse) {

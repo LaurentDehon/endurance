@@ -243,6 +243,7 @@ class Calendar extends Component
     {
         $this->year--;
         $this->dispatch('update-url', year: $this->year);
+        $this->dispatch('reload-tooltips');
     }
 
     /**
@@ -254,6 +255,7 @@ class Calendar extends Component
     {
         $this->year++;
         $this->dispatch('update-url', year: $this->year);
+        $this->dispatch('reload-tooltips');
     }
 
     /**
@@ -627,7 +629,7 @@ class Calendar extends Component
         $week->week_type_id = $weekTypeId;
         $week->save();
         $this->invalidateCache();
-        $this->dispatch('refresh');
+        $this->dispatch('toast', 'Week type updated successfully', 'success');
     }
 
     /**
@@ -684,25 +686,6 @@ class Calendar extends Component
             return Carbon::createFromFormat('Y-m', $week->month)->year == $this->year;
         })->groupBy('month');    
     }
-    
-    /**
-     * Updates a week's type and sends a success notification.
-     *
-     * @param int $weekId The week identifier
-     * @param int|null $weekTypeId The week type identifier (null to clear)
-     * @return void
-     */
-    public function updateWeekType($weekId, $weekTypeId)
-    {
-        $week = Week::findOrFail($weekId);
-        $weekTypeId = $weekTypeId === '' ? null : $weekTypeId;
-        
-        $week->update([
-            'week_type_id' => $weekTypeId
-        ]);
-        
-        $this->dispatch('toast', 'Week type updated successfully', 'success');
-    }  
 
     /**
      * Updates the date of a workout when it's moved in the calendar.
