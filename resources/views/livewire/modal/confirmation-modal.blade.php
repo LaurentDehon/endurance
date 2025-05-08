@@ -27,8 +27,8 @@
                 <!-- En-tête -->
                 <div class="px-6 py-5">
                     <div class="flex items-center">
-                        <div class="mr-4 p-2 rounded-full bg-{{ $iconColor }}-100 text-{{ $iconColor }}-600">
-                            <i class="fas fa-{{ $icon }} text-xl"></i>
+                        <div class="mr-4 px-3 py-2 rounded-full bg-{{ $iconColor }}-100 text-{{ $iconColor }}-600">
+                            <i class="fas fa-{{ $icon }} text-2xl"></i>
                         </div>
                         <h3 class="text-xl font-bold text-white">{{ $title }}</h3>
                     </div>

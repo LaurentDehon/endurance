@@ -57,6 +57,42 @@ class Activities extends Component
         $this->dispatch('reload-tooltips');
     }
 
+    // Function to trigger delete all confirmation
+    public function deleteAll()
+    {
+        $this->dispatch('openConfirmModal', [
+            'title' => 'Delete All Activities',
+            'message' => 'Are you sure you want to delete all activities?<br>This action cannot be undone.',
+            'confirmAction' => 'confirmDeleteAll',
+        ]);
+    }
+
+    // Function to delete all activities after confirmation
+    public function confirmDeleteAll()
+    {
+        Activity::where('user_id', Auth::id())->delete();
+        
+        // Invalider explicitement les caches du calendrier
+        $cacheKeys = [
+            'calendar-activities-' . Auth::id() . '-' . now()->year,
+            'calendar-months-' . Auth::id() . '-' . now()->year,
+            'calendar-month-stats-' . Auth::id() . '-' . now()->year,
+            'calendar-year-stats-' . Auth::id() . '-' . now()->year,
+            'calendar-weeks-' . Auth::id() . '-' . now()->year
+        ];
+        
+        foreach ($cacheKeys as $key) {
+            \Illuminate\Support\Facades\Cache::forget($key);
+        }
+        
+        $this->dispatch('toast', [
+            'type' => 'success',
+            'message' => 'All activities have been deleted successfully.'
+        ]);
+        
+        $this->dispatch('reload-tooltips');
+    }
+
     public function render()
     {
         return view('livewire.activities', [

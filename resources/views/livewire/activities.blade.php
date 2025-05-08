@@ -33,6 +33,14 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Delete All Button -->
+                <button 
+                    wire:click="deleteAll"
+                    class="px-4 py-2 rounded-lg bg-red-600 bg-opacity-80 text-white hover:bg-red-500 transition-colors"
+                    data-tippy-content="Delete all activities">
+                    Delete All
+                </button>
             </div>
         </div>
     </div>

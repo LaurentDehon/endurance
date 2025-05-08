@@ -434,10 +434,10 @@
                                             </div>
 
                                             <!-- Week stats -->
-                                            <div class="flex justify-between mb-1 sm:gap-4 md:gap-6 cursor-default">
+                                            <div class="flex justify-between mb-1 gap-4 cursor-default">
                                                 @foreach(['distance', 'duration', 'elevation'] as $stat)
                                                 <!-- Structure for all stat displays with consistent height regardless of content -->
-                                                    <div class="flex flex-col md:w-36 lg:w-36">
+                                                    <div class="flex flex-col w-32">
                                                         <!-- Stat increase display -->
                                                         <div class="flex justify-center h-5">
                                                             @if($stat === 'distance' || $stat === 'duration')
