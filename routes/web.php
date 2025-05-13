@@ -1,17 +1,16 @@
 <?php
 
 require __DIR__.'/auth.php';
+use App\Livewire\ProfileEdit;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StravaMiddleware;
-use App\Http\Middleware\LocaleMiddleware;
 use App\Http\Controllers\StravaController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChangelogController;
+use App\Http\Controllers\DashboardController;
 
 // Public routes - accessible without authentication
 // Home page - Landing page with marketing content
@@ -68,11 +67,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // User Profile Management
     // ----------------------
-    Route::prefix('profile')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
+    Route::get('/profile', function() { 
+        return view('profile'); 
+    })->name('profile');
     
     // User Settings
     // ----------------------

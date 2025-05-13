@@ -56,7 +56,7 @@
                 <h3 class="text-xs uppercase text-slate-300 mb-4 px-3">{{ __("navigation.account") }}</h3>
                 <nav>
                     <div class="space-y-2">
-                        <a href="{{ route('profile.edit') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
+                        <a href="{{ route('profile') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group {{ request()->routeIs('profile.edit') ? 'border-l-4 border-cyan-400 !border-opacity-100 bg-cyan-800 bg-opacity-30 text-white font-medium' : '' }}">
                             <span>{{ __("navigation.profile") }}</span>
                         </a>
                         <a href="{{ route('settings.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-white hover:bg-cyan-800 hover:bg-opacity-50 transition-all duration-200 group">

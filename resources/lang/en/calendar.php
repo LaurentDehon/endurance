@@ -4,6 +4,7 @@ return [
     // Navigation 
     'navigation' => 'Navigation',
     'scroll_to_top' => 'Scroll to top',
+    'current_month' => 'Current month',
     'weeks' => 'weeks',
 
     // Loading states
@@ -30,7 +31,7 @@ return [
     
     // Calendar elements
     'week' => 'Week',
-    'set_week_type' => 'Set week type',
+    'set_week_type' => 'Week type',
     'none' => 'None',
     'toggle_week' => 'Toggle week',
     

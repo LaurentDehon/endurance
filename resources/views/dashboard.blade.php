@@ -196,16 +196,15 @@
                 
                 <!-- Calendar Link Button -->
                 @php
-                    // Get current month in English for the slug (for navigation)
-                    $currentMonthNameEnglish = \Carbon\Carbon::now()->locale('en')->format('F');
-                    $currentMonthSlug = Str::slug($currentMonthNameEnglish);
+                    // Get current month number for the anchor
+                    $currentMonthNumber = \Carbon\Carbon::now()->format('m');
                     
                     // Get current month in user's locale for display
                     \Carbon\Carbon::setLocale(app()->getLocale());
                     $currentMonthName = \Carbon\Carbon::now()->translatedFormat('F');
                 @endphp
                 <div class="mt-auto pt-4 border-t border-white border-opacity-20">
-                    <a href="{{ route('calendar') }}#{{ $currentMonthSlug }}" class="flex items-center justify-center gap-2 px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors w-full">
+                    <a href="{{ route('calendar') }}#{{ $currentMonthNumber }}" class="flex items-center justify-center gap-2 px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors w-full">
                         <i class="fas fa-calendar"></i>
                         <span>{{ __('dashboard.progress.view_calendar', ['month' => $currentMonthName]) }}</span>
                     </a>

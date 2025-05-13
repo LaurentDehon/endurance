@@ -4,6 +4,7 @@ return [
     // Navigation 
     'navigation' => 'Navigation',
     'scroll_to_top' => 'Remonter en haut',
+    'current_month' => 'Mois courant',
     'weeks' => 'semaines',
 
     // Loading states
@@ -30,7 +31,7 @@ return [
     
     // Calendar elements
     'week' => 'Semaine',
-    'set_week_type' => 'Définir le type de semaine',
+    'set_week_type' => 'Type de semaine',
     'none' => 'Aucun',
     'toggle_week' => 'Basculer la semaine',
     

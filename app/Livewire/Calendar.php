@@ -1158,7 +1158,7 @@ class Calendar extends Component
             
             return [
                 'name' => $monthName,
-                'number' => $monthNumber
+                'number' => sprintf('%02d', $monthNumber)
             ];
         } catch (\Exception $e) {
             return [

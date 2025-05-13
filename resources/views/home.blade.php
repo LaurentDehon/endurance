@@ -47,7 +47,7 @@
                     {{ __('home.why_section.description') }}
                 </p>
                 
-                <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
+                <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8 shadow-lg">
                     <p class="text-xl text-center font-semibold text-white">
                         {{ __('home.why_section.tagline') }}
                     </p>
@@ -320,7 +320,7 @@
                 <h2 class="text-3xl font-bold text-white">{{ __('home.training_blocks.title') }}</h2>
             </div>
             
-            <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
+            <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8 shadow-lg">
                 <p class="text-lg italic text-white">
                     "{{ __('home.training_blocks.tagline') }}"
                 </p>

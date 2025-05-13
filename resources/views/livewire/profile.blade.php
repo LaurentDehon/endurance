@@ -1,5 +1,3 @@
-@extends('layouts.app')
-@section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <!-- Fond d'écran fixe avec dégradé de couleur -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
@@ -26,10 +24,7 @@
                 </div>
 
                 <div class="bg-slate-800 bg-opacity-50 p-6 rounded-xl">
-                    <form method="POST" action="{{ route('profile.update') }}">
-                        @csrf
-                        @method('PATCH')
-
+                    <form wire:submit="updateProfile">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Full Name -->
                             <div class="space-y-2">
@@ -42,8 +37,7 @@
                                     </div>
                                     <input type="text" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                                        name="name" 
-                                        value="{{ old('name', $user->name) }}" 
+                                        wire:model="name" 
                                         required>
                                 </div>
                                 @error('name')
@@ -62,8 +56,7 @@
                                     </div>
                                     <input type="email" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                                        name="email" 
-                                        value="{{ old('email', $user->email) }}" 
+                                        wire:model="email" 
                                         required>
                                 </div>
                                 @error('email')
@@ -93,10 +86,7 @@
                 </div>
 
                 <div class="bg-slate-800 bg-opacity-50 p-6 rounded-xl">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
-                        @method('PUT')
-
+                    <form wire:submit="updatePassword">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <!-- Current Password -->
                             <div class="space-y-2">
@@ -109,7 +99,7 @@
                                     </div>
                                     <input type="password" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                                        name="current_password" 
+                                        wire:model="current_password" 
                                         required>
                                 </div>
                                 @error('current_password')
@@ -128,7 +118,7 @@
                                     </div>
                                     <input type="password" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                                        name="password" 
+                                        wire:model="password" 
                                         required>
                                 </div>
                                 @error('password')
@@ -147,7 +137,7 @@
                                     </div>
                                     <input type="password" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                                        name="password_confirmation" 
+                                        wire:model="password_confirmation" 
                                         required>
                                 </div>
                             </div>
@@ -174,10 +164,7 @@
                 </div>
 
                 <div class="bg-slate-800 bg-opacity-50 p-6 rounded-xl border border-red-400/10">
-                    <form method="POST" action="{{ route('profile.destroy') }}">
-                        @csrf
-                        @method('DELETE')
-
+                    <form wire:submit="confirmAccountDeletion">
                         <div class="space-y-4">
                             <div class="p-4 rounded-lg bg-red-400/10 border border-red-400/20">
                                 <p class="text-red-400 font-medium flex items-start">
@@ -197,10 +184,10 @@
                                     </div>
                                     <input type="password" 
                                         class="pl-10 pr-4 py-3 w-full rounded-lg border border-red-300/30 bg-red-400/5 focus:border-red-400/50 focus:ring-2 focus:ring-red-400/20 text-white" 
-                                        name="password" 
+                                        wire:model="delete_password" 
                                         required>
                                 </div>
-                                @error('password')
+                                @error('delete_password')
                                     <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -218,5 +205,7 @@
             </div>
         </div>
     </div>
+
+    {{-- Composant confirmation-modal pour confirmation de suppression --}}
+    <livewire:modal.confirmation-modal />
 </div>
-@endsection

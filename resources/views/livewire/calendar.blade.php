@@ -3,20 +3,9 @@
     use Carbon\Carbon;
 ?>    
 
-<div class="mx-auto p-2 sm:p-4 overflow-y-scroll relative"
+<div class="mx-auto p-2 sm:p-4 overflow-y-scroll relative" id="calendar-container"
     x-data="{ contentLoaded: false }" 
-    x-init="setTimeout(() => { 
-        contentLoaded = true;
-        // Scroll to fragment/anchor if present in URL
-        if (window.location.hash) {
-            setTimeout(() => {
-                const targetElement = document.querySelector(window.location.hash);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
-                }
-            }, 500); // Délai pour s'assurer que le contenu est chargé
-        }
-    }, 500)">
+    x-init="setTimeout(() => { contentLoaded = true; }, 500)">
     <!-- Fixed gradient background covering the entire page -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
 
@@ -133,11 +122,14 @@
                         <nav class="space-y-1">
                             @php
                                 $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
+                                $currentMonthNumber = Carbon::now()->format('m');  // Format "05" pour mai
                             @endphp
                             <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 text-slate-100 hover:text-cyan-200 rounded-lg transition-colors cursor-pointer">
                                 {{ __('calendar.scroll_to_top') }}
                             </a>
-                            
+                            <a href="#{{ $currentMonthNumber }}" class="flex px-3 py-1 text-amber-300 hover:text-amber-200 rounded-lg transition-colors cursor-pointer">
+                                {{ __('calendar.current_month') }}
+                            </a>
                             @foreach ($months as $monthKey => $weeksInMonth)
                                 @php
                                     if(substr($monthKey, 0, 4) != $year) {
@@ -145,8 +137,9 @@
                                     }
                                     $monthInfo = $this->getMonthInfo($monthKey);
                                     $monthName = $monthInfo['name'];
+                                    $monthNumber = $monthInfo['number'];
                                 @endphp
-                                <a href="#{{ Str::slug($monthName) }}" 
+                                <a href="#{{ $monthNumber }}" 
                                 class="flex items-center justify-between px-3 py-1 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">
                                     <span>{{ $monthName }}</span>
                                     <span class="text-sm text-slate-300 group-hover:text-cyan-200">
@@ -275,7 +268,7 @@
                         $monthName = $monthInfo['name'];
                         $monthNumber = $monthInfo['number'];
                     @endphp
-                    <section id="{{ Str::slug($monthName) }}"                         
+                    <section id="{{ $monthNumber }}"                         
                             class="mb-4 sm:mb-5" 
                             data-month-key="{{ $monthKey }}" 
                             data-month-number="{{ $monthNumber }}">
@@ -628,9 +621,13 @@
                             <nav class="">
                                 @php
                                     $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
+                                    $currentMonthNumber = Carbon::now()->format('m');
                                 @endphp
                                 <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 text-slate-100 hover:text-cyan-200 rounded-lg transition-colors cursor-pointer">
                                     {{ __('calendar.scroll_to_top') }}
+                                </a>
+                                <a href="#{{ $currentMonthNumber }}" class="flex px-3 py-1 text-amber-300 hover:text-amber-200 rounded-lg transition-colors cursor-pointer">
+                                    {{ __('calendar.current_month') }}
                                 </a>
                                 @foreach ($months as $monthKey => $weeksInMonth)
                                     @php
@@ -639,8 +636,9 @@
                                         }
                                         $monthInfo = $this->getMonthInfo($monthKey);
                                         $monthName = $monthInfo['name'];
+                                        $monthNumber = $monthInfo['number'];
                                     @endphp
-                                    <a href="#{{ Str::slug($monthName) }}" 
+                                    <a href="#{{ $monthNumber }}" 
                                     class="flex items-center justify-between px-3 py-1 gap-2 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">
                                         <span>{{ $monthName }}</span>
                                         <span class="text-sm text-slate-300">
@@ -675,6 +673,57 @@
             display: none !important;
         }
     </style>
+    
+    <!-- Script pour le défilement via localStorage -->
+    <script>
+        // Auto-execute immediately to set up scroll before content is displayed
+        (function() {
+            // Vérifier si on a un mois enregistré dans localStorage
+            var targetMonthId = localStorage.getItem('scrollToMonth');
+            if (targetMonthId) {
+                // Supprimer l'item pour éviter de scroller automatiquement lors des visites futures
+                localStorage.removeItem('scrollToMonth');
+                
+                // Configurer une fonction qui tentera de faire défiler dès que possible
+                function attemptScroll() {
+                    // Cette fonction sera appelée plusieurs fois jusqu'à ce qu'elle trouve l'élément
+                    var targetElement = document.getElementById(targetMonthId);
+                    if (targetElement) {
+                        // On a trouvé l'élément, on fait défiler immédiatement
+                        targetElement.scrollIntoView({behavior: 'auto', block: 'start'});
+                        return true;
+                    }
+                    return false;
+                }
+                
+                // Mettre en place un MutationObserver pour détecter quand l'élément apparaît dans le DOM
+                var observer = new MutationObserver(function(mutations) {
+                    if (attemptScroll()) {
+                        // Si on a réussi à défiler, on arrête d'observer
+                        observer.disconnect();
+                    }
+                });
+                
+                // Commencer à observer le document pour les changements dans le DOM
+                observer.observe(document.documentElement, { childList: true, subtree: true });
+                
+                // Programmer plusieurs tentatives de défilement pour s'assurer que cela fonctionne
+                var attempts = 0;
+                var maxAttempts = 10;
+                var attemptInterval = setInterval(function() {
+                    if (attemptScroll() || ++attempts >= maxAttempts) {
+                        clearInterval(attemptInterval);
+                    }
+                }, 200);
+                
+                // Ajout d'un événement sur le chargement de la page
+                window.addEventListener('load', function() {
+                    // Tentative finale de défilement après le chargement complet
+                    setTimeout(attemptScroll, 500);
+                });
+            }
+        })();
+    </script>
 </div>
 <script>
 // --- Drag & Drop & Tippy Module ---
@@ -800,17 +849,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             };
             
-            // Initialize tooltips when setup is complete
-            initTippyTooltips();
-            
             return { 
                 onDragStart: onDragStart, 
                 onDragOver: onDragOver, 
                 onDragLeave: onDragLeave, 
-                onDropWrapper: onDropWrapper, 
-                initTippyTooltips: initTippyTooltips 
+                onDropWrapper: onDropWrapper
             };
         })();
     }
+
+    // Handle URL anchor scrolling during page load
+    (function() {
+        // Get the anchor from URL (remove the # symbol)
+        var urlAnchor = window.location.hash.substring(1);
+        
+        if (urlAnchor) {
+            // Function to attempt scrolling to the element
+            function attemptScrollToAnchor() {
+                var targetElement = document.getElementById(urlAnchor);
+                if (targetElement) {
+                    // Element found, scroll to it
+                    targetElement.scrollIntoView({behavior: 'auto', block: 'start'});
+                    return true;
+                }
+                return false;
+            }
+            
+            // Start observing DOM changes to detect when the anchor element is added
+            var observer = new MutationObserver(function(mutations) {
+                if (attemptScrollToAnchor()) {
+                    // If successful, stop observing
+                    observer.disconnect();
+                }
+            });
+            
+            // Start observing the document
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+            
+            // Make multiple attempts to scroll
+            var attempts = 0;
+            var maxAttempts = 10;
+            var attemptInterval = setInterval(function() {
+                if (attemptScrollToAnchor() || ++attempts >= maxAttempts) {
+                    clearInterval(attemptInterval);
+                }
+            }, 200);
+            
+            // Final attempt after page load
+            window.addEventListener('load', function() {
+                setTimeout(attemptScrollToAnchor, 500);
+            });
+        }
+    })();
 });
 </script>

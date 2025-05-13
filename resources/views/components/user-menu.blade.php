@@ -20,7 +20,7 @@
                 <p class="text-xs text-cyan-200 font-medium">ACCOUNT</p>
             </div>
             <div class="pt-1">
-                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
+                <a href="{{ route('profile') }}" class="flex items-center px-4 py-2.5 text-sm text-white hover:bg-white hover:bg-opacity-20 transition-colors rounded-lg">
                     <i class="fas fa-user-edit w-5 mr-3 text-cyan-200"></i>
                     <span>{{ __("navigation.profile") }}</span>
                 </a>
