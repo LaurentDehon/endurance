@@ -9,9 +9,9 @@
         <div class="text-center">
             <h1 class="text-3xl font-bold text-white">
                 <i class="fas fa-cogs mr-2 text-amber-300"></i>
-                User Settings
+                {{ __('settings.page_title') }}
             </h1>
-            <p class="text-cyan-200 text-sm mt-2">Customize your application preferences</p>
+            <p class="text-cyan-200 text-sm mt-2">{{ __('settings.page_description') }}</p>
         </div>
 
         <!-- Main Content -->
@@ -21,7 +21,7 @@
                 <div class="border-b border-white border-opacity-20 pb-3">
                     <h2 class="text-xl font-semibold text-white flex items-center">
                         <i class="fas fa-running mr-2 text-amber-300"></i>
-                        Strava Connection
+                        {{ __('settings.strava.title') }}
                     </h2>
                 </div>
 
@@ -31,20 +31,20 @@
                             <div class="flex items-center mb-2">
                                 @if($user->strava_token && $user->strava_expires_at > now()->timestamp)
                                     <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                                    <span class="text-green-300 font-medium">Connected to Strava</span>
+                                    <span class="text-green-300 font-medium">{{ __('settings.strava.connected') }}</span>
                                 @else
                                     <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                                    <span class="text-red-300 font-medium">Not connected to Strava</span>
+                                    <span class="text-red-300 font-medium">{{ __('settings.strava.not_connected') }}</span>
                                 @endif
                             </div>
                             <p class="text-slate-300 text-sm">
                                 @if($user->strava_token && $user->strava_expires_at > now()->timestamp)
-                                    Your account is linked to Strava.
+                                    {{ __('settings.strava.connected_description') }}
                                     <span class="block text-slate-400 text-xs mt-2">
-                                        Connection expires: {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->setTimezone($user->settings['timezone'] ?? config('app.timezone'))->format('Y-m-d H:i') }} ({{ $user->settings['timezone'] ?? 'local' }} time)
+                                        {{ __('settings.strava.connection_expires') }}: {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->setTimezone($user->settings['timezone'] ?? config('app.timezone'))->format('Y-m-d H:i') }} ({{ $user->settings['timezone'] ?? 'local' }} time)
                                     </span>
                                 @else
-                                    Connect your Strava account to automatically import your running activities.
+                                    {{ __('settings.strava.not_connected_description') }}
                                 @endif
                             </p>
                         </div>
@@ -53,13 +53,13 @@
                                 <a href="{{ route('strava.disconnect') }}" 
                                    class="flex items-center bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg transition-all">
                                     <i class="fas fa-unlink mr-2"></i>
-                                    Disconnect Strava
+                                    {{ __('settings.strava.disconnect') }}
                                 </a>
                             @else
                                 <a href="{{ route('strava.redirect') }}" 
                                    class="flex items-center bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg transition-all">
                                     <i class="fab fa-strava mr-2"></i>
-                                    Connect Strava
+                                    {{ __('settings.strava.connect') }}
                                 </a>
                             @endif
                         </div>
@@ -84,14 +84,14 @@
                                    class="rounded bg-slate-700 border-slate-600 text-amber-400 focus:ring-amber-400"
                                    {{ isset($user->settings['auto_renew_token']) && $user->settings['auto_renew_token'] ? 'checked' : '' }}>
                             <label for="auto_renew_token" class="ml-2 text-slate-300">
-                                Automatically renew Strava token when expired
+                                {{ __('settings.strava.auto_renew_token') }}
                             </label>
                         </div>
                         
                         <div class="pt-4">
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                                 <i class="fas fa-save mr-2"></i>
-                                Save Strava Settings
+                                {{ __('settings.strava.save_settings') }}
                             </button>
                         </div>
                     </form>
@@ -103,7 +103,7 @@
                 <div class="border-b border-white border-opacity-20 pb-3">
                     <h2 class="text-xl font-semibold text-white flex items-center">
                         <i class="fas fa-globe mr-2 text-amber-300"></i>
-                        Timezone & Language Settings
+                        {{ __('settings.timezone_language.title') }}
                     </h2>
                 </div>
 
@@ -112,46 +112,48 @@
                         @csrf
                         @method('PATCH')
                         
-                        <div>
-                            <label for="timezone" class="block text-slate-300 mb-2">Your Timezone</label>
-                            <select id="timezone" name="timezone" 
-                                    class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                @php
-                                    $timezones = \DateTimeZone::listIdentifiers();
-                                    $currentTimezone = $user->settings['timezone'] ?? null;
-                                @endphp
-                                
-                                @if (!$currentTimezone)
-                                    <option value="" selected disabled>Select your timezone</option>
-                                @endif
-                                
-                                @foreach($timezones as $timezone)
-                                    <option value="{{ $timezone }}" {{ $currentTimezone == $timezone ? 'selected' : '' }}>
-                                        {{ $timezone }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <p class="mt-1 text-xs text-slate-400">
-                                <i class="fas fa-info-circle mr-1"></i> Your timezone is automatically detected, but you can change it manually.
-                            </p>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <label for="language" class="block text-slate-300 mb-2">Language</label>
-                            <select id="language" name="language" 
-                                    class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                <option value="en" {{ ($user->settings['language'] ?? 'en') == 'en' ? 'selected' : '' }}>English</option>
-                                {{-- <option value="fr" {{ ($user->settings['language'] ?? 'en') == 'fr' ? 'selected' : '' }}>Français</option> --}}
-                            </select>
-                            <p class="mt-1 text-xs text-slate-400">
-                                <i class="fas fa-info-circle mr-1"></i> Choose your preferred language for the application interface.
-                            </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="timezone" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.timezone_label') }}</label>
+                                <select id="timezone" name="timezone" 
+                                        class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                    @php
+                                        $timezones = \DateTimeZone::listIdentifiers();
+                                        $currentTimezone = $user->settings['timezone'] ?? null;
+                                    @endphp
+                                    
+                                    @if (!$currentTimezone)
+                                        <option value="" selected disabled>{{ __('settings.timezone_language.timezone_placeholder') }}</option>
+                                    @endif
+                                    
+                                    @foreach($timezones as $timezone)
+                                        <option value="{{ $timezone }}" {{ $currentTimezone == $timezone ? 'selected' : '' }}>
+                                            {{ $timezone }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-1 text-xs text-slate-400">
+                                    <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.timezone_help') }}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <label for="language" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.language_label') }}</label>
+                                <select id="language" name="language" 
+                                        class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="en" {{ ($user->settings['language'] ?? 'en') == 'en' ? 'selected' : '' }}>English</option>
+                                    <option value="fr" {{ ($user->settings['language'] ?? 'en') == 'fr' ? 'selected' : '' }}>Français</option>
+                                </select>
+                                <p class="mt-1 text-xs text-slate-400">
+                                    <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.language_help') }}
+                                </p>
+                            </div>
                         </div>
                         
                         <div class="pt-4">
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                                 <i class="fas fa-save mr-2"></i>
-                                Save Settings
+                                {{ __('settings.timezone_language.save_settings') }}
                             </button>
                         </div>
                     </form>

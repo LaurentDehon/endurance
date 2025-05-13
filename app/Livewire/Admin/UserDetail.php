@@ -44,8 +44,8 @@ class UserDetail extends Component
     public function toggleEmailForm()
     {
         $this->email = [
-            'subject' => 'Message from ' . config('app.name'),
-            'message' => "Hello {$this->user->name},\n\n",
+            'subject' => __('admin.modal.email.default_subject', ['app_name' => config('app.name')]),
+            'message' => __('admin.modal.email.default_message', ['name' => $this->user->name]) . "\n\n",
         ];
 
         // Use EmailModal
@@ -57,10 +57,10 @@ class UserDetail extends Component
         $this->validate();
         
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm Email Sending',
-            'message' => "Are you sure you want to send an email to <strong>{$this->user->name}</strong> with subject: '{$this->email['subject']}'?",
-            'confirmButtonText' => 'Send Email',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('admin.user_detail.confirm.email_sending'),
+            'message' => __('admin.user_detail.confirm.email_message', ['name' => $this->user->name, 'subject' => $this->email['subject']]),
+            'confirmButtonText' => __('admin.user_detail.confirm.send_email'),
+            'cancelButtonText' => __('admin.user_detail.confirm.cancel'),
             'confirmAction' => 'confirmSendEmail',
             'params' => [],
             'icon' => 'envelope',
@@ -77,16 +77,16 @@ class UserDetail extends Component
         });
         
         $this->dispatch('closeModal');
-        $this->dispatch('toast', 'Email sent successfully to ' . $this->user->name, 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.email_sent', ['name' => $this->user->name]), 'success');
     }
     
     public function resetStravaConnection()
     {
         $this->dispatch('openConfirmModal', [
-            'title' => 'Reset Strava Connection',
-            'message' => "Are you sure you want to force <strong>{$this->user->name}</strong> to reconnect to Strava?",
-            'confirmButtonText' => 'Reset Connection',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('admin.user_detail.confirm.reset_strava'),
+            'message' => __('admin.user_detail.confirm.reset_strava_message', ['name' => $this->user->name]),
+            'confirmButtonText' => __('admin.user_detail.confirm.reset_connection'),
+            'cancelButtonText' => __('admin.user_detail.confirm.cancel'),
             'confirmAction' => 'confirmResetStrava',
             'params' => [],
             'icon' => 'running',
@@ -97,22 +97,22 @@ class UserDetail extends Component
     public function confirmResetStrava()
     {
         $this->user->update(['strava_expires_at' => now()->timestamp]);
-        $this->dispatch('toast', 'Strava connection has been reset for ' . $this->user->name, 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.strava_reset', ['name' => $this->user->name]), 'success');
     }
     
     public function deleteUser()
     {
         // Check if user is admin
         if ($this->user->is_admin) {
-            $this->dispatch('toast', 'Cannot delete admin users', 'error');
+            $this->dispatch('toast', __('admin.user_detail.messages.cannot_delete_admin'), 'error');
             return;
         }
         
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm User Deletion',
-            'message' => "Are you sure you want to delete user <strong>{$this->user->name}</strong>?<br>All associated data (activities, workouts, and weeks) will be permanently removed.",
-            'confirmButtonText' => 'Delete User',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('admin.user_detail.confirm.delete_user'),
+            'message' => __('admin.user_detail.confirm.delete_user_message', ['name' => $this->user->name]),
+            'confirmButtonText' => __('admin.user_detail.confirm.delete_user_button'),
+            'cancelButtonText' => __('admin.user_detail.confirm.cancel'),
             'confirmAction' => 'confirmDeleteUser',
             'params' => [],
             'icon' => 'user-slash',
@@ -124,7 +124,7 @@ class UserDetail extends Component
     {
         // Additional verification to avoid deleting administrators
         if ($this->user->is_admin) {
-            $this->dispatch('toast', 'Cannot delete admin users', 'error');
+            $this->dispatch('toast', __('admin.user_detail.messages.cannot_delete_admin'), 'error');
             return;
         }
         
@@ -136,50 +136,50 @@ class UserDetail extends Component
 
         $this->user->delete();
         
-        $this->dispatch('toast', 'User ' . $name . ' has been successfully deleted', 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.user_deleted', ['name' => $name]), 'success');
         return redirect()->route('admin');
     }
 
     public function toggleAdmin()
     {
         $this->user->update(['is_admin' => !$this->user->is_admin]);
-        $status = $this->user->is_admin ? 'granted' : 'revoked';
-        $this->dispatch('toast', 'Admin status ' . $status . ' for ' . $this->user->name, 'success');
+        $status = $this->user->is_admin ? 'admin_granted' : 'admin_revoked';
+        $this->dispatch('toast', __('admin.user_detail.messages.' . $status, ['name' => $this->user->name]), 'success');
     }
 
     public function verifyEmail()
     {
         $this->user->update(['email_verified_at' => $this->user->email_verified_at ? null : now()]);
-        $status = $this->user->email_verified_at ? 'verified' : 'unverified';
-        $this->dispatch('toast', 'Email ' . $status . ' for ' . $this->user->name, 'success');
+        $status = $this->user->email_verified_at ? 'email_verified' : 'email_unverified';
+        $this->dispatch('toast', __('admin.user_detail.messages.' . $status, ['name' => $this->user->name]), 'success');
     }
 
     public function sendResetPassword()
     {
         $token = Password::createToken($this->user);
         $this->user->sendPasswordResetNotification($token);
-        $this->dispatch('toast', 'Password reset email sent to ' . $this->user->name, 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.password_reset_sent', ['name' => $this->user->name]), 'success');
     }
 
     public function resendVerificationEmail()
     {
         $this->user->sendEmailVerificationNotification();
-        $this->dispatch('toast', 'Verification email sent to ' . $this->user->name, 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.verification_email_sent', ['name' => $this->user->name]), 'success');
     }
 
     public function banIpAddress()
     {
         // Check if the user has a registered IP address
         if (!$this->user->last_ip_address) {
-            $this->dispatch('toast', 'No IP address available for this user', 'error');
+            $this->dispatch('toast', __('admin.user_detail.messages.no_ip_available'), 'error');
             return;
         }
         
         $this->dispatch('openConfirmModal', [
-            'title' => 'Ban IP Address',
-            'message' => "Are you sure you want to ban the IP address <strong>{$this->user->last_ip_address}</strong> used by {$this->user->name}?<br>This will prevent anyone using this IP from logging in.",
-            'confirmButtonText' => 'Ban IP',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('admin.user_detail.confirm.ban_ip'),
+            'message' => __('admin.user_detail.confirm.ban_ip_message', ['ip' => $this->user->last_ip_address, 'name' => $this->user->name]),
+            'confirmButtonText' => __('admin.user_detail.confirm.ban_ip_button'),
+            'cancelButtonText' => __('admin.user_detail.confirm.cancel'),
             'confirmAction' => 'confirmBanIp',
             'params' => [],
             'icon' => 'ban',
@@ -191,13 +191,13 @@ class UserDetail extends Component
     {
         // Additional verification that the IP address exists
         if (!$this->user->last_ip_address) {
-            $this->dispatch('toast', 'No IP address available for this user', 'error');
+            $this->dispatch('toast', __('admin.user_detail.messages.no_ip_available'), 'error');
             return;
         }
         
         // Check if the IP is already banned
         if (\App\Models\BannedIp::isIpBanned($this->user->last_ip_address)) {
-            $this->dispatch('toast', 'This IP address is already banned', 'warning');
+            $this->dispatch('toast', __('admin.user_detail.messages.ip_already_banned'), 'warning');
             return;
         }
         
@@ -208,7 +208,7 @@ class UserDetail extends Component
             'banned_by' => Auth::id(),
         ]);
         
-        $this->dispatch('toast', 'IP address ' . $this->user->last_ip_address . ' has been banned', 'success');
+        $this->dispatch('toast', __('admin.user_detail.messages.ip_banned', ['ip' => $this->user->last_ip_address]), 'success');
     }
 
     public function render()

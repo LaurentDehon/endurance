@@ -61,8 +61,8 @@ class Activities extends Component
     public function deleteAll()
     {
         $this->dispatch('openConfirmModal', [
-            'title' => 'Delete All Activities',
-            'message' => 'Are you sure you want to delete all activities?<br>This action cannot be undone.',
+            'title' => __('activities.delete_all_title'),
+            'message' => __('activities.delete_all_message'),
             'confirmAction' => 'confirmDeleteAll',
         ]);
     }
@@ -87,7 +87,7 @@ class Activities extends Component
         
         $this->dispatch('toast', [
             'type' => 'success',
-            'message' => 'All activities have been deleted successfully.'
+            'message' => __('activities.delete_all_success')
         ]);
         
         $this->dispatch('reload-tooltips');

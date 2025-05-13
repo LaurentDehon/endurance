@@ -31,16 +31,16 @@
         <div class="flex justify-between items-start mb-4">
             <h2 class="text-xl md:text-2xl font-bold text-white mb-1 flex items-center" id="modal-title">
                 <i class="fas fa-{{ $workoutId ? 'edit' : 'plus-circle' }} text-amber-300 mr-3"></i>
-                {{ $workoutId ? 'Edit Workout' : 'Create New Workout' }}
+                {{ $workoutId ? __('workouts.modal.Edit Workout') : __('workouts.modal.Create New Workout') }}
             </h2>
             <button type="button" wire:click.prevent="close" 
                 class="text-white bg-cyan-600 hover:bg-cyan-500 h-8 w-8 rounded-full flex items-center justify-center hover:scale-105 transition-all"
-                aria-label="Close">
+                aria-label="{{ __('workouts.modal.Close') }}">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <p class="text-cyan-200 text-sm mb-4">
-            {{ $workoutId ? 'Update your workout session details' : 'Enter the details of your session' }}
+            {{ $workoutId ? __('workouts.modal.Update your workout session details') : __('workouts.modal.Enter the details of your session') }}
         </p>
     </div>
 
@@ -48,7 +48,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <!-- Date -->
             <div class="space-y-1.5">
-                <label for="date" class="text-sm font-medium text-white">Date</label>
+                <label for="date" class="text-sm font-medium text-white">{{ __('workouts.modal.Date') }}</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-calendar-alt text-slate-300 text-sm"></i>
@@ -62,7 +62,7 @@
 
             <!-- Workout Type -->
             <div class="space-y-1.5">
-                <label for="workout_type_id" class="text-sm font-medium text-white">Workout Type</label>
+                <label for="workout_type_id" class="text-sm font-medium text-white">{{ __('workouts.modal.Workout Type') }}</label>
                 <div class="relative" x-data="{ typeMenuOpen: false }">
                     <!-- Bouton du dropdown -->
                     <button 
@@ -135,7 +135,7 @@
 
             <!-- Distance -->
             <div class="space-y-1.5">
-                <label for="distance" class="text-sm font-medium text-white">Distance (km)</label>
+                <label for="distance" class="text-sm font-medium text-white">{{ __('workouts.modal.Distance') }} ({{ __('workouts.modal.km') }})</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-route text-slate-300 text-sm"></i>
@@ -151,7 +151,7 @@
 
             <!-- Elevation -->
             <div class="space-y-1.5">
-                <label for="elevation" class="text-sm font-medium text-white">Elevation (m)</label>
+                <label for="elevation" class="text-sm font-medium text-white">{{ __('workouts.modal.Elevation') }} ({{ __('workouts.modal.m') }})</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-mountain text-slate-300 text-sm"></i>
@@ -167,7 +167,7 @@
 
             <!-- Duration -->
             <div class="col-span-full space-y-1.5">
-                <label class="text-sm font-medium text-white">Duration</label>
+                <label class="text-sm font-medium text-white">{{ __('workouts.modal.Duration') }}</label>
                 <div class="flex flex-col space-y-2 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
                     <!-- Hours -->
                     <div class="relative">
@@ -177,7 +177,7 @@
                         <input type="number" wire:model="hours" id="hours" min="0" 
                             class="pl-10 pr-12 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all"
                             placeholder="0">
-                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-sm">hrs</span>
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-sm">{{ __('workouts.modal.hrs') }}</span>
                     </div>
 
                     <!-- Minutes -->
@@ -188,7 +188,7 @@
                         <input type="number" wire:model="minutes" id="minutes" min="0" max="59" 
                             class="pl-10 pr-12 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all"
                             placeholder="0">
-                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-sm">min</span>
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-sm">{{ __('workouts.modal.min') }}</span>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -199,14 +199,14 @@
 
             <!-- Notes -->
             <div class="col-span-full space-y-1.5">
-                <label for="notes" class="text-sm font-medium text-white">Notes</label>
+                <label for="notes" class="text-sm font-medium text-white">{{ __('workouts.modal.Notes') }}</label>
                 <div class="relative">
                     <div class="absolute top-2.5 left-3">
                         <i class="fas fa-comment text-slate-300 text-sm"></i>
                     </div>
                     <textarea wire:model="notes" id="notes" rows="3" 
                         class="pl-10 pr-4 py-2.5 w-full rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-2 focus:ring-blue-400/20 transition-all" 
-                        placeholder="Write additional notes..."></textarea>
+                        placeholder="{{ __('workouts.modal.Write additional notes...') }}"></textarea>
                     @error('notes')
                         <span class="text-red-500 text-xs mt-1 block">{{ $errors->first('notes') }}</span>
                     @enderror
@@ -223,7 +223,7 @@
                         <label for="isRecurring" class="ml-2 text-sm font-medium text-white cursor-pointer"></label>
                             <span class="flex items-center text-white">
                                 <i class="fas fa-repeat text-amber-400 mr-1.5"></i>
-                                Recurring Workout
+                                {{ __('workouts.modal.Recurring Workout') }}
                             </span>
                         </label>
                     </div>
@@ -234,7 +234,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                         <!-- Interval -->
                         <div class="space-y-1.5">
-                            <label for="recurrenceInterval" class="text-sm font-medium text-white">Repeat every (days)</label>
+                            <label for="recurrenceInterval" class="text-sm font-medium text-white">{{ __('workouts.modal.Repeat every (days)') }}</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-repeat text-slate-300 text-sm"></i>
@@ -250,7 +250,7 @@
 
                         <!-- End Date -->
                         <div class="space-y-1.5">
-                            <label for="recurrenceEndDate" class="text-sm font-medium text-white">End Date</label>
+                            <label for="recurrenceEndDate" class="text-sm font-medium text-white">{{ __('workouts.modal.End Date') }}</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-calendar-times text-slate-300 text-sm"></i>
@@ -274,7 +274,7 @@
             <button type="button" wire:click.prevent="close" 
                 class="text-white bg-cyan-600 hover:bg-cyan-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300/50">
                 <i class="fas fa-times mr-1.5"></i>
-                Close
+                {{ __('workouts.modal.Close') }}
             </button>
 
             @if($workoutId)
@@ -282,7 +282,7 @@
                 <button type="button" wire:click.prevent="delete" 
                     class="bg-red-600 hover:bg-red-500 text-white flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300/50 hover:shadow-md">
                     <i class="fas fa-trash-alt mr-1.5"></i>
-                    Delete
+                    {{ __('workouts.modal.Delete') }}
                 </button>
             @endif
             
@@ -290,7 +290,7 @@
             <button type="submit" 
                 class="bg-amber-600 text-white hover:bg-amber-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 hover:shadow-md">
                 <i class="fas fa-{{ $workoutId ? 'save' : 'plus' }} mr-1.5"></i>
-                {{ $workoutId ? 'Save' : 'Create' }}
+                {{ $workoutId ? __('workouts.modal.Save') : __('workouts.modal.Create') }}
             </button>
         </div>
     </form>

@@ -1,0 +1,55 @@
+<?php
+
+return [
+    'login' => [
+        'title' => 'Connectez-vous à votre compte',
+        'subtitle' => 'Entrez vos identifiants pour accéder à votre compte',
+        'email' => 'Adresse e-mail',
+        'password' => 'Mot de passe',
+        'remember' => 'Se souvenir de moi',
+        'forgot_password' => 'Mot de passe oublié ?',
+        'sign_in' => 'Se connecter',
+        'register' => 'Pas encore de compte ? Inscrivez-vous',
+    ],
+    'register' => [
+        'title' => 'Créez votre compte',
+        'subtitle' => 'Remplissez vos informations pour créer un compte',
+        'name' => 'Nom complet',
+        'email' => 'Adresse e-mail',
+        'password' => 'Mot de passe',
+        'password_confirmation' => 'Confirmer le mot de passe',
+        'already_registered' => 'Déjà inscrit ?',
+        'create_account' => 'Créer un compte',
+    ],
+    'forgot_password' => [
+        'title' => 'Mot de passe oublié ?',
+        'subtitle' => 'Entrez votre e-mail et nous vous enverrons un lien de réinitialisation',
+        'email' => 'Adresse e-mail',
+        'send_link' => 'Envoyer le lien de réinitialisation',
+        'back_to_login' => 'Retour à la connexion',
+    ],
+    'reset_password' => [
+        'title' => 'Réinitialiser le mot de passe',
+        'subtitle' => 'Créez un nouveau mot de passe pour votre compte',
+        'email' => 'Adresse e-mail',
+        'password' => 'Mot de passe',
+        'password_confirmation' => 'Confirmer le mot de passe',
+        'reset_password' => 'Réinitialiser le mot de passe',
+    ],
+    'confirm_password' => [
+        'title' => 'Confirmation requise',
+        'subtitle' => 'Veuillez confirmer votre mot de passe pour continuer',
+        'password' => 'Mot de passe',
+        'confirm' => 'Confirmer',
+        'forgot_password' => 'Mot de passe oublié ?',
+    ],
+    'verify_email' => [
+        'title' => 'Vérifiez votre adresse e-mail',
+        'sent' => 'Un lien de vérification a été envoyé à votre adresse e-mail.',
+        'check' => 'Avant de continuer, veuillez vérifier votre e-mail pour un lien de vérification.',
+        'not_received' => 'Si vous n\'avez pas reçu l\'e-mail',
+        'resend' => 'Cliquez ici pour en demander un autre',
+        'verified' => 'Votre adresse e-mail a été vérifiée !',
+        'proceed' => 'Vous pouvez maintenant accéder à votre tableau de bord.',
+    ],
+];

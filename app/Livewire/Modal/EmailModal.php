@@ -29,8 +29,8 @@ class EmailModal extends Component
             $this->email = $email;
         } else {
             $this->email = [
-                'subject' => 'Message from ' . config('app.name'),
-                'message' => "Hello {$this->user->name},\n\n",
+                'subject' => __('admin.modal.email.default_subject', ['app_name' => config('app.name')]),
+                'message' => __('admin.modal.email.default_message', ['name' => $this->user->name]) . "\n\n",
             ];
         }
     }
@@ -48,12 +48,11 @@ class EmailModal extends Component
         });
         
         $this->dispatch('closeModal');
-        $this->dispatch('toast', 'Email sent successfully to ' . $user->name, 'success');
+        $this->dispatch('toast', __('admin.modal.email.success_message', ['name' => $user->name]), 'success');
     }
 
     public function render()
     {
-        $name = $this->user->name;
-        return view('livewire.modal.email-modal', compact('name'));
+        return view('livewire.modal.email-modal');
     }
 }

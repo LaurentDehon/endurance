@@ -2,10 +2,10 @@
     <!-- Navigation tabs -->
     <div class="flex mb-6 gap-4 text-center">
         <a href="{{ route('admin.users') }}" class="flex-1 px-5 py-3 rounded-lg text-white bg-amber-600 hover:bg-amber-500 transition-colors">
-            <i class="fas fa-users mr-2"></i> Users
+            <i class="fas fa-users mr-2"></i> {{ __('admin.navigation.users') }}
         </a>
         <a href="{{ route('admin.visits') }}" class="flex-1 px-5 py-3 rounded-lg text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-            <i class="fas fa-chart-line mr-2"></i> Visits
+            <i class="fas fa-chart-line mr-2"></i> {{ __('admin.navigation.visits') }}
         </a>
     </div>
 
@@ -13,7 +13,7 @@
         <div class="flex gap-4 w-full ml-auto">
             <!-- Search -->
             <div class="relative flex-1">
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search..." 
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('admin.users.search') }}" 
                        class="w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400 focus:ring-0 transition-all border-0 outline-none">
                 @if($search)
                     <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 text-cyan-200 transition-colors">✕</button>
@@ -23,7 +23,7 @@
             <!-- Items per page -->
             <div class="relative" x-data="{ open: false, selected: '{{ $perPage }}' }">
                 <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-0 transition-all">
-                    <span x-text="selected + '/page'"></span>
+                    <span x-text="selected + '{{ __('admin.users.per_page') }}'"></span>
                     <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': open}"></i>
                 </button>
                 
@@ -36,9 +36,9 @@
                     x-transition:leave-end="transform opacity-0 scale-95"
                     class="absolute right-0 mt-1 w-28 z-10 rounded-lg overflow-hidden shadow-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 backdrop-blur-sm">
                     <div class="py-1">
-                        <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">10/page</button>
-                        <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">25/page</button>
-                        <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">50/page</button>
+                        <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">10{{ __('admin.users.per_page') }}</button>
+                        <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">25{{ __('admin.users.per_page') }}</button>
+                        <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">50{{ __('admin.users.per_page') }}</button>
                     </div>
                 </div>
             </div>
@@ -54,23 +54,23 @@
                         <!-- Headings -->
                         <th class="px-4 py-3 text-left text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('name')">
-                            Name
+                            {{ __('admin.users.table.name') }}
                             @include('components.sort-icon', ['field' => 'name'])
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-cyan-200 uppercase cursor-pointer hidden sm:table-cell" 
                             wire:click="sortBy('email')">
-                            Email
+                            {{ __('admin.users.table.email') }}
                             @include('components.sort-icon', ['field' => 'email'])
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
-                            Verified
+                            {{ __('admin.users.table.verified') }}
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
-                            Admin
+                            {{ __('admin.users.table.admin') }}
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('last_login_at')">
-                            Last Login
+                            {{ __('admin.users.table.last_login') }}
                             @include('components.sort-icon', ['field' => 'last_login_at'])
                         </th>
                     </tr>
@@ -101,14 +101,14 @@
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        Verified
+                                        {{ __('admin.users.table.status.verified') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-gray-300 text-gray-800">
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-gray-400" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        Pending
+                                        {{ __('admin.users.table.status.not_verified') }}
                                     </span>
                                 @endif
                             </td>
@@ -120,14 +120,14 @@
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-purple-400" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        Admin
+                                        {{ __('admin.users.table.status.admin') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-gray-300 text-gray-800">
                                         <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-gray-400" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        User
+                                        {{ __('admin.users.table.status.user') }}
                                     </span>
                                 @endif
                             </td>
@@ -160,7 +160,7 @@
                     <tr>
                         <td colspan="5" class="px-6 py-4 text-center text-cyan-200">
                            <div class="flex justify-center items-center py-6">
-                                <span class="font-medium">No user found</span>
+                                <span class="font-medium">{{ __('admin.users.table.no_results') }}</span>
                            </div>
                         </td>
                     </tr>
@@ -174,13 +174,13 @@
             <div class="p-4 border-t bg-white bg-opacity-10">
                 <div class="custom-pagination">
                     <div class="pagination-summary text-cyan-200">
-                        Showing 
+                        {{ __('admin.users.pagination.showing') }} 
                         <span class="font-medium mx-1 text-white">{{ $users->firstItem() }}</span> 
-                        to 
+                        {{ __('admin.users.pagination.to') }} 
                         <span class="font-medium mx-1 text-white">{{ $users->lastItem() }}</span> 
-                        of 
+                        {{ __('admin.users.pagination.of') }} 
                         <span class="font-medium mx-1 text-white">{{ $users->total() }}</span> 
-                        results
+                        {{ __('admin.users.pagination.results') }}
                     </div>
                     
                     <div class="pagination-controls">

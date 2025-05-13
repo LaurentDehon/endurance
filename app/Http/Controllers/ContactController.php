@@ -21,6 +21,12 @@ class ContactController extends Controller
             'email' => 'required|email',
             'subject' => 'required|string|max:255',
             'message' => 'required|string'
+        ], [
+            'name.required' => __('contact.messages.validation.name_required'),
+            'email.required' => __('contact.messages.validation.email_required'),
+            'email.email' => __('contact.messages.validation.email_valid'),
+            'subject.required' => __('contact.messages.validation.subject_required'),
+            'message.required' => __('contact.messages.validation.message_required'),
         ]);
 
         $recipient = config('mail.from.address');
@@ -29,12 +35,19 @@ class ContactController extends Controller
             throw new \Exception('The mail recipient is empty.');
         }
 
-        Mail::to($recipient)->send(new ContactMail($request->all()));
-        
-        session()->flash('toast', [
-            'message' => 'Your message has been sent successfully',
-            'type' => 'success'
-        ]);
+        try {
+            Mail::to($recipient)->send(new ContactMail($request->all()));
+            
+            session()->flash('toast', [
+                'message' => __('contact.messages.success'),
+                'type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('toast', [
+                'message' => __('contact.messages.error'),
+                'type' => 'error'
+            ]);
+        }
 
         return back();
     }

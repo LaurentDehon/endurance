@@ -3,18 +3,18 @@
         <div class="flex gap-3 w-full ml-auto">
             <!-- Search -->
             <div class="relative flex-1">
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search..." 
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('activities.search_placeholder') }}" 
                        class="w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400 focus:ring-0 transition-all border-0 outline-none">
                 @if($search)
-                    <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 text-cyan-200 transition-colors" data-tippy-content="Clear search">✕</button>
+                    <button wire:click="$set('search', '')" class="absolute right-3 top-2.5 text-cyan-200 transition-colors" data-tippy-content="{{ __('activities.clear_search') }}">✕</button>
                 @endif
             </div>
         
             <!-- Items per page -->
             <div class="flex gap-3 h-10">
                 <div class="relative" x-data="{ open: false, selected: '{{ $perPage }}' }">
-                    <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-0 transition-all" data-tippy-content="Select items per page">
-                        <span x-text="selected + '/page'"></span>
+                    <button @click="open = !open" type="button" class="flex items-center justify-between w-28 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 focus:ring-0 transition-all" data-tippy-content="{{ __('activities.items_per_page') }}">
+                        <span x-text="selected + '{{ __('activities.per_page') }}'"></span>
                         <i class="fas fa-chevron-down text-xs ml-1 opacity-70 transition-transform duration-200" :class="{'rotate-180': open}"></i>
                     </button>
                     
@@ -27,9 +27,9 @@
                         x-transition:leave-end="transform opacity-0 scale-95"
                         class="absolute right-0 mt-1 w-28 z-10 rounded-lg overflow-hidden shadow-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 backdrop-blur-sm">
                         <div class="py-1">
-                            <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">10/page</button>
-                            <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">25/page</button>
-                            <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">50/page</button>
+                            <button wire:click="$set('perPage', 10)" @click="open = false; selected='10'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">10{{ __('activities.per_page') }}</button>
+                            <button wire:click="$set('perPage', 25)" @click="open = false; selected='25'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">25{{ __('activities.per_page') }}</button>
+                            <button wire:click="$set('perPage', 50)" @click="open = false; selected='50'" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-opacity-20 hover:bg-white transition-colors">50{{ __('activities.per_page') }}</button>
                         </div>
                     </div>
                 </div>
@@ -38,8 +38,8 @@
                 <button 
                     wire:click="deleteAll"
                     class="px-4 py-2 rounded-lg bg-red-600 bg-opacity-80 text-white hover:bg-red-500 transition-colors"
-                    data-tippy-content="Delete all activities">
-                    Delete All
+                    data-tippy-content="{{ __('activities.delete_all_tip') }}">
+                    {{ __('activities.delete_all') }}
                 </button>
             </div>
         </div>
@@ -56,51 +56,51 @@
                         <!-- Headings -->
                         <th class="w-1/4 px-4 py-3 text-left text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('name')"
-                            data-tippy-content="Sort by name">
-                            Name
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.name')]) }}">
+                            {{ __('activities.table.name') }}
                             @include('components.sort-icon', ['field' => 'name'])
                         </th>
                         
                         <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('start_date')"
-                            data-tippy-content="Sort by date">
-                            Date
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.date')]) }}">
+                            {{ __('activities.table.date') }}
                             @include('components.sort-icon', ['field' => 'start_date'])
                         </th>
 
                         <th class="hidden sm:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('distance')"
-                            data-tippy-content="Sort by distance">
-                            Distance
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.distance')]) }}">
+                            {{ __('activities.table.distance') }}
                             @include('components.sort-icon', ['field' => 'distance'])
                         </th>
 
                         <th class="hidden sm:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('moving_time')"
-                            data-tippy-content="Sort by time">
-                            Time
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.time')]) }}">
+                            {{ __('activities.table.time') }}
                             @include('components.sort-icon', ['field' => 'moving_time'])
                         </th>
 
                         <th class="hidden md:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('total_elevation_gain')"
-                            data-tippy-content="Sort by elevation">
-                            Elevation
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.elevation')]) }}">
+                            {{ __('activities.table.elevation') }}
                             @include('components.sort-icon', ['field' => 'total_elevation_gain'])
                         </th>
                         
                         <!-- Nouvelles colonnes pour lg et plus -->
                         <th class="hidden lg:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('average_heartrate')"
-                            data-tippy-content="Sort by average heart rate">
-                            Average HR
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.average_hr')]) }}">
+                            {{ __('activities.table.average_hr') }}
                             @include('components.sort-icon', ['field' => 'average_heartrate'])
                         </th>
                         
                         <th class="hidden lg:table-cell px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase cursor-pointer" 
                             wire:click="sortBy('average_speed')"
-                            data-tippy-content="Sort by average pace">
-                            Average Pace
+                            data-tippy-content="{{ __('activities.table.sort_by', ['field' => __('activities.table.average_pace')]) }}">
+                            {{ __('activities.table.average_pace') }}
                             @include('components.sort-icon', ['field' => 'average_speed'])
                         </th>
                     </tr>
@@ -127,7 +127,7 @@
                             <!-- Distance -->
                             <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium text-cyan-200">
-                                    {{ number_format($activity->distance / 1000, 1) }}km
+                                    {{ number_format($activity->distance / 1000, 1) }}{{ __('activities.units.km') }}
                                 </span>
                             </td>
 
@@ -140,7 +140,7 @@
                             <!-- Elevation -->
                             <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap text-center">
                                 <span class="text-sm font-medium text-cyan-200">
-                                    {{ $activity->total_elevation_gain }}m
+                                    {{ $activity->total_elevation_gain }}{{ __('activities.units.m') }}
                                 </span>
                             </td>
 
@@ -160,7 +160,7 @@
                                             $minutes = floor($secondsPerKm / 60);
                                             $seconds = floor($secondsPerKm % 60);
                                         @endphp
-                                        {{ $minutes }}:{{ str_pad($seconds, 2, '0', STR_PAD_LEFT) }}/km
+                                        {{ $minutes }}:{{ str_pad($seconds, 2, '0', STR_PAD_LEFT) }}{{ __('activities.units.per_km') }}
                                     @else
                                         N/A
                                     @endif
@@ -169,9 +169,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-cyan-200">
+                            <td colspan="7" class="px-6 py-4 text-center text-cyan-200">
                                <div class="flex justify-center items-center py-6">
-                                    <span class="font-medium">No activity found</span>
+                                    <span class="font-medium">{{ __('activities.no_activities') }}</span>
                                </div>
                             </td>
                         </tr>
@@ -185,13 +185,13 @@
             <div class="p-4 border-t bg-white bg-opacity-10">
                 <div class="custom-pagination">
                     <div class="pagination-summary text-cyan-200">
-                        Showing 
+                        {{ __('activities.pagination.showing') }} 
                         <span class="font-medium mx-1 text-white">{{ $activities->firstItem() }}</span> 
-                        to 
+                        {{ __('activities.pagination.to') }} 
                         <span class="font-medium mx-1 text-white">{{ $activities->lastItem() }}</span> 
-                        of 
+                        {{ __('activities.pagination.of') }} 
                         <span class="font-medium mx-1 text-white">{{ $activities->total() }}</span> 
-                        results
+                        {{ __('activities.pagination.results') }}
                     </div>
                     
                     <div class="pagination-controls">

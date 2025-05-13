@@ -20,10 +20,10 @@ class ActivityModal extends Component
     public function delete()
     {
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm deletion',
-            'message' => 'Are you sure you want to delete this activity?<br>This action cannot be undone.',
-            'confirmButtonText' => 'Confirm',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('activities.confirm_deletion'),
+            'message' => __('activities.delete_confirmation_message'),
+            'confirmButtonText' => __('activities.confirm'),
+            'cancelButtonText' => __('activities.cancel'),
             'confirmAction' => 'confirmDelete',
             'icon' => 'trash-alt',
             'iconColor' => 'red'
@@ -36,7 +36,7 @@ class ActivityModal extends Component
             ->where('id', $this->activity->id)
             ->delete();
 
-        $this->dispatch('toast', 'Activity deleted successfully', 'success');
+        $this->dispatch('toast', __('activities.deleted_success'), 'success');
         $this->dispatch('closeModal', 'activity-modal');
         $this->dispatch('activity-deleted');
     }

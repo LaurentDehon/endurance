@@ -9,7 +9,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Next Objectives
+                    {{ __('dashboard.next_objectives.title') }}
                 </h2>
                 
                 <div class="mb-4" id="nextWorkoutContent">
@@ -30,20 +30,20 @@
                                 @if(isset($workout->distance) && $workout->distance > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
                                     <i class="fas fa-route"></i>
-                                    <span>{{ $workout->distance }} km</span>
+                                    <span>{{ $workout->distance }} {{ __('dashboard.units.km') }}</span>
                                 </div>
                                 @endif
                                 @if(isset($workout->elevation) && $workout->elevation > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
                                     <i class="fas fa-mountain"></i>
-                                    <span>{{ $workout->elevation }} m</span>
+                                    <span>{{ $workout->elevation }} {{ __('dashboard.units.m') }}</span>
                                 </div>
                                 @endif
                             </div>
                         @endforeach
                     @else
                         <div class="text-center py-6">
-                            <p class="text-xl text-cyan-200 mb-4">No upcoming objectives scheduled</p>
+                            <p class="text-xl text-cyan-200 mb-4">{{ __('dashboard.next_objectives.no_upcoming') }}</p>
                         </div>
                     @endif
                 </div>
@@ -55,7 +55,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
                     </svg>
-                    Next Race
+                    {{ __('dashboard.next_race.title') }}
                 </h2>
                 
                 <div class="flex-grow mb-4" id="nextRaceContent">
@@ -74,41 +74,41 @@
                         @if(isset($nextRace->distance) && $nextRace->distance > 0)
                         <div class="flex items-center mb-2 gap-2 text-cyan-200">
                             <i class="fas fa-route"></i>
-                            <span>{{ $nextRace->distance }} km</span>
+                            <span>{{ $nextRace->distance }} {{ __('dashboard.units.km') }}</span>
                         </div>
                         @endif
                         @if(isset($nextRace->elevation) && $nextRace->elevation > 0)
                         <div class="flex items-center mb-2 gap-2 text-cyan-200">
                             <i class="fas fa-mountain"></i>
-                            <span>{{ $nextRace->elevation }} m</span>
+                            <span>{{ $nextRace->elevation }} {{ __('dashboard.units.m') }}</span>
                         </div>
                         @endif
                     @else
                         <div class="text-center py-6">
-                            <p class="text-xl text-cyan-200 mb-4">No upcoming races scheduled</p>
+                            <p class="text-xl text-cyan-200 mb-4">{{ __('dashboard.next_race.no_upcoming') }}</p>
                         </div>
                     @endif
                 </div>
                 
                 @if(isset($nextRace))
                     <div class="mt-auto pt-4">
-                        <h3 class="font-semibold mb-2 text-white">Time Until Race:</h3>
+                        <h3 class="font-semibold mb-2 text-white">{{ __('dashboard.next_race.time_until') }}</h3>
                         <div class="grid grid-cols-4 gap-2 text-center" id="raceCountdown" data-target-date="{{ $nextRace->date }}">
                             <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
                                 <span id="raceDays" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">DAYS</span>
+                                <span class="text-xs text-cyan-200">{{ __('dashboard.next_race.countdown.days') }}</span>
                             </div>
                             <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
                                 <span id="raceHours" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">HRS</span>
+                                <span class="text-xs text-cyan-200">{{ __('dashboard.next_race.countdown.hours') }}</span>
                             </div>
                             <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
                                 <span id="raceMinutes" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">MINS</span>
+                                <span class="text-xs text-cyan-200">{{ __('dashboard.next_race.countdown.mins') }}</span>
                             </div>
                             <div class="bg-red-600 bg-opacity-60 rounded-lg p-2">
                                 <span id="raceSeconds" class="text-3xl font-bold block text-white">--</span>
-                                <span class="text-xs text-cyan-200">SECS</span>
+                                <span class="text-xs text-cyan-200">{{ __('dashboard.next_race.countdown.secs') }}</span>
                             </div>
                         </div>
                     </div>
@@ -121,18 +121,18 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
-                    Your Progress
+                    {{ __('dashboard.progress.title') }}
                 </h2>
                 
                 <div class="space-y-6 flex-grow mb-4">
                     <!-- Weekly Distance -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Distance</span>
+                            <span class="text-sm font-medium text-cyan-200">{{ __('dashboard.progress.weekly_distance') }}</span>
                             @if(isset($weeklyGoal->distance) && $weeklyGoal->distance > 0)
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} / {{ number_format($weeklyGoal->distance, 1) }} km</span>
+                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} / {{ number_format($weeklyGoal->distance, 1) }} {{ __('dashboard.units.km') }}</span>
                             @else
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} km</span>
+                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->distance ?? 0, 1) }} {{ __('dashboard.units.km') }}</span>
                             @endif
                         </div>
                         <div class="w-full bg-gray-800 bg-opacity-50 rounded-full h-2.5">
@@ -147,7 +147,7 @@
                     <!-- Weekly Duration -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Duration</span>
+                            <span class="text-sm font-medium text-cyan-200">{{ __('dashboard.progress.weekly_duration') }}</span>
                             @if(isset($weeklyGoal->duration) && $weeklyGoal->duration > 0)
                                 <span class="text-sm font-bold text-white">{{ formatTime($weeklyStats->duration ?? 0) }} / {{ formatTime($weeklyGoal->duration) }}</span>
                             @else
@@ -166,11 +166,11 @@
                     <!-- Weekly Elevation -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Weekly Elevation</span>
+                            <span class="text-sm font-medium text-cyan-200">{{ __('dashboard.progress.weekly_elevation') }}</span>
                             @if(isset($weeklyGoal->elevation) && $weeklyGoal->elevation > 0)
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} / {{ number_format($weeklyGoal->elevation) }} m</span>
+                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} / {{ number_format($weeklyGoal->elevation) }} {{ __('dashboard.units.m') }}</span>
                             @else
-                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} m</span>
+                                <span class="text-sm font-bold text-white">{{ number_format($weeklyStats->elevation ?? 0) }} {{ __('dashboard.units.m') }}</span>
                             @endif
                         </div>
                         <div class="w-full bg-gray-700 rounded-full h-2.5">
@@ -185,8 +185,8 @@
                     <!-- Monthly Consistency -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-cyan-200">Monthly Consistency</span>
-                            <span class="text-sm font-bold text-white">{{ $monthlyConsistency ?? 0 }}%</span>
+                            <span class="text-sm font-medium text-cyan-200">{{ __('dashboard.progress.monthly_consistency') }}</span>
+                            <span class="text-sm font-bold text-white">{{ $monthlyConsistency ?? 0 }}{{ __('dashboard.units.percent') }}</span>
                         </div>
                         <div class="w-full bg-gray-700 rounded-full h-2.5">
                             <div class="bg-purple-400 h-2.5 rounded-full progress-bar" style="width: {{ $monthlyConsistency ?? 0 }}%"></div>
@@ -196,13 +196,18 @@
                 
                 <!-- Calendar Link Button -->
                 @php
-                    $currentMonthName = \Carbon\Carbon::now()->format('F');
-                    $currentMonthSlug = Str::slug($currentMonthName);
+                    // Get current month in English for the slug (for navigation)
+                    $currentMonthNameEnglish = \Carbon\Carbon::now()->locale('en')->format('F');
+                    $currentMonthSlug = Str::slug($currentMonthNameEnglish);
+                    
+                    // Get current month in user's locale for display
+                    \Carbon\Carbon::setLocale(app()->getLocale());
+                    $currentMonthName = \Carbon\Carbon::now()->translatedFormat('F');
                 @endphp
                 <div class="mt-auto pt-4 border-t border-white border-opacity-20">
                     <a href="{{ route('calendar') }}#{{ $currentMonthSlug }}" class="flex items-center justify-center gap-2 px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors w-full">
                         <i class="fas fa-calendar"></i>
-                        <span>View {{ $currentMonthName }} in Calendar</span>
+                        <span>{{ __('dashboard.progress.view_calendar', ['month' => $currentMonthName]) }}</span>
                     </a>
                 </div>
             </div>

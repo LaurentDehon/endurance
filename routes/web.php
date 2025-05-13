@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StravaMiddleware;
+use App\Http\Middleware\LocaleMiddleware;
 use App\Http\Controllers\StravaController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;

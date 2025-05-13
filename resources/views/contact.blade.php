@@ -4,9 +4,9 @@
     <!-- Header Section -->
     <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Contact Us</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">{{ __('contact.header.title') }}</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
-                We're here to help with any questions about your workout calendar
+                {{ __('contact.header.subtitle') }}
             </p>
         </div>
     </div>
@@ -20,7 +20,7 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-envelope text-xl text-white"></i>
                     </div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Send a Message</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('contact.form.title') }}</h2>
                 </div>
                 
                 <form class="contact-form mt-8 space-y-6" action="{{ route('contact.send') }}" method="POST">
@@ -29,24 +29,24 @@
                     <div class="rounded-md space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-white mb-1">Your Name</label>
-                                <input id="name" name="name" type="text" required placeholder="Your name" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
+                                <label for="name" class="block text-sm font-medium text-white mb-1">{{ __('contact.form.name') }}</label>
+                                <input id="name" name="name" type="text" required placeholder="{{ __('contact.form.name_placeholder') }}" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
                             </div>
 
                             <div>
-                                <label for="email" class="block text-sm font-medium text-white mb-1">Email Address</label>
-                                <input id="email" name="email" type="email" required placeholder="your@email.com" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
+                                <label for="email" class="block text-sm font-medium text-white mb-1">{{ __('contact.form.email') }}</label>
+                                <input id="email" name="email" type="email" required placeholder="{{ __('contact.form.email_placeholder') }}" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
                             </div>
                         </div>
 
                         <div>
-                            <label for="subject" class="block text-sm font-medium text-white mb-1">Subject</label>
-                            <input id="subject" name="subject" type="text" required placeholder="Subject of the message" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
+                            <label for="subject" class="block text-sm font-medium text-white mb-1">{{ __('contact.form.subject') }}</label>
+                            <input id="subject" name="subject" type="text" required placeholder="{{ __('contact.form.subject_placeholder') }}" class="input w-full h-10 px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400">
                         </div>
 
                         <div>
-                            <label for="message" class="block text-sm font-medium text-white mb-1">Your Message</label>
-                            <textarea id="message" name="message" rows="6" required placeholder="Your message..." class="input w-full px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400"></textarea>
+                            <label for="message" class="block text-sm font-medium text-white mb-1">{{ __('contact.form.message') }}</label>
+                            <textarea id="message" name="message" rows="6" required placeholder="{{ __('contact.form.message_placeholder') }}" class="input w-full px-4 py-2 rounded-lg bg-slate-700 bg-opacity-60 text-white border-slate-600 border-opacity-50 placeholder-gray-400"></textarea>
                         </div>
                     </div>
 
@@ -56,7 +56,7 @@
                             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                                 <i class="fas fa-paper-plane"></i>
                             </span>
-                            Send the message
+                            {{ __('contact.form.submit') }}
                         </button>
                     </div>
                 </form>
@@ -70,21 +70,21 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-info text-xl text-white"></i>
                     </div>
-                    <h2 class="text-xl font-bold text-white">Contact Info</h2>
+                    <h2 class="text-xl font-bold text-white">{{ __('contact.info.title') }}</h2>
                 </div>
                 
                 <ul class="space-y-4">
                     <li class="flex items-center gap-3">
                         <div class="mt-1 text-white"><i class="fas fa-envelope"></i></div>
-                        <span class="text-white">info@zone2.be</span>
+                        <span class="text-white">{{ __('contact.info.email') }}</span>
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="mt-1 text-white"><i class="fas fa-phone"></i></div>
-                        <span class="text-white">+32 000/00.00.00</span>
+                        <span class="text-white">{{ __('contact.info.phone') }}</span>
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="mt-1 text-white"><i class="fas fa-clock"></i></div>
-                        <span class="text-white">Mon-Fri: 9:00 AM - 5:00 PM</span>
+                        <span class="text-white">{{ __('contact.info.hours') }}</span>
                     </li>
                 </ul>
             </div>
@@ -94,7 +94,7 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                         <i class="fas fa-share-alt text-xl text-white"></i>
                     </div>
-                    <h2 class="text-xl font-bold text-white">Follow Us</h2>
+                    <h2 class="text-xl font-bold text-white">{{ __('contact.social.title') }}</h2>
                 </div>
                 
                 <div class="flex justify-center gap-6 my-4">
@@ -118,35 +118,35 @@
             <div class="w-12 h-12 rounded-full text-white bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center">
                 <i class="fas fa-question text-xl text-white"></i>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold text-white">Frequently Asked Questions</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('contact.faq.title') }}</h2>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                <h3 class="text-lg font-semibold text-white mb-2">How quickly will I receive a response?</h3>
+                <h3 class="text-lg font-semibold text-white mb-2">{{ __('contact.faq.questions.response_time.question') }}</h3>
                 <p class="text-cyan-200">
-                    We aim to respond to all inquiries within 24-48 hours during business days.
+                    {{ __('contact.faq.questions.response_time.answer') }}
                 </p>
             </div>
             
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                <h3 class="text-lg font-semibold text-white mb-2">Do you offer technical support?</h3>
+                <h3 class="text-lg font-semibold text-white mb-2">{{ __('contact.faq.questions.technical_support.question') }}</h3>
                 <p class="text-cyan-200">
-                    Yes, our team provides technical assistance for any issues related to the workout calendar.
+                    {{ __('contact.faq.questions.technical_support.answer') }}
                 </p>
             </div>
             
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                <h3 class="text-lg font-semibold text-white mb-2">How do I report bugs?</h3>
+                <h3 class="text-lg font-semibold text-white mb-2">{{ __('contact.faq.questions.bug_report.question') }}</h3>
                 <p class="text-cyan-200">
-                    Please use this contact form and include as many details as possible about the issue you're experiencing.
+                    {{ __('contact.faq.questions.bug_report.answer') }}
                 </p>
             </div>
             
             <div class="bg-white bg-opacity-10 border-white border-opacity-20 shadow-sm p-5 rounded-xl">
-                <h3 class="text-lg font-semibold text-white mb-2">Can I request new features?</h3>
+                <h3 class="text-lg font-semibold text-white mb-2">{{ __('contact.faq.questions.feature_request.question') }}</h3>
                 <p class="text-cyan-200">
-                    Absolutely! We welcome feature suggestions and continuously improve based on user feedback.
+                    {{ __('contact.faq.questions.feature_request.answer') }}
                 </p>
             </div>
         </div>

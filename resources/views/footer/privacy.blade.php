@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Privacy Policy - Zone 2')
-@section('meta_description', 'Privacy Policy for Zone 2, the running training plan application. Learn about how we collect, use, and protect your personal data.')
-@section('meta_keywords', 'privacy policy, data protection, privacy, zone 2, running app, personal data')
+@section('title', __('privacy.page_title'))
+@section('meta_description', __('privacy.meta_description'))
+@section('meta_keywords', __('privacy.meta_keywords'))
 
 @section('content')
 <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
@@ -12,136 +12,136 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-shield-alt text-xl"></i>
                 </div>
-                <h1 class="text-3xl font-bold text-white">Privacy Policy</h1>
+                <h1 class="text-3xl font-bold text-white">{{ __('privacy.header.title') }}</h1>
             </div>
 
             <div class="prose prose-lg prose-invert max-w-none">
-                <p class="text-cyan-200">Last Updated: {{ date('F d, Y') }}</p>
+                <p class="text-cyan-200">{{ __('privacy.last_updated', ['date' => date('F d, Y')]) }}</p>
                 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">1. Introduction</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.introduction.title') }}</h2>
                 <p class="text-white">
-                    At Zone 2 ("we", "us", or "our"), we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our running training plan application.
+                    {{ __('privacy.sections.introduction.content.paragraph_1') }}
                 </p>
                 <p class="text-white mt-4">
-                    Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Service.
+                    {{ __('privacy.sections.introduction.content.paragraph_2') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">2. Information We Collect</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.information_collected.title') }}</h2>
                 <p class="text-white">
-                    We collect several types of information from and about users of our Service:
+                    {{ __('privacy.sections.information_collected.content') }}
                 </p>
-                <h3 class="text-xl font-bold text-white mt-6 mb-3">2.1 Personal Data</h3>
+                <h3 class="text-xl font-bold text-white mt-6 mb-3">{{ __('privacy.sections.information_collected.personal_data.title') }}</h3>
                 <p class="text-white">
-                    When you register an account or use our Service, we may collect personally identifiable information such as:
+                    {{ __('privacy.sections.information_collected.personal_data.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Your name and email address</li>
-                    <li>Your account credentials</li>
-                    <li>Your profile information</li>
+                    <li>{{ __('privacy.sections.information_collected.personal_data.items.name_email') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.personal_data.items.credentials') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.personal_data.items.profile') }}</li>
                 </ul>
 
-                <h3 class="text-xl font-bold text-white mt-6 mb-3">2.2 Training Data</h3>
+                <h3 class="text-xl font-bold text-white mt-6 mb-3">{{ __('privacy.sections.information_collected.training_data.title') }}</h3>
                 <p class="text-white">
-                    As part of our core functionality, we collect and process data related to your training activities:
+                    {{ __('privacy.sections.information_collected.training_data.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Running activities and workout details</li>
-                    <li>Distance, duration, and elevation statistics</li>
-                    <li>Training plans and goals</li>
-                    <li>Performance metrics and progress data</li>
+                    <li>{{ __('privacy.sections.information_collected.training_data.items.activities') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.training_data.items.statistics') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.training_data.items.plans') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.training_data.items.metrics') }}</li>
                 </ul>
 
-                <h3 class="text-xl font-bold text-white mt-6 mb-3">2.3 Strava Integration Data</h3>
+                <h3 class="text-xl font-bold text-white mt-6 mb-3">{{ __('privacy.sections.information_collected.strava_data.title') }}</h3>
                 <p class="text-white">
-                    If you choose to connect your Strava account, we may collect:
+                    {{ __('privacy.sections.information_collected.strava_data.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Strava authentication tokens</li>
-                    <li>Activity data from Strava (with your permission)</li>
-                    <li>Training history and metrics from your Strava account</li>
+                    <li>{{ __('privacy.sections.information_collected.strava_data.items.tokens') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.strava_data.items.activity_data') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.strava_data.items.history') }}</li>
                 </ul>
 
-                <h3 class="text-xl font-bold text-white mt-6 mb-3">2.4 Technical Data</h3>
+                <h3 class="text-xl font-bold text-white mt-6 mb-3">{{ __('privacy.sections.information_collected.technical_data.title') }}</h3>
                 <p class="text-white">
-                    We automatically collect certain information when you visit, use, or navigate our Service:
+                    {{ __('privacy.sections.information_collected.technical_data.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>Device and connection information (IP address, browser type, operating system)</li>
-                    <li>Usage patterns and preferences</li>
-                    <li>Log data and error reports</li>
+                    <li>{{ __('privacy.sections.information_collected.technical_data.items.device') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.technical_data.items.usage') }}</li>
+                    <li>{{ __('privacy.sections.information_collected.technical_data.items.logs') }}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">3. How We Use Your Information</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.how_we_use.title') }}</h2>
                 <p class="text-white">
-                    We use the information we collect for various purposes, including:
+                    {{ __('privacy.sections.how_we_use.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li>To provide and maintain our Service</li>
-                    <li>To create and manage your account</li>
-                    <li>To deliver the features of our training plan application</li>
-                    <li>To process and analyze your training data</li>
-                    <li>To improve our Service and user experience</li>
-                    <li>To communicate with you about updates or changes to our Service</li>
-                    <li>To detect, prevent, and address technical issues</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.provide') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.manage') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.features') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.analyze') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.improve') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.communicate') }}</li>
+                    <li>{{ __('privacy.sections.how_we_use.items.technical') }}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">4. Sharing Your Information</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.sharing.title') }}</h2>
                 <p class="text-white">
-                    We may share your information in the following situations:
+                    {{ __('privacy.sections.sharing.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li><strong>With Service Providers:</strong> We may share your information with third-party vendors, service providers, and other partners who help us provide our Service.</li>
-                    <li><strong>With Your Consent:</strong> We may share your information when you specifically authorize us to do so.</li>
-                    <li><strong>For Legal Reasons:</strong> We may disclose your information to comply with applicable laws and regulations, to respond to a subpoena, search warrant, or other lawful request.</li>
-                    <li><strong>To Protect Rights:</strong> We may disclose information to protect the rights, property, or safety of Zone 2, our users, or others.</li>
+                    <li>{!! __('privacy.sections.sharing.items.providers') !!}</li>
+                    <li>{!! __('privacy.sections.sharing.items.consent') !!}</li>
+                    <li>{!! __('privacy.sections.sharing.items.legal') !!}</li>
+                    <li>{!! __('privacy.sections.sharing.items.rights') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">5. Third-Party Services</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.third_party.title') }}</h2>
                 <p class="text-white">
-                    Our Service integrates with third-party services, particularly Strava. When you connect your Strava account to our Service, the data transfer is subject to Strava's privacy policy. We recommend reviewing their privacy policy to understand how they handle your information.
+                    {{ __('privacy.sections.third_party.content') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">6. Data Security</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.security.title') }}</h2>
                 <p class="text-white">
-                    We implement appropriate technical and organizational measures to protect your personal information. However, no method of transmission over the Internet or electronic storage is completely secure, and we cannot guarantee absolute security.
+                    {{ __('privacy.sections.security.content') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">7. Your Data Protection Rights</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.rights.title') }}</h2>
                 <p class="text-white">
-                    Depending on your location, you may have certain rights regarding your personal information:
+                    {{ __('privacy.sections.rights.content') }}
                 </p>
                 <ul class="list-disc pl-6 text-white space-y-2">
-                    <li><strong>Access:</strong> You have the right to request copies of your personal data.</li>
-                    <li><strong>Rectification:</strong> You have the right to request that we correct inaccurate information about you.</li>
-                    <li><strong>Erasure:</strong> You have the right to request that we delete your personal data under certain conditions.</li>
-                    <li><strong>Restriction:</strong> You have the right to request that we restrict the processing of your data under certain conditions.</li>
-                    <li><strong>Data Portability:</strong> You have the right to request that we transfer the data we have collected to another organization or directly to you under certain conditions.</li>
+                    <li>{!! __('privacy.sections.rights.items.access') !!}</li>
+                    <li>{!! __('privacy.sections.rights.items.rectification') !!}</li>
+                    <li>{!! __('privacy.sections.rights.items.erasure') !!}</li>
+                    <li>{!! __('privacy.sections.rights.items.restriction') !!}</li>
+                    <li>{!! __('privacy.sections.rights.items.portability') !!}</li>
                 </ul>
                 <p class="text-white mt-4">
-                    To exercise any of these rights, please contact us through our <a href="{{ route('contact.show') }}" class="text-cyan-300 hover:underline">Contact page</a>.
+                    {!! __('privacy.sections.rights.exercise_rights', ['contact_url' => route('contact.show')]) !!}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">8. Cookies and Similar Technologies</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.cookies.title') }}</h2>
                 <p class="text-white">
-                    We use cookies and similar tracking technologies to track activity on our Service and hold certain information. Cookies are files with a small amount of data that may include an anonymous unique identifier.
+                    {{ __('privacy.sections.cookies.content_1') }}
                 </p>
                 <p class="text-white mt-4">
-                    You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.
+                    {{ __('privacy.sections.cookies.content_2') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">9. Children's Privacy</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.children.title') }}</h2>
                 <p class="text-white">
-                    Our Service is not intended for use by children under the age of 16. We do not knowingly collect personally identifiable information from children under 16. If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us.
+                    {{ __('privacy.sections.children.content') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">10. Changes to This Privacy Policy</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.changes.title') }}</h2>
                 <p class="text-white">
-                    We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes.
+                    {{ __('privacy.sections.changes.content') }}
                 </p>
 
-                <h2 class="text-2xl font-bold text-white mt-8 mb-4">11. Contact Us</h2>
+                <h2 class="text-2xl font-bold text-white mt-8 mb-4">{{ __('privacy.sections.contact.title') }}</h2>
                 <p class="text-white">
-                    If you have any questions about this Privacy Policy, please contact us through our <a href="{{ route('contact.show') }}" class="text-cyan-300 hover:underline">Contact page</a>.
+                    {!! __('privacy.sections.contact.content', ['contact_url' => route('contact.show')]) !!}
                 </p>
             </div>
         </div>

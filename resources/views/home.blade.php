@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Zone 2 - Running Training Plan Application')
-@section('meta_description', 'Zone 2 helps you create personalized and structured training plans for running. Plan your weeks, sync with Strava, and optimize your progression.')
-@section('meta_keywords', 'running training plan, running planning, marathon, trail, periodization, zone 2, running progression, running calendar')
-@section('og_title', 'Zone 2 - Take Control of Your Running Training')
-@section('og_description', 'Create personalized training plans, structured in blocks and tailored to your goals. Analyze your performance and sync with Strava.')
+@section('title', __('home.meta.title'))
+@section('meta_description', __('home.meta.description'))
+@section('meta_keywords', __('home.meta.keywords'))
+@section('og_title', __('home.meta.og_title'))
+@section('og_description', __('home.meta.og_description'))
 
 @section('content')
 <div class="welcome-container overflow-y-auto w-full">
@@ -14,20 +14,19 @@
             <div class="container mx-auto">
                 <div class="flex flex-col md:flex-row items-center gap-12">
                     <div class="md:w-full">
-                        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">Take Control of Your Training</h1>
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">{{ __('home.hero.title') }}</h1>
                         <p class="text-xl text-cyan-200 mb-6">
-                            Zone 2 helps you create personalized, structured training plans tailored to your goals.
-                            A clear, progressive approach that you control.
+                            {{ __('home.hero.description') }}
                         </p>
                         <div class="flex flex-wrap gap-4">
                             <a href="@auth {{ route('calendar') }} @else {{ route('login') }} @endauth" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center">
-                                <i class="fas fa-running mr-2"></i> @auth Create My Training Plan @else Sign In to Start @endauth
+                                <i class="fas fa-running mr-2"></i> @auth {{ __('home.hero.create_plan') }} @else {{ __('home.hero.sign_in') }} @endauth
                             </a>
                             <a href="#features" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center">
-                                <i class="fas fa-search mr-2"></i> Discover Features
+                                <i class="fas fa-search mr-2"></i> {{ __('home.hero.discover') }}
                             </a>
                             <a href="{{ route('help') }}" class="px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center">
-                                <i class="fas fa-question-circle mr-2"></i> Help Center
+                                <i class="fas fa-question-circle mr-2"></i> {{ __('home.hero.help') }}
                             </a>
                         </div>
                     </div>
@@ -43,15 +42,14 @@
         <!-- Why Zone 2 Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="whySection">
             <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg">
-                <h2 class="text-3xl font-bold text-white mb-6">Why Zone 2?</h2>
+                <h2 class="text-3xl font-bold text-white mb-6">{{ __('home.why_section.title') }}</h2>
                 <p class="text-lg text-cyan-200 mb-6">
-                    Many runners still plan their workouts in Excel spreadsheets or on paper.<br>
-                    Zone 2 offers an interactive and structured alternative, designed for those who want to track their progress methodically.
+                    {{ __('home.why_section.description') }}
                 </p>
                 
                 <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
                     <p class="text-xl text-center font-semibold text-white">
-                        Zone 2 isn't a plan generator, it's your smart training companion that evolves with you.
+                        {{ __('home.why_section.tagline') }}
                     </p>
                 </div>   
             </div>
@@ -64,17 +62,17 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-cube text-xl"></i>
                     </div>
-                    <h2 class="text-3xl font-bold text-white">A Structure Designed for Progression</h2>
+                    <h2 class="text-3xl font-bold text-white">{{ __('home.structure_section.title') }}</h2>
                 </div>
                 
                 <div class="flex flex-col md:flex-row gap-8">
                     <div class="md:w-full">
-                        <h3 class="text-2xl font-bold text-white mb-4">Think in Blocks, Progress Intelligently</h3>
+                        <h3 class="text-2xl font-bold text-white mb-4">{{ __('home.structure_section.subtitle') }}</h3>
                         <p class="text-lg text-cyan-200 mb-4">
-                            Zone 2 is based on structured periodization. Each week plays a specific role in your progression.
+                            {{ __('home.structure_section.description_1') }}
                         </p>
                         <p class="text-lg text-cyan-200 mb-6">
-                            This method helps balance training load and optimize performance.
+                            {{ __('home.structure_section.description_2') }}
                         </p>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -83,10 +81,10 @@
                                     <div class="w-8 h-8 bg-pink-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-bed text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Recovery</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.recovery.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    A light intensity week focused on rest and active recovery
+                                    {{ __('home.structure_section.week_types.recovery.description') }}
                                 </p>
                             </div>
 
@@ -95,10 +93,10 @@
                                     <div class="w-8 h-8 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-arrow-up text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Development</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.development.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    A high-load week designed to improve endurance, speed, or strength
+                                    {{ __('home.structure_section.week_types.development.description') }}
                                 </p>
                             </div>
                             
@@ -107,10 +105,10 @@
                                     <div class="w-8 h-8 bg-amber-700 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-equals text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Maintain</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.maintain.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    A balanced week that maintains fitness without excessive stress
+                                    {{ __('home.structure_section.week_types.maintain.description') }}
                                 </p>
                             </div>
                             
@@ -119,10 +117,10 @@
                                     <div class="w-8 h-8 bg-emerald-400 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-arrow-down text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Reduced</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.reduced.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    A week with reduced volume to prevent burnout and allow adaptation
+                                    {{ __('home.structure_section.week_types.reduced.description') }}
                                 </p>
                             </div>
                             
@@ -131,10 +129,10 @@
                                     <div class="w-8 h-8 bg-fuchsia-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-compress-alt text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Taper</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.taper.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    A progressive reduction in workout volume before a race
+                                    {{ __('home.structure_section.week_types.taper.description') }}
                                 </p>
                             </div>
                             
@@ -143,10 +141,10 @@
                                     <div class="w-8 h-8 bg-rose-600 rounded-full flex-shrink-0 flex items-center justify-center">
                                         <i class="fas fa-flag-checkered text-white"></i>
                                     </div>
-                                    <h4 class="font-medium text-white">Race</h4>
+                                    <h4 class="font-medium text-white">{{ __('home.structure_section.week_types.race.title') }}</h4>
                                 </div>
                                 <p class="text-sm text-cyan-200">
-                                    Competition week including the race and recovery
+                                    {{ __('home.structure_section.week_types.race.description') }}
                                 </p>
                             </div>
                         </div>
@@ -166,82 +164,82 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-tools text-xl"></i>
                     </div>
-                    <h2 class="text-3xl font-bold text-white">Key Features</h2>
+                    <h2 class="text-3xl font-bold text-white">{{ __('home.features_section.title') }}</h2>
                 </div>
                 
-                <h3 class="text-2xl font-bold text-white mb-6">Everything You Need to Plan, Track, and Adjust</h3>
+                <h3 class="text-2xl font-bold text-white mb-6">{{ __('home.features_section.subtitle') }}</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-cyan-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-calendar-alt text-cyan-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Interactive Calendar</h4>
-                        <p class="text-cyan-200">View your plan by week and month with an intuitive interface</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.calendar.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.calendar.description') }}</p>
                     </div>
                     
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-yellow-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-bullseye text-yellow-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Precise Goal Setting</h4>
-                        <p class="text-cyan-200">Set your targets in duration, distance, and elevation for each session</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.goals.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.goals.description') }}</p>
                     </div>
                     
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
                             <i class="fab fa-strava text-orange-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Strava Synchronization</h4>
-                        <p class="text-cyan-200">Automatically import your activities to compare with your plan</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.strava.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.strava.description') }}</p>
                     </div>
                     
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-chart-bar text-purple-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Dashboards</h4>
-                        <p class="text-cyan-200">Analyze your performance and compare planned vs. actual results</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.dashboards.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.dashboards.description') }}</p>
                     </div>
                     
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-dumbbell text-teal-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Custom Week Types</h4>
-                        <p class="text-cyan-200">Adapt your weeks according to your specific training phases</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.week_types.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.week_types.description') }}</p>
                     </div>
                     
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-14 h-14 flex items-center justify-center bg-red-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
                         </div>
-                        <h4 class="text-xl font-semibold text-white mb-2">Overload Alert</h4>
-                        <p class="text-cyan-200">Receive notifications if you exceed the 10% increase rule</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">{{ __('home.features_section.features.overload_alert.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.overload_alert.description') }}</p>
                     </div>
 
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-indigo-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-puzzle-piece text-indigo-400 text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Coherent Block Structure</h4>
-                        <p class="text-cyan-200">Organize your weeks based on your specific goals</p>
+                        <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.features_section.features.block_structure.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.block_structure.description') }}</p>
                     </div>
 
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-pencil-alt text-blue-400 text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">100% Customized Plans</h4>
-                        <p class="text-cyan-200">Create and adapt your plan according to your specific needs</p>
+                        <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.features_section.features.custom_plans.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.custom_plans.description') }}</p>
                     </div>
 
                     <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-5 hover:transform hover:scale-105 transition-all duration-300">
                         <div class="feature-icon mb-4 w-12 h-12 flex items-center justify-center bg-pink-500 bg-opacity-25 rounded-full">
                             <i class="fas fa-eye text-pink-400 text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-white mb-2">Clear Annual Planning</h4>
-                        <p class="text-cyan-200">Visualize and organize your training year in just a few clicks</p>
+                        <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.features_section.features.annual_planning.title') }}</h4>
+                        <p class="text-cyan-200">{{ __('home.features_section.features.annual_planning.description') }}</p>
                     </div>
                 </div>
             </div>
@@ -254,10 +252,10 @@
                     <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-question text-xl"></i>
                     </div>
-                    <h2 class="text-3xl font-bold text-white">How It Works</h2>
+                    <h2 class="text-3xl font-bold text-white">{{ __('home.how_section.title') }}</h2>
                 </div>
                 
-                <h3 class="text-2xl font-bold text-white mb-6">Your Training in 5 Steps</h3>
+                <h3 class="text-2xl font-bold text-white mb-6">{{ __('home.how_section.subtitle') }}</h3>
                 
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <div class="md:w-full">
@@ -267,40 +265,40 @@
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">1</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
-                                    <h4 class="text-lg font-semibold text-white mb-2">Create Your Goal</h4>
-                                    <p class="text-cyan-200">Define your main objective (e.g., Marathon, 50K Trail) and the event date</p>
+                                    <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.how_section.steps.step_1.title') }}</h4>
+                                    <p class="text-cyan-200">{{ __('home.how_section.steps.step_1.description') }}</p>
                                 </div>
                             </div>
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">2</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
-                                    <h4 class="text-lg font-semibold text-white mb-2">Organize Your Weeks</h4>
-                                    <p class="text-cyan-200">Structure your weeks in blocks adapted to your goal (development, maintain, recovery...)</p>
+                                    <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.how_section.steps.step_2.title') }}</h4>
+                                    <p class="text-cyan-200">{{ __('home.how_section.steps.step_2.description') }}</p>
                                 </div>
                             </div>
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">3</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
-                                    <h4 class="text-lg font-semibold text-white mb-2">Add Your Sessions</h4>
-                                    <p class="text-cyan-200">Plan your weekly sessions with details (type, distance, duration, elevation)</p>
+                                    <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.how_section.steps.step_3.title') }}</h4>
+                                    <p class="text-cyan-200">{{ __('home.how_section.steps.step_3.description') }}</p>
                                 </div>
                             </div>
                             
                             <div class="step-item relative z-10 flex items-start gap-4 mb-8">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">4</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
-                                    <h4 class="text-lg font-semibold text-white mb-2">Sync with Strava</h4>
-                                    <p class="text-cyan-200">Connect your Strava account or manually enter your completed activities</p>
+                                    <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.how_section.steps.step_4.title') }}</h4>
+                                    <p class="text-cyan-200">{{ __('home.how_section.steps.step_4.description') }}</p>
                                 </div>
                             </div>
                             
                             <div class="step-item relative z-10 flex items-start gap-4">
                                 <div class="step-number w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">5</div>
                                 <div class="step-content bg-white bg-opacity-10 shadow-sm rounded-xl p-4 flex-grow">
-                                    <h4 class="text-lg font-semibold text-white mb-2">Track and Adjust</h4>
-                                    <p class="text-cyan-200">Modify your plan based on how you feel and your actual performance</p>
+                                    <h4 class="text-lg font-semibold text-white mb-2">{{ __('home.how_section.steps.step_5.title') }}</h4>
+                                    <p class="text-cyan-200">{{ __('home.how_section.steps.step_5.description') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -319,12 +317,12 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-route text-xl"></i>
                 </div>
-                <h2 class="text-3xl font-bold text-white">16-Week Marathon Training Plan Example</h2>
+                <h2 class="text-3xl font-bold text-white">{{ __('home.training_blocks.title') }}</h2>
             </div>
             
             <div class="bg-blue-900 bg-opacity-40 p-5 rounded-xl mb-8">
                 <p class="text-lg italic text-white">
-                    "A strategic progression from initial development to race day, with regular recovery periods to optimize adaptation."
+                    "{{ __('home.training_blocks.tagline') }}"
                 </p>
             </div>
             
@@ -333,17 +331,17 @@
                 <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 1-3</span>
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.development_1.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Base Building (Development)
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> {{ __('home.training_blocks.blocks.development_1.title') }}
                         </h3>
                     </div>
-                    <p class="text-blue-200 mb-3">Development phase focused on building aerobic foundation</p>
+                    <p class="text-blue-200 mb-3">{{ __('home.training_blocks.blocks.development_1.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-chart-line mr-2"></i> Progressive volume increase week by week</li>
-                        <li><i class="fas fa-heartbeat mr-2"></i> Low-intensity foundation work to build endurance</li>
-                        <li><i class="fas fa-clock mr-2"></i> Establishing running routine and consistency</li>
+                        <li><i class="fas fa-chart-line mr-2"></i> {{ __('home.training_blocks.blocks.development_1.points.0') }}</li>
+                        <li><i class="fas fa-heartbeat mr-2"></i> {{ __('home.training_blocks.blocks.development_1.points.1') }}</li>
+                        <li><i class="fas fa-clock mr-2"></i> {{ __('home.training_blocks.blocks.development_1.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -351,17 +349,17 @@
                 <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 4</span>
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.reduced_1.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> First Recovery (Reduced)
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> {{ __('home.training_blocks.blocks.reduced_1.title') }}
                         </h3>
                     </div>
-                    <p class="text-emerald-200 mb-3">Planned reduction in volume to allow adaptation</p>
+                    <p class="text-emerald-200 mb-3">{{ __('home.training_blocks.blocks.reduced_1.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-tachometer-alt mr-2"></i> 20-30% volume reduction from previous weeks</li>
-                        <li><i class="fas fa-walking mr-2"></i> Focus on active recovery sessions</li>
-                        <li><i class="fas fa-bed mr-2"></i> Extra rest and sleep emphasis</li>
+                        <li><i class="fas fa-tachometer-alt mr-2"></i> {{ __('home.training_blocks.blocks.reduced_1.points.0') }}</li>
+                        <li><i class="fas fa-walking mr-2"></i> {{ __('home.training_blocks.blocks.reduced_1.points.1') }}</li>
+                        <li><i class="fas fa-bed mr-2"></i> {{ __('home.training_blocks.blocks.reduced_1.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -369,17 +367,17 @@
                 <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 5-7</span>
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.development_2.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Building Phase (Development)
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> {{ __('home.training_blocks.blocks.development_2.title') }}
                         </h3>
                     </div>
-                    <p class="text-blue-200 mb-3">Progressive development with increasing intensity</p>
+                    <p class="text-blue-200 mb-3">{{ __('home.training_blocks.blocks.development_2.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-fire mr-2"></i> Introduction of tempo runs and some speedwork</li>
-                        <li><i class="fas fa-road mr-2"></i> Longer weekend runs to build endurance</li>
-                        <li><i class="fas fa-chart-bar mr-2"></i> Building weekly mileage at a controlled rate</li>
+                        <li><i class="fas fa-fire mr-2"></i> {{ __('home.training_blocks.blocks.development_2.points.0') }}</li>
+                        <li><i class="fas fa-road mr-2"></i> {{ __('home.training_blocks.blocks.development_2.points.1') }}</li>
+                        <li><i class="fas fa-chart-bar mr-2"></i> {{ __('home.training_blocks.blocks.development_2.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -387,17 +385,17 @@
                 <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 8</span>
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.reduced_2.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Mid-cycle Recovery (Reduced)
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> {{ __('home.training_blocks.blocks.reduced_2.title') }}
                         </h3>
                     </div>
-                    <p class="text-emerald-200 mb-3">Strategic recovery to consolidate fitness gains</p>
+                    <p class="text-emerald-200 mb-3">{{ __('home.training_blocks.blocks.reduced_2.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-battery-half mr-2"></i> Reduced mileage week to prevent overtraining</li>
-                        <li><i class="fas fa-sync mr-2"></i> Maintain frequency, lower intensity</li>
-                        <li><i class="fas fa-battery-three-quarters mr-2"></i> Preparation for peak training phase</li>
+                        <li><i class="fas fa-battery-half mr-2"></i> {{ __('home.training_blocks.blocks.reduced_2.points.0') }}</li>
+                        <li><i class="fas fa-sync mr-2"></i> {{ __('home.training_blocks.blocks.reduced_2.points.1') }}</li>
+                        <li><i class="fas fa-battery-three-quarters mr-2"></i> {{ __('home.training_blocks.blocks.reduced_2.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -405,17 +403,17 @@
                 <div class="bg-blue-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">Weeks 9-10</span>
+                            <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.development_3.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> Peak Training (Development)
+                            <i class="fas fa-arrow-up text-blue-300 mr-2"></i> {{ __('home.training_blocks.blocks.development_3.title') }}
                         </h3>
                     </div>
-                    <p class="text-blue-200 mb-3">Highest volume and intensity weeks of the plan</p>
+                    <p class="text-blue-200 mb-3">{{ __('home.training_blocks.blocks.development_3.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-mountain mr-2"></i> Longest runs of training cycle (up to 20 miles)</li>
-                        <li><i class="fas fa-tachometer-alt mr-2"></i> Race-specific workout intensity</li>
-                        <li><i class="fas fa-brain mr-2"></i> Mental toughness development</li>
+                        <li><i class="fas fa-mountain mr-2"></i> {{ __('home.training_blocks.blocks.development_3.points.0') }}</li>
+                        <li><i class="fas fa-tachometer-alt mr-2"></i> {{ __('home.training_blocks.blocks.development_3.points.1') }}</li>
+                        <li><i class="fas fa-brain mr-2"></i> {{ __('home.training_blocks.blocks.development_3.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -423,17 +421,17 @@
                 <div class="bg-emerald-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">Week 11</span>
+                            <span class="px-3 py-1 bg-emerald-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.reduced_3.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> Pre-maintain Recovery (Reduced)
+                            <i class="fas fa-arrow-down text-emerald-300 mr-2"></i> {{ __('home.training_blocks.blocks.reduced_3.title') }}
                         </h3>
                     </div>
-                    <p class="text-emerald-200 mb-3">Final recovery before maintain phase</p>
+                    <p class="text-emerald-200 mb-3">{{ __('home.training_blocks.blocks.reduced_3.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-battery-quarter mr-2"></i> Strategic volume reduction to absorb peak weeks</li>
-                        <li><i class="fas fa-redo mr-2"></i> Reset for final preparation phase</li>
-                        <li><i class="fas fa-search mr-2"></i> Assessment of progress and adjustments</li>
+                        <li><i class="fas fa-battery-quarter mr-2"></i> {{ __('home.training_blocks.blocks.reduced_3.points.0') }}</li>
+                        <li><i class="fas fa-redo mr-2"></i> {{ __('home.training_blocks.blocks.reduced_3.points.1') }}</li>
+                        <li><i class="fas fa-search mr-2"></i> {{ __('home.training_blocks.blocks.reduced_3.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -441,17 +439,17 @@
                 <div class="bg-amber-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-amber-600 text-white text-sm rounded-full inline-block">Weeks 12-13</span>
+                            <span class="px-3 py-1 bg-amber-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.maintain.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-equals text-amber-300 mr-2"></i> Maintain Phase
+                            <i class="fas fa-equals text-amber-300 mr-2"></i> {{ __('home.training_blocks.blocks.maintain.title') }}
                         </h3>
                     </div>
-                    <p class="text-amber-200 mb-3">Holding fitness while preparing for taper</p>
+                    <p class="text-amber-200 mb-3">{{ __('home.training_blocks.blocks.maintain.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-balance-scale mr-2"></i> Consistent volume at 80-90% of peak</li>
-                        <li><i class="fas fa-stopwatch mr-2"></i> Race pace work integration</li>
-                        <li><i class="fas fa-chess mr-2"></i> Race day strategy refinement</li>
+                        <li><i class="fas fa-balance-scale mr-2"></i> {{ __('home.training_blocks.blocks.maintain.points.0') }}</li>
+                        <li><i class="fas fa-stopwatch mr-2"></i> {{ __('home.training_blocks.blocks.maintain.points.1') }}</li>
+                        <li><i class="fas fa-chess mr-2"></i> {{ __('home.training_blocks.blocks.maintain.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -459,17 +457,17 @@
                 <div class="bg-fuchsia-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full inline-block">Weeks 14-15</span>
+                            <span class="px-3 py-1 bg-fuchsia-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.taper.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> Taper Period
+                            <i class="fas fa-compress-alt text-fuchsia-300 mr-2"></i> {{ __('home.training_blocks.blocks.taper.title') }}
                         </h3>
                     </div>
-                    <p class="text-fuchsia-200 mb-3">Strategic reduction to maximize race day performance</p>
+                    <p class="text-fuchsia-200 mb-3">{{ __('home.training_blocks.blocks.taper.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-sort-amount-down mr-2"></i> Progressive volume reduction (40-60%)</li>
-                        <li><i class="fas fa-bolt mr-2"></i> Maintaining intensity while reducing volume</li>
-                        <li><i class="fas fa-battery-full mr-2"></i> Recovery optimization and glycogen loading</li>
+                        <li><i class="fas fa-sort-amount-down mr-2"></i> {{ __('home.training_blocks.blocks.taper.points.0') }}</li>
+                        <li><i class="fas fa-bolt mr-2"></i> {{ __('home.training_blocks.blocks.taper.points.1') }}</li>
+                        <li><i class="fas fa-battery-full mr-2"></i> {{ __('home.training_blocks.blocks.taper.points.2') }}</li>
                     </ul>
                 </div>
                 
@@ -477,17 +475,17 @@
                 <div class="bg-rose-600 bg-opacity-20 p-5 rounded-xl shadow-lg max-w-[600px] mx-auto">
                     <div class="flex flex-col lg:flex-row lg:items-center">
                         <div class="mb-2 lg:mb-0 lg:mr-4">
-                            <span class="px-3 py-1 bg-rose-600 text-white text-sm rounded-full inline-block">Week 16</span>
+                            <span class="px-3 py-1 bg-rose-600 text-white text-sm rounded-full inline-block">{{ __('home.training_blocks.blocks.race.weeks') }}</span>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2 lg:mb-0">
-                            <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> Race Week
+                            <i class="fas fa-flag-checkered text-rose-300 mr-2"></i> {{ __('home.training_blocks.blocks.race.title') }}
                         </h3>
                     </div>
-                    <p class="text-rose-200 mb-3">Final preparation and race execution</p>
+                    <p class="text-rose-200 mb-3">{{ __('home.training_blocks.blocks.race.description') }}</p>
                     <ul class="text-white space-y-2 ml-6">
-                        <li><i class="fas fa-feather mr-2"></i> Minimal running with rest focus</li>
-                        <li><i class="fas fa-clipboard-check mr-2"></i> Race day logistics preparation</li>
-                        <li><i class="fas fa-medal mr-2"></i> Marathon day!</li>
+                        <li><i class="fas fa-feather mr-2"></i> {{ __('home.training_blocks.blocks.race.points.0') }}</li>
+                        <li><i class="fas fa-clipboard-check mr-2"></i> {{ __('home.training_blocks.blocks.race.points.1') }}</li>
+                        <li><i class="fas fa-medal mr-2"></i> {{ __('home.training_blocks.blocks.race.points.2') }}</li>
                     </ul>
                 </div>
             </div>
@@ -500,7 +498,7 @@
                     <div class="w-12 h-12 rounded-full text-white bg-amber-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-flask text-xl"></i>
                     </div>
-                    <h2 class="text-3xl font-bold text-white">Beta Version</h2>
+                    <h2 class="text-3xl font-bold text-white">{{ __('home.beta_section.title') }}</h2>
                 </div>
                 
                 <div class="flex items-center gap-6 bg-amber-900 bg-opacity-30 p-5 rounded-xl mb-8">
@@ -508,8 +506,8 @@
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div>
-                        <p class="text-lg text-white mb-2">Zone 2 is currently in beta version.</p>
-                        <p class="text-white">The application is available in English, with additional languages planned for the final release. Some features are still under development.</p>
+                        <p class="text-lg text-white mb-2">{{ __('home.beta_section.message_1') }}</p>
+                        <p class="text-white">{{ __('home.beta_section.message_2') }}</p>
                     </div>
                 </div>
             </div>
@@ -518,11 +516,11 @@
         <!-- Call to Action Section -->
         <section class="mb-16 opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" id="ctaSection">
             <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-lg text-center">
-                <h2 class="text-3xl font-bold text-white mb-6">Ready to Structure Your Progress?</h2>
+                <h2 class="text-3xl font-bold text-white mb-6">{{ __('home.cta_section.title') }}</h2>
                 
                 <div class="flex flex-wrap justify-center gap-4 mb-8">
                     <a href="@auth {{ route('calendar') }} @else {{ route('login') }} @endauth" class="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center text-lg">
-                        <i class="fas fa-check-circle mr-2"></i> @auth Create My Plan Now @else Sign In to Get Started @endauth
+                        <i class="fas fa-check-circle mr-2"></i> @auth {{ __('home.cta_section.create_now') }} @else {{ __('home.cta_section.sign_in') }} @endauth
                     </a>
                     {{-- <button id="openDemoModal" class="px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center text-lg">
                         <i class="fas fa-play-circle mr-2"></i> See Interface Demo
@@ -531,9 +529,9 @@
                 
                 @guest
                 <div class="mt-4 flex justify-center gap-4">
-                    <a href="{{ route('login') }}" class="text-cyan-300 hover:underline">Log in</a>
+                    <a href="{{ route('login') }}" class="text-cyan-300 hover:underline">{{ __('home.cta_section.log_in') }}</a>
                     <span class="text-white">•</span>
-                    <a href="{{ route('register') }}" class="text-cyan-300 hover:underline">Create an account</a>
+                    <a href="{{ route('register') }}" class="text-cyan-300 hover:underline">{{ __('home.cta_section.create_account') }}</a>
                 </div>
                 @endguest
             </div>

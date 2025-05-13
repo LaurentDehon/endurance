@@ -112,17 +112,17 @@ class WorkoutModal extends Component
                 }
 
                 $this->dispatch('workout-created');
-                $message = 'Recurring workouts created successfully';
+                $message = __('workouts.recurring_created_success');
             } else {
                 if ($this->workoutId) {
                     $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
                     $workout->update($baseData);
-                    $message = 'Workout successfully updated';
+                    $message = __('workouts.updated_success');
                     $this->dispatch('workout-updated');
                 } 
                 else {
                     Workout::create($baseData); // Simplified since baseData already includes date
-                    $message = 'Workout successfully created';
+                    $message = __('workouts.created_success');
                     $this->dispatch('workout-created');
                 }
             }
@@ -138,10 +138,10 @@ class WorkoutModal extends Component
     public function delete()
     {
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm deletion',
-            'message' => 'Are you sure you want to delete this workout?<br>This action cannot be undone.',
-            'confirmButtonText' => 'Confirm',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('workouts.confirm_deletion'),
+            'message' => __('workouts.delete_confirmation_message'),
+            'confirmButtonText' => __('workouts.confirm'),
+            'cancelButtonText' => __('workouts.cancel'),
             'confirmAction' => 'confirmDelete',
             'icon' => 'trash-alt',
             'iconColor' => 'red'
@@ -155,7 +155,7 @@ class WorkoutModal extends Component
             
         $workout->delete();
 
-        $this->dispatch('toast', 'Workout deleted successfully', 'success');
+        $this->dispatch('toast', __('workouts.deleted_success'), 'success');
         $this->dispatch('closeModal', 'workout-modal');
         $this->dispatch('workout-deleted');
     }

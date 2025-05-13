@@ -1,0 +1,55 @@
+<?php
+
+return [
+    'login' => [
+        'title' => 'Sign in to your account',
+        'subtitle' => 'Enter your credentials to access your account',
+        'email' => 'Email address',
+        'password' => 'Password',
+        'remember' => 'Remember me',
+        'forgot_password' => 'Forgot your password?',
+        'sign_in' => 'Sign in',
+        'register' => 'Don\'t have an account? Register',
+    ],
+    'register' => [
+        'title' => 'Create your account',
+        'subtitle' => 'Fill in your information to create an account',
+        'name' => 'Full name',
+        'email' => 'Email address',
+        'password' => 'Password',
+        'password_confirmation' => 'Confirm password',
+        'already_registered' => 'Already registered?',
+        'create_account' => 'Create Account',
+    ],
+    'forgot_password' => [
+        'title' => 'Forgot your password?',
+        'subtitle' => 'Enter your email and we will send you a reset link',
+        'email' => 'Email address',
+        'send_link' => 'Email Password Reset Link',
+        'back_to_login' => 'Back to login',
+    ],
+    'reset_password' => [
+        'title' => 'Reset Password',
+        'subtitle' => 'Create a new password for your account',
+        'email' => 'Email address',
+        'password' => 'Password',
+        'password_confirmation' => 'Confirm password',
+        'reset_password' => 'Reset Password',
+    ],
+    'confirm_password' => [
+        'title' => 'Confirmation Required',
+        'subtitle' => 'Please confirm your password to continue',
+        'password' => 'Password',
+        'confirm' => 'Confirm',
+        'forgot_password' => 'Forgot your password?',
+    ],
+    'verify_email' => [
+        'title' => 'Verify Your Email Address',
+        'sent' => 'A verification link has been sent to your email address.',
+        'check' => 'Before proceeding, please check your email for a verification link.',
+        'not_received' => 'If you did not receive the email',
+        'resend' => 'Click here to request another',
+        'verified' => 'Your email has been verified!',
+        'proceed' => 'You may now proceed to your dashboard.',
+    ],
+];

@@ -5,7 +5,18 @@
 
 <div class="mx-auto p-2 sm:p-4 overflow-y-scroll relative"
     x-data="{ contentLoaded: false }" 
-    x-init="setTimeout(() => { contentLoaded = true }, 500)">
+    x-init="setTimeout(() => { 
+        contentLoaded = true;
+        // Scroll to fragment/anchor if present in URL
+        if (window.location.hash) {
+            setTimeout(() => {
+                const targetElement = document.querySelector(window.location.hash);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+                }
+            }, 500); // Délai pour s'assurer que le contenu est chargé
+        }
+    }, 500)">
     <!-- Fixed gradient background covering the entire page -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
 

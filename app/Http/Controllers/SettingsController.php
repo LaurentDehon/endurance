@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
@@ -34,9 +36,22 @@ class SettingsController extends Controller
         $validated['auto_sync_activities'] = isset($validated['auto_sync_activities']);
         $validated['auto_renew_token'] = isset($validated['auto_renew_token']);
         
+        // Enregistrer la langue actuelle
+        $oldLanguage = $user->settings['language'] ?? config('app.locale');
+        
         // Merge with existing settings
         $user->setSettings(array_merge($user->getSettings() ?? [], $validated));
         $user->save();
+
+        // Si la langue a changé, effacer le cache des traductions et actualiser la locale
+        if (isset($validated['language']) && $validated['language'] !== $oldLanguage) {
+            App::setLocale($validated['language']);
+            
+            // Mise à jour de la session avec la nouvelle langue
+            session(['locale' => $validated['language']]);
+            
+            Artisan::call('cache:clear');
+        }
 
         return Redirect::route('settings.index')
             ->with('toast', [

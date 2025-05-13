@@ -4,16 +4,16 @@
     <!-- Header Section -->
     <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg mb-8 py-6">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">FAQ - Frequently Asked Questions</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">{{ __('help.faq_title') }}</h1>
             <p class="text-lg md:text-xl text-cyan-200 max-w-2xl mx-auto mb-4">
-                All the answers to your questions about Zone 2
+                {{ __('help.faq_subtitle') }}
             </p>
             <div class="flex flex-wrap justify-center gap-4 mt-6">
                 <a href="#general" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
-                    <i class="fas fa-question-circle"></i> General Questions
+                    <i class="fas fa-question-circle"></i> {{ __('help.general_questions') }}
                 </a>
                 <a href="{{ route('calendar') }}" class="px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2">
-                    <i class="fas fa-calendar"></i> Go to Calendar
+                    <i class="fas fa-calendar"></i> {{ __('help.go_to_calendar') }}
                 </a>
             </div>
         </div>
@@ -23,28 +23,28 @@
     <div class="mb-8 p-3 bg-white bg-opacity-10 shadow-sm rounded-lg">
         <div class="flex flex-wrap justify-center gap-2">
             <a href="#general" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-info-circle"></i> General
+                <i class="fas fa-info-circle"></i> {{ __('help.general') }}
             </a>
             <a href="#plan" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-tasks"></i> Planning
+                <i class="fas fa-tasks"></i> {{ __('help.planning') }}
             </a>
             <a href="#metrics" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-chart-bar"></i> Metrics
+                <i class="fas fa-chart-bar"></i> {{ __('help.metrics') }}
             </a>
             <a href="#strava" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fab fa-strava"></i> Strava
+                <i class="fab fa-strava"></i> {{ __('help.strava') }}
             </a>
             <a href="#weeks" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-calendar-week"></i> Weeks
+                <i class="fas fa-calendar-week"></i> {{ __('help.weeks') }}
             </a>
             <a href="#workouts" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-running"></i> Workouts
+                <i class="fas fa-running"></i> {{ __('help.workouts') }}
             </a>
             <a href="#tips" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-lightbulb"></i> Tips
+                <i class="fas fa-lightbulb"></i> {{ __('help.tips') }}
             </a>
             <a href="#data" class="whitespace-nowrap px-4 py-2 text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-300 flex items-center gap-2 text-sm">
-                <i class="fas fa-database"></i> Data
+                <i class="fas fa-database"></i> {{ __('help.data') }}
             </a>
         </div>
     </div>
@@ -55,28 +55,28 @@
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-orange-500 bg-opacity-25 rounded-full">
                 <i class="fab fa-strava text-orange-400"></i>
             </div>
-            <h3 class="text-sm font-medium text-white">Strava Sync</h3>
+            <h3 class="text-sm font-medium text-white">{{ __('help.strava_sync') }}</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-teal-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-calendar text-teal-400"></i>
             </div>
-            <h3 class="text-sm font-medium text-white">Weekly Planning</h3>
+            <h3 class="text-sm font-medium text-white">{{ __('help.weekly_planning') }}</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-purple-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-chart-line text-purple-400"></i>
             </div>
-            <h3 class="text-sm font-medium text-white">Performance Tracking</h3>
+            <h3 class="text-sm font-medium text-white">{{ __('help.performance_tracking') }}</h3>
         </div>
         
         <div class="feature-card bg-white bg-opacity-10 shadow-sm backdrop-blur-lg rounded-xl p-4 text-center hover:transform hover:scale-105 transition-all duration-300 flex flex-col items-center">
             <div class="feature-icon mb-3 w-12 h-12 flex items-center justify-center bg-blue-500 bg-opacity-25 rounded-full">
                 <i class="fas fa-lightbulb text-blue-400"></i>
             </div>
-            <h3 class="text-sm font-medium text-white">Pro Tips</h3>
+            <h3 class="text-sm font-medium text-white">{{ __('help.pro_tips') }}</h3>
         </div>
     </div>
 
@@ -88,38 +88,34 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-info-circle text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">General Questions</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.general_questions_title') }}</h2>
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>What is Zone 2?</span>
+                        <span>{{ __('help.what_is_zone2') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Zone 2 is an interactive training calendar that combines your actual sports activities (synced from Strava) with your planned workout sessions.</p>
-                            <p class="mt-2">It's a tool designed for athletes who want to structure their progression and methodically track their performance.</p>
+                            <p>{{ __('help.what_is_zone2_answer_1') }}</p>
+                            <p class="mt-2">{{ __('help.what_is_zone2_answer_2') }}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>What are the main features of Zone 2?</span>
+                        <span>{{ __('help.main_features') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
                             <ul class="list-disc pl-5 space-y-2">
-                                <li>Visualization of weekly/monthly/yearly training loads</li>
-                                <li>Comparison between planned and actual performances</li>
-                                <li>Organization of training cycles with different week types</li>
-                                <li>Drag and drop workout sessions</li>
-                                <li>Track progress with visual indicators</li>
-                                <li>Adapt your schedule based on your goals</li>
-                                <li>Strava synchronization</li>
+                                @foreach(__('help.main_features_list') as $feature)
+                                <li>{{ $feature }}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -127,24 +123,24 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>Is Zone 2 free?</span>
+                        <span>{{ __('help.is_zone2_free') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Zone 2 is currently in beta and free to access.</p>
+                            <p>{{ __('help.is_zone2_free_answer') }}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>Does Zone 2 work on mobile?</span>
+                        <span>{{ __('help.works_on_mobile') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Yes, Zone 2 is designed to be fully responsive and work on all devices, from mobile phones to desktop computers. However some functionalities may be limited on smaller screens at the moment.</p>
+                            <p>{{ __('help.works_on_mobile_answer') }}</p>
                         </div>
                     </div>
                 </div>
@@ -157,24 +153,22 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-tasks text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Training Planning</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.training_planning_title') }}</h2>
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How do I create my training plan?</span>
+                        <span>{{ __('help.create_training_plan') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>To create your training plan in Zone 2:</p>
+                            <p>{{ __('help.create_training_plan') }}:</p>
                             <ol class="list-decimal pl-5 space-y-2 mt-2">
-                                <li>Go to the calendar</li>
-                                <li>Set your main goal (marathon, trail running, etc.)</li>
-                                <li>Structure your training weeks in appropriate blocks</li>
-                                <li>Plan your weekly sessions with details on type, distance, duration, and elevation</li>
-                                <li>Sync with Strava or manually enter your completed activities</li>
+                                @foreach(__('help.create_training_plan_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
                             {{-- <div class="mt-4">
                                 <a href="#" class="text-cyan-400 underline">Watch the tutorial video</a>
@@ -185,20 +179,16 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>Can I plan different types of workouts?</span>
+                        <span>{{ __('help.different_workout_types') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Yes, Zone 2 allows you to plan various types of workouts:</p>
+                            <p>{{ __('help.different_workout_types_answer') }}</p>
                             <ul class="space-y-2 mt-2">
-                                <li><span class="font-medium">Easy Run:</span> Low intensity to develop aerobic endurance without excessive fatigue</li>
-                                <li><span class="font-medium">Recovery Run:</span> Very light run after intense effort to promote muscle recovery</li>
-                                <li><span class="font-medium">Intervals:</span> Intense periods followed by rest to improve speed and cardiovascular condition</li>
-                                <li><span class="font-medium">Long Run:</span> Sustained run at moderate pace to develop endurance</li>
-                                <li><span class="font-medium">Fartlek:</span> Mix of fast and slow running with spontaneous speed variations</li>
-                                <li><span class="font-medium">Tempo:</span> Sustained, moderate effort to improve lactate threshold</li>
-                                <li><span class="font-medium">Hill Repeats:</span> Intense uphill sprints followed by recovery jogs</li>
+                                @foreach(__('help.different_workout_types_list') as $workout)
+                                <li>{!! $workout !!}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -206,18 +196,18 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How do I modify a planned session?</span>
+                        <span>{{ __('help.modify_session') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>To modify a session:</p>
+                            <p>{{ __('help.modify_session') }}:</p>
                             <ol class="list-decimal pl-5 space-y-2 mt-2">
-                                <li>Click on the session in the calendar</li>
-                                <li>Edit the details in the form that opens</li>
-                                <li>Save your changes</li>
+                                @foreach(__('help.modify_session_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
-                            <p class="mt-2">You can also move a session by drag-and-drop directly in the calendar. You can also copy a session by holding the <strong>Ctrl</strong> key (or <strong>Cmd</strong> on Mac) while dragging it to another date.</p>
+                            <p class="mt-2">{!! __('help.modify_session_drag_drop') !!}</p>
                         </div>
                     </div>
                 </div>
@@ -230,61 +220,60 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-chart-bar text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Performance Metrics</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.performance_metrics_title') }}</h2>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-route text-blue-400 text-4xl py-3"></i>                    
-                    <h3 class="text-lg font-semibold text-white">Distance</h3>
-                    <p class="text-sm text-cyan-200 mt-2">Complete tracking of distance covered compared to your goals</p>
+                    <h3 class="text-lg font-semibold text-white">{{ __('help.distance') }}</h3>
+                    <p class="text-sm text-cyan-200 mt-2">{{ __('help.distance_desc') }}</p>
                 </div>
                 
                 <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-stopwatch text-green-400 text-4xl py-3"></i>                    
-                    <h3 class="text-lg font-semibold text-white">Duration</h3>
-                    <p class="text-sm text-cyan-200 mt-2">Workout time management and comparison with planned sessions</p>
+                    <h3 class="text-lg font-semibold text-white">{{ __('help.duration') }}</h3>
+                    <p class="text-sm text-cyan-200 mt-2">{{ __('help.duration_desc') }}</p>
                 </div>
 
                 <div class="text-center bg-white bg-opacity-10 shadow-sm p-5 rounded-xl">
                     <i class="fas fa-mountain text-red-400 text-4xl py-3"></i>
-                    <h3 class="text-lg font-semibold text-white">Elevation</h3>
-                    <p class="text-sm text-cyan-200 mt-2">Precise analysis of climbs and positive elevation gain</p>
+                    <h3 class="text-lg font-semibold text-white">{{ __('help.elevation') }}</h3>
+                    <p class="text-sm text-cyan-200 mt-2">{{ __('help.elevation_desc') }}</p>
                 </div>                
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How do I interpret the metric colors?</span>
+                        <span>{{ __('help.interpret_colors') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>The color code for metrics is as follows:</p>
+                            <p>{{ __('help.interpret_colors_answer') }}</p>
                             <ul class="space-y-2 mt-2">
-                                <li><span class="font-semibold text-blue-500">Blue</span> = Distance</li>
-                                <li><span class="font-semibold text-red-500">Red</span> = Elevation</li>
-                                <li><span class="font-semibold text-green-500">Green</span> = Duration</li>
+                                @foreach(__('help.interpret_colors_list') as $color)
+                                <li>{!! $color !!}</li>
+                                @endforeach
                             </ul>
-                            <p class="mt-2">Display format: <span class="font-semibold">Actual / Planned</span></p>
+                            <p class="mt-2">{!! __('help.interpret_colors_format') !!}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How can I see my progress over time? (not yet implemented)</span>
+                        <span>{{ __('help.see_progress') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>To see your progress over time:</p>
+                            <p>{{ __('help.see_progress') }}:</p>
                             <ol class="list-decimal pl-5 space-y-2 mt-2">
-                                <li>Go to the dashboard</li>
-                                <li>Check the charts showing the progression of your metrics (distance, elevation, time)</li>
-                                <li>Use filters to display different periods (week, month, year)</li>
-                                <li>Compare your actual performances with your planned goals</li>
+                                @foreach(__('help.see_progress_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
                         </div>
                     </div>
@@ -298,23 +287,21 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fab fa-strava text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Strava Synchronization</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.strava_sync_title') }}</h2>
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How do I connect my Strava account?</span>
+                        <span>{{ __('help.connect_strava') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
                             <ol class="list-decimal pl-5 space-y-2">
-                                <li>By clicking on the dashboard, calendar or activities page, you will be prompted to connect your Strava account</li>
-                                <li>Click on "Connect to Strava"</li>
-                                <li>Authorize Zone 2 to access your Strava data</li>
-                                <li>Once connected, you will be able to synchronize your activities from the calendar</li>
-                                <li>Your activities will automatically appear on the days they were performed</li>
+                                @foreach(__('help.connect_strava_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
                         </div>
                     </div>
@@ -322,16 +309,16 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>What should I do if my Strava activities aren't syncing?</span>
+                        <span>{{ __('help.strava_not_syncing') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>If your activities aren't syncing:</p>
+                            <p>{{ __('help.strava_not_syncing') }}:</p>
                             <ol class="list-decimal pl-5 space-y-2 mt-2">
-                                <li>Make sure you're properly connected to Strava</li>
-                                <li>Click the "Sync" button in the calendar</li>
-                                <li>If the problem persists, disconnect and reconnect your Strava account</li>
+                                @foreach(__('help.strava_not_syncing_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
                         </div>
                     </div>
@@ -339,12 +326,12 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>Can I use Zone 2 without Strava?</span>
+                        <span>{{ __('help.use_without_strava') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>No, Zone 2 is designed to work with Strava data for optimal performance tracking.</p>                            
+                            <p>{{ __('help.use_without_strava_answer') }}</p>                            
                         </div>
                     </div>
                 </div>
@@ -357,58 +344,58 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-calendar-week text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Week Types</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.week_types_title') }}</h2>
             </div>
             
             <div class="mb-6">
                 <div class="bg-red-900 bg-opacity-20 p-5 rounded-xl mb-4">
-                    <h3 class="font-semibold text-white mb-3">Available Week Types</h3>
+                    <h3 class="font-semibold text-white mb-3">{{ __('help.available_week_types') }}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-blue-600 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Development</span>
-                                <p class="text-sm text-cyan-200">High-load week designed to improve endurance, speed, or strength</p>
+                                <span class="font-medium text-white">{{ __('help.development') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.development_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-amber-700 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Maintain</span>
-                                <p class="text-sm text-cyan-200">Balanced week that maintains fitness without excessive stress</p>
+                                <span class="font-medium text-white">{{ __('help.maintain') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.maintain_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-emerald-400 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Reduced</span>
-                                <p class="text-sm text-cyan-200">Week with reduced volume to prevent burnout and promote adaptation</p>
+                                <span class="font-medium text-white">{{ __('help.reduced') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.reduced_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-pink-600 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Recovery</span>
-                                <p class="text-sm text-cyan-200">Low-intensity week focused on rest and active recovery</p>
+                                <span class="font-medium text-white">{{ __('help.recovery') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.recovery_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-fuchsia-600 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Tapering</span>
-                                <p class="text-sm text-cyan-200">Progressive reduction of training volume before a competition</p>
+                                <span class="font-medium text-white">{{ __('help.tapering') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.tapering_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-rose-600 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Race</span>
-                                <p class="text-sm text-cyan-200">Competition and recovery week</p>
+                                <span class="font-medium text-white">{{ __('help.race') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.race_desc') }}</p>
                             </div>
                         </div>
                     </div>
@@ -418,19 +405,16 @@
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to choose the right week type?</span>
+                        <span>{{ __('help.choose_week_type') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>The choice of week type depends on your overall training plan and the phase you're in:</p>
+                            <p>{{ __('help.choose_week_type_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li>Use <strong>Development</strong> weeks during intensive training periods</li>
-                                <li>Alternate with <strong>Reduced</strong> weeks every 3-4 weeks to promote recovery</li>
-                                <li>Use <strong>Maintain</strong> weeks between intensive training blocks</li>
-                                <li>Schedule a <strong>Recovery</strong> week after a competition or an intense training block</li>
-                                <li>Include 1-3 <strong>Tapering</strong> weeks before an important competition</li>
-                                <li>Mark your competitions as <strong>Race</strong> weeks</li>
+                                @foreach(__('help.choose_week_type_list') as $item)
+                                <li>{!! $item !!}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -438,15 +422,15 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to change a week type?</span>
+                        <span>{{ __('help.change_week_type') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
                             <ol class="list-decimal pl-5 space-y-2">
-                                <li>Go to the calendar view</li>
-                                <li>Click on the week header</li>
-                                <li>Select the desired week type from the dropdown menu</li>
+                                @foreach(__('help.change_week_type_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
                         </div>
                     </div>
@@ -460,82 +444,82 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-running text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Workout Types</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.workout_types_title') }}</h2>
             </div>
             
             <div class="mb-6">
                 <div class="bg-blue-900 bg-opacity-20 p-5 rounded-xl mb-4">
-                    <h3 class="font-semibold text-white mb-3">Available Workout Types</h3>
+                    <h3 class="font-semibold text-white mb-3">{{ __('help.available_workout_types') }}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-blue-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Easy Run (E)</span>
-                                <p class="text-sm text-cyan-200">Low intensity run to develop aerobic endurance without excessive fatigue</p>
+                                <span class="font-medium text-white">{{ __('help.easy_run') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.easy_run_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Long Run (L)</span>
-                                <p class="text-sm text-cyan-200">Sustained run at moderate pace to develop endurance over longer distances</p>
+                                <span class="font-medium text-white">{{ __('help.long_run') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.long_run_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-stone-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Recovery Run (R)</span>
-                                <p class="text-sm text-cyan-200">Very light run after intense effort to promote muscle recovery</p>
+                                <span class="font-medium text-white">{{ __('help.recovery_run') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.recovery_run_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-pink-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Fartlek (F)</span>
-                                <p class="text-sm text-cyan-200">Mix of fast and slow running with spontaneous speed variations</p>
+                                <span class="font-medium text-white">{{ __('help.fartlek') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.fartlek_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-slate-800 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Tempo Run (T)</span>
-                                <p class="text-sm text-cyan-200">Sustained, moderate-to-high effort to improve lactate threshold</p>
+                                <span class="font-medium text-white">{{ __('help.tempo_run') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.tempo_run_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Hill Repeats (H)</span>
-                                <p class="text-sm text-cyan-200">Intense uphill sprints followed by recovery jogs to build strength and power</p>
+                                <span class="font-medium text-white">{{ __('help.hill_repeats') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.hill_repeats_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-red-500 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Intervals (I)</span>
-                                <p class="text-sm text-cyan-200">Intense periods followed by rest to improve speed and cardiovascular capacity</p>
+                                <span class="font-medium text-white">{{ __('help.intervals') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.intervals_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-cyan-600 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Back to Back (B)</span>
-                                <p class="text-sm text-cyan-200">Two challenging workouts in close succession to build endurance and mental toughness</p>
+                                <span class="font-medium text-white">{{ __('help.back_to_back') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.back_to_back_desc') }}</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-2">
                             <div class="mt-1 w-4 h-4 rounded-full bg-red-700 flex-shrink-0"></div>
                             <div>
-                                <span class="font-medium text-white">Race (R)</span>
-                                <p class="text-sm text-cyan-200">Competition event - give it your all!</p>
+                                <span class="font-medium text-white">{{ __('help.race') }}</span>
+                                <p class="text-sm text-cyan-200">{{ __('help.race_desc') }}</p>
                             </div>
                         </div>
                     </div>
@@ -545,21 +529,16 @@
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to choose the right workout type?</span>
+                        <span>{{ __('help.choose_workout_type') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>The choice of workout type depends on your training goals and the current phase of your plan:</p>
+                            <p>{{ __('help.choose_workout_type_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li>Use <strong>Easy Runs</strong> for building base aerobic fitness and recovery between harder sessions</li>
-                                <li>Include <strong>Long Runs</strong> weekly to build endurance, especially when preparing for longer distance races</li>
-                                <li>Schedule <strong>Recovery Runs</strong> after intense workouts or races to promote active recovery</li>
-                                <li>Add <strong>Tempo Runs</strong> to improve your lactate threshold and sustainable race pace</li>
-                                <li>Incorporate <strong>Intervals</strong> and <strong>Fartlek</strong> sessions to improve speed and VO2 max</li>
-                                <li>Use <strong>Hill Repeats</strong> to build strength and power with lower impact than speed work</li>
-                                <li>Include <strong>Back to Back</strong> workouts strategically when training for ultra distance events</li>
-                                <li>Mark your competitions as <strong>Race</strong> to distinguish them from training sessions</li>
+                                @foreach(__('help.choose_workout_type_list') as $item)
+                                <li>{!! $item !!}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -567,40 +546,33 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to create a workout with a specific type?</span>
+                        <span>{{ __('help.create_specific_workout') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
                             <ol class="list-decimal pl-5 space-y-2">
-                                <li>Go to the calendar view</li>
-                                <li>Click on the day you want to add a workout</li>
-                                <li>In the workout modal, select the desired workout type from the dropdown menu</li>
-                                <li>Fill in the details (distance, duration, elevation, notes)</li>
-                                <li>Save your workout</li>
+                                @foreach(__('help.create_specific_workout_steps') as $step)
+                                <li>{{ $step }}</li>
+                                @endforeach
                             </ol>
-                            <p class="mt-2">You can also create recurring workouts of the same type for consistent training blocks.</p>
+                            <p class="mt-2">{{ __('help.create_specific_workout_note') }}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>What do the letters in parentheses mean?</span>
+                        <span>{{ __('help.letters_meaning') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>The letters in parentheses are short codes used to quickly identify the workout type in the calendar view and during planning:</p>
+                            <p>{{ __('help.letters_meaning_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li><strong>E</strong> = Easy Run</li>
-                                <li><strong>L</strong> = Long Run</li>
-                                <li><strong>R</strong> = Recovery Run or Race (context dependent)</li>
-                                <li><strong>F</strong> = Fartlek</li>
-                                <li><strong>T</strong> = Tempo Run</li>
-                                <li><strong>H</strong> = Hill Repeats</li>
-                                <li><strong>I</strong> = Intervals</li>
-                                <li><strong>B</strong> = Back to Back</li>
+                                @foreach(__('help.letters_meaning_list') as $letter => $meaning)
+                                <li>{!! $meaning !!}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -614,25 +586,22 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-lightbulb text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Expert Tips</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.expert_tips_title') }}</h2>
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to structure my training effectively?</span>
+                        <span>{{ __('help.structure_training') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>For an effective training structure:</p>
+                            <p>{{ __('help.structure_training_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li>Follow the 10% rule (don't increase your volume by more than 10% per week)</li>
-                                <li>Follow a cycle of 3-4 weeks of increasing load followed by a recovery week</li>
-                                <li>Vary the types of training (endurance, speed, strength)</li>
-                                <li>Include at least one complete rest day per week</li>
-                                <li>Plan your intensive sessions after recovery days</li>
-                                <li>Adapt your plan according to how you feel and your actual performances</li>
+                                @foreach(__('help.structure_training_list') as $tip)
+                                <li>{{ $tip }}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -640,19 +609,15 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>What pitfalls should be avoided in planning?</span>
+                        <span>{{ __('help.planning_pitfalls') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
                             <ul class="list-disc pl-5 space-y-2">
-                                <li>Avoid increasing volume or intensity too quickly</li>
-                                <li>Don't neglect recovery weeks</li>
-                                <li>Don't do multiple intense sessions consecutively</li>
-                                <li>Don't ignore signs of excessive fatigue or injury</li>
-                                <li>Don't copy another athlete's plan without adapting it to your level</li>
-                                <li>Avoid planning sessions that are too specific too early in your preparation</li>
-                                <li>Remember that consistency takes precedence over intensity for long-term progress</li>
+                                @foreach(__('help.planning_pitfalls_list') as $pitfall)
+                                <li>{{ $pitfall }}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -666,27 +631,27 @@
                 <div class="w-12 h-12 rounded-full text-white bg-cyan-600 flex items-center justify-center">
                     <i class="fas fa-database text-xl"></i>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white">Data Management</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">{{ __('help.data_management_title') }}</h2>
             </div>
             
             <div class="space-y-4">
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>How to delete data?</span>
+                        <span>{{ __('help.delete_data') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Use deletion options with caution:</p>
+                            <p>{{ __('help.delete_data_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li>To delete an individual session, go to the session view and use the trash icon</li>
-                                <li>To delete entire weeks/months/years, use the corresponding menu</li>
-                                <li>To delete activities, go to the Activities menu and use the delete option</li>
+                                @foreach(__('help.delete_data_list') as $item)
+                                <li>{{ $item }}</li>
+                                @endforeach
                             </ul>
                             <div class="mt-4 bg-red-900 bg-opacity-20 p-3 rounded-lg">
                                 <p class="flex items-center gap-2">
                                     <i class="fas fa-exclamation-triangle text-red-400"></i>
-                                    <span>Warning: deleted data cannot be recovered</span>
+                                    <span>{{ __('help.delete_warning') }}</span>
                                 </p>
                             </div>
                         </div>
@@ -714,19 +679,18 @@
                 
                 <div x-data="{ open: false }" class="faq-item bg-white bg-opacity-5 rounded-lg overflow-hidden">
                     <button @click="open = !open" class="w-full p-4 text-left flex justify-between items-center text-white font-medium">
-                        <span>Is my data secure?</span>
+                        <span>{{ __('help.data_secure') }}</span>
                         <i class="fas transition-transform" :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="p-4 pt-0 text-cyan-200">
-                            <p>Yes, your data is secure:</p>
+                            <p>{{ __('help.data_secure_answer') }}</p>
                             <ul class="list-disc pl-5 space-y-2 mt-2">
-                                <li>All data is stored securely and confidentially</li>
-                                <li>We only use your information to provide and improve the service</li>
-                                <li>You maintain complete control over your data</li>
-                                <li>You can request deletion of your data at any time</li>
+                                @foreach(__('help.data_secure_list') as $item)
+                                <li>{{ $item }}</li>
+                                @endforeach
                             </ul>
-                            <p class="mt-2">For more information, see our <a href="#" class="text-cyan-400 underline">privacy policy</a>.</p>
+                            <p class="mt-2">{!! __('help.see_privacy_policy') !!}</p>
                         </div>
                     </div>
                 </div>
