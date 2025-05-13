@@ -1146,15 +1146,16 @@ class Calendar extends Component
      */
     public function getMonthInfo(string $monthKey): array
     {
-        static $months = [
-            '01' => 'January', '02' => 'February', '03' => 'March', '04' => 'April',
-            '05' => 'May', '06' => 'June', '07' => 'July', '08' => 'August',
-            '09' => 'September', '10' => 'October', '11' => 'November', '12' => 'December',
-        ];
         try {
             list($yearPart, $monthPart) = explode('-', $monthKey);
-            $monthName = $months[$monthPart] ?? 'Month ' . $monthKey;
             $monthNumber = (int)$monthPart;
+            
+            // Créer un objet Carbon pour le mois concerné
+            $date = \Carbon\Carbon::createFromDate($yearPart, $monthNumber, 1);
+            
+            // Utiliser la traduction via le helper trans() ou __()
+            $monthName = __('calendar.months.' . strtolower($date->format('F')));
+            
             return [
                 'name' => $monthName,
                 'number' => $monthNumber

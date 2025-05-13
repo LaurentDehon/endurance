@@ -38,8 +38,8 @@
                 </div>
             </div>
             
-            <h3 class="text-2xl font-bold text-white mb-2">Strava Synchronization</h3>
-            <p class="text-center text-white/80 mb-6">Retrieving your workout data from Strava...</p>
+            <h3 class="text-2xl font-bold text-white mb-2">{{ __('calendar.strava_synchronization') }}</h3>
+            <p class="text-center text-white/80 mb-6">{{ __('calendar.retrieving_workout_data') }}</p>
             
             <!-- Animated progress indicator for sync process -->
             <div class="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden">
@@ -67,8 +67,8 @@
                 </div>
             </div>
             
-            <h3 class="text-2xl font-bold text-white mb-2">Loading</h3>
-            <p class="text-center text-white/80 mb-6">Preparing your calendar...</p>
+            <h3 class="text-2xl font-bold text-white mb-2">{{ __('calendar.loading') }}</h3>
+            <p class="text-center text-white/80 mb-6">{{ __('calendar.preparing_calendar') }}</p>
             
             <!-- Animated progress indicator -->
             <div class="w-64 h-2 mx-auto bg-gray-700/50 rounded-full overflow-hidden">
@@ -125,7 +125,7 @@
                         <!-- Header -->
                         <div class="flex justify-between items-center pb-4 mb-4 border-b border-white border-opacity-20">
                             <h3 class="font-bold text-white mb-3 mt-5"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>
-                                Navigation
+                                {{ __('calendar.navigation') }}
                             </h3>
                         </div>
 
@@ -135,7 +135,7 @@
                                 $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                             @endphp
                             <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 text-slate-100 hover:text-cyan-200 rounded-lg transition-colors cursor-pointer">
-                                Scroll to top
+                                {{ __('calendar.scroll_to_top') }}
                             </a>
                             
                             @foreach ($months as $monthKey => $weeksInMonth)
@@ -150,7 +150,7 @@
                                 class="flex items-center justify-between px-3 py-1 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">
                                     <span>{{ $monthName }}</span>
                                     <span class="text-sm text-slate-300 group-hover:text-cyan-200">
-                                        {{ count($weeksInMonth) }} weeks
+                                        {{ count($weeksInMonth) }} {{ __('calendar.weeks') }}
                                     </span>
                                 </a>
                             @endforeach
@@ -173,7 +173,7 @@
                             <div class="flex items-center gap-4">
                                 <i class="fas fa-{{ $statIcons[$stat] }} text-{{ $statColors[$stat] }}-400 text-4xl"></i>
                                 <div>
-                                    <p class="text-xs uppercase tracking-wider text-slate-300 mb-1">{{ ucfirst($stat) }}</p>
+                                    <p class="text-xs uppercase tracking-wider text-slate-300 mb-1">{{ __('calendar.stats.'.$stat) }}</p>
                                     <div class="flex items-baseline">
                                         <span class="text-2xl font-bold text-white">
                                             @if($stat === 'distance')
@@ -251,14 +251,14 @@
                                     <div class="py-1">
                                         <div class="border-b border-white border-opacity-10 pb-2 mb-2">
                                             <x-dropdown-item icon="chevron-down" iconColor="cyan" @click="toggleAllWeeks(true); open = false">
-                                                Collapse all weeks
+                                                {{ __('calendar.collapse_all_weeks') }}
                                             </x-dropdown-item>
                                             <x-dropdown-item icon="chevron-up" iconColor="cyan" @click="toggleAllWeeks(false); open = false">
-                                                Expand all weeks
+                                                {{ __('calendar.expand_all_weeks') }}
                                             </x-dropdown-item>
                                         </div>
                                         <x-dropdown-item wire:click.prevent="deleteAll" icon="trash-alt" iconColor="red">
-                                            Delete all the workouts
+                                            {{ __('calendar.delete_all_workouts') }}
                                         </x-dropdown-item>
                                     </div>
                                 </x-dropdown>
@@ -289,7 +289,7 @@
                                     <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-xl transition-colors focus:outline-none" align="right">
                                         <div class="py-1">
                                             <x-dropdown-item wire:click.prevent="deleteMonth('{{ $monthKey }}')" icon="trash-alt" iconColor="red">
-                                                Delete monthly workouts
+                                                {{ __('calendar.delete_monthly_workouts') }}
                                             </x-dropdown-item>
                                         </div>
                                     </x-dropdown>
@@ -328,7 +328,7 @@
                                         <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-3 px-2 text-gray-400 hover:text-white rounded-lg transition-colors focus:outline-none" align="right">
                                             <div class="py-1">
                                                 <x-dropdown-item wire:click.prevent="deleteMonth('{{ $monthKey }}')" icon="trash-alt" iconColor="red">
-                                                    Delete monthly workouts
+                                                    {{ __('calendar.delete_monthly_workouts') }}
                                                 </x-dropdown-item>
                                             </div>
                                         </x-dropdown>
@@ -378,7 +378,7 @@
                                             <div class="flex justify-between sm:flex-col gap-2">
                                                 <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                                        Week {{ $week->week_number }}
+                                                        {{ __('calendar.week') }} {{ $week->week_number }}
                                                     </span>                                        
                                                     <span class="text-sm text-white">
                                                         {{ $week->start }} - {{ $week->end }}
@@ -398,7 +398,7 @@
                                                                         {{ $week->type->name }}
                                                                     </span>
                                                                 @else
-                                                                    <span>Set week type</span>
+                                                                    <span>{{ __('calendar.set_week_type') }}</span>
                                                                 @endif
                                                             </button>
                                                         </x-slot>
@@ -408,7 +408,7 @@
                                                             <x-dropdown-item wire:click="setWeekType({{ $week->id }}, null)">
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="w-4 h-4 rounded-full bg-gray-500 bg-opacity-30"></span>
-                                                                    <span>None</span>
+                                                                    <span>{{ __('calendar.none') }}</span>
                                                                 </div>
                                                             </x-dropdown-item>
                                                             
@@ -430,14 +430,14 @@
                                                     <button 
                                                         @click="collapsed = !collapsed; saveState()" 
                                                         class="flex py-1.5 ps-2 items-center justify-center text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none collapse-toggle"
-                                                        data-tippy-content="Toggle week">
+                                                        data-tippy-content="{{ __('calendar.toggle_week') }}">
                                                         <i class="fas" :class="collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
                                                     </button>
 
                                                     <x-dropdown trigger-icon="ellipsis-v" trigger-class="py-1.5 px-2 text-gray-400 hover:text-white rounded-md transition-colors focus:outline-none" align="right">
                                                         <div class="py-1">
                                                             <x-dropdown-item wire:click.prevent="deleteWeek('{{ $week->id }}')" icon="trash-alt" iconColor="red">
-                                                                Delete weekly workouts
+                                                                {{ __('calendar.delete_weekly_workouts') }}
                                                             </x-dropdown-item>
                                                         </div>
                                                     </x-dropdown>
@@ -623,14 +623,14 @@
                     <div class="hidden lg:block">
                         <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-lg p-4">
                             <h3 class="font-bold text-white mt-1 pb-4 mb-4 border-b border-white border-opacity-20"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>
-                                Navigation
+                                {{ __('calendar.navigation') }}
                             </h3>
                             <nav class="">
                                 @php
                                     $currentMonthSlug = Str::slug(Carbon::now()->format('F'));
                                 @endphp
                                 <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex px-3 py-1 text-slate-100 hover:text-cyan-200 rounded-lg transition-colors cursor-pointer">
-                                    Scroll to top
+                                    {{ __('calendar.scroll_to_top') }}
                                 </a>
                                 @foreach ($months as $monthKey => $weeksInMonth)
                                     @php
@@ -644,7 +644,7 @@
                                     class="flex items-center justify-between px-3 py-1 gap-2 rounded-xl text-slate-100 hover:text-cyan-200 transition-all duration-200 group">
                                         <span>{{ $monthName }}</span>
                                         <span class="text-sm text-slate-300">
-                                            {{ count($weeksInMonth) }} weeks
+                                            {{ count($weeksInMonth) }} {{ __('calendar.weeks') }}
                                         </span>
                                     </a>
                                 @endforeach
