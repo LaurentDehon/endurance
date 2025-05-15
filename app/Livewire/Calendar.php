@@ -415,8 +415,8 @@ class Calendar extends Component
                 $weekPlannedStats['duration'] += $firstWeekNextYearStats['planned']['duration'] * 60;
             }
 
-            $week->start = $start->format('d M');
-            $week->end = $end->format('d M');
+            $week->start = $start->translatedFormat(__('calendar.date_formats.day_month'));
+            $week->end = $end->translatedFormat(__('calendar.date_formats.day_month'));
             $week->month = $thursday->format('Y-m');
             $week->actual_stats = $weekActualStats;
             $week->planned_stats = $weekPlannedStats;
@@ -629,7 +629,7 @@ class Calendar extends Component
         $week->week_type_id = $weekTypeId;
         $week->save();
         $this->invalidateCache();
-        $this->dispatch('toast', 'Week type updated successfully', 'success');
+        $this->dispatch('toast', __('calendar.messages.week_type_updated'), 'success');
     }
 
     /**
@@ -714,12 +714,15 @@ class Calendar extends Component
             
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
-            $this->dispatch('toast', $workout->type->name . ' moved to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            $this->dispatch('toast', __('calendar.messages.workout_moved', [
+                'type' => $workout->type->name,
+                'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
+            ]), 'success');
             
             // Émettre l'événement pour recharger les tooltips
             $this->dispatch('reload-tooltips');
         } catch (\Exception $e) {
-            $this->dispatch('toast', 'Error moving workout: ' . $e->getMessage(), 'error');
+            $this->dispatch('toast', __('calendar.messages.error_moving_workout', ['error' => $e->getMessage()]), 'error');
         }
     }
 
@@ -758,12 +761,15 @@ class Calendar extends Component
 
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
-            $this->dispatch('toast', $originalWorkout->type->name . ' copied to ' . Carbon::parse($newDate)->format('jS \\of F'), 'success');
+            $this->dispatch('toast', __('calendar.messages.workout_copied', [
+                'type' => $originalWorkout->type->name,
+                'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
+            ]), 'success');
             
             // Émettre l'événement pour recharger les tooltips
             $this->dispatch('reload-tooltips');
         } catch (\Exception $e) {
-            $this->dispatch('toast', 'Error copying workout: ' . $e->getMessage(), 'error');
+            $this->dispatch('toast', __('calendar.messages.error_copying_workout', ['error' => $e->getMessage()]), 'error');
         }
     }
 
@@ -804,7 +810,7 @@ class Calendar extends Component
         try {
             $user = Auth::user();
             if (!$user || !($user instanceof \App\Models\User)) {
-                $this->dispatch('toast', 'User authentication required', 'error');
+                $this->dispatch('toast', __('calendar.messages.auth_required'), 'error');
                 return;
             }
             
@@ -825,7 +831,7 @@ class Calendar extends Component
             }
 
         } catch (\Exception $e) {
-            $this->dispatch('toast', $e->getMessage(), 'error');
+            $this->dispatch('toast', __('calendar.messages.generic_error', ['message' => $e->getMessage()]), 'error');
         }
     }
 
@@ -841,10 +847,13 @@ class Calendar extends Component
             ->count();
             
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm deletion',
-            'message' => "Are you sure you want to delete all workout sessions for the year {$this->year}?<br>This will remove {$count} workout sessions and cannot be undone.",
-            'confirmButtonText' => 'Delete All',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('calendar.delete_modal.confirm_deletion'),
+            'message' => __('calendar.delete_modal.confirm_delete_all', [
+                'year' => $this->year,
+                'count' => $count
+            ]),
+            'confirmButtonText' => __('calendar.delete_modal.delete_all'),
+            'cancelButtonText' => __('calendar.delete_modal.cancel'),
             'confirmAction' => 'confirmDeleteAll',
             'icon' => 'calendar-times',
             'iconColor' => 'red'
@@ -865,7 +874,7 @@ class Calendar extends Component
         $workouts->delete(); 
         // Invalidation de tous les caches liés à l'année
         $this->invalidateCache('all');
-        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
+        $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
 
     /**
@@ -877,7 +886,7 @@ class Calendar extends Component
     public function deleteMonth($monthKey)
     {
         $month = Carbon::createFromFormat('Y-m', $monthKey);
-        $monthName = $month->format('F');
+        $monthName = $month->translatedFormat('F');
         
         $count = Workout::where('user_id', Auth::id())
             ->whereYear('date', $month->year)
@@ -885,10 +894,14 @@ class Calendar extends Component
             ->count();
             
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm Monthly Deletion',
-            'message' => "Are you sure you want to delete all workout sessions for {$monthName} {$month->year}?<br>This will remove {$count} workout sessions and cannot be undone.",
-            'confirmButtonText' => 'Delete Sessions',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('calendar.delete_modal.confirm_monthly_deletion'),
+            'message' => __('calendar.delete_modal.confirm_delete_month', [
+                'month' => $monthName,
+                'year' => $month->year,
+                'count' => $count
+            ]),
+            'confirmButtonText' => __('calendar.delete_modal.delete_sessions'),
+            'cancelButtonText' => __('calendar.delete_modal.cancel'),
             'confirmAction' => 'confirmDeleteMonth',
             'params' => [$monthKey],
             'icon' => 'calendar-minus',
@@ -915,7 +928,7 @@ class Calendar extends Component
         $workouts->delete(); 
         // Invalidation des caches liés aux workouts
         $this->invalidateCache('workout');
-        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
+        $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
 
     /**
@@ -937,10 +950,13 @@ class Calendar extends Component
             ->count();
             
         $this->dispatch('openConfirmModal', [
-            'title' => 'Confirm Weekly Deletion',
-            'message' => "Are you sure you want to delete all workout sessions for Week {$week->week_number}?<br>This will remove {$count} workout sessions and cannot be undone.",
-            'confirmButtonText' => 'Delete Sessions',
-            'cancelButtonText' => 'Cancel',
+            'title' => __('calendar.delete_modal.confirm_weekly_deletion'),
+            'message' => __('calendar.delete_modal.confirm_delete_week', [
+                'week' => $week->week_number,
+                'count' => $count
+            ]),
+            'confirmButtonText' => __('calendar.delete_modal.delete_sessions'),
+            'cancelButtonText' => __('calendar.delete_modal.cancel'),
             'confirmAction' => 'confirmDeleteWeek',
             'params' => [$weekId],
             'icon' => 'calendar-week',
@@ -969,7 +985,7 @@ class Calendar extends Component
         $count = $workouts->count();
         $workouts->delete(); 
         $this->invalidateCache();
-        $this->dispatch('toast', $count . ' workout sessions deleted successfully', 'success');
+        $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
     
     /**

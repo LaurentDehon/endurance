@@ -58,7 +58,7 @@ class StravaAuthService
 
         $tokens = $this->refreshToken($user->strava_refresh_token);
         session()->flash('toast', [
-            'message' => 'Strava connected successfully',
+            'message' => __('strava.auth.connected_success'),
             'type' => 'success'
         ]);
         return $this->updateOrCreateUser($tokens, $user);
@@ -83,11 +83,11 @@ class StravaAuthService
         $user = $user ?? Auth::user();
 
         if (!$user) {
-            throw new \Exception('Aucun utilisateur authentifié trouvé.');
+            throw new \Exception(__('strava.auth.no_user_found'));
         }
 
         if (!$user instanceof User) {
-            throw new \Exception('L\'objet user n\'est pas une instance de User.');
+            throw new \Exception(__('strava.auth.not_user_instance'));
         }
 
         $user->fill([

@@ -15,7 +15,7 @@ class StravaSyncService
     public function sync(User $user): array
     {
         if (!$token = $this->authService->refreshUserToken($user)?->strava_token) {
-            return ['success' => false, 'message' => 'Unable to sync. Please reconnect to Strava'];
+            return ['success' => false, 'message' => __('strava.sync.reconnect_required')];
         }
 
         $activities = $this->fetchNewActivities($user, $token);
@@ -100,9 +100,12 @@ class StravaSyncService
 
     private function buildResultMessage(int $count): string
     {
-        return $count > 0 
-            ? ($count == 1 ? "1 new activity imported"
-            : "$count new activities imported")
-            : "No new activities to import";
+        if ($count > 0) {
+            return $count == 1 
+                ? __('strava.sync.one_activity_imported')
+                : __('strava.sync.multiple_activities_imported', ['count' => $count]);
+        } else {
+            return __('strava.sync.no_new_activities');
+        }
     }
 }

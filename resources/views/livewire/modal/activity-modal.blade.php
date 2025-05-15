@@ -11,7 +11,7 @@
             </h2>
             <button type="button" wire:click.prevent="close" 
                 class="text-white bg-cyan-600 hover:bg-cyan-500 h-8 w-8 rounded-full flex items-center justify-center hover:scale-105 transition-all"
-                aria-label="{{ __('activities.modal.Close') }}">
+                aria-label="{{ __('activities.modal.close') }}">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -30,7 +30,7 @@
                         <i class="fas fa-route text-blue-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Distance') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.distance') }}</p>
                         <p class="font-semibold text-white">
                             {{ number_format($activity->distance / 1000, 2) }} {{ __('activities.modal.km') }}
                         </p>
@@ -42,7 +42,7 @@
                         <i class="fas fa-stopwatch text-green-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Moving Time') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.moving_time') }}</p>
                         <p class="font-semibold text-white">
                             {{ formatTime($activity->moving_time) }}
                         </p>
@@ -54,7 +54,7 @@
                         <i class="fas fa-mountain text-purple-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Elevation Gain') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.elevation_gain') }}</p>
                         <p class="font-semibold text-white">
                             {{ $activity->total_elevation_gain }} {{ __('activities.modal.m') }}
                         </p>
@@ -70,7 +70,7 @@
                         <i class="fas fa-tachometer-alt text-yellow-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Average Pace') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.average_pace') }}</p>
                         <p class="font-semibold text-white">
                             @if($activity->average_speed > 0)
                                 @php
@@ -80,7 +80,7 @@
                                 @endphp
                                 {{ $minutes }}:{{ str_pad($seconds, 2, '0', STR_PAD_LEFT) }} /{{ __('activities.modal.km') }}
                             @else
-                                {{ __('activities.modal.N/A') }}
+                                {{ __('activities.modal.n_a') }}
                             @endif
                         </p>
                     </div>
@@ -91,11 +91,11 @@
                         <i class="fas fa-heartbeat text-red-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Heart Rate') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.heart_rate') }}</p>
                         <p class="font-semibold text-white">
-                            {{ $activity->average_heartrate ?? __('activities.modal.N/A') }} 
+                            {{ $activity->average_heartrate ?? __('activities.modal.n_a') }} 
                             @if($activity->max_heartrate)
-                                <span class="text-slate-300">({{ __('activities.modal.Max') }} {{ $activity->max_heartrate }})</span>
+                                <span class="text-slate-300">({{ __('activities.modal.max') }} {{ $activity->max_heartrate }})</span>
                             @endif
                         </p>
                     </div>
@@ -106,7 +106,7 @@
                         <i class="fas fa-sync-alt text-indigo-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-slate-300">{{ __('activities.modal.Synced') }}</p>
+                        <p class="text-sm text-slate-300">{{ __('activities.modal.synced') }}</p>
                         <p class="font-semibold text-white">
                             {{ \Carbon\Carbon::parse($activity->sync_date)->locale(app()->getLocale())->diffForHumans() }}
                         </p>
@@ -120,17 +120,17 @@
             <a href="https://www.strava.com/activities/{{ $activity->strava_id }}" target="_blank" 
                 class="flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-medium text-white bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl hover:from-amber-600 hover:to-orange-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 flex-1 hover:shadow-md">
                 <i class="fab fa-strava mr-1.5"></i>
-                {{ __('activities.modal.View') }}
+                {{ __('activities.modal.view') }}
             </a>
             <button type="button" wire:click.prevent="delete" 
                 class="bg-red-600 hover:bg-red-500 text-white flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300/50 hover:shadow-md flex items-center justify-center gap-2">
                 <i class="fas fa-trash-alt mr-1.5"></i>
-                {{ __('activities.modal.Delete') }}
+                {{ __('activities.modal.delete') }}
             </button>
             <button type="button" wire:click.prevent="close" 
                 class="text-white bg-cyan-600 hover:bg-cyan-500 flex-1 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300/50">
                 <i class="fas fa-times mr-1.5"></i>
-                {{ __('activities.modal.Close') }}
+                {{ __('activities.modal.close') }}
             </button>
         </div>
     </div>
