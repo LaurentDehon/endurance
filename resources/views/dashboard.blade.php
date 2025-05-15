@@ -19,7 +19,7 @@
                                 <div class="text-2xl font-bold text-amber-300 mb-2">{{ $workout->title }}</div>
                                 <div class="flex items-center mb-2 gap-2 text-white">
                                     <i class="fas fa-calendar"></i>
-                                    <span>{{ \Carbon\Carbon::parse($workout->date)->format('l, F j, Y') }}</span>
+                                    <span>{{ \Carbon\Carbon::parse($workout->date)->translatedFormat('l, j F Y') }}</span>
                                 </div>
                                 @if($workout->duration > 0)
                                 <div class="flex items-center mb-2 gap-2 text-cyan-200">
@@ -63,7 +63,7 @@
                         <div class="text-3xl font-bold text-amber-300 mb-2">{{ $nextRace->title }}</div>
                         <div class="flex items-center mb-2 gap-2 text-white">
                             <i class="fas fa-calendar"></i>
-                            <span>{{ \Carbon\Carbon::parse($nextRace->date)->format('l, F j, Y') }}</span>
+                            <span>{{ \Carbon\Carbon::parse($nextRace->date)->translatedFormat('l, j F Y') }}</span>
                         </div>
                         @if($nextRace->duration > 0)
                         <div class="flex items-center mb-2 gap-2 text-cyan-200">
