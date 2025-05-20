@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 @section('content')
-<div class="min-h-screen flex items-center justify-center {{ themeClass('background') }} py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-lg border bg-white bg-opacity-10 border-white border-opacity-20">
         <div class="text-center">
             <h2 class="mt-6 text-3xl font-bold text-white">
