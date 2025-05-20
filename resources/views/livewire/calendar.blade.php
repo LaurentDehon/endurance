@@ -371,7 +371,7 @@
                                             <div class="flex justify-between sm:flex-col gap-2">
                                                 <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                                        {{ __('calendar.week') }} {{ $week->week_number }} et {{ $week->id }}
+                                                        {{ __('calendar.week') }} {{ $week->week_number }}
                                                     </span>                                        
                                                     <span class="text-sm text-white">
                                                         {{ $week->start }} - {{ $week->end }}
