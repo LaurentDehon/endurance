@@ -586,11 +586,12 @@
                                                                     }}">
                                                                 <!-- Workout icon -->
                                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
-                                                                    @if($workout->type && $workout->type->getLocalizedName() === __('workout_types.race'))
+                                                                    {{-- @if($workout->type && $workout->type->getLocalizedName() === __('workout_types.race'))
                                                                         <i class="{{ $workout->type->icon }} text-sm"></i>
                                                                     @else
                                                                         <span class="text-sm font-semibold">{{ $workout->type ? $workout->type->short : 'W' }}</span>
-                                                                    @endif
+                                                                    @endif --}}
+                                                                    <i class="{{ $workout->type->icon }} text-sm"></i>
                                                                 </div>
                                                             </a>
                                                         </div>
