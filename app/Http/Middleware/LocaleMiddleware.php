@@ -26,18 +26,32 @@ class LocaleMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Priorité 1: Langue stockée en session
-        if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
-        } 
-        // Priorité 2: Langue stockée dans les paramètres utilisateur si connecté
-        else if (Auth::check()) {
-            $locale = Auth::user()->settings['language'] ?? config('app.locale');
+        // Priorité 1: Langue stockée dans les paramètres utilisateur si connecté
+        if (Auth::check()) {
+            $user = Auth::user();
+            $settings = $user->settings ?? [];
+            
+            // À la première connexion, définir la langue du navigateur comme préférence
+            if (!isset($settings['language'])) {
+                $browserLocale = $this->getPreferredLocaleFromBrowser($request);
+                if ($browserLocale) {
+                    $settings['language'] = $browserLocale;
+                    $user->setSettings($settings);
+                    $user->save();
+                }
+            }
+            
+            $locale = $settings['language'] ?? config('app.locale');
             App::setLocale($locale);
             
             // Stocker en session pour les requêtes suivantes
             Session::put('locale', $locale);
         }
+        // Priorité 2: Langue stockée en session
+        else if (Session::has('locale')) {
+            $locale = Session::get('locale');
+            App::setLocale($locale);
+        } 
         // Priorité 3: Langue du navigateur pour les utilisateurs non connectés
         else if ($preferredLocale = $this->getPreferredLocaleFromBrowser($request)) {
             App::setLocale($preferredLocale);

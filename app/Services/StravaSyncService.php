@@ -14,6 +14,10 @@ class StravaSyncService
 
     public function sync(User $user): array
     {
+        if (!$user->strava_token || ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true))) {
+            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
+        }
+
         if (!$token = $this->authService->refreshUserToken($user)?->strava_token) {
             return ['success' => false, 'message' => __('strava.sync.reconnect_required')];
         }

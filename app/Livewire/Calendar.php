@@ -44,7 +44,8 @@ class Calendar extends Component
         'refresh' => '$refresh',
         'confirmDeleteAll',
         'confirmDeleteMonth',
-        'confirmDeleteWeek'
+        'confirmDeleteWeek',
+        'setWeekType'
     ];
 
     /**
@@ -159,12 +160,15 @@ class Calendar extends Component
             fn() => $this->getWorkouts()
         );
         
-        // Cache pour les semaines
-        $this->weeks = Cache::remember(
-            self::CACHE_KEY_WEEKS . $userId . '-' . $this->year, 
-            self::CACHE_TTL_WEEKS, 
-            fn() => $this->getWeeks()
-        );
+        // Désactiver temporairement le cache pour les semaines pour déboguer
+        Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+        $this->weeks = $this->getWeeks();
+        \Illuminate\Support\Facades\Log::info("Récupération des semaines sans cache pour l'année {$this->year}");
+        
+        // Vérifier chaque semaine pour l'ID
+        foreach ($this->weeks as $weekIndex => $week) {
+            \Illuminate\Support\Facades\Log::info("Semaine {$weekIndex}: Numéro {$week->week_number}, ID: " . ($week->id ?? 'null'));
+        }
         
         // Groupement des semaines par mois (pas besoin de cacher car c'est une opération de mémoire)
         $this->months = $this->groupWeeksByMonth($this->weeks);
@@ -350,7 +354,7 @@ class Calendar extends Component
             $end = $start->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
             $thursday = $start->addDays(3);  // Le jeudi détermine l'année à laquelle appartient la semaine ISO
 
-            // Récupérer le Week de la collection, sinon en créer un nouveau en mémoire
+            // Récupérer le Week de la collection, sinon en créer un nouveau et le sauvegarder
             $week = $weeksFromDb->get($weekNumber);
             if (!$week) {
                 $week = new Week([
@@ -359,6 +363,8 @@ class Calendar extends Component
                     'user_id' => Auth::id(),
                     'week_type_id' => null
                 ]);
+                // Sauvegarder pour obtenir un ID
+                $week->save();
                 $week->setRelation('type', null);
             }
 
@@ -575,6 +581,7 @@ class Calendar extends Component
     private function invalidateCache($type = 'all', $weekNumber = null, $month = null)
     {
         $userId = Auth::id();
+        \Illuminate\Support\Facades\Log::info("Invalidation du cache de type: {$type} pour l'utilisateur {$userId} et l'année {$this->year}");
         
         // Invalidation sélective selon le type de données modifiées
         switch ($type) {
@@ -585,6 +592,7 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                \Illuminate\Support\Facades\Log::info("Cache workout invalidé");
                 break;
                 
             case 'activity':
@@ -594,11 +602,13 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                \Illuminate\Support\Facades\Log::info("Cache activity invalidé");
                 break;
                 
             case 'week':
                 // Invalide le cache des semaines
                 Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                \Illuminate\Support\Facades\Log::info("Cache week invalidé");
                 break;
                 
             case 'all':
@@ -609,6 +619,7 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
+                \Illuminate\Support\Facades\Log::info("Tous les caches invalidés");
                 break;
         }
     }
@@ -616,19 +627,19 @@ class Calendar extends Component
     /**
      * Updates the type of a week.
      *
-     * @param int $weekId The week identifier
+     * @param int|null $weekId The week identifier
      * @param int|null $weekTypeId The week type identifier
      * @return void
      */
     public function setWeekType($weekId, $weekTypeId)
-    {
+    {        
         $week = Week::findOrFail($weekId);
         if ($week->user_id !== Auth::id()) {
             return;
         }
         $week->week_type_id = $weekTypeId;
         $week->save();
-        $this->invalidateCache();
+        $this->invalidateCache('week');
         $this->dispatch('toast', __('calendar.messages.week_type_updated'), 'success');
     }
 
@@ -715,7 +726,7 @@ class Calendar extends Component
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
             $this->dispatch('toast', __('calendar.messages.workout_moved', [
-                'type' => $workout->type->name,
+                'type' => $workout->type->getLocalizedName(),
                 'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
             ]), 'success');
             
@@ -762,7 +773,7 @@ class Calendar extends Component
             // Utilisation de l'invalidation sélective du cache
             $this->invalidateCache('workout');
             $this->dispatch('toast', __('calendar.messages.workout_copied', [
-                'type' => $originalWorkout->type->name,
+                'type' => $originalWorkout->type->getLocalizedName(),
                 'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
             ]), 'success');
             
@@ -813,8 +824,11 @@ class Calendar extends Component
                 $this->dispatch('toast', __('calendar.messages.auth_required'), 'error');
                 return;
             }
-            
             $result = $syncService->sync($user);
+
+            if (isset($result['redirect']) && $result['redirect'] === true) {
+                return $this->redirect(route($result['route']));
+            }
             
             if ($result['success']) {
                 if ($result['count'] > 0) {
@@ -1068,7 +1082,7 @@ class Calendar extends Component
                 }
                 
                 // Vérifier si le type de semaine doit être ignoré
-                $weekTypeName = $week->type ? strtolower($week->type->name) : '';
+                $weekTypeName = $week->type ? strtolower($week->type->getLocalizedName()) : '';
                 $isIgnoredType = in_array($weekTypeName, $ignoredWeekTypes);
                 
                 if (!$isIgnoredType) {
@@ -1090,7 +1104,7 @@ class Calendar extends Component
                 $result['distance'] = [
                     'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
                     'previous' => $comparisonWeek->planned_stats['distance'],
-                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->name : 'Previous Week',
+                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->getLocalizedName() : 'Previous Week',
                     'weekNumber' => $comparisonWeek->week_number
                 ];
                 $result['isValid'] = true;
@@ -1103,7 +1117,7 @@ class Calendar extends Component
                 $result['duration'] = [
                     'value' => $percent > 0 ? '+' . round($percent, 1) : round($percent, 1),
                     'previous' => $comparisonWeek->planned_stats['duration'],
-                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->name : 'Previous Week',
+                    'comparedTo' => $comparisonWeek->type ? $comparisonWeek->type->getLocalizedName() : 'Previous Week',
                     'weekNumber' => $comparisonWeek->week_number
                 ];
                 $result['isValid'] = true;

@@ -41,26 +41,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Dashboard - The main user interface showing stats and upcoming workouts
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware(StravaMiddleware::class)
         ->name('dashboard');
     
     // Calendar - Workout planning and visualization
     Route::get('/calendar/{year?}', function ($year = null) { 
         return view('calendar', ['year' => $year]); 
-    })->middleware(StravaMiddleware::class)->name('calendar');
+    })->name('calendar');
     Route::redirect('/calendar', '/calendar/'.now()->year);
     
     // Activities - Displays user activity history
     Route::get('/activities', function() { 
         return view('activities'); 
-    })->middleware(StravaMiddleware::class)->name('activities');
+    })->name('activities');
     
     // Strava Integration
     // -----------------
     // Routes for connecting and syncing with Strava API
     Route::prefix('strava')->group(function () {
         Route::get('/connect', [StravaController::class, 'showConnect'])->name('strava.connect');
-        Route::get('/redirect', [StravaController::class, 'redirect'])->name('strava.redirect');
+        Route::get('/redirect', [StravaController::class, 'redirect'])->middleware(StravaMiddleware::class)->name('strava.redirect');
         Route::get('/callback', [StravaController::class, 'handleCallback']);
         Route::get('/disconnect', [StravaController::class, 'disconnect'])->name('strava.disconnect');
     });

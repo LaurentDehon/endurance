@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\VerifyEmailNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,16 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // Si les paramètres sont null, retourne un tableau par défaut
     public function getSettingsAttribute($value)
-    {
-        if (is_null($value)) {
-            return [
-                'theme' => 'system',
-                'language' => 'en',
-                'notification_email' => true,
-                'notification_app' => true,
-            ];
-        }
-
+    {        
         return json_decode($value, true);
     }
 

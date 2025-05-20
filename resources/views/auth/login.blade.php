@@ -59,6 +59,24 @@
                     </label>
                 </div>
 
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Récupérer la préférence "Remember Me" stockée
+                        const rememberedPreference = localStorage.getItem('rememberMePreference');
+                        
+                        // Pré-cocher la case si la préférence existe et est "true"
+                        if (rememberedPreference === 'true') {
+                            document.getElementById('remember').checked = true;
+                        }
+                        
+                        // Sauvegarder la préférence lors de la soumission du formulaire
+                        document.querySelector('form').addEventListener('submit', function() {
+                            const rememberChecked = document.getElementById('remember').checked;
+                            localStorage.setItem('rememberMePreference', rememberChecked);
+                        });
+                    });
+                </script>
+
                 <!-- Forgot Password -->
                 <div class="flex items-center justify-between">
                     @if (Route::has('password.request'))

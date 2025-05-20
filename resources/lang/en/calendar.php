@@ -34,11 +34,11 @@ return [
     'retrieving_workout_data' => 'Retrieving your workout data from Strava...',
     
     // Global actions
-    'collapse_all_weeks' => 'Collapse all weeks',
-    'expand_all_weeks' => 'Expand all weeks',
-    'delete_all_workouts' => 'Delete all the workouts',
-    'delete_monthly_workouts' => 'Delete monthly workouts',
-    'delete_weekly_workouts' => 'Delete weekly workouts',
+    'collapse_all_weeks' => 'Collapse',
+    'expand_all_weeks' => 'Expand',
+    'delete_all_workouts' => 'Delete workouts',
+    'delete_monthly_workouts' => 'Delete workouts',
+    'delete_weekly_workouts' => 'Delete workouts',
     
     // Delete modal
     'delete_modal' => [

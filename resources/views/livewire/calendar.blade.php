@@ -371,7 +371,7 @@
                                             <div class="flex justify-between sm:flex-col gap-2">
                                                 <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                                        {{ __('calendar.week') }} {{ $week->week_number }}
+                                                        {{ __('calendar.week') }} {{ $week->week_number }} et {{ $week->id }}
                                                     </span>                                        
                                                     <span class="text-sm text-white">
                                                         {{ $week->start }} - {{ $week->end }}
@@ -388,7 +388,7 @@
                                                                 @if($week->type)
                                                                     <span class="flex items-center gap-2">
                                                                         <span class="w-3 h-3 rounded-full {{ $week->type->color }}"></span>
-                                                                        {{ $week->type->name }}
+                                                                        {{ $week->type->getLocalizedName() }}
                                                                     </span>
                                                                 @else
                                                                     <span>{{ __('calendar.set_week_type') }}</span>
@@ -407,12 +407,11 @@
                                                             
                                                             <!-- Divider -->
                                                             <div class="my-1 border-t border-white border-opacity-10"></div>
-                                                            
                                                             @foreach($weekTypes as $weekType)
                                                                 <x-dropdown-item wire:click="setWeekType({{ $week->id }}, {{ $weekType->id }})">
                                                                     <div class="flex items-center gap-2">
                                                                         <span class="w-4 h-4 rounded-full {{ $weekType->color }}"></span>
-                                                                        <span>{{ $weekType->name }}</span>
+                                                                        <span>{{ $weekType->getLocalizedName() }}</span>
                                                                     </div>
                                                                 </x-dropdown-item>
                                                             @endforeach
@@ -577,7 +576,7 @@
                                                                     draggable="true" 
                                                                     ondragstart="onDragStart(event, {{ $workout->id }})"
                                                                     data-tippy-content="{{ 
-                                                                        ($workout->type ? '<div class=\'font-medium mb-0.5\'>' . $workout->type->name . '</div>' : '<div class=\'font-medium mb-0.5\'>Workout</div>') . 
+                                                                        ($workout->type ? '<div class=\'font-medium mb-0.5\'>' . $workout->type->getLocalizedName() . '</div>' : '<div class=\'font-medium mb-0.5\'>Workout</div>') . 
                                                                         '<div class=\'flex flex-wrap gap-x-2 text-gray-300 text-xs\'>' . 
                                                                             ($workout->duration > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-stopwatch mr-1\'></i>' . formatTime($workout->duration * 60) . '</span>' : '') . 
                                                                             ($workout->distance > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-route mr-1\'></i>' . formatDistance($workout->distance) . '</span>' : '') .
@@ -587,7 +586,7 @@
                                                                     }}">
                                                                 <!-- Workout icon -->
                                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
-                                                                    @if($workout->type && $workout->type->name === 'Race')
+                                                                    @if($workout->type && $workout->type->getLocalizedName() === __('workout_types.race'))
                                                                         <i class="{{ $workout->type->icon }} text-sm"></i>
                                                                     @else
                                                                         <span class="text-sm font-semibold">{{ $workout->type ? $workout->type->short : 'W' }}</span>

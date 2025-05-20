@@ -15,12 +15,12 @@ class WeekTypesTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         $types = [
-            ['name' => 'Reduced', 'color' => 'bg-emerald-400'], // Ambre plus visible et distinct
-            ['name' => 'Recovery', 'color' => 'bg-pink-600'], // Émeraude plus vif et différent du bleu
-            ['name' => 'Development', 'color' => 'bg-blue-600'], // Bleu un peu plus clair pour meilleure distinction
-            ['name' => 'Maintain', 'color' => 'bg-amber-700'], // Indigo pour un bon contraste avec le bleu
-            ['name' => 'Taper', 'color' => 'bg-fuchsia-600'], // Fuchsia plus vif
-            ['name' => 'Race', 'color' => 'bg-rose-600'], // Rose plus vif au lieu de rouge
+            ['name' => 'reduced', 'color' => 'bg-emerald-400'],
+            ['name' => 'recovery', 'color' => 'bg-pink-600'],
+            ['name' => 'development', 'color' => 'bg-blue-600'],
+            ['name' => 'maintain', 'color' => 'bg-amber-700'],
+            ['name' => 'taper', 'color' => 'bg-fuchsia-600'],
+            ['name' => 'race', 'color' => 'bg-rose-600'],
         ];
 
         foreach ($types as $type) {

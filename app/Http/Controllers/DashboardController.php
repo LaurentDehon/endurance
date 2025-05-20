@@ -50,7 +50,7 @@ class DashboardController extends Controller
             
         foreach ($nextWorkouts as $workout) {
             // Add a title property that combines workout type and date
-            $typeName = $workout->type ? $workout->type->name : 'Workout';
+            $typeName = $workout->type ? $workout->type->getLocalizedName() : 'Workout';
             $workout->title = $typeName;
         }
             

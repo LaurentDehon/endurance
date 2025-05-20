@@ -76,7 +76,7 @@
                         <span class="block truncate text-left">
                             @foreach($workoutTypes as $type)
                                 @if($workoutTypeId == $type->id)
-                                    {{ $type->name }}
+                                    {{ $type->getLocalizedName() }}
                                 @endif
                             @endforeach
                         </span>
@@ -117,7 +117,7 @@
                                         @click="typeMenuOpen = false"
                                         type="button"
                                         class="w-full text-left px-4 py-2.5 text-white hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded-lg transition-colors">
-                                        <span class="text-sm">{{ $type->name }}</span>
+                                        <span class="text-sm">{{ $type->getLocalizedName() }}</span>
                                     </button>
                                 @endforeach
                             </div>

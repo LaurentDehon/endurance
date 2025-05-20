@@ -101,6 +101,8 @@ class StravaController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $user->strava_expires_at = now()->timestamp;
+        $user->strava_token = null;
+        $user->strava_refresh_token = null;
         $user->save();
         
         session()->flash('toast', [

@@ -34,11 +34,11 @@ return [
     'retrieving_workout_data' => 'Récupération de vos données d\'entraînement depuis Strava...',
     
     // Global actions
-    'collapse_all_weeks' => 'Réduire toutes les semaines',
-    'expand_all_weeks' => 'Développer toutes les semaines',
-    'delete_all_workouts' => 'Supprimer tous les entraînements',
-    'delete_monthly_workouts' => 'Supprimer les entraînements du mois',
-    'delete_weekly_workouts' => 'Supprimer les entraînements de la semaine',
+    'collapse_all_weeks' => 'Réduire',
+    'expand_all_weeks' => 'Développer',
+    'delete_all_workouts' => 'Supprimer entraînements',
+    'delete_monthly_workouts' => 'Supprimer entraînements',
+    'delete_weekly_workouts' => 'Supprimer entraînements',
     
     // Delete modal
     'delete_modal' => [
