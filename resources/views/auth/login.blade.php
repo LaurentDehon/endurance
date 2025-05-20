@@ -1,16 +1,5 @@
 @extends('layouts.guest')
 @section('content')
-<style>
-/* Neutraliser l'arrière-plan jaune sur les champs remplis automatiquement */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px rgb(51, 65, 85) inset !important; /* bg-slate-700 approximation */
-    -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
-}
-</style>
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-lg bg-white bg-opacity-10 border-white border-opacity-20 border">
         <div class="text-center">
@@ -59,6 +48,15 @@ input:-webkit-autofill:active {
                     @error('password')
                         <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
                     @enderror
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center">
+                    <input id="remember" name="remember" type="checkbox" 
+                           class="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-slate-400 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-cyan-200">
+                        {{ __('auth.login.remember') }}
+                    </label>
                 </div>
 
                 <!-- Forgot Password -->

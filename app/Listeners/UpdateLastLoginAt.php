@@ -17,6 +17,10 @@ class UpdateLastLoginAt
         $user = $event->user;
         $user->last_login_at = now();
         
+        if (request()->ip()) {
+            $user->last_ip_address = request()->ip();
+        }
+        
         if ($user instanceof Model) {
             $user->save();
         }
