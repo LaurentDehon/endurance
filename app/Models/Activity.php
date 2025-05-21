@@ -42,4 +42,22 @@ class Activity extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    public function day()
+    {
+        return $this->belongsTo(Day::class);
+    }
+    
+    /**
+     * Auto-associate with day based on start_date when creating or updating
+     */
+    protected static function booted()
+    {
+        static::saving(function ($activity) {
+            if ($activity->start_date && !$activity->day_id) {
+                $day = Day::findByDateOrCreate($activity->start_date);
+                $activity->day_id = $day->id;
+            }
+        });
+    }
 }

@@ -49,30 +49,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return json_decode($value, true);
     }
 
-    /**
-     * Get the user settings
-     * 
-     * @return array
-     */
     public function getSettings()
     {
         return $this->settings;
     }
 
-    /**
-     * Set the user settings
-     * 
-     * @param array $settings
-     * @return void
-     */
     public function setSettings($settings)
     {
         $this->settings = $settings;
     }
 
-    public function workouts()
+    public function years()
     {
-        return $this->hasMany(Workout::class);
+        return $this->hasMany(Year::class);
+    }
+    
+    public function months()
+    {
+        return $this->hasManyThrough(Month::class, Year::class);
     }
 
     public function weeks()
@@ -80,10 +74,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Week::class);
     }
 
+    public function days()
+    {
+        return Day::whereHas('month', function ($query) {
+            $query->whereHas('year', function ($q) {
+                $q->where('user_id', $this->id);
+            });
+        });
+    }
+
+    public function workouts()
+    {
+        return $this->hasMany(Workout::class);
+    }
+
     public function activities()
     {
         return $this->hasMany(Activity::class);
-    }
+    }  
 
     public function sendPasswordResetNotification($token): void
     {
