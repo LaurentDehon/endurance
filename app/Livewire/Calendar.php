@@ -3,7 +3,10 @@
 namespace App\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Day;
 use App\Models\Week;
+use App\Models\Year;
+use App\Models\Month;
 use App\Models\Workout;
 use Livewire\Component;
 use App\Models\Activity;
@@ -45,9 +48,17 @@ class Calendar extends Component
         'confirmDeleteAll',
         'confirmDeleteMonth',
         'confirmDeleteWeek',
-        'setWeekType'
+        'setWeekType',
+        'workout-saved' => 'updateWeekStatsForDate', // Ajout du listener pour maj semaine
     ];
 
+    /**
+     * The current year model.
+     * 
+     * @var \App\Models\Year
+     */
+    public $yearModel;
+    
     /**
      * The current year being displayed.
      * 
@@ -128,6 +139,25 @@ class Calendar extends Component
     public function mount($year = null)
     {
         $this->year = $year ?: now()->year;
+        
+        // Make sure the year model exists for this user
+        $this->initializeYearModel();
+    }
+    
+    /**
+     * Initializes or retrieves the Year model for the current user and year.
+     *
+     * @return void
+     */
+    private function initializeYearModel()
+    {
+        $userId = Auth::id();
+        
+        // Get or create the Year model
+        $this->yearModel = Year::firstOrCreate(
+            ['user_id' => $userId, 'year' => $this->year],
+            ['user_id' => $userId, 'year' => $this->year]
+        );
     }    
 
     /**
@@ -138,47 +168,52 @@ class Calendar extends Component
     public function render()
     {
         $userId = Auth::id();
-        
         // Cache pour les années disponibles (longue durée)
         $years = Cache::remember(
             self::CACHE_KEY_YEARS . $userId, 
             self::CACHE_TTL_YEARS, 
             fn() => $this->getAvailableYears()
         );
-        
-        // Cache pour les activités (durée moyenne)
-        $this->activities = Cache::remember(
-            self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year, 
-            self::CACHE_TTL_ACTIVITIES, 
-            fn() => $this->getActivities()
-        );
-        
-        // Cache pour les workouts (durée courte car fréquemment modifiés)
-        $this->workouts = Cache::remember(
-            self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year, 
-            self::CACHE_TTL_WORKOUTS, 
-            fn() => $this->getWorkouts()
-        );
-        
-        $this->weeks = $this->getWeeks();
-        
-        // Groupement des semaines par mois (pas besoin de cacher car c'est une opération de mémoire)
-        $this->months = $this->groupWeeksByMonth($this->weeks);
-        
-        // Cache pour les statistiques mensuelles
+
+        // Assurez-vous que l'année est correctement initialisée
+        if (!$this->yearModel) {
+            $this->initializeYearModel();
+        }
+
+        // Récupérer l'année, les mois, les semaines et les jours via Eloquent
+        $yearModel = $this->yearModel->load(['months.weeks.days', 'months.days']);
+        $months = $yearModel->months->sortBy('month');
+        $weeks = $yearModel->weeks()->with(['type', 'days'])->get()->sortBy('week_number');
+        $activities = $yearModel->activities()->with('day')->get();
+        $workouts = $yearModel->workouts()->with(['type', 'day'])->get();
+
+        // Group weeks by month (key = YYYY-MM)
+        $monthsGrouped = $months->mapWithKeys(function($month) use ($weeks) {
+            $monthKey = sprintf('%04d-%02d', $month->year->year, $month->month);
+            $weeksInMonth = $weeks->filter(function($week) use ($month) {
+                return $week->month_id === $month->id;
+            });
+            return [$monthKey => $weeksInMonth];
+        });
+
+        // Calculer les stats mensuelles et annuelles (en DB ou via helpers existants)
         $this->monthStats = Cache::remember(
             self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year, 
             self::CACHE_TTL_STATS, 
             fn() => $this->calculateMonthStatsFromDb()
         );
-        
-        // Cache pour les statistiques annuelles
         $this->yearStats = Cache::remember(
             self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year, 
             self::CACHE_TTL_STATS, 
             fn() => $this->calculateYearStatsFromDb()
         );
-        
+
+        // Pour compatibilité avec la vue
+        $this->months = $monthsGrouped;
+        $this->weeks = $weeks;
+        $this->activities = $activities;
+        $this->workouts = $workouts;
+
         return view('livewire.calendar', [
             'months' => $this->months,
             'monthStats' => $this->monthStats,
@@ -297,6 +332,9 @@ class Calendar extends Component
      */
     private function getWeeks(): Collection
     {
+        // Initialize months collection for the current year
+        $months = Month::where('year_id', $this->yearModel->id)->get()->keyBy('month');
+
         // Récupérer les stats groupées par semaine pour les activités réelles
         $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
             ->whereYear('start_date', $this->year)
@@ -413,12 +451,50 @@ class Calendar extends Component
                 $weekPlannedStats['duration'] += $firstWeekNextYearStats['planned']['duration'] * 60;
             }
 
+            // Déterminer le mois auquel appartient cette semaine (selon le jeudi)
+            $monthNumber = $thursday->month;
+            
+            // Récupérer ou créer le mois si nécessaire
+            $month = $months->get($monthNumber);
+            if (!$month) {
+                $month = Month::create([
+                    'year_id' => $this->yearModel->id,
+                    'month' => $monthNumber
+                ]);
+                $months->put($monthNumber, $month);
+            }
+            
+            // Récupérer la semaine de la collection, sinon en créer une nouvelle
+            $week = $weeksFromDb->get($weekNumber);
+            if (!$week) {
+                $week = new Week([
+                    'year' => $this->year,
+                    'week_number' => $weekNumber,
+                    'user_id' => Auth::id(),
+                    'month_id' => $month->id,
+                    'week_type_id' => null
+                ]);
+                // Sauvegarder pour obtenir un ID
+                $week->save();
+                $week->setRelation('type', null);
+                $weeksFromDb->put($weekNumber, $week);
+            } else {
+                // S'assurer que la semaine est associée au bon mois
+                if ($week->month_id !== $month->id) {
+                    $week->month_id = $month->id;
+                    $week->save();
+                }
+            }
+            
+            // Créer ou mettre à jour les jours de la semaine
+            $this->createOrUpdateDays($week, $start, $end);
+
             $week->start = $start->translatedFormat(__('calendar.date_formats.day_month'));
             $week->end = $end->translatedFormat(__('calendar.date_formats.day_month'));
-            $week->month = $thursday->format('Y-m');
+            $week->month_key = $thursday->format('Y-m'); // Use a new property for grouping if needed
             $week->actual_stats = $weekActualStats;
             $week->planned_stats = $weekPlannedStats;
-            $week->days = $this->generateWeekDays($start);
+            $week->computed_days = $this->generateWeekDays($start); // Use a local property for computed days
             $week->is_current_week = $this->isCurrentWeek($start, $end);
 
             $weeks->push($week);
@@ -578,7 +654,6 @@ class Calendar extends Component
                 // Invalide le cache des workouts
                 Cache::forget(self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year);
                 // Invalide les stats de la semaine, du mois et de l'année 
-                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
                 \Illuminate\Support\Facades\Log::info("Cache workout invalidé");
@@ -587,17 +662,16 @@ class Calendar extends Component
             case 'activity':
                 // Invalide le cache des activités
                 Cache::forget(self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year);
-                // Invalide les stats hebdomadaires, mensuelles et annuelles
-                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
+                // Invalide les stats mensuelles et annuelles
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
                 \Illuminate\Support\Facades\Log::info("Cache activity invalidé");
                 break;
                 
             case 'week':
-                // Invalide le cache des semaines
-                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
-                \Illuminate\Support\Facades\Log::info("Cache week invalidé");
+                // Pas besoin d'invalider les semaines car elles sont maintenant stockées en DB
+                // et mises à jour individuellement avec refreshWeekStats()
+                \Illuminate\Support\Facades\Log::info("Week stats seront mis à jour directement");
                 break;
                 
             case 'all':
@@ -605,7 +679,6 @@ class Calendar extends Component
                 // Invalide tous les caches liés à l'année courante
                 Cache::forget(self::CACHE_KEY_ACTIVITIES . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_WORKOUTS . $userId . '-' . $this->year);
-                Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $userId . '-' . $this->year);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $userId . '-' . $this->year);
                 \Illuminate\Support\Facades\Log::info("Tous les caches invalidés");
@@ -629,6 +702,16 @@ class Calendar extends Component
         $week->week_type_id = $weekTypeId;
         $week->save();
         $this->invalidateCache('week');
+        
+        // Mise à jour de la semaine dans la collection actuelle
+        $this->weeks = $this->weeks->map(function($w) use ($week, $weekTypeId) {
+            if ($w->id === $week->id) {
+                $w->week_type_id = $weekTypeId;
+                $w->type = $weekTypeId ? WeekType::find($weekTypeId) : null;
+            }
+            return $w;
+        });
+        
         $this->dispatch('toast', __('calendar.messages.week_type_updated'), 'success');
     }
 
@@ -707,13 +790,21 @@ class Calendar extends Component
             if ($workout->date->isSameDay($parsedDate)) {
                 return;
             }
-
-            $workout->update([
-                'date' => $parsedDate
-            ]);
             
-            // Utilisation de l'invalidation sélective du cache
-            $this->invalidateCache('workout');
+            // Récupérer ou créer le jour pour la nouvelle date
+            $day = $this->getOrCreateDayForDate($parsedDate);
+            
+            // Mettre à jour le workout
+            $workout->day_id = $day->id;
+            $workout->date = $parsedDate;
+            $workout->save();
+            
+            // Mise à jour des statistiques des semaines concernées
+            $this->updateWeekStats($workout->date);
+            if ($workout->getOriginal('date')) {
+                $this->updateWeekStats(Carbon::parse($workout->getOriginal('date')));
+            }
+            
             $this->dispatch('toast', __('calendar.messages.workout_moved', [
                 'type' => $workout->type->getLocalizedName(),
                 'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
@@ -724,6 +815,89 @@ class Calendar extends Component
         } catch (\Exception $e) {
             $this->dispatch('toast', __('calendar.messages.error_moving_workout', ['error' => $e->getMessage()]), 'error');
         }
+    }
+    
+    /**
+     * Gets or creates a Day model for a specific date
+     *
+     * @param \Carbon\Carbon|\Carbon\CarbonImmutable|string $date The date
+     * @return \App\Models\Day
+     */
+    private function getOrCreateDayForDate($date)
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+        
+        $dateString = $date->format('Y-m-d');
+        
+        // Vérifier si le jour existe déjà
+        $day = Day::where('date', $dateString)->first();
+        
+        if ($day) {
+            return $day;
+        }
+        
+        // Obtenir l'année et le mois pour ce jour
+        $year = Year::firstOrCreate(
+            ['user_id' => Auth::id(), 'year' => $date->year],
+            ['user_id' => Auth::id(), 'year' => $date->year]
+        );
+        
+        $month = Month::firstOrCreate(
+            ['year_id' => $year->id, 'month' => $date->month],
+            ['year_id' => $year->id, 'month' => $date->month]
+        );
+        
+        // Obtenir la semaine pour ce jour
+        $weekNumber = $date->weekOfYear;
+        $week = Week::firstOrCreate(
+            ['user_id' => Auth::id(), 'year' => $date->year, 'week_number' => $weekNumber],
+            ['user_id' => Auth::id(), 'year' => $date->year, 'week_number' => $weekNumber, 'month_id' => $month->id]
+        );
+        
+        // Créer le jour
+        $day = Day::create([
+            'month_id' => $month->id,
+            'week_id' => $week->id,
+            'date' => $dateString
+        ]);
+        
+        return $day;
+    }
+    
+    /**
+     * Updates the statistics of a week based on a date
+     *
+     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $date The date
+     * @return void
+     */
+    private function updateWeekStats($date)
+    {
+        $weekNumber = $date->weekOfYear;
+        $year = $date->year;
+        $userId = Auth::id();
+        $week = Week::where('user_id', $userId)->where('year', $year)->where('week_number', $weekNumber)->first();
+        if (!$week) return;
+        // Recalculate stats for this week only
+        $activityStats = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->where('user_id', $userId)
+            ->whereHas('day', function($q) use ($week) { $q->where('week_id', $week->id); })
+            ->first();
+        $workoutStats = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->where('user_id', $userId)
+            ->whereHas('day', function($q) use ($week) { $q->where('week_id', $week->id); })
+            ->first();
+        $week->actual_stats = [
+            'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
+            'elevation' => $activityStats ? $activityStats->ele : 0,
+            'duration' => $activityStats ? $activityStats->time : 0,
+        ];
+        $week->planned_stats = [
+            'distance' => $workoutStats ? $workoutStats->dist : 0,
+            'elevation' => $workoutStats ? $workoutStats->ele : 0,
+            'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
+        ];
     }
 
     /**
@@ -755,12 +929,18 @@ class Calendar extends Component
             
             $originalWorkout = Workout::with('type')->findOrFail($workoutId);
             
+            // Récupérer ou créer le jour pour la nouvelle date
+            $parsedDate = Carbon::parse($newDate);
+            $day = $this->getOrCreateDayForDate($parsedDate);
+            
             $newWorkout = $originalWorkout->replicate();
-            $newWorkout->date = Carbon::parse($newDate);
+            $newWorkout->date = $parsedDate;
+            $newWorkout->day_id = $day->id;
             $newWorkout->save();
 
-            // Utilisation de l'invalidation sélective du cache
-            $this->invalidateCache('workout');
+            // Mise à jour des statistiques de la semaine concernée
+            $this->updateWeekStats($parsedDate);
+            
             $this->dispatch('toast', __('calendar.messages.workout_copied', [
                 'type' => $originalWorkout->type->getLocalizedName(),
                 'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
@@ -783,7 +963,12 @@ class Calendar extends Component
     #[On('workout-updated')]
     public function refreshWorkouts()
     {
-        $this->invalidateCache('workout');
+        // Récupérer les workouts mis à jour
+        $this->workouts = $this->getWorkouts();
+        
+        // Mettre à jour les statistiques des semaines
+        $this->refreshWeekStats();
+        
         $this->dispatch('reload-tooltips');
     }
     
@@ -795,8 +980,67 @@ class Calendar extends Component
     #[On('activity-deleted')]
     public function refreshActivities()
     {
-        $this->invalidateCache('activity');
+        // Récupérer les activités mises à jour
+        $this->activities = $this->getActivities();
+        
+        // Mettre à jour les statistiques des semaines
+        $this->refreshWeekStats();
+        
         $this->dispatch('reload-tooltips');
+    }
+    
+    /**
+     * Refreshes the weekly statistics for all weeks in the current year
+     *
+     * @return void
+     */
+    private function refreshWeekStats()
+    {
+        // Récupérer toutes les semaines pour l'année courante
+        $weeks = $this->weeks;
+        
+        if ($weeks->isEmpty()) {
+            return;
+        }
+        
+        // Récupérer les stats groupées par semaine pour les activités réelles
+        $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->whereYear('start_date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+
+        // Récupérer les stats groupées par semaine pour les workouts planifiés
+        $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->whereYear('date', $this->year)
+            ->where('user_id', Auth::id())
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+        
+        // Mettre à jour les statistiques de chaque semaine
+        $this->weeks = $weeks->map(function($week) use ($activityStats, $workoutStats) {
+            $weekNumber = $week->week_number;
+            
+            $week->actual_stats = [
+                'distance' => isset($activityStats[$weekNumber]) ? round($activityStats[$weekNumber]->dist / 1000, 1) : 0,
+                'elevation' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->ele : 0,
+                'duration' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->time : 0,
+            ];
+            
+            $week->planned_stats = [
+                'distance' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0,
+                'elevation' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->ele : 0,
+                'duration' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0,
+            ];
+            
+            return $week;
+        });
+        
+        // Mettre à jour les statistiques mensuelles et annuelles
+        $this->monthStats = $this->calculateMonthStatsFromDb();
+        $this->yearStats = $this->calculateYearStatsFromDb();
     }
     
     /**
@@ -816,15 +1060,15 @@ class Calendar extends Component
             $result = $syncService->sync($user);
 
             if (isset($result['redirect']) && $result['redirect'] === true) {
-                return $this->redirect(route($result['route']));
+                return redirect(route($result['route']));
             }
             
             if ($result['success']) {
                 if ($result['count'] > 0) {
                     $this->dispatch('toast', $result['message'], 'success');
-                    // Invalider le cache des activités avant de les récupérer à nouveau
-                    $this->invalidateCache('activity');
+                    // Récupérer les activités mises à jour et mettre à jour les statistiques
                     $this->activities = $this->getActivities();
+                    $this->refreshWeekStats();
                     $this->dispatch('reload-tooltips');
                 } else {
                     $this->dispatch('toast', $result['message'], 'info');
@@ -875,8 +1119,10 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-        // Invalidation de tous les caches liés à l'année
-        $this->invalidateCache('all');
+        
+        // Mettre à jour les statistiques
+        $this->refreshWeekStats();
+        
         $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
 
@@ -929,8 +1175,10 @@ class Calendar extends Component
 
         $count = $workouts->count();
         $workouts->delete(); 
-        // Invalidation des caches liés aux workouts
-        $this->invalidateCache('workout');
+        
+        // Mettre à jour les statistiques
+        $this->refreshWeekStats();
+        
         $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
 
@@ -987,7 +1235,10 @@ class Calendar extends Component
             
         $count = $workouts->count();
         $workouts->delete(); 
-        $this->invalidateCache();
+        
+        // Mettre à jour les statistiques
+        $this->refreshWeekStats();
+        
         $this->dispatch('toast', __('calendar.messages.workouts_deleted', ['count' => $count]), 'success');
     }
     
@@ -1225,5 +1476,234 @@ class Calendar extends Component
         }
         
         return min(($actual / $planned) * 100, 100);
+    }
+    
+    /**
+     * Gets or creates all needed weeks for the current year using the Week model.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    private function getOrCreateWeeks(): \Illuminate\Support\Collection
+    {
+        $userId = Auth::id();
+        $year = $this->year;
+        
+        // Récupère ou crée les 53 semaines possibles pour l'année
+        $date = \Carbon\CarbonImmutable::create($year, 1, 1)->startOfYear();
+        
+        // Première et dernière semaine de l'année
+        $firstWeekStart = $date->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+        $lastWeekStart = $date->endOfYear()->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+        $lastWeekNumber = $lastWeekStart->weekOfYear;
+
+        // Ajuster pour les années où la dernière semaine est la semaine 1 de l'année suivante
+        if ($lastWeekStart->weekOfYear === 1) {
+            $lastWeekPrev = $lastWeekStart->subWeek();
+            $lastWeekNumber = $lastWeekPrev->weekOfYear;
+        }
+        
+        // Récupérer toutes les semaines existantes pour cette année et cet utilisateur
+        $weeksFromDb = Week::with('type')
+            ->where('user_id', $userId)
+            ->where('year', $year)
+            ->get()
+            ->keyBy('week_number');
+            
+        // Récupérer les stats groupées par semaine pour les activités réelles
+        $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->whereYear('start_date', $year)
+            ->where('user_id', $userId)
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+
+        // Récupérer les stats groupées par semaine pour les workouts planifiés
+        $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->whereYear('date', $year)
+            ->where('user_id', $userId)
+            ->groupBy('week')
+            ->get()
+            ->keyBy('week');
+            
+        $weeks = collect();
+        
+        for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
+            $start = $date->setISODate($year, $weekNumber)->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+            
+            // Sortir de la boucle si on dépasse la dernière semaine de l'année
+            if ($start->year > $year && $weekNumber > 1) 
+                break;
+                
+            $end = $start->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
+            $thursday = $start->addDays(3);  // Le jeudi détermine l'année à laquelle appartient la semaine ISO
+
+            // Récupérer le Week de la collection, sinon en créer un nouveau et le sauvegarder
+            $week = $weeksFromDb->get($weekNumber);
+            if (!$week) {
+                $week = new Week([
+                    'year' => $year,
+                    'week_number' => $weekNumber,
+                    'user_id' => $userId,
+                    'week_type_id' => null
+                ]);
+                // Sauvegarder pour obtenir un ID
+                $week->save();
+                $week->setRelation('type', null);
+            }
+
+            // Pour les semaines qui chevauchent l'année, on doit récupérer les statistiques correctement
+            $weekActualStats = [
+                'distance' => 0,
+                'elevation' => 0,
+                'duration' => 0,
+            ];
+            
+            $weekPlannedStats = [
+                'distance' => 0,
+                'elevation' => 0,
+                'duration' => 0,
+            ];
+            
+            // Utiliser les stats groupées pour cette semaine
+            if (isset($activityStats[$weekNumber])) {
+                $weekActualStats['distance'] = round($activityStats[$weekNumber]->dist / 1000, 1);
+                $weekActualStats['elevation'] = $activityStats[$weekNumber]->ele;
+                $weekActualStats['duration'] = $activityStats[$weekNumber]->time;
+            }
+            
+            if (isset($workoutStats[$weekNumber])) {
+                $weekPlannedStats['distance'] = $workoutStats[$weekNumber]->dist;
+                $weekPlannedStats['elevation'] = $workoutStats[$weekNumber]->ele;
+                $weekPlannedStats['duration'] = $workoutStats[$weekNumber]->time * 60;
+            }
+            
+            // Pour les semaines qui chevauchent deux années, on doit aussi récupérer les stats de l'autre année
+            // Première semaine de l'année pouvant avoir des jours en décembre de l'année précédente
+            if ($weekNumber === 1 && $start->year < $year) {
+                // Récupérer les statistiques de la dernière semaine de l'année précédente
+                $lastWeekPrevYearStats = $this->getWeekStatsFromRange($start, $end->copy()->startOfYear()->subDay());
+                $weekActualStats['distance'] += round($lastWeekPrevYearStats['actual']['distance'] / 1000, 1);
+                $weekActualStats['elevation'] += $lastWeekPrevYearStats['actual']['elevation'];
+                $weekActualStats['duration'] += $lastWeekPrevYearStats['actual']['duration'];
+                
+                $weekPlannedStats['distance'] += $lastWeekPrevYearStats['planned']['distance'];
+                $weekPlannedStats['elevation'] += $lastWeekPrevYearStats['planned']['elevation'];
+                $weekPlannedStats['duration'] += $lastWeekPrevYearStats['planned']['duration'] * 60;
+            }
+            
+            // Dernière semaine de l'année pouvant avoir des jours en janvier de l'année suivante
+            if ($weekNumber === $lastWeekNumber && $end->year > $year) {
+                // Récupérer les statistiques de la première semaine de l'année suivante
+                $firstWeekNextYearStats = $this->getWeekStatsFromRange($end->copy()->startOfYear(), $end);
+                $weekActualStats['distance'] += round($firstWeekNextYearStats['actual']['distance'] / 1000, 1);
+                $weekActualStats['elevation'] += $firstWeekNextYearStats['actual']['elevation'];
+                $weekActualStats['duration'] += $firstWeekNextYearStats['actual']['duration'];
+                
+                $weekPlannedStats['distance'] += $firstWeekNextYearStats['planned']['distance'];
+                $weekPlannedStats['elevation'] += $firstWeekNextYearStats['planned']['elevation'];
+                $weekPlannedStats['duration'] += $firstWeekNextYearStats['planned']['duration'] * 60;
+            }
+
+            // Déterminer le mois auquel appartient cette semaine (selon le jeudi)
+            $monthNumber = $thursday->month;
+            
+            // Récupérer ou créer le mois si nécessaire
+            $month = $months->get($monthNumber);
+            if (!$month) {
+                $month = Month::create([
+                    'year_id' => $this->yearModel->id,
+                    'month' => $monthNumber
+                ]);
+                $months->put($monthNumber, $month);
+            }
+            
+            // Récupérer la semaine de la collection, sinon en créer une nouvelle
+            $week = $weeksFromDb->get($weekNumber);
+            if (!$week) {
+                $week = new Week([
+                    'year' => $this->year,
+                    'week_number' => $weekNumber,
+                    'user_id' => $userId,
+                    'month_id' => $month->id,
+                    'week_type_id' => null
+                ]);
+                // Sauvegarder pour obtenir un ID
+                $week->save();
+                $week->setRelation('type', null);
+                $weeksFromDb->put($weekNumber, $week);
+            } else {
+                // S'assurer que la semaine est associée au bon mois
+                if ($week->month_id !== $month->id) {
+                    $week->month_id = $month->id;
+                    $week->save();
+                }
+            }
+            
+            // Créer ou mettre à jour les jours de la semaine
+            $this->createOrUpdateDays($week, $start, $end);
+
+            $week->start = $start->translatedFormat(__('calendar.date_formats.day_month'));
+            $week->end = $end->translatedFormat(__('calendar.date_formats.day_month'));
+            $week->month_key = $thursday->format('Y-m'); // Use a new property for grouping if needed
+            $week->actual_stats = $weekActualStats;
+            $week->planned_stats = $weekPlannedStats;
+            $week->computed_days = $this->generateWeekDays($start); // Use a local property for computed days
+            $week->is_current_week = $this->isCurrentWeek($start, $end);
+
+            $weeks->push($week);
+        }
+
+        return $weeks;
+    }
+
+    /**
+     * Creates or updates days for a week
+     *
+     * @param Week $week The week model
+     * @param \Carbon\CarbonInterface $start Start date of the week
+     * @param \Carbon\CarbonInterface $end End date of the week
+     * @return void
+     */
+    private function createOrUpdateDays(Week $week, \Carbon\CarbonInterface $start, \Carbon\CarbonInterface $end)
+    {
+        $startMutable = $start instanceof \Carbon\CarbonImmutable ? $start->toMutable() : $start->copy();
+        
+        // Récupérer les jours existants pour cette semaine
+        $existingDays = $week->days()->get()->keyBy(function($day) {
+            return $day->date->format('Y-m-d');
+        });
+        
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startMutable->copy()->addDays($i);
+            $dateString = $date->format('Y-m-d');
+            
+            // Récupérer le mois pour ce jour
+            $monthNumber = $date->month;
+            $yearId = $date->year == $this->year ? $this->yearModel->id : null;
+            
+            // Si le jour n'est pas dans l'année courante, il faut récupérer l'année correcte
+            if (!$yearId) {
+                $yearModel = Year::firstOrCreate(
+                    ['user_id' => Auth::id(), 'year' => $date->year],
+                    ['user_id' => Auth::id(), 'year' => $date->year]
+                );
+                $yearId = $yearModel->id;
+            }
+            
+            $month = Month::firstOrCreate(
+                ['year_id' => $yearId, 'month' => $monthNumber],
+                ['year_id' => $yearId, 'month' => $monthNumber]
+            );
+            
+            // Vérifier si le jour existe déjà
+            if (!$existingDays->has($dateString)) {
+                // Créer le jour s'il n'existe pas
+                Day::create([
+                    'week_id' => $week->id,
+                    'month_id' => $month->id,
+                    'date' => $date
+                ]);
+            }
+        }
     }
 }

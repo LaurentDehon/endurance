@@ -262,10 +262,7 @@
                         $monthName = $monthInfo['name'];
                         $monthNumber = $monthInfo['number'];
                     @endphp
-                    <section id="{{ $monthNumber }}"                         
-                            class="mb-4 sm:mb-5" 
-                            data-month-key="{{ $monthKey }}" 
-                            data-month-number="{{ $monthNumber }}">
+                    <section id="{{ $monthNumber }}" class="mb-4 sm:mb-5" data-month-key="{{ $monthKey }}" data-month-number="{{ $monthNumber }}">
                         <!-- Month header -->
                         <h2>
                             <div class="flex flex-row items-center gap-3 py-2">
@@ -316,30 +313,10 @@
                         <!-- Weeks -->
                         @foreach ($weeksInMonth as $week)
                             @php
-                                $baseColor = $week->type->color ?? 'bg-slate-500';
+                                $baseColor = $week->type ? $week->type->color : 'bg-slate-500';
                                 $colorPalette = $this->getWeekColorPalette($baseColor);
                             @endphp
-                            <div wire:key="week-{{ $week->id }}" x-data="{
-                                collapsed: false,
-                                weekId: '{{ $week->id }}',
-                                monthKey: '{{ $monthKey }}',
-                                year: '{{ $year }}',
-                                storageKey() {
-                                    return `weekState_${this.year}_${this.weekId}`;
-                                },
-                                saveState() {
-                                    localStorage.setItem(this.storageKey(), this.collapsed ? '1' : '0');
-                                }
-                            }"
-                            x-init="$nextTick(() => { 
-                                // Charger l'état depuis le localStorage, défaut à false (déplié)
-                                collapsed = localStorage.getItem(storageKey()) === '1'; 
-                            })"
-                            @toggle-week-collapse.window="if ($event.detail.weekId === weekId) { 
-                                collapsed = !collapsed; 
-                                saveState();
-                            }"                        
-                            class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible bg-white bg-opacity-10 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
+                            <div wire:key="week-{{ $week->id }}" x-data="{ collapsed: false, weekId: '{{ $week->id }}', monthKey: '{{ $monthKey }}', year: '{{ $year }}', storageKey() { return `weekState_${this.year}_${this.weekId}`; }, saveState() { localStorage.setItem(this.storageKey(), this.collapsed ? '1' : '0'); } }" x-init="$nextTick(() => { collapsed = localStorage.getItem(storageKey()) === '1'; })" @toggle-week-collapse.window="if ($event.detail.weekId === weekId) { collapsed = !collapsed; saveState(); }" class="relative rounded-xl shadow-lg ps-2 mb-2 overflow-visible bg-white bg-opacity-10 {{ $week->is_current_week ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }}">
                                 <!-- Background overlay plus visible -->
                                 <div class="absolute inset-0 rounded-xl opacity-20 bg-gradient-to-br from-{{ $colorPalette['lightShade'] }} via-{{ $colorPalette['midShade'] }} to-{{ $colorPalette['darkShade'] }}"></div>
                                 
@@ -457,20 +434,20 @@
                                                             <div class="flex items-end">
                                                                 <span class="text-lg font-bold text-slate-300">
                                                                     @if($stat === 'distance')
-                                                                        {{ number_format($week->actual_stats[$stat], 1) }}
+                                                                        {{ number_format($week->actual_stats[$stat] ?? 0, 1) }}
                                                                     @elseif($stat === 'duration')
-                                                                        {{ formatTime((int)($week->actual_stats[$stat])) }}
+                                                                        {{ formatTime((int)($week->actual_stats[$stat] ?? 0)) }}
                                                                     @else
-                                                                        {{ $week->actual_stats[$stat] }}
+                                                                        {{ $week->actual_stats[$stat] ?? 0 }}
                                                                     @endif
                                                                 </span>
-                                                                @if($week->planned_stats[$stat] > 0)
+                                                                @if(($week->planned_stats[$stat] ?? 0) > 0)
                                                                     <span class="text-sm text-gray-400 ml-0.5 whitespace-nowrap flex items-end mb-0.5">
                                                                         /&nbsp;<span>
                                                                             @if($stat === 'duration')
-                                                                                {{ formatTime($week->planned_stats[$stat]) }}
+                                                                                {{ formatTime($week->planned_stats[$stat] ?? 0) }}
                                                                             @else
-                                                                                {{ $stat === 'distance' ? number_format($week->planned_stats[$stat], 1) : $week->planned_stats[$stat] }}
+                                                                                {{ $stat === 'distance' ? number_format($week->planned_stats[$stat] ?? 0, 1) : ($week->planned_stats[$stat] ?? 0) }}
                                                                             @endif
                                                                         </span>
                                                                     </span>
@@ -479,7 +456,7 @@
                                                         </div>
                                                         
                                                         <!-- Stat progress bar -->
-                                                        @if($week->planned_stats[$stat] > 0)                                
+                                                        @if(($week->planned_stats[$stat] ?? 0) > 0)                                
                                                             @php 
                                                                 $percentage = $this->calculateCompletionPercentage($week->actual_stats[$stat], $week->planned_stats[$stat]);
                                                             @endphp
@@ -493,100 +470,72 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-                                    <div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
-                                        @foreach ($week->days as $day)
-                                            @php
-                                                $dayDate = $day['date'];
-                                                // Détermine si c'est le dernier jour de la semaine
-                                                $isLastDayInWeek = $loop->last;
-                                                // Détermine si c'est un jour impair dans la liste (pour mobile/tablette)
-                                                $isOddDayInList = $loop->iteration % 2 !== 0;
-                                                // Si c'est le dernier jour et qu'il est impair (seul sur sa ligne), il devrait prendre toute la largeur
-                                                $shouldTakeFullWidth = $isLastDayInWeek && $isOddDayInList;
-                                            @endphp
-                                            <div wire:key="day-{{ $dayDate->format('Y-m-d') }}"
-                                                ondragover="onDragOver(event)" 
-                                                ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')" 
-                                                ondragleave="onDragLeave(event)" 
-                                                wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})" 
-                                                class="relative block p-2 rounded-xl shadow-lg {{ $day['is_today'] ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }} min-h-24 cursor-pointer 
-                                                bg-gradient-to-b from-slate-800/40 to-slate-900/40 {{ $shouldTakeFullWidth ? 'col-span-2 lg:col-span-1' : '' }}">
-                                                <!-- Day date display in calendar cell -->
-                                                <div class="absolute top-2 left-2">
-                                                    <div>
-                                                        <span class="text-sm text-cyan-200">{{ $day['name'] }}</span>
-                                                        <span class="text-sm font-bold text-white">{{ $day['number'] }}</span>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Completed activities badges - Shows Strava activities for this day -->
-                                                @php 
-                                                    $dayActivities = $activities->filter(function ($activity) use ($dayDate) {
-                                                        return $activity->start_date->isSameDay($dayDate);
-                                                    });
+                                    <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                        <div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
+                                            @foreach ($week->days as $day)
+                                                @php
+                                                    $dayDate = $day->date;
+                                                    $isLastDayInWeek = $loop->last;
+                                                    $isOddDayInList = $loop->iteration % 2 !== 0;
+                                                    $shouldTakeFullWidth = $isLastDayInWeek && $isOddDayInList;
                                                 @endphp
-                                                @if($dayActivities->isNotEmpty())
-                                                    <div class="absolute top-2 right-2 flex flex-wrap justify-end gap-1.5">
-                                                        @foreach($dayActivities as $activity)
-                                                        <div class="relative">
-                                                            <a wire:click.stop="$dispatch('openModal', { component: 'modal.activity-modal', attributes: { id: '{{ $activity->id }}' }})" 
-                                                                class="relative cursor-pointer block"
-                                                                data-tippy-content="{{ $activity->name }}">
-                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white">
-                                                                    <i class="fas fa-running text-sm"></i>
-                                                                </div>
-                                                            </a>
+                                                <div wire:key="day-{{ $dayDate->format('Y-m-d') }}"
+                                                    ondragover="onDragOver(event)"
+                                                    ondrop="onDrop(event, '{{ $dayDate->format('Y-m-d') }}')"
+                                                    ondragleave="onDragLeave(event)"
+                                                    wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { date: '{{ $dayDate->format('Y-m-d') }}' }})"
+                                                    class="relative block p-2 rounded-xl shadow-lg {{ $dayDate->isToday() ? 'ring-2 ring-amber-300/60 ring-offset-1 ring-offset-slate-900/40' : '' }} min-h-24 cursor-pointer bg-gradient-to-b from-slate-800/40 to-slate-900/40 {{ $shouldTakeFullWidth ? 'col-span-2 lg:col-span-1' : '' }}">
+                                                    <!-- Day date display in calendar cell -->
+                                                    <div class="absolute top-2 left-2">
+                                                        <div>
+                                                            <span class="text-sm text-cyan-200">{{ $dayDate->isoFormat('ddd') }}</span>
+                                                            <span class="text-sm font-bold text-white">{{ $dayDate->day }}</span>
                                                         </div>
-                                                        @endforeach
                                                     </div>
-                                                @endif
-
-                                                <!-- Workout badges -->
-                                                @php 
-                                                    $dayWorkouts = $workouts->filter(function ($workout) use ($dayDate){
-                                                        return $workout->date->isSameDay($dayDate);
-                                                    }); 
-                                                @endphp
-                                                @if($dayWorkouts->isNotEmpty())
-                                                    <div class="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[80%]">
-                                                        @foreach($dayWorkouts as $workout)
+                                                    
+                                                    <!-- Completed activities badges - Shows Strava activities for this day -->
+                                                    @php 
+                                                        $dayActivities = $activities->filter(fn($activity) => $activity->day_id === $day->id);
+                                                    @endphp
+                                                    @if($dayActivities->isNotEmpty())
+                                                        <div class="absolute top-2 right-2 flex flex-wrap justify-end gap-1.5">
+                                                            @foreach($dayActivities as $activity)
                                                             <div class="relative">
-                                                                <a wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { id: '{{ $workout->id }}' }})" 
-                                                                    class="relative cursor-pointer block"
-                                                                    draggable="true" 
-                                                                    ondragstart="onDragStart(event, {{ $workout->id }})"
-                                                                    data-tippy-content="{{ 
-                                                                        ($workout->type ? '<div class=\'font-medium mb-0.5\'>' . $workout->type->getLocalizedName() . '</div>' : '<div class=\'font-medium mb-0.5\'>Workout</div>') . 
-                                                                        '<div class=\'flex flex-wrap gap-x-2 text-gray-300 text-xs\'>' . 
-                                                                            ($workout->duration > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-stopwatch mr-1\'></i>' . formatTime($workout->duration * 60) . '</span>' : '') . 
-                                                                            ($workout->distance > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-route mr-1\'></i>' . formatDistance($workout->distance) . '</span>' : '') .
-                                                                            ($workout->elevation > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-mountain mr-1\'></i>' . $workout->elevation . 'm</span>' : '') .
-                                                                        '</div>' . 
-                                                                        ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '')
-                                                                    }}">
-                                                                <!-- Workout icon -->
-                                                                <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
-                                                                    {{-- @if($workout->type && $workout->type->getLocalizedName() === __('workout_types.race'))
-                                                                        <i class="{{ $workout->type->icon }} text-sm"></i>
-                                                                    @else
-                                                                        <span class="text-sm font-semibold">{{ $workout->type ? $workout->type->short : 'W' }}</span>
-                                                                    @endif --}}
-                                                                    <i class="{{ $workout->type->icon }} text-sm"></i>
-                                                                </div>
-                                                            </a>
+                                                                <a wire:click.stop="$dispatch('openModal', { component: 'modal.activity-modal', attributes: { id: '{{ $activity->id }}' }})" class="relative cursor-pointer block" data-tippy-content="{{ $activity->name }}">
+                                                                    <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 text-white">
+                                                                        <i class="fas fa-running text-sm"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
+                                                    @endif
+
+                                                    <!-- Workout badges -->
+                                                    @php 
+                                                        $dayWorkouts = $workouts->filter(fn($workout) => $workout->day_id === $day->id);
+                                                    @endphp
+                                                    @if($dayWorkouts->isNotEmpty())
+                                                        <div class="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[80%]">
+                                                            @foreach($dayWorkouts as $workout)
+                                                                <div class="relative">
+                                                                    <a wire:click.stop="$dispatch('openModal', { component: 'modal.workout-modal', attributes: { id: '{{ $workout->id }}' }})" class="relative cursor-pointer block" draggable="true" ondragstart="onDragStart(event, {{ $workout->id }})" data-tippy-content="{{ ($workout->type ? '<div class=\'font-medium mb-0.5\'>' . $workout->type->getLocalizedName() . '</div>' : '<div class=\'font-medium mb-0.5\'>Workout</div>') . '<div class=\'flex flex-wrap gap-x-2 text-gray-300 text-xs\'>' . ($workout->duration > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-stopwatch mr-1\'></i>' . formatTime($workout->duration * 60) . '</span>' : '') . ($workout->distance > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-route mr-1\'></i>' . formatDistance($workout->distance) . '</span>' : '') . ($workout->elevation > 0 ? '<span class=\'whitespace-nowrap\'><i class=\'fas fa-mountain mr-1\'></i>' . $workout->elevation . 'm</span>' : '') . '</div>' . ($workout->notes != '' ? '<div class=\'mt-1 text-gray-200 text-xs line-clamp-2\'>' . $workout->notes . '</div>' : '') }}">
+                                                                        <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $workout->type ? $workout->type->color : 'bg-gray-500' }} text-white">
+                                                                            <i class="{{ $workout->type->icon }} text-sm"></i>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @endif
+                                            @endforeach
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </section>
+                        @endforeach
+                    </section>
                 @endforeach
 
             </div>

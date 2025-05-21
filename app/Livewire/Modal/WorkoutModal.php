@@ -111,21 +111,19 @@ class WorkoutModal extends Component
                     $currentDate = $currentDate->addDays((int)$interval);
                 }
 
-                $this->dispatch('workout-created');
                 $message = __('workouts.recurring_created_success');
             } else {
                 if ($this->workoutId) {
                     $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
                     $workout->update($baseData);
                     $message = __('workouts.updated_success');
-                    $this->dispatch('workout-updated');
                 } 
                 else {
                     Workout::create($baseData); // Simplified since baseData already includes date
                     $message = __('workouts.created_success');
-                    $this->dispatch('workout-created');
                 }
             }
+            $this->dispatch('workout-saved', date: $this->date);
 
             $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'workout-modal');
