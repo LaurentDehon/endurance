@@ -170,19 +170,13 @@
                                     <div class="flex items-baseline">
                                         <span class="text-2xl font-bold text-white">
                                             @if($stat === 'distance')
-                                                {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
+                                                <span class="whitespace-nowrap">{{ number_format($yearStats['actual'][$stat], 0, ',', '') }} <span class="text-sm text-gray-400">km</span></span>                                            
                                             @elseif($stat === 'duration')
                                                 {{ formatTime((int)($yearStats['actual'][$stat])) }}
                                             @else
-                                                {{ number_format($yearStats['actual'][$stat], 0, ',', '') }}
+                                                <span class="whitespace-nowrap">{{ number_format($yearStats['actual'][$stat], 0, ',', '') }} <span class="text-sm text-gray-400">m</span></span>                                            
                                             @endif
                                         </span>
-                                        
-                                        @if($yearStats['planned'][$stat] > 0)
-                                            <span class="text-sm text-gray-400 ml-1.5 whitespace-nowrap">
-                                                <span class="me-1">/</span>{{ $stat === 'duration' ? formatTime($yearStats['planned'][$stat]) : ($stat === 'distance' ? number_format($yearStats['planned'][$stat], 0, ',', '') : number_format($yearStats['planned'][$stat], 0, ',', '')) }}
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -304,17 +298,6 @@
                                                             {{ $monthStats[$monthKey]['actual'][$stat] }}
                                                         @endif
                                                     </span>
-                                                    @if($monthStats[$monthKey]['planned'][$stat] > 0)
-                                                        <span class="text-xs text-gray-400 ml-1 whitespace-nowrap flex items-end mb-0.5">
-                                                            /&nbsp;<span>
-                                                                @if($stat === 'duration')
-                                                                    {{ formatTime($monthStats[$monthKey]['planned'][$stat]) }}
-                                                                @else
-                                                                    {{ $stat === 'distance' ? number_format($monthStats[$monthKey]['planned'][$stat], 1) : $monthStats[$monthKey]['planned'][$stat] }}
-                                                                @endif
-                                                            </span>
-                                                        </span>
-                                                    @endif
                                                 </div>
                                             </div>
                                         @endforeach      
@@ -481,7 +464,6 @@
                                                                         {{ $week->actual_stats[$stat] }}
                                                                     @endif
                                                                 </span>
-                                                                
                                                                 @if($week->planned_stats[$stat] > 0)
                                                                     <span class="text-sm text-gray-400 ml-0.5 whitespace-nowrap flex items-end mb-0.5">
                                                                         /&nbsp;<span>

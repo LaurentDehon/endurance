@@ -160,15 +160,7 @@ class Calendar extends Component
             fn() => $this->getWorkouts()
         );
         
-        // Désactiver temporairement le cache pour les semaines pour déboguer
-        Cache::forget(self::CACHE_KEY_WEEKS . $userId . '-' . $this->year);
         $this->weeks = $this->getWeeks();
-        \Illuminate\Support\Facades\Log::info("Récupération des semaines sans cache pour l'année {$this->year}");
-        
-        // Vérifier chaque semaine pour l'ID
-        foreach ($this->weeks as $weekIndex => $week) {
-            \Illuminate\Support\Facades\Log::info("Semaine {$weekIndex}: Numéro {$week->week_number}, ID: " . ($week->id ?? 'null'));
-        }
         
         // Groupement des semaines par mois (pas besoin de cacher car c'est une opération de mémoire)
         $this->months = $this->groupWeeksByMonth($this->weeks);
@@ -340,8 +332,8 @@ class Calendar extends Component
 
         // Ajuster pour les années où la dernière semaine est la semaine 1 de l'année suivante
         if ($lastWeekStart->weekOfYear === 1) {
-            $lastPrevWeek = $lastWeekStart->subWeek();
-            $lastWeekNumber = $lastPrevWeek->weekOfYear;
+            $lastWeekPrev = $lastWeekStart->subWeek();
+            $lastWeekNumber = $lastWeekPrev->weekOfYear;
         }
 
         for ($weekNumber = 1; $weekNumber <= 53; $weekNumber++) {
@@ -526,7 +518,6 @@ class Calendar extends Component
     {
         $yearly = $this->getYearlyStats();
         $activity = $yearly['activity'][$this->year] ?? null;
-        $workout = $yearly['workout'][$this->year] ?? null;
         return [
             'actual' => [
                 'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
@@ -534,9 +525,9 @@ class Calendar extends Component
                 'duration' => $activity ? $activity->time : 0,
             ],
             'planned' => [
-                'distance' => $workout ? $workout->dist : 0,
-                'elevation' => $workout ? $workout->ele : 0,
-                'duration' => $workout ? $workout->time * 60 : 0,
+                'distance' => 0,
+                'elevation' => 0,
+                'duration' => 0,
             ]
         ];
     }
@@ -553,7 +544,6 @@ class Calendar extends Component
         for ($m = 1; $m <= 12; $m++) {
             $monthKey = sprintf('%04d-%02d', $this->year, $m);
             $activity = $monthly['activity'][$monthKey] ?? null;
-            $workout = $monthly['workout'][$monthKey] ?? null;
             $monthStats[$monthKey] = [
                 'actual' => [
                     'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
@@ -561,9 +551,9 @@ class Calendar extends Component
                     'duration' => $activity ? $activity->time : 0,
                 ],
                 'planned' => [
-                    'distance' => $workout ? $workout->dist : 0,
-                    'elevation' => $workout ? $workout->ele : 0,
-                    'duration' => $workout ? $workout->time * 60 : 0,
+                    'distance' => 0,
+                    'elevation' => 0,
+                    'duration' => 0,
                 ]
             ];
         }
@@ -581,7 +571,6 @@ class Calendar extends Component
     private function invalidateCache($type = 'all', $weekNumber = null, $month = null)
     {
         $userId = Auth::id();
-        \Illuminate\Support\Facades\Log::info("Invalidation du cache de type: {$type} pour l'utilisateur {$userId} et l'année {$this->year}");
         
         // Invalidation sélective selon le type de données modifiées
         switch ($type) {
