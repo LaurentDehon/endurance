@@ -178,6 +178,9 @@ class Calendar extends Component
         // S'assurer que les semaines et les jours sont créés lors du premier rendu
         if (!$this->weeks || $this->weeks->isEmpty()) {
             $this->weeks = $this->getWeeks();
+            
+            // S'assurer que les workouts sont correctement associés aux jours
+            $this->reassociateWorkoutsWithDays();
         }
 
         // Récupérer l'année, les semaines et les jours via Eloquent avec les relations nécessaires
@@ -200,8 +203,13 @@ class Calendar extends Component
             $week->planned_stats = $stats['planned_stats'];
         }
         
-        $activities = $yearModel->activities()->with('day')->get();
-        $workouts = $yearModel->workouts()->with(['type', 'day'])->get();
+        // Récupérer les workouts et activités y compris ceux de la dernière semaine de l'année précédente
+        // qui font partie de la première semaine de l'année en cours
+        $activities = $this->getActivities();
+        $workouts = $this->getWorkouts();
+        
+        // Vérifier spécifiquement les workouts de la première semaine
+        $this->reloadFirstWeekWorkouts();
 
         // Group weeks by month format for view compatibility (key = YYYY-MM)
         $monthsGrouped = collect();
@@ -287,7 +295,13 @@ class Calendar extends Component
     {
         $year = $this->year;
         
-        $startDate = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        // Get the first week of the year, which might start in the previous year
+        $firstWeekStart = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        
+        // Use the first week's start date as our start date, which may include days from the previous year
+        $startDate = $firstWeekStart;
+        
+        // Similarly, get the last week which might extend into the next year
         $endDate = Carbon::createFromDate($year, 12, 31)->endOfWeek(Carbon::SUNDAY);
 
         return Activity::where('user_id', Auth::id())
@@ -305,7 +319,13 @@ class Calendar extends Component
     {
         $year = $this->year;
         
-        $startDate = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        // Get the first week of the year, which might start in the previous year
+        $firstWeekStart = Carbon::createFromDate($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        
+        // Use the first week's start date as our start date, which may include days from the previous year
+        $startDate = $firstWeekStart;
+        
+        // Similarly, get the last week which might extend into the next year
         $endDate = Carbon::createFromDate($year, 12, 31)->endOfWeek(Carbon::SUNDAY);
 
         return Workout::with('type')
@@ -324,20 +344,24 @@ class Calendar extends Component
         $userId = Auth::id();
         $year = $this->year;
         
-        // Récupérer les stats groupées par semaine pour les activités réelles et les workouts planifiés
-        $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
-            ->whereYear('start_date', $year)
+        // Déterminer les dates de début et de fin pour inclure les jours de la dernière semaine de l'année précédente
+        $firstWeekStart = \Carbon\CarbonImmutable::create($year, 1, 1)->startOfWeek(\Carbon\CarbonImmutable::MONDAY);
+        $endDate = \Carbon\CarbonImmutable::create($year, 12, 31)->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
+        
+        // Récupérer les stats groupées par semaine pour les activités réelles
+        $activityQuery = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
             ->where('user_id', $userId)
-            ->groupBy('week')
-            ->get()
-            ->keyBy('week');
+            ->whereBetween('start_date', [$firstWeekStart, $endDate])
+            ->groupBy('week');
+            
+        $activityStats = $activityQuery->get()->keyBy('week');
 
-        $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
-            ->whereYear('date', $year)
+        $workoutQuery = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
             ->where('user_id', $userId)
-            ->groupBy('week')
-            ->get()
-            ->keyBy('week');
+            ->whereBetween('date', [$firstWeekStart, $endDate])
+            ->groupBy('week');
+            
+        $workoutStats = $workoutQuery->get()->keyBy('week');
 
         // Pré-charger tous les Week de l'année avec leur type
         $weeksFromDb = Week::with('type')
@@ -1013,8 +1037,10 @@ class Calendar extends Component
             }
             $result = $syncService->sync($user);
 
-            if (isset($result['redirect']) && $result['redirect'] === true) {
-                return redirect(route($result['route']));
+            if (isset($result['redirect']) && $result['redirect'] === true && isset($result['route'])) {
+                // Use dispatch instead of trying to redirect directly
+                $this->dispatch('redirectTo', ['route' => $result['route']]);
+                return;
             }
             
             if ($result['success']) {
@@ -1554,7 +1580,15 @@ class Calendar extends Component
     {
         // Création complète de la structure calendrier pour l'année
         $this->initializeYearModel();
+        
+        // Initialiser la première semaine spécifiquement pour gérer les jours à cheval sur deux années
+        $this->initializeFirstWeekOfYear($this->year);
+        
+        // Générer toutes les semaines de l'année
         $this->weeks = $this->getWeeks();
+        
+        // Réassocier les workouts aux jours corrects (important pour les jours à cheval sur deux années)
+        $this->reassociateWorkoutsWithDays();
         
         // Invalider les caches pour forcer le rechargement des données
         $this->invalidateCache('all');
@@ -1566,5 +1600,64 @@ class Calendar extends Component
         // Envoi direct de l'événement de fin de navigation après un court délai
         // pour permettre au DOM de se mettre à jour
         $this->dispatch('year-navigation-end');
+    }
+    
+    /**
+     * Réassocier les workouts aux jours corrects, particulièrement utile pour les jours
+     * à cheval sur deux années (ex: 30-31 décembre 2024 dans la première semaine de 2025)
+     * 
+     * @return void
+     */
+    private function reassociateWorkoutsWithDays()
+    {
+        // Déterminer la première semaine de l'année
+        $firstWeekStart = Carbon::createFromDate($this->year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        $yearStart = Carbon::createFromDate($this->year, 1, 1);
+        
+        // Si la première semaine commence en décembre de l'année précédente
+        if ($firstWeekStart->year < $this->year) {
+            // S'assurer que les workouts de la fin de l'année précédente sont correctement associés aux jours
+            $this->ensureWorkoutsHaveCorrectDays($firstWeekStart, $yearStart->subDay());
+        }
+        
+        // Également vérifier tous les workouts de l'année en cours
+        $yearEnd = Carbon::createFromDate($this->year, 12, 31);
+        $this->ensureWorkoutsHaveCorrectDays($yearStart, $yearEnd);
+    }
+    
+    /**
+     * Recharge les workouts de la première semaine de l'année, y compris ceux de l'année précédente
+     * Cette méthode est utile pour s'assurer que les workouts du 30-31 décembre
+     * qui appartiennent à la première semaine de l'année suivante sont bien affichés
+     *
+     * @return void
+     */
+    private function reloadFirstWeekWorkouts()
+    {
+        // Déterminer les dates de la première semaine
+        $firstWeekStart = Carbon::createFromDate($this->year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        $firstWeekEnd = $firstWeekStart->copy()->endOfWeek(Carbon::SUNDAY);
+        
+        // Si la première semaine commence en décembre de l'année précédente
+        if ($firstWeekStart->year < $this->year) {
+            // Récupérer tous les workouts de cette période
+            $firstWeekWorkouts = Workout::with(['type', 'day'])
+                ->where('user_id', Auth::id())
+                ->whereBetween('date', [$firstWeekStart, $firstWeekEnd])
+                ->get();
+            
+            // Ajouter ces workouts à la collection existante
+            // Mais d'abord, filtrer les workouts existants pour éviter les doublons
+            if ($this->workouts) {
+                $existingIds = $this->workouts->pluck('id')->toArray();
+                $newWorkouts = $firstWeekWorkouts->filter(function($workout) use ($existingIds) {
+                    return !in_array($workout->id, $existingIds);
+                });
+                
+                if ($newWorkouts->isNotEmpty()) {
+                    $this->workouts = $this->workouts->merge($newWorkouts);
+                }
+            }
+        }
     }
 }

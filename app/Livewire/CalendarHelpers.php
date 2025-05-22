@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Day;
 use App\Models\Week;
 use App\Models\Year;
+use App\Models\Workout;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Auth;
@@ -122,5 +123,91 @@ trait CalendarHelpers {
                 }
             }
         }
+    }
+    
+    /**
+     * S'assure que les workouts sont correctement associés aux jours correspondants
+     * Cette méthode est utile pour corriger les problèmes avec les workouts qui sont
+     * à la frontière entre deux années (ex: 30-31 décembre dans la première semaine de janvier)
+     *
+     * @param Carbon|\Carbon\CarbonImmutable|string $startDate Date de début
+     * @param Carbon|\Carbon\CarbonImmutable|string $endDate Date de fin
+     * @return void
+     */
+    private function ensureWorkoutsHaveCorrectDays($startDate, $endDate)
+    {
+        if (is_string($startDate)) {
+            $startDate = Carbon::parse($startDate);
+        }
+        
+        if (is_string($endDate)) {
+            $endDate = Carbon::parse($endDate);
+        }
+        
+        // Récupérer tous les workouts dans la plage de dates spécifiée
+        $workouts = Workout::where('user_id', Auth::id())
+            ->whereBetween('date', [$startDate, $endDate])
+            ->get();
+            
+        foreach ($workouts as $workout) {
+            // Vérifier si le workout a un jour associé
+            if (!$workout->day_id) {
+                $day = $this->getOrCreateDayForDate($workout->date);
+                $workout->day_id = $day->id;
+                $workout->save();
+            } else {
+                // Vérifier si le jour associé correspond à la date du workout
+                $day = Day::find($workout->day_id);
+                if (!$day || !$day->date->isSameDay($workout->date)) {
+                    $correctDay = $this->getOrCreateDayForDate($workout->date);
+                    $workout->day_id = $correctDay->id;
+                    $workout->save();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Initialise la première semaine de l'année et s'assure que tous les jours
+     * sont correctement créés, y compris ceux de l'année précédente si nécessaire
+     *
+     * @param int $year L'année à initialiser
+     * @return Week La première semaine de l'année
+     */
+    private function initializeFirstWeekOfYear(int $year)
+    {
+        $userId = Auth::id();
+        
+        // Obtenir les dates de début et de fin de la première semaine
+        $firstWeekStart = Carbon::create($year, 1, 1)->startOfWeek(Carbon::MONDAY);
+        $firstWeekEnd = $firstWeekStart->copy()->endOfWeek(Carbon::SUNDAY);
+        $weekNumber = $firstWeekStart->weekOfYear;
+        
+        // Obtenir ou créer l'année
+        $yearModel = Year::firstOrCreate(
+            ['user_id' => $userId, 'year' => $year]
+        );
+        
+        // Obtenir ou créer la semaine
+        $week = Week::firstOrCreate(
+            ['user_id' => $userId, 'year' => $year, 'week_number' => $weekNumber],
+            [
+                'user_id' => $userId,
+                'year' => $year,
+                'week_number' => $weekNumber,
+                'year_id' => $yearModel->id
+            ]
+        );
+        
+        // Créer tous les jours de la semaine
+        $this->createOrUpdateDays($week, $firstWeekStart, $firstWeekEnd);
+        
+        // Si la première semaine commence en décembre de l'année précédente
+        if ($firstWeekStart->year < $year) {
+            // S'assurer que les workouts de la fin de l'année précédente sont correctement associés aux jours
+            $this->ensureWorkoutsHaveCorrectDays($firstWeekStart, Carbon::create($year, 1, 1)->subDay());
+        }
+        
+        return $week;
     }
 }
