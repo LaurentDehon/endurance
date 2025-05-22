@@ -119,6 +119,11 @@ class Week extends Model
      */
     public function getStartAttribute()
     {
+        // Return cached value if it exists
+        if (isset($this->attributes['start_cached'])) {
+            return $this->attributes['start_cached'];
+        }
+        
         $startDate = $this->getStartDate();
         return $startDate->translatedFormat(__('calendar.date_formats.day_month', [], $startDate->locale));
     }
@@ -128,7 +133,32 @@ class Week extends Model
      */
     public function getEndAttribute()
     {
+        // Return cached value if it exists
+        if (isset($this->attributes['end_cached'])) {
+            return $this->attributes['end_cached'];
+        }
+        
         $endDate = $this->getEndDate();
         return $endDate->translatedFormat(__('calendar.date_formats.day_month', [], $endDate->locale));
+    }
+
+    /**
+     * Set formatted start date of the week.
+     */
+    public function setStartAttribute($value)
+    {
+        // This is a virtual attribute, but we need this method
+        // to allow setting the property from Calendar component
+        $this->attributes['start_cached'] = $value;
+    }
+
+    /**
+     * Set formatted end date of the week.
+     */
+    public function setEndAttribute($value)
+    {
+        // This is a virtual attribute, but we need this method
+        // to allow setting the property from Calendar component
+        $this->attributes['end_cached'] = $value;
     }
 }

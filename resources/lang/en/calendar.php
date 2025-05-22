@@ -28,6 +28,7 @@ return [
     // Loading states
     'loading' => 'Loading',
     'preparing_calendar' => 'Preparing your calendar...',
+    'year_changing' => 'Changing year...',
     
     // Strava sync
     'strava_synchronization' => 'Strava Synchronization',

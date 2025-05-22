@@ -4,8 +4,10 @@
 ?>    
 
 <div class="mx-auto p-2 sm:p-4 overflow-y-scroll relative" id="calendar-container"
-    x-data="{ contentLoaded: false }" 
-    x-init="setTimeout(() => { contentLoaded = true; }, 500)">
+    x-data="{ contentLoaded: false, yearChanging: false }" 
+    x-init="setTimeout(() => { contentLoaded = true; }, 500)"
+    @year-navigation-start.window="yearChanging = true; contentLoaded = false"
+    @year-navigation-end.window="setTimeout(() => { yearChanging = false; contentLoaded = true; }, 500)">
     <!-- Fixed gradient background covering the entire page -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
 
@@ -57,7 +59,10 @@
             </div>
             
             <h3 class="text-2xl font-bold text-white mb-2">{{ __('calendar.loading') }}</h3>
-            <p class="text-center text-white/80 mb-6">{{ __('calendar.preparing_calendar') }}</p>
+            <p class="text-center text-white/80 mb-6">
+                <span x-show="yearChanging">{{ __('calendar.year_changing') }}</span>
+                <span x-show="!yearChanging">{{ __('calendar.preparing_calendar') }}</span>
+            </p>
             
             <!-- Animated progress indicator -->
             <div class="w-64 h-2 mx-auto bg-gray-700/50 rounded-full overflow-hidden">
@@ -191,6 +196,7 @@
                                 <div class="flex items-center justify-between gap-2 py-2 px-4 bg-white bg-opacity-10 border-white border-opacity-20 rounded-xl shadow-lg w-full">
                                     <button 
                                         wire:click="previousYear" 
+                                        @click="$dispatch('year-navigation-start')"
                                         type="button"
                                         :disabled="isLoading"
                                         :class="{ 'opacity-30 cursor-not-allowed': isLoading }"
@@ -212,6 +218,7 @@
                                     
                                     <button 
                                         wire:click="nextYear"
+                                        @click="$dispatch('year-navigation-start')"
                                         type="button"
                                         :disabled="isLoading"
                                         :class="{ 'opacity-30 cursor-not-allowed': isLoading }"
@@ -257,6 +264,7 @@
 
                 <!-- Months -->
                 @foreach ($months as $monthKey => $weeksInMonth)
+                    @if(isset($monthStats[$monthKey]))
                     @php
                         $monthInfo = $this->getMonthInfo($monthKey);
                         $monthName = $monthInfo['name'];
@@ -288,11 +296,11 @@
                                                 <div class="flex items-end">
                                                     <span class="font-semibold text-white">
                                                         @if($stat === 'distance')
-                                                            {{ number_format($monthStats[$monthKey]['actual'][$stat], 1) }}
+                                                            {{ number_format($monthStats[$monthKey]['actual'][$stat] ?? 0, 1) }}
                                                         @elseif($stat === 'duration')
-                                                            {{ formatTime((int)($monthStats[$monthKey]['actual'][$stat])) }}
+                                                            {{ formatTime((int)($monthStats[$monthKey]['actual'][$stat] ?? 0)) }}
                                                         @else
-                                                            {{ $monthStats[$monthKey]['actual'][$stat] }}
+                                                            {{ $monthStats[$monthKey]['actual'][$stat] ?? 0 }}
                                                         @endif
                                                     </span>
                                                 </div>
@@ -538,6 +546,7 @@
                             </div>
                         @endforeach
                     </section>
+                @endif
                 @endforeach
 
             </div>

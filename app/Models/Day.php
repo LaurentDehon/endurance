@@ -109,14 +109,25 @@ class Day extends Model
                 'month_id' => $monthObj->id
             ]);
             
-            // Create the day
-            $day = self::create([
-                'month_id' => $monthObj->id,
-                'week_id' => $weekObj->id,
-                'date' => $dateObj->format('Y-m-d')
-            ]);
+            // Create the day using firstOrCreate to avoid integrity violations
+            $day = self::firstOrCreate(
+                ['date' => $dateObj->format('Y-m-d')],
+                [
+                    'month_id' => $monthObj->id,
+                    'week_id' => $weekObj->id,
+                    'date' => $dateObj->format('Y-m-d')
+                ]
+            );
             
-            \Illuminate\Support\Facades\Log::info("Day created successfully with ID: " . $day->id);
+            // Update week and month associations if needed
+            if ($day->month_id !== $monthObj->id || $day->week_id !== $weekObj->id) {
+                $day->month_id = $monthObj->id;
+                $day->week_id = $weekObj->id;
+                $day->save();
+                \Illuminate\Support\Facades\Log::info("Day relations updated for existing day: " . $day->id);
+            } else {
+                \Illuminate\Support\Facades\Log::info("Day created successfully with ID: " . $day->id);
+            }
         }
         
         return $day;

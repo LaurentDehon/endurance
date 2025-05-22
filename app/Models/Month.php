@@ -109,11 +109,15 @@ class Month extends Model
                 ]
             );
             
-            // Create the day and associate it with this month and the week
-            $this->days()->create([
-                'date' => $currentDate->format('Y-m-d'),
-                'week_id' => $week->id,
-            ]);
+            // Create the day using firstOrCreate to avoid integrity violations
+            Day::firstOrCreate(
+                ['date' => $currentDate->format('Y-m-d')],
+                [
+                    'month_id' => $this->id,
+                    'week_id' => $week->id,
+                    'date' => $currentDate->format('Y-m-d')
+                ]
+            );
             
             $currentDate->addDay();
         }
