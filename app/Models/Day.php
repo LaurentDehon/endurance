@@ -86,47 +86,36 @@ class Day extends Model
         
         $day = self::where('date', $dateObj->format('Y-m-d'))->first();
         
-        if (!$day) {
-            \Illuminate\Support\Facades\Log::info("Creating new day for date: " . $dateObj->format('Y-m-d'));
-            
+        if (!$day) {            
             // Find or create the year
             $yearObj = Year::firstOrCreate([
                 'year' => $dateObj->year,
                 'user_id' => Auth::id()
             ]);
             
-            // Find or create the month
-            $monthObj = Month::firstOrCreate([
-                'year_id' => $yearObj->id,
-                'month' => $dateObj->month
-            ]);
-            
             // Find or create the week
             $weekObj = Week::firstOrCreate([
                 'year' => $dateObj->year,
                 'week_number' => $dateObj->weekOfYear,
-                'user_id' => Auth::id(),
-                'month_id' => $monthObj->id
+                'user_id' => Auth::id()
+            ], [
+                'year_id' => $yearObj->id
             ]);
             
             // Create the day using firstOrCreate to avoid integrity violations
             $day = self::firstOrCreate(
                 ['date' => $dateObj->format('Y-m-d')],
                 [
-                    'month_id' => $monthObj->id,
+                    'year_id' => $yearObj->id,
                     'week_id' => $weekObj->id,
                     'date' => $dateObj->format('Y-m-d')
                 ]
             );
             
             // Update week and month associations if needed
-            if ($day->month_id !== $monthObj->id || $day->week_id !== $weekObj->id) {
-                $day->month_id = $monthObj->id;
+            if ($$day->week_id !== $weekObj->id) {
                 $day->week_id = $weekObj->id;
                 $day->save();
-                \Illuminate\Support\Facades\Log::info("Day relations updated for existing day: " . $day->id);
-            } else {
-                \Illuminate\Support\Facades\Log::info("Day created successfully with ID: " . $day->id);
             }
         }
         
