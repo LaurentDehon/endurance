@@ -1798,6 +1798,7 @@ class Calendar extends Component
             $week->load('days');
             
             // Calculate the stats using the Week model method
+
             $stats = $week->calculateStats();
             
             // Log the calculated stats

@@ -113,4 +113,22 @@ class Week extends Model
             ]
         ];
     }
+
+    /**
+     * Get formatted start date of the week.
+     */
+    public function getStartAttribute()
+    {
+        $startDate = $this->getStartDate();
+        return $startDate->translatedFormat(__('calendar.date_formats.day_month', [], $startDate->locale));
+    }
+
+    /**
+     * Get formatted end date of the week.
+     */
+    public function getEndAttribute()
+    {
+        $endDate = $this->getEndDate();
+        return $endDate->translatedFormat(__('calendar.date_formats.day_month', [], $endDate->locale));
+    }
 }

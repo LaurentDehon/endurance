@@ -327,14 +327,13 @@
                                 <div class="relative z-10 week-header pt-2 pb-1 px-2">
                                     <div class="flex flex-col gap-4">
                                         <!-- Week info and controls -->
-                                        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-                                            <div class="flex justify-between sm:flex-col gap-2">
+                                        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">                                                <div class="flex justify-between sm:flex-col gap-2">
                                                 <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
-                                                        {{ __('calendar.week') }} {{ $week->week_number }}
-                                                    </span>                                        
-                                                    <span class="text-sm text-white">
-                                                        {{ $week->start }} - {{ $week->end }}
+                                                        {{ __('calendar.week') }} {{ $week->week_number }} <span class="text-gray-600">({{ $week->start }} - {{ $week->end }})</span>
+                                                    </span>
+                                                    <span class="sm:hidden text-sm text-white">
+                                                        {{ __('calendar.week') }} {{ $week->week_number }} <span class="text-gray-300">({{ $week->start }} - {{ $week->end }})</span>
                                                     </span>
                                                 </div>
                                             
