@@ -458,7 +458,10 @@
                                                         <!-- Stat progress bar -->
                                                         @if(($week->planned_stats[$stat] ?? 0) > 0)                                
                                                             @php 
-                                                                $percentage = $this->calculateCompletionPercentage($week->actual_stats[$stat], $week->planned_stats[$stat]);
+                                                                $percentage = $this->calculateCompletionPercentage(
+                                                                    $week->actual_stats[$stat] ?? null, 
+                                                                    $week->planned_stats[$stat] ?? null
+                                                                );
                                                             @endphp
                                                             <div class="w-full mt-1 h-2 bg-gray-800 bg-opacity-50 rounded-full">
                                                                 <div class="h-2 bg-{{ $statColors[$stat] }}-400 rounded-full" 

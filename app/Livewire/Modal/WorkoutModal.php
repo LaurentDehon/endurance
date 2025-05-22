@@ -97,33 +97,43 @@ class WorkoutModal extends Component
             'workout_type_id' => $this->workoutTypeId,
             'user_id' => Auth::id(),
         ];
-
+        
         try {
             if ($this->isRecurring) {
                 $startDate = Carbon::parse($this->date);
                 $endDate = Carbon::parse($this->recurrenceEndDate);
                 $interval = $this->recurrenceInterval;
-
                 $currentDate = $startDate->copy();
+                $createdDates = [];
 
                 while ($currentDate <= $endDate) {
-                    Workout::create(array_merge($baseData, ['date' => $currentDate]));
+                    $workoutDate = $currentDate->copy();
+                    Workout::create(array_merge($baseData, ['date' => $workoutDate]));
+                    $createdDates[] = $workoutDate->format('Y-m-d');
                     $currentDate = $currentDate->addDays((int)$interval);
                 }
 
+                foreach ($createdDates as $createdDate) {
+                    $this->dispatch('workout-saved', date: $createdDate);
+                }
+
+                $this->dispatch('workout-created');
                 $message = __('workouts.recurring_created_success');
             } else {
                 if ($this->workoutId) {
                     $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
                     $workout->update($baseData);
                     $message = __('workouts.updated_success');
+                    $this->dispatch('workout-updated');
                 } 
                 else {
-                    Workout::create($baseData); // Simplified since baseData already includes date
+                    Workout::create($baseData);
                     $message = __('workouts.created_success');
+                    $this->dispatch('workout-created');
                 }
+                
+                $this->dispatch('workout-saved', date: $this->date);
             }
-            $this->dispatch('workout-saved', date: $this->date);
 
             $this->dispatch('toast', $message, 'success');
             $this->dispatch('closeModal', 'workout-modal');

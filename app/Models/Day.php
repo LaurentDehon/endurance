@@ -87,6 +87,8 @@ class Day extends Model
         $day = self::where('date', $dateObj->format('Y-m-d'))->first();
         
         if (!$day) {
+            \Illuminate\Support\Facades\Log::info("Creating new day for date: " . $dateObj->format('Y-m-d'));
+            
             // Find or create the year
             $yearObj = Year::firstOrCreate([
                 'year' => $dateObj->year,
@@ -103,7 +105,8 @@ class Day extends Model
             $weekObj = Week::firstOrCreate([
                 'year' => $dateObj->year,
                 'week_number' => $dateObj->weekOfYear,
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
+                'month_id' => $monthObj->id
             ]);
             
             // Create the day
@@ -112,6 +115,8 @@ class Day extends Model
                 'week_id' => $weekObj->id,
                 'date' => $dateObj->format('Y-m-d')
             ]);
+            
+            \Illuminate\Support\Facades\Log::info("Day created successfully with ID: " . $day->id);
         }
         
         return $day;

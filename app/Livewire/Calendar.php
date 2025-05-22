@@ -180,10 +180,20 @@ class Calendar extends Component
             $this->initializeYearModel();
         }
 
-        // Récupérer l'année, les mois, les semaines et les jours via Eloquent
-        $yearModel = $this->yearModel->load(['months.weeks.days', 'months.days']);
+        // Récupérer l'année, les mois, les semaines et les jours via Eloquent avec les relations nécessaires
+        $yearModel = $this->yearModel->fresh(['months.weeks.days', 'months.days']);
         $months = $yearModel->months->sortBy('month');
+        
+        // Récupérer les semaines avec leurs jours et types
         $weeks = $yearModel->weeks()->with(['type', 'days'])->get()->sortBy('week_number');
+        
+        // Parcourir chaque semaine et calculer ses statistiques actuelles
+        foreach ($weeks as $week) {
+            $stats = $week->calculateStats();
+            $week->actual_stats = $stats['actual_stats'];
+            $week->planned_stats = $stats['planned_stats'];
+        }
+        
         $activities = $yearModel->activities()->with('day')->get();
         $workouts = $yearModel->workouts()->with(['type', 'day'])->get();
 
@@ -874,30 +884,69 @@ class Calendar extends Component
      */
     private function updateWeekStats($date)
     {
-        $weekNumber = $date->weekOfYear;
-        $year = $date->year;
-        $userId = Auth::id();
-        $week = Week::where('user_id', $userId)->where('year', $year)->where('week_number', $weekNumber)->first();
-        if (!$week) return;
-        // Recalculate stats for this week only
-        $activityStats = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
-            ->where('user_id', $userId)
-            ->whereHas('day', function($q) use ($week) { $q->where('week_id', $week->id); })
-            ->first();
-        $workoutStats = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
-            ->where('user_id', $userId)
-            ->whereHas('day', function($q) use ($week) { $q->where('week_id', $week->id); })
-            ->first();
-        $week->actual_stats = [
-            'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
-            'elevation' => $activityStats ? $activityStats->ele : 0,
-            'duration' => $activityStats ? $activityStats->time : 0,
-        ];
-        $week->planned_stats = [
-            'distance' => $workoutStats ? $workoutStats->dist : 0,
-            'elevation' => $workoutStats ? $workoutStats->ele : 0,
-            'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
-        ];
+        try {
+            $weekNumber = $date->weekOfYear;
+            $year = $date->year;
+            $userId = Auth::id();
+            
+            // Log debug information
+            \Illuminate\Support\Facades\Log::info("Updating stats for week {$weekNumber} of {$year}");
+            
+            $week = Week::where('user_id', $userId)
+                         ->where('year', $year)
+                         ->where('week_number', $weekNumber)
+                         ->first();
+                         
+            if (!$week) {
+                \Illuminate\Support\Facades\Log::warning("Week not found for week {$weekNumber} of {$year}");
+                return;
+            }
+            
+            // Force reload days to ensure we have the latest data
+            $week->load('days');
+            
+            // Get all day IDs for this week
+            $dayIds = $week->days->pluck('id')->toArray();
+            
+            // Log the found days
+            \Illuminate\Support\Facades\Log::info("Found " . count($dayIds) . " days for week {$weekNumber}");
+            
+            // Recalculate stats for this week only using direct queries on workout and activity tables
+            $workoutStats = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+                ->where('user_id', $userId)
+                ->whereIn('day_id', $dayIds)
+                ->first();
+            
+            $activityStats = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+                ->where('user_id', $userId)
+                ->whereIn('day_id', $dayIds)
+                ->first();
+            
+            // Update dynamic attributes
+            $week->actual_stats = [
+                'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
+                'elevation' => $activityStats ? $activityStats->ele : 0,
+                'duration' => $activityStats ? $activityStats->time : 0,
+            ];
+            
+            $week->planned_stats = [
+                'distance' => $workoutStats ? $workoutStats->dist : 0,
+                'elevation' => $workoutStats ? $workoutStats->ele : 0,
+                'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
+            ];
+            
+            // Save the week to persist any database-stored attributes
+            $week->save();
+            
+            // Log success
+            \Illuminate\Support\Facades\Log::info("Week stats updated: actual_distance={$week->actual_stats['distance']}, planned_distance={$week->planned_stats['distance']}");
+            
+            return $week;
+        } catch (\Exception $e) {
+            // Log any errors
+            \Illuminate\Support\Facades\Log::error("Error in updateWeekStats: " . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -1465,12 +1514,16 @@ class Calendar extends Component
     /**
      * Calculates the completion percentage of a statistic.
      *
-     * @param float $actual Actual value
-     * @param float $planned Planned value
+     * @param float|null $actual Actual value
+     * @param float|null $planned Planned value
      * @return float Completion percentage (capped at 100%)
      */
-    public function calculateCompletionPercentage(float $actual, float $planned): float
+    public function calculateCompletionPercentage($actual, $planned): float
     {
+        // Convert null values to 0
+        $actual = is_null($actual) ? 0.0 : (float)$actual;
+        $planned = is_null($planned) ? 0.0 : (float)$planned;
+        
         if ($planned <= 0) {
             return 0;
         }
@@ -1487,6 +1540,9 @@ class Calendar extends Component
     {
         $userId = Auth::id();
         $year = $this->year;
+        
+        // Initialize months collection for the current year
+        $months = Month::where('year_id', $this->yearModel->id)->get()->keyBy('month');
         
         // Récupère ou crée les 53 semaines possibles pour l'année
         $date = \Carbon\CarbonImmutable::create($year, 1, 1)->startOfYear();
@@ -1705,5 +1761,132 @@ class Calendar extends Component
                 ]);
             }
         }
+    }
+    
+    /**
+     * Livewire event handler: update only the affected week's stats after a workout is saved/edited
+     *
+     * @param string|\Carbon\Carbon $date The date of the workout
+     * @return void
+     */
+    public function updateWeekStatsForDate($date)
+    {
+        try {
+            // Parse the date if it's a string
+            $carbonDate = $date instanceof \Carbon\Carbon ? $date : Carbon::parse($date);
+            
+            // Log debugging information
+            \Illuminate\Support\Facades\Log::info("Updating week stats for date: " . $carbonDate->format('Y-m-d'));
+            
+            // Get the week number for this date
+            $weekNumber = $carbonDate->weekOfYear;
+            $year = $carbonDate->year;
+            $userId = Auth::id();
+            
+            // Find the week
+            $week = Week::where('user_id', $userId)
+                         ->where('year', $year)
+                         ->where('week_number', $weekNumber)
+                         ->first();
+            
+            if (!$week) {
+                \Illuminate\Support\Facades\Log::warning("Week not found for date " . $carbonDate->format('Y-m-d'));
+                return;
+            }
+            
+            // Reload the week with its days to ensure we have the latest data
+            $week->load('days');
+            
+            // Calculate the stats using the Week model method
+            $stats = $week->calculateStats();
+            
+            // Log the calculated stats
+            \Illuminate\Support\Facades\Log::info("Week {$weekNumber} stats: planned distance=" . 
+                                                $stats['planned_stats']['distance'] . 
+                                                ", actual distance=" . $stats['actual_stats']['distance']);
+            
+            // Update the week object with the calculated stats
+            $week->actual_stats = $stats['actual_stats'];
+            $week->planned_stats = $stats['planned_stats'];
+            
+            // Invalidate cache
+            $this->invalidateCache('workout');
+            
+            // Refresh the page to show updated stats
+            $this->dispatch('refresh');
+            
+            // Log success
+            \Illuminate\Support\Facades\Log::info("Week stats updated successfully");
+        } catch (\Exception $e) {
+            // Log any errors
+            \Illuminate\Support\Facades\Log::error("Error updating week stats: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+        }
+    }
+    
+    /**
+     * Recompute stats and refresh after a workout is saved
+     *
+     * @param string $date The date in Y-m-d format
+     * @return void
+     */
+    public function forceRefreshStatsFromDate($date)
+    {
+        // Convert string date to Carbon instance
+        $carbonDate = Carbon::parse($date);
+        
+        // Get the week number for this date
+        $weekNumber = $carbonDate->weekOfYear;
+        $year = $carbonDate->year;
+        $userId = Auth::id();
+        
+        // Log for debugging
+        \Illuminate\Support\Facades\Log::info("Force refreshing stats for week {$weekNumber} of {$year} from date {$date}");
+        
+        // Find the week
+        $week = Week::where('user_id', $userId)
+                     ->where('year', $year)
+                     ->where('week_number', $weekNumber)
+                     ->first();
+        
+        if (!$week) {
+            \Illuminate\Support\Facades\Log::warning("Week not found for date {$date}");
+            return;
+        }
+        
+        // Get all days for this week
+        $dayIds = Day::where('week_id', $week->id)->pluck('id')->toArray();
+        
+        // Direct query to sum workout stats for this week's days
+        $workoutStats = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->where('user_id', $userId)
+            ->whereIn('day_id', $dayIds)
+            ->first();
+        
+        // Direct query to sum activity stats for this week's days
+        $activityStats = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->where('user_id', $userId)
+            ->whereIn('day_id', $dayIds)
+            ->first();
+        
+        // Log the calculated stats
+        \Illuminate\Support\Facades\Log::info("Week {$weekNumber} stats: " . 
+                                            "Workout dist=" . ($workoutStats ? $workoutStats->dist : 0) . 
+                                            ", Activity dist=" . ($activityStats ? $activityStats->dist : 0));
+        
+        // Update the week model with new stats
+        $week->actual_stats = [
+            'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
+            'elevation' => $activityStats ? $activityStats->ele : 0,
+            'duration' => $activityStats ? $activityStats->time : 0,
+        ];
+        
+        $week->planned_stats = [
+            'distance' => $workoutStats ? $workoutStats->dist : 0,
+            'elevation' => $workoutStats ? $workoutStats->ele : 0,
+            'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
+        ];
+        
+        // Force a full refresh of the component
+        $this->dispatch('refresh');
     }
 }

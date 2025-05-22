@@ -76,4 +76,41 @@ class Week extends Model
     {
         return Carbon::now()->setISODate($this->year, $this->week_number, 1)->endOfWeek();
     }
+
+    /**
+     * Calculate and return the stats for this week.
+     * This includes actual stats (from activities) and planned stats (from workouts).
+     *
+     * @return array
+     */
+    public function calculateStats()
+    {
+        // Get all day IDs for this week
+        $dayIds = $this->days()->pluck('id')->toArray();
+        
+        // Get workout stats
+        $workoutStats = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
+            ->where('user_id', $this->user_id)
+            ->whereIn('day_id', $dayIds)
+            ->first();
+            
+        // Get activity stats
+        $activityStats = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
+            ->where('user_id', $this->user_id)
+            ->whereIn('day_id', $dayIds)
+            ->first();
+            
+        return [
+            'actual_stats' => [
+                'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
+                'elevation' => $activityStats ? $activityStats->ele : 0,
+                'duration' => $activityStats ? $activityStats->time : 0,
+            ],
+            'planned_stats' => [
+                'distance' => $workoutStats ? $workoutStats->dist : 0,
+                'elevation' => $workoutStats ? $workoutStats->ele : 0,
+                'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
+            ]
+        ];
+    }
 }
