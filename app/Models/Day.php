@@ -113,7 +113,7 @@ class Day extends Model
             );
             
             // Update week and month associations if needed
-            if ($$day->week_id !== $weekObj->id) {
+            if ($day->week_id !== $weekObj->id) {
                 $day->week_id = $weekObj->id;
                 $day->save();
             }

@@ -30,7 +30,13 @@ class StravaController extends Controller
             
             // Stocker l'URL de référence
             if ($request->headers->has('referer')) {
-                Session::put('strava.referer', $request->headers->get('referer'));
+                $referer = $request->headers->get('referer');
+                Session::put('strava.referer', $referer);
+                
+                // Vérifier si la demande vient du calendrier pour synchroniser automatiquement après
+                if (str_contains($referer, '/calendar')) {
+                    Session::put('strava.auto_sync', true);
+                }
             }
             
             // Stocker l'ID de l'utilisateur pour le récupérer après l'authentification si nécessaire
@@ -53,10 +59,30 @@ class StravaController extends Controller
                 Auth::loginUsingId(Session::get('auth_user_id'));
             }
             
-            session()->flash('toast', [
-                'message' => 'Strava connected successfully',
-                'type' => 'success'
-            ]);
+            // Vérifier si une synchronisation automatique est demandée
+            $autoSync = Session::get('strava.auto_sync', false);
+            Session::forget('strava.auto_sync');
+            
+            if ($autoSync && Auth::check()) {
+                $syncResult = $this->syncService->sync(Auth::user());
+                
+                if ($syncResult['success']) {
+                    session()->flash('toast', [
+                        'message' => $syncResult['message'],
+                        'type' => 'success'
+                    ]);
+                } else {
+                    session()->flash('toast', [
+                        'message' => $syncResult['message'] ?? 'Error during synchronization',
+                        'type' => 'error'
+                    ]);
+                }
+            } else {
+                session()->flash('toast', [
+                    'message' => 'Strava connected successfully',
+                    'type' => 'success'
+                ]);
+            }
 
         } catch (\Exception $e) {
             session()->flash('toast', [

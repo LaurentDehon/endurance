@@ -977,8 +977,17 @@ class Calendar extends Component
         // Récupérer toutes les semaines pour l'année courante
         $weeks = $this->weeks;
         
-        if ($weeks->isEmpty()) {
-            return;
+        if (!$weeks || $weeks->isEmpty()) {
+            // Si les semaines ne sont pas chargées, les récupérer depuis la base de données
+            $this->yearModel = $this->yearModel ?? Year::firstOrCreate(['user_id' => Auth::id(), 'year' => $this->year]);
+            $weeks = $this->yearModel->weeks()->with(['type', 'days'])->get()->sortBy('week_number');
+            
+            // Si toujours vide, générer les semaines
+            if ($weeks->isEmpty()) {
+                $weeks = $this->getWeeks();
+            }
+            
+            $this->weeks = $weeks;
         }
         
         // Récupérer les stats groupées par semaine pour les activités réelles
@@ -1035,30 +1044,41 @@ class Calendar extends Component
                 $this->dispatch('toast', __('calendar.messages.auth_required'), 'error');
                 return;
             }
-            $result = $syncService->sync($user);
-
-            if (isset($result['redirect']) && $result['redirect'] === true && isset($result['route'])) {
-                // Use dispatch instead of trying to redirect directly
-                $this->dispatch('redirectTo', ['route' => $result['route']]);
-                return;
+            
+            // S'assurer que l'année est correctement initialisée
+            if (!$this->yearModel) {
+                $this->initializeYearModel();
             }
             
-            if ($result['success']) {
-                if ($result['count'] > 0) {
-                    $this->dispatch('toast', $result['message'], 'success');
-                    // Récupérer les activités mises à jour et mettre à jour les statistiques
-                    $this->activities = $this->getActivities();
-                    $this->refreshWeekStats();
-                    $this->dispatch('reload-tooltips');
-                } else {
-                    $this->dispatch('toast', $result['message'], 'info');
+            try {
+                $result = $syncService->sync($user);
+                
+                if (isset($result['redirect']) && $result['redirect'] === true && isset($result['route'])) {
+                    // Rediriger directement vers strava.redirect au lieu d'utiliser redirectTo
+                    return redirect()->route('strava.redirect');
                 }
-            } else {
-                $this->dispatch('toast', $result['message'], 'error');
+                
+                if ($result['success']) {
+                    if ($result['count'] > 0) {
+                        $this->dispatch('toast', $result['message'], 'success');
+                        // Récupérer les activités mises à jour et mettre à jour les statistiques
+                        $this->activities = $this->getActivities();
+                        $this->refreshWeekStats();
+                        $this->dispatch('reload-tooltips');
+                    } else {
+                        $this->dispatch('toast', $result['message'], 'info');
+                    }
+                } else {
+                    $this->dispatch('toast', $result['message'], 'error');
+                }
+            } catch (\Exception $syncException) {
+                \Illuminate\Support\Facades\Log::error("Strava sync exception: " . $syncException->getMessage());
+                throw $syncException;
             }
 
         } catch (\Exception $e) {
-            $this->dispatch('toast', __('calendar.messages.generic_error', ['message' => $e->getMessage()]), 'error');
+            \Illuminate\Support\Facades\Log::error("Strava sync error: " . $e->getMessage());
+            $this->dispatch('toast', __('calendar.messages.sync_error', ['error' => $e->getMessage()]), 'error');
         }
     }
 
