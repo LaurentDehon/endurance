@@ -336,7 +336,7 @@
                                     <div class="flex flex-col gap-4">
                                         <!-- Week info and controls -->
                                         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">                                                <div class="flex justify-between sm:flex-col gap-2">
-                                                <div class="flex flex-wrap items-center gap-2 ps-1 cursor-default">
+                                                <div class="flex flex-wrap items-center gap-2 cursor-default">
                                                     <span class="hidden sm:block px-3 py-1 text-sm font-medium rounded bg-gray-100 text-gray">
                                                         {{ __('calendar.week') }} {{ $week->week_number }} <span class="text-gray-600">({{ $week->start }} - {{ $week->end }})</span>
                                                     </span>
@@ -480,7 +480,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="p-2" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                    <div class="pt-2 pb-1" x-show="!collapsed" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                         <div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
                                             @foreach ($week->days as $day)
                                                 @php
