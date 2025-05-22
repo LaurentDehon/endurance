@@ -28,19 +28,11 @@ class Year extends Model
     }
 
     /**
-     * Get the months for this year.
-     */
-    public function months()
-    {
-        return $this->hasMany(Month::class);
-    }
-
-    /**
-     * Get all weeks that start in this year.
+     * Get all weeks that belong to this year.
      */
     public function weeks()
     {
-        return $this->hasManyThrough(Week::class, Month::class);
+        return $this->hasMany(Week::class);
     }
 
     /**
@@ -48,7 +40,7 @@ class Year extends Model
      */
     public function days()
     {
-        return $this->hasManyThrough(Day::class, Month::class);
+        return $this->hasMany(Day::class);
     }
 
     /**
@@ -57,9 +49,7 @@ class Year extends Model
     public function workouts()
     {
         return Workout::whereHas('day', function ($query) {
-            $query->whereHas('month', function ($q) {
-                $q->where('year_id', $this->id);
-            });
+            $query->where('year_id', $this->id);
         });
     }
 
@@ -69,28 +59,19 @@ class Year extends Model
     public function activities()
     {
         return Activity::whereHas('day', function ($query) {
-            $query->whereHas('month', function ($q) {
-                $q->where('year_id', $this->id);
-            });
+            $query->where('year_id', $this->id);
         });
     }
 
     /**
-     * Create a Year record with all its months.
+     * Create a Year record.
      */
-    public static function createWithMonths($userId, $year)
+    public static function createForUser($userId, $year)
     {
         $yearModel = self::create([
             'user_id' => $userId,
             'year' => $year,
         ]);
-
-        // Create 12 months for this year
-        for ($month = 1; $month <= 12; $month++) {
-            $yearModel->months()->create([
-                'month' => $month,
-            ]);
-        }
 
         return $yearModel;
     }

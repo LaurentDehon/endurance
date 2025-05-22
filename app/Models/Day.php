@@ -12,7 +12,7 @@ class Day extends Model
     use HasFactory;
 
     protected $fillable = [
-        'month_id',
+        'year_id',
         'week_id',
         'date',
     ];
@@ -22,11 +22,11 @@ class Day extends Model
     ];
 
     /**
-     * Get the month that owns the day.
+     * Get the year that owns the day.
      */
-    public function month()
+    public function year()
     {
-        return $this->belongsTo(Month::class);
+        return $this->belongsTo(Year::class);
     }
 
     /**

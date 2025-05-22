@@ -10,7 +10,7 @@ class Week extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year', 'week_number', 'week_type_id', 'user_id', 'month_id', 'notes', 'settings'];
+    protected $fillable = ['year', 'year_id', 'week_number', 'week_type_id', 'user_id', 'notes', 'settings'];
 
     protected $casts = [
         'settings' => 'json',
@@ -21,9 +21,9 @@ class Week extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function month()
+    public function year()
     {
-        return $this->belongsTo(Month::class);
+        return $this->belongsTo(Year::class);
     }
 
     public function type()

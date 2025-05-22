@@ -1,0 +1,126 @@
+<?php
+
+namespace App\Livewire;
+
+use Carbon\Carbon;
+use App\Models\Day;
+use App\Models\Week;
+use App\Models\Year;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Auth;
+
+trait CalendarHelpers {
+    /**
+     * Gets or creates a Day model for a specific date without using months
+     *
+     * @param Carbon|\Carbon\CarbonImmutable|string $date The date
+     * @return Day
+     */
+    private function getOrCreateDayForDate($date)
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+        
+        $dateString = $date->format('Y-m-d');
+        
+        // Vérifier si le jour existe déjà
+        $day = Day::where('date', $dateString)->first();
+        
+        if ($day) {
+            return $day;
+        }
+        
+        // Obtenir l'année pour ce jour
+        $year = Year::firstOrCreate(
+            ['user_id' => Auth::id(), 'year' => $date->year]
+        );
+        
+        // Obtenir la semaine pour ce jour
+        $weekNumber = $date->weekOfYear;
+        $week = Week::firstOrCreate(
+            ['user_id' => Auth::id(), 'year' => $date->year, 'week_number' => $weekNumber],
+            [
+                'user_id' => Auth::id(),
+                'year' => $date->year,
+                'week_number' => $weekNumber, 
+                'year_id' => $year->id
+            ]
+        );
+        
+        // Créer le jour en utilisant firstOrCreate pour éviter les violations de contrainte d'unicité
+        $day = Day::firstOrCreate(
+            ['date' => $dateString],
+            [
+                'year_id' => $year->id,
+                'week_id' => $week->id,
+                'date' => $dateString
+            ]
+        );
+        
+        // Si le jour existe mais avec des relations différentes, mettre à jour ses relations
+        if ($day->year_id !== $year->id || $day->week_id !== $week->id) {
+            $day->year_id = $year->id;
+            $day->week_id = $week->id;
+            $day->save();
+        }
+        
+        return $day;
+    }
+    
+    /**
+     * Creates or updates days for a week without using months
+     *
+     * @param Week $week The week model
+     * @param CarbonInterface $start Start date of the week
+     * @param CarbonInterface $end End date of the week
+     * @return void
+     */
+    private function createOrUpdateDays(Week $week, CarbonInterface $start, CarbonInterface $end)
+    {
+        $startMutable = $start instanceof CarbonImmutable ? $start->toMutable() : $start->copy();
+        
+        // Récupérer les jours existants pour cette semaine
+        $existingDays = $week->days()->get()->keyBy(function($day) {
+            return $day->date->format('Y-m-d');
+        });
+        
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startMutable->copy()->addDays($i);
+            $dateString = $date->format('Y-m-d');
+            
+            // Récupérer l'année pour ce jour
+            $yearId = $date->year == $this->year ? $this->yearModel->id : null;
+            
+            // Si le jour n'est pas dans l'année courante, il faut récupérer l'année correcte
+            if (!$yearId) {
+                $yearModel = Year::firstOrCreate(
+                    ['user_id' => Auth::id(), 'year' => $date->year]
+                );
+                $yearId = $yearModel->id;
+            }
+            
+            // Vérifier si le jour existe déjà dans cette semaine
+            if (!$existingDays->has($dateString)) {
+                // Utiliser firstOrCreate pour éviter les violations de contrainte d'unicité
+                // si le jour existe déjà dans une autre semaine
+                $day = Day::firstOrCreate(
+                    ['date' => $dateString],
+                    [
+                        'week_id' => $week->id,
+                        'year_id' => $yearId,
+                        'date' => $date
+                    ]
+                );
+                
+                // Si le jour existe mais est associé à une autre semaine, le mettre à jour
+                if ($day->week_id !== $week->id) {
+                    $day->week_id = $week->id;
+                    $day->year_id = $yearId;
+                    $day->save();
+                }
+            }
+        }
+    }
+}

@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\Models\Day;
 use App\Models\Week;
 use App\Models\Year;
-use App\Models\Month;
 use App\Models\Workout;
 use Livewire\Component;
 use App\Models\Activity;
@@ -17,8 +16,10 @@ use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
+
 class Calendar extends Component
 {    
+    use CalendarHelpers;
     /**
      * Cache TTL constants in seconds
      */
@@ -142,6 +143,9 @@ class Calendar extends Component
         
         // Make sure the year model exists for this user
         $this->initializeYearModel();
+        
+        // Initialize the weeks and days for the year
+        $this->setupYearData();
     }
     
     /**
@@ -170,20 +174,24 @@ class Calendar extends Component
         if (!$this->yearModel) {
             $this->initializeYearModel();
         }
-        
-        // S'assurer que tous les mois existent pour cette année
-        for ($m = 1; $m <= 12; $m++) {
-            Month::firstOrCreate(
-                ['year_id' => $this->yearModel->id, 'month' => $m]
-            );
+
+        // S'assurer que les semaines et les jours sont créés lors du premier rendu
+        if (!$this->weeks || $this->weeks->isEmpty()) {
+            $this->weeks = $this->getWeeks();
         }
 
-        // Récupérer l'année, les mois, les semaines et les jours via Eloquent avec les relations nécessaires
-        $yearModel = $this->yearModel->fresh(['months.weeks.days', 'months.days']);
-        $months = $yearModel->months->sortBy('month');
+        // Récupérer l'année, les semaines et les jours via Eloquent avec les relations nécessaires
+        $yearModel = $this->yearModel->fresh(['weeks.days', 'days']);
         
         // Récupérer les semaines avec leurs jours et types
         $weeks = $yearModel->weeks()->with(['type', 'days'])->get()->sortBy('week_number');
+        
+        // Si aucune semaine n'existe encore, générer les semaines
+        if ($weeks->isEmpty()) {
+            $this->weeks = $this->getWeeks();
+            $yearModel = $this->yearModel->fresh(['weeks.days', 'days']);
+            $weeks = $yearModel->weeks()->with(['type', 'days'])->get()->sortBy('week_number');
+        }
         
         // Parcourir chaque semaine et calculer ses statistiques actuelles
         foreach ($weeks as $week) {
@@ -195,14 +203,19 @@ class Calendar extends Component
         $activities = $yearModel->activities()->with('day')->get();
         $workouts = $yearModel->workouts()->with(['type', 'day'])->get();
 
-        // Group weeks by month (key = YYYY-MM)
-        $monthsGrouped = $months->mapWithKeys(function($month) use ($weeks) {
-            $monthKey = sprintf('%04d-%02d', $month->year->year, $month->month);
-            $weeksInMonth = $weeks->filter(function($week) use ($month) {
-                return $week->month_id === $month->id;
-            });
-            return [$monthKey => $weeksInMonth];
-        });
+        // Group weeks by month format for view compatibility (key = YYYY-MM)
+        $monthsGrouped = collect();
+        foreach ($weeks as $week) {
+            // Utiliser le jeudi pour déterminer le mois de la semaine (règle ISO)
+            $startOfWeek = Carbon::now()->setISODate($this->year, $week->week_number)->startOfWeek(Carbon::MONDAY);
+            $thursday = $startOfWeek->copy()->addDays(3);
+            $monthKey = sprintf('%04d-%02d', $thursday->year, $thursday->month);
+            
+            if (!$monthsGrouped->has($monthKey)) {
+                $monthsGrouped[$monthKey] = collect();
+            }
+            $monthsGrouped[$monthKey]->push($week);
+        }
 
         // Calculer les stats mensuelles et annuelles (en DB ou via helpers existants)
         $this->monthStats = $this->getCachedData(
@@ -311,9 +324,6 @@ class Calendar extends Component
         $userId = Auth::id();
         $year = $this->year;
         
-        // Initialize months collection for the current year
-        $months = Month::where('year_id', $this->yearModel->id)->get()->keyBy('month');
-
         // Récupérer les stats groupées par semaine pour les activités réelles et les workouts planifiés
         $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
             ->whereYear('start_date', $year)
@@ -359,35 +369,22 @@ class Calendar extends Component
             $end = $start->endOfWeek(\Carbon\CarbonImmutable::SUNDAY);
             $thursday = $start->addDays(3);  // Le jeudi détermine l'année à laquelle appartient la semaine ISO
 
-            // Déterminer le mois auquel appartient cette semaine (selon le jeudi)
-            $monthNumber = $thursday->month;
-            
-            // Récupérer ou créer le mois si nécessaire
-            $month = $months->get($monthNumber);
-            if (!$month) {
-                $month = Month::create([
-                    'year_id' => $this->yearModel->id,
-                    'month' => $monthNumber
-                ]);
-                $months->put($monthNumber, $month);
-            }
-
             // Récupérer la semaine de la collection, sinon en créer une nouvelle
             $week = $weeksFromDb->get($weekNumber);
             if (!$week) {
                 $week = new Week([
                     'year' => $year,
+                    'year_id' => $this->yearModel->id,
                     'week_number' => $weekNumber,
                     'user_id' => $userId,
-                    'month_id' => $month->id,
                     'week_type_id' => null
                 ]);
                 $week->save();
                 $week->setRelation('type', null);
                 $weeksFromDb->put($weekNumber, $week);
-            } else if ($week->month_id !== $month->id) {
-                // S'assurer que la semaine est associée au bon mois
-                $week->month_id = $month->id;
+            } else if ($week->year_id !== $this->yearModel->id) {
+                // S'assurer que la semaine est associée à la bonne année
+                $week->year_id = $this->yearModel->id;
                 $week->save();
             }
 
@@ -787,64 +784,7 @@ class Calendar extends Component
         }
     }
     
-    /**
-     * Gets or creates a Day model for a specific date
-     *
-     * @param \Carbon\Carbon|\Carbon\CarbonImmutable|string $date The date
-     * @return \App\Models\Day
-     */
-    private function getOrCreateDayForDate($date)
-    {
-        if (is_string($date)) {
-            $date = Carbon::parse($date);
-        }
-        
-        $dateString = $date->format('Y-m-d');
-        
-        // Vérifier si le jour existe déjà
-        $day = Day::where('date', $dateString)->first();
-        
-        if ($day) {
-            return $day;
-        }
-        
-        // Obtenir l'année et le mois pour ce jour
-        $year = Year::firstOrCreate(
-            ['user_id' => Auth::id(), 'year' => $date->year],
-            ['user_id' => Auth::id(), 'year' => $date->year]
-        );
-        
-        $month = Month::firstOrCreate(
-            ['year_id' => $year->id, 'month' => $date->month],
-            ['year_id' => $year->id, 'month' => $date->month]
-        );
-        
-        // Obtenir la semaine pour ce jour
-        $weekNumber = $date->weekOfYear;
-        $week = Week::firstOrCreate(
-            ['user_id' => Auth::id(), 'year' => $date->year, 'week_number' => $weekNumber],
-            ['user_id' => Auth::id(), 'year' => $date->year, 'week_number' => $weekNumber, 'month_id' => $month->id]
-        );
-        
-        // Créer le jour en utilisant firstOrCreate pour éviter les violations de contrainte d'unicité
-        $day = Day::firstOrCreate(
-            ['date' => $dateString],
-            [
-                'month_id' => $month->id,
-                'week_id' => $week->id,
-                'date' => $dateString
-            ]
-        );
-        
-        // Si le jour existe mais avec des relations différentes, mettre à jour ses relations
-        if ($day->month_id !== $month->id || $day->week_id !== $week->id) {
-            $day->month_id = $month->id;
-            $day->week_id = $week->id;
-            $day->save();
-        }
-        
-        return $day;
-    }
+    // getOrCreateDayForDate method moved to CalendarHelpers trait
     
     /**
      * Updates the statistics of a week based on a date
@@ -1493,88 +1433,9 @@ class Calendar extends Component
         return $planned <= 0 ? 0 : min(($actual / $planned) * 100, 100);
     }
     
-    /**
-     * Ensure all months exist for the current year
-     *
-     * @return void
-     */
-    private function ensureMonthsExist(): void
-    {
-        // Vérifier que l'année existe
-        if (!$this->yearModel) {
-            $this->initializeYearModel();
-        }
-        
-        // Vérifier que tous les mois existent pour cette année
-        for ($m = 1; $m <= 12; $m++) {
-            Month::firstOrCreate(
-                ['year_id' => $this->yearModel->id, 'month' => $m],
-                ['year_id' => $this->yearModel->id, 'month' => $m]
-            );
-        }
-    }
+    // ensureMonthsExist method removed since we no longer use months
     
-    /**
-     * Creates or updates days for a week
-     *
-     * @param Week $week The week model
-     * @param \Carbon\CarbonInterface $start Start date of the week
-     * @param \Carbon\CarbonInterface $end End date of the week
-     * @return void
-     */
-    private function createOrUpdateDays(Week $week, \Carbon\CarbonInterface $start, \Carbon\CarbonInterface $end)
-    {
-        $startMutable = $start instanceof \Carbon\CarbonImmutable ? $start->toMutable() : $start->copy();
-        
-        // Récupérer les jours existants pour cette semaine
-        $existingDays = $week->days()->get()->keyBy(function($day) {
-            return $day->date->format('Y-m-d');
-        });
-        
-        for ($i = 0; $i < 7; $i++) {
-            $date = $startMutable->copy()->addDays($i);
-            $dateString = $date->format('Y-m-d');
-            
-            // Récupérer le mois pour ce jour
-            $monthNumber = $date->month;
-            $yearId = $date->year == $this->year ? $this->yearModel->id : null;
-            
-            // Si le jour n'est pas dans l'année courante, il faut récupérer l'année correcte
-            if (!$yearId) {
-                $yearModel = Year::firstOrCreate(
-                    ['user_id' => Auth::id(), 'year' => $date->year],
-                    ['user_id' => Auth::id(), 'year' => $date->year]
-                );
-                $yearId = $yearModel->id;
-            }
-            
-            $month = Month::firstOrCreate(
-                ['year_id' => $yearId, 'month' => $monthNumber],
-                ['year_id' => $yearId, 'month' => $monthNumber]
-            );
-            
-            // Vérifier si le jour existe déjà dans cette semaine
-            if (!$existingDays->has($dateString)) {
-                // Utiliser firstOrCreate pour éviter les violations de contrainte d'unicité
-                // si le jour existe déjà dans une autre semaine
-                $day = Day::firstOrCreate(
-                    ['date' => $dateString],
-                    [
-                        'week_id' => $week->id,
-                        'month_id' => $month->id,
-                        'date' => $date
-                    ]
-                );
-                
-                // Si le jour existe mais est associé à une autre semaine, le mettre à jour
-                if ($day->week_id !== $week->id) {
-                    $day->week_id = $week->id;
-                    $day->month_id = $month->id;
-                    $day->save();
-                }
-            }
-        }
-    }
+    // createOrUpdateDays method moved to CalendarHelpers trait
     
     /**
      * Recompute stats and refresh after a workout is saved or edited
@@ -1693,7 +1554,6 @@ class Calendar extends Component
     {
         // Création complète de la structure calendrier pour l'année
         $this->initializeYearModel();
-        $this->ensureMonthsExist();
         $this->weeks = $this->getWeeks();
         
         // Invalider les caches pour forcer le rechargement des données
