@@ -27,6 +27,7 @@ class SettingsController extends Controller
             'language' => ['string', 'in:fr,en', 'nullable'],
             'auto_sync_activities' => ['boolean', 'nullable'],
             'auto_renew_token' => ['boolean', 'nullable'],
+            'sync_on_login' => ['boolean', 'nullable'],
             'timezone' => ['string', 'nullable'],
         ]);
 
@@ -35,6 +36,7 @@ class SettingsController extends Controller
         // Process checkbox values
         $validated['auto_sync_activities'] = isset($validated['auto_sync_activities']);
         $validated['auto_renew_token'] = isset($validated['auto_renew_token']);
+        $validated['sync_on_login'] = isset($validated['sync_on_login']);
         
         // Enregistrer la langue actuelle
         $oldLanguage = $user->settings['language'] ?? config('app.locale');
@@ -55,7 +57,7 @@ class SettingsController extends Controller
 
         return Redirect::route('settings.index')
             ->with('toast', [
-                'message' => 'Settings updated successfully.',
+                'message' => __('settings.messages.updated_successfully'),
                 'type' => 'success'
             ]);
     }

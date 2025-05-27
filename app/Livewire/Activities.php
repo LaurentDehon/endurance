@@ -15,6 +15,7 @@ class Activities extends Component
         'confirmDeleteAll', 
         'confirmDelete',
         'activity-deleted' => '$refresh',
+        'activities-sync-refresh' => 'handleSyncRefresh',
     ];
 
     public $search = '';
@@ -90,6 +91,18 @@ class Activities extends Component
             'message' => __('activities.delete_all_success')
         ]);
         
+        $this->dispatch('reload-tooltips');
+    }
+    
+    /**
+     * Gère le rafraîchissement des activités après completion d'une synchronisation
+     */
+    public function handleSyncRefresh()
+    {
+        // Réinitialiser la pagination à la première page pour voir les nouvelles activités
+        $this->resetPage();
+        
+        // Recharger les tooltips
         $this->dispatch('reload-tooltips');
     }
 

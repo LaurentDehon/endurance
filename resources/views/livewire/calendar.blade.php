@@ -11,34 +11,6 @@
     <!-- Fixed gradient background covering the entire page -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -z-10"></div>
 
-    <!-- Strava Synchronization Loading Overlay -->
-    <!-- This overlay appears when syncing with Strava API -->
-    <div
-        wire:loading
-        wire:target="startSync"
-        class="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center">
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-700/20 border border-amber-500/30 backdrop-blur-lg shadow-2xl max-w-md w-full">
-            <div class="relative w-24 h-24 mb-6">
-                <!-- Animated loading spinner with Strava branding -->
-                <div class="absolute inset-0 rounded-full border-4 border-amber-500/20"></div>
-                <div class="absolute inset-0 rounded-full border-t-4 border-amber-500 animate-spin"></div>
-                
-                <!-- Strava logo with pulse animation -->
-                <div class="absolute inset-0 flex items-center justify-center animate-pulse">
-                    <i class="fab fa-strava text-5xl text-amber-500"></i>
-                </div>
-            </div>
-            
-            <h3 class="text-2xl font-bold text-white mb-2">{{ __('calendar.strava_synchronization') }}</h3>
-            <p class="text-center text-white/80 mb-6">{{ __('calendar.retrieving_workout_data') }}</p>
-            
-            <!-- Animated progress indicator for sync process -->
-            <div class="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full animate-pulse"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- Page loading overlay -->
     <div 
         x-show="!contentLoaded" 
@@ -232,12 +204,88 @@
                                 </div>
                             </div>
                             
-                            <div class="flex gap-2 flex-shrink-0">
+                            <div class="flex gap-2 flex-shrink-0" 
+                                x-data="{ 
+                                    syncInProgress: @entangle('syncInProgress').live,
+                                    loading: @entangle('loading').live,
+                                    pollInterval: null,
+                                    startSyncPolling: function() {
+                                        // Démarrer un polling léger uniquement pendant la sync
+                                        if (this.syncInProgress && !this.pollInterval) {
+                                            this.pollInterval = setInterval(() => {
+                                                $wire.call('checkSyncStatus');
+                                            }, 2000); // Vérifier toutes les 2 secondes
+                                        }
+                                    },
+                                    stopSyncPolling: function() {
+                                        if (this.pollInterval) {
+                                            clearInterval(this.pollInterval);
+                                            this.pollInterval = null;
+                                        }
+                                    }
+                                }"
+                                x-init="() => {
+                                    // Vérifier si un rafraîchissement du calendrier est nécessaire après sync
+                                    if (localStorage.getItem('calendar_needs_refresh') === 'true') {
+                                        setTimeout(function() {
+                                            $wire.dispatch('sync-completed-refresh');
+                                            localStorage.removeItem('calendar_needs_refresh');
+                                        }, 500);
+                                    }
+                                    
+                                    // Vérifier le statut de sync au chargement de la page
+                                    setTimeout(() => {
+                                        $wire.call('checkSyncStatus').then(() => {
+                                            // Après avoir vérifié le statut, démarrer le polling si nécessaire
+                                            if (syncInProgress) {
+                                                startSyncPolling();
+                                            }
+                                        });
+                                    }, 100);
+                                    
+                                    // Écouter les événements de changement de statut depuis le polling global
+                                    $wire.on('sync-completed-refresh', function() {
+                                        // S'assurer que syncInProgress est bien remis à false
+                                        syncInProgress = false;
+                                        // Le rafraîchissement sera géré par le composant Livewire
+                                        stopSyncPolling();
+                                    });
+                                    
+                                    // Surveiller les changements de syncInProgress
+                                    $watch('syncInProgress', function(value) {
+                                        if (value) {
+                                            startSyncPolling();
+                                        } else {
+                                            stopSyncPolling();
+                                        }
+                                    });
+                                    
+                                    // Nettoyer le polling en quittant la page
+                                    window.addEventListener('beforeunload', function() {
+                                        stopSyncPolling();
+                                    });
+                                }">
                                 <button 
-                                    wire:click.prevent="startSync" 
-                                    class="relative group py-3 px-4 bg-amber-600 text-white hover:bg-amber-500 rounded-xl transition-colors"
-                                    data-tippy-content="Synchronize with Strava">
-                                    <i class="fab fa-strava text-2xl" wire:loading.class="animate-spin" wire:target="startSync"></i>
+                                    wire:click.prevent="startSync"
+                                    x-bind:disabled="syncInProgress || loading"
+                                    x-bind:class="syncInProgress || loading
+                                        ? 'bg-amber-600 cursor-not-allowed' 
+                                        : 'bg-amber-600 hover:bg-amber-500 cursor-pointer'"
+                                    class="w-14 h-16 relative group py-3 px-4 text-white rounded-xl transition-colors"
+                                    x-bind:data-tippy-content="syncInProgress 
+                                        ? '{{ __('calendar.messages.sync_already_in_progress') }}' 
+                                        : 'Synchronize with Strava'">
+                                    <!-- Icône Strava normale quand pas en sync -->
+                                    <span x-show="!syncInProgress && !loading" 
+                                          class="flex items-center justify-center">
+                                        <i class="fab fa-strava text-2xl"></i>
+                                    </span>
+                                    
+                                    <!-- Spinner circulaire unique pour tous les états de chargement -->
+                                    <span x-show="syncInProgress || loading" 
+                                          class="flex items-center justify-center">
+                                        <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    </span>
                                 </button>  
 
                                 <!-- Year Options Dropdown Menu Button -->
@@ -770,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 } catch (error) {
-                    console.error('Error during drop:', error);
+                    // Silent error handling for drag and drop
                 }
             }
             

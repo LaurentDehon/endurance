@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\{User, Activity};
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\DB;
 
 class StravaSyncService
 {
@@ -22,14 +23,17 @@ class StravaSyncService
             return ['success' => false, 'message' => __('strava.sync.reconnect_required')];
         }
 
-        $activities = $this->fetchNewActivities($user, $token);
-        $this->saveActivities($user, $activities);
+        // Utiliser une transaction pour s'assurer que toutes les activités sont ajoutées d'un coup
+        return DB::transaction(function () use ($user, $token) {
+            $activities = $this->fetchNewActivities($user, $token);
+            $this->saveActivities($user, $activities);
 
-        return [
-            'success' => true,
-            'message' => $this->buildResultMessage(count($activities)),
-            'count' => count($activities)
-        ];
+            return [
+                'success' => true,
+                'message' => $this->buildResultMessage(count($activities)),
+                'count' => count($activities)
+            ];
+        });
     }
 
     private function fetchNewActivities(User $user, string $token): array
@@ -38,12 +42,34 @@ class StravaSyncService
         $page = 1;
         $newActivities = [];
         $existingIds = Activity::where('user_id', $user->id)->pluck('strava_id')->toArray();
+        $maxPages = 50; // Limite de sécurité pour éviter les boucles infinies
+        $consecutiveEmptyPages = 0;
 
         do {
-            $fetched = $this->fetchActivitiesPage($httpClient, $token, $page);
-            $filtered = $this->filterNewRuns($fetched, $existingIds);
-            $newActivities = array_merge($newActivities, $filtered);
-            $page++;
+            try {
+                $fetched = $this->fetchActivitiesPage($httpClient, $token, $page);
+                
+                // Si la page est vide, incrémenter le compteur
+                if (empty($fetched)) {
+                    $consecutiveEmptyPages++;
+                } else {
+                    $consecutiveEmptyPages = 0; // Reset si on trouve des données
+                }
+                
+                $filtered = $this->filterNewRuns($fetched, $existingIds);
+                $newActivities = array_merge($newActivities, $filtered);
+                $page++;
+                
+                // Sortir si on atteint la limite de pages ou trop de pages vides consécutives
+                if ($page > $maxPages || $consecutiveEmptyPages >= 2) {
+                    break;
+                }
+                
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning("Error fetching Strava activities page {$page}: " . $e->getMessage());
+                break; // Sortir en cas d'erreur HTTP
+            }
+            
         } while (!empty($fetched));
 
         return $newActivities;
@@ -51,12 +77,20 @@ class StravaSyncService
 
     private function fetchActivitiesPage(GuzzleClient $client, string $token, int $page): array
     {
-        $response = $client->get('https://www.strava.com/api/v3/athlete/activities', [
-            'headers' => ['Authorization' => 'Bearer ' . $token],
-            'query' => ['page' => $page, 'per_page' => 200]
-        ]);
+        try {
+            $response = $client->get('https://www.strava.com/api/v3/athlete/activities', [
+                'headers' => ['Authorization' => 'Bearer ' . $token],
+                'query' => ['page' => $page, 'per_page' => 200],
+                'timeout' => 30 // Timeout de 30 secondes par requête
+            ]);
 
-        return json_decode($response->getBody()->getContents(), true) ?: [];
+            $data = json_decode($response->getBody()->getContents(), true);
+            return is_array($data) ? $data : [];
+            
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            \Illuminate\Support\Facades\Log::error("Strava API request failed for page {$page}: " . $e->getMessage());
+            return []; // Retourner un tableau vide en cas d'erreur
+        }
     }
 
     private function filterNewRuns(array $activities, array $existingIds): array
@@ -68,12 +102,38 @@ class StravaSyncService
 
     private function saveActivities(User $user, array $activities): void
     {
-        foreach ($activities as $activity) {
-            Activity::updateOrCreate(
-                ['strava_id' => $activity['id']],
-                $this->mapActivityFields($user, $activity)
-            );
+        if (empty($activities)) {
+            return;
         }
+
+        // Préparer les données pour l'insertion en lot
+        $insertData = [];
+        $now = \Carbon\Carbon::now();
+        
+        foreach ($activities as $activity) {
+            $activityData = $this->mapActivityFields($user, $activity);
+            $activityData['created_at'] = $now;
+            $activityData['updated_at'] = $now;
+            
+            // Assigner le day_id manuellement car upsert ne déclenche pas les événements Eloquent
+            $day = \App\Models\Day::findByDateOrCreate($activityData['start_date']);
+            $activityData['day_id'] = $day->id;
+            
+            $insertData[] = $activityData;
+        }
+
+        // Utiliser upsert pour insérer ou mettre à jour en lot
+        // Cela évite les doublons basés sur strava_id et user_id
+        Activity::upsert(
+            $insertData,
+            ['strava_id', 'user_id'], // Colonnes uniques pour détecter les doublons
+            [
+                'name', 'type', 'start_date', 'distance', 'moving_time', 'elapsed_time',
+                'average_speed', 'max_speed', 'average_heartrate', 'max_heartrate',
+                'total_elevation_gain', 'elev_high', 'elev_low', 'sync_date',
+                'kudos_count', 'description', 'calories', 'map_polyline', 'day_id', 'updated_at'
+            ] // Colonnes à mettre à jour si l'enregistrement existe déjà
+        );
     }
 
     private function mapActivityFields(User $user, array $activity): array

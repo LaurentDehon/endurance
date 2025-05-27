@@ -15,7 +15,10 @@
         </div>
 
         <!-- Main Content -->
-        <div class="space-y-10">
+        <form method="POST" action="{{ route('settings.update') }}" class="space-y-10">
+            @csrf
+            @method('PATCH')
+            
             <!-- Strava Connection -->
             <div class="space-y-6">
                 <div class="border-b border-white border-opacity-20 pb-3">
@@ -26,7 +29,7 @@
                 </div>
 
                 <div class="bg-slate-800 bg-opacity-50 p-6 rounded-xl">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between mb-6">
                         <div>
                             <div class="flex items-center mb-2">
                                 @if($user->strava_token && $user->strava_expires_at > now()->timestamp)
@@ -65,20 +68,8 @@
                         </div>
                     </div>
                     
-                    <!-- Strava Settings Form - Always visible -->
-                    <form method="POST" action="{{ route('settings.update') }}" class="mt-6 space-y-4">
-                        @csrf
-                        @method('PATCH')
-                        
-                        {{-- <div class="flex items-center">
-                            <input type="checkbox" id="auto_sync_activities" name="auto_sync_activities" value="1" 
-                                   class="rounded bg-slate-700 border-slate-600 text-amber-400 focus:ring-amber-400"
-                                   {{ isset($user->settings['auto_sync_activities']) && $user->settings['auto_sync_activities'] ? 'checked' : '' }}>
-                            <label for="auto_sync_activities" class="ml-2 text-slate-300">
-                                Automatically sync activities upon Strava connection
-                            </label>
-                        </div> --}}
-                        
+                    <!-- Strava Settings -->
+                    <div class="space-y-4">                        
                         <div class="flex items-center">
                             <input type="checkbox" id="auto_renew_token" name="auto_renew_token" value="1" 
                                    class="rounded bg-slate-700 border-slate-600 text-amber-400 focus:ring-amber-400"
@@ -88,13 +79,15 @@
                             </label>
                         </div>
                         
-                        <div class="pt-4">
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                                <i class="fas fa-save mr-2"></i>
-                                {{ __('settings.strava.save_settings') }}
-                            </button>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sync_on_login" name="sync_on_login" value="1" 
+                                   class="rounded bg-slate-700 border-slate-600 text-amber-400 focus:ring-amber-400"
+                                   {{ isset($user->settings['sync_on_login']) && $user->settings['sync_on_login'] ? 'checked' : '' }}>
+                            <label for="sync_on_login" class="ml-2 text-slate-300">
+                                {{ __('settings.strava.sync_on_login') }}
+                            </label>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             
@@ -108,58 +101,54 @@
                 </div>
 
                 <div class="bg-slate-800 bg-opacity-50 p-6 rounded-xl">
-                    <form method="POST" action="{{ route('settings.update') }}" class="space-y-5">
-                        @csrf
-                        @method('PATCH')
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="timezone" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.timezone_label') }}</label>
-                                <select id="timezone" name="timezone" 
-                                        class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                    @php
-                                        $timezones = \DateTimeZone::listIdentifiers();
-                                        $currentTimezone = $user->settings['timezone'] ?? null;
-                                    @endphp
-                                    
-                                    @if (!$currentTimezone)
-                                        <option value="" selected disabled>{{ __('settings.timezone_language.timezone_placeholder') }}</option>
-                                    @endif
-                                    
-                                    @foreach($timezones as $timezone)
-                                        <option value="{{ $timezone }}" {{ $currentTimezone == $timezone ? 'selected' : '' }}>
-                                            {{ $timezone }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <p class="mt-1 text-xs text-slate-400">
-                                    <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.timezone_help') }}
-                                </p>
-                            </div>
-                            
-                            <div>
-                                <label for="language" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.language_label') }}</label>
-                                <select id="language" name="language" 
-                                        class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="en" {{ ($user->settings['language'] ?? 'en') == 'en' ? 'selected' : '' }}>English</option>
-                                    <option value="fr" {{ ($user->settings['language'] ?? 'en') == 'fr' ? 'selected' : '' }}>Français</option>
-                                </select>
-                                <p class="mt-1 text-xs text-slate-400">
-                                    <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.language_help') }}
-                                </p>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="timezone" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.timezone_label') }}</label>
+                            <select id="timezone" name="timezone" 
+                                    class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                @php
+                                    $timezones = \DateTimeZone::listIdentifiers();
+                                    $currentTimezone = $user->settings['timezone'] ?? null;
+                                @endphp
+                                
+                                @if (!$currentTimezone)
+                                    <option value="" selected disabled>{{ __('settings.timezone_language.timezone_placeholder') }}</option>
+                                @endif
+                                
+                                @foreach($timezones as $timezone)
+                                    <option value="{{ $timezone }}" {{ $currentTimezone == $timezone ? 'selected' : '' }}>
+                                        {{ $timezone }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-slate-400">
+                                <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.timezone_help') }}
+                            </p>
                         </div>
                         
-                        <div class="pt-4">
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                                <i class="fas fa-save mr-2"></i>
-                                {{ __('settings.timezone_language.save_settings') }}
-                            </button>
+                        <div>
+                            <label for="language" class="block text-slate-300 mb-2">{{ __('settings.timezone_language.language_label') }}</label>
+                            <select id="language" name="language" 
+                                    class="w-full bg-slate-700 border-slate-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <option value="en" {{ ($user->settings['language'] ?? 'en') == 'en' ? 'selected' : '' }}>English</option>
+                                <option value="fr" {{ ($user->settings['language'] ?? 'en') == 'fr' ? 'selected' : '' }}>Français</option>
+                            </select>
+                            <p class="mt-1 text-xs text-slate-400">
+                                <i class="fas fa-info-circle mr-1"></i> {{ __('settings.timezone_language.language_help') }}
+                            </p>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+            
+            <!-- Global Save Button -->
+            <div class="pt-6 border-t border-white border-opacity-20">
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-save mr-2"></i>
+                    {{ __('settings.messages.save_settings') }}
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

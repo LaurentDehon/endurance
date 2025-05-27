@@ -29,7 +29,8 @@ class Activity extends Model
         'kudos_count',
         'description',
         'calories',
-        'map_polyline'
+        'map_polyline',
+        'day_id'
     ];
 
     protected $casts = [

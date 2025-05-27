@@ -14,6 +14,7 @@ return [
         'disconnect' => 'Disconnect',
         'connect' => 'Connect',
         'auto_renew_token' => 'Automatically renew Strava token when expired',
+        'sync_on_login' => 'Automatically sync when logging into the site',
         'save_settings' => 'Save Strava Settings',
     ],
     
@@ -25,5 +26,10 @@ return [
         'language_label' => 'Language',
         'language_help' => 'Choose your preferred language for the application interface.',
         'save_settings' => 'Save Settings',
+    ],
+    
+    'messages' => [
+        'updated_successfully' => 'Settings updated successfully.',
+        'save_settings' => 'Save',
     ],
 ];

@@ -13,6 +13,12 @@ class Toast extends Component
     #[On('toast')]
     public function showToast($message, $type = 'info', $duration = 4000)
     {
+        \Illuminate\Support\Facades\Log::info("Toast event received", [
+            'message' => $message,
+            'type' => $type,
+            'duration' => $duration
+        ]);
+        
         // Vérifier si le premier argument est un tableau (nouveau format)
         if (is_array($message) && isset($message['message'])) {
             $data = $message;

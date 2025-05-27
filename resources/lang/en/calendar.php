@@ -10,7 +10,13 @@ return [
         'error_copying_workout' => 'Error copying workout: :error',
         'auth_required' => 'User authentication required',
         'workouts_deleted' => ':count workout sessions deleted successfully',
-        'generic_error' => 'Error: :message'
+        'generic_error' => 'Error: :message',
+        'sync_started' => 'Strava synchronization started in background',
+        'login_sync_started' => 'Automatically synchronizing your latest Strava activities...',
+        'sync_completed' => 'Strava synchronization completed successfully - :count activities synchronized',
+        'sync_no_activities' => 'Strava synchronization completed - No new activities found',
+        'sync_already_in_progress' => 'A Strava synchronization is already in progress',
+        'sync_error' => 'Synchronization error: :error'
     ],
     
     // Date formats

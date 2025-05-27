@@ -11,6 +11,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SyncStatusController;
 
 // Public routes - accessible without authentication
 // Home page - Landing page with marketing content
@@ -84,6 +85,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ContactController::class, 'show'])->name('contact.show');
         Route::post('/', [ContactController::class, 'send'])->name('contact.send');
     });
+    
+    // Sync Status API - pour le polling global depuis toutes les pages
+    // ----------------------------------------------------------
+    Route::get('/sync-status', [App\Http\Controllers\SyncStatusController::class, 'checkStatus'])->name('sync.status');
     
     // Admin Area
     // ---------

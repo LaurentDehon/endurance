@@ -17,7 +17,15 @@ return [
     
     'updates' => [
         [
-            'date' => '2025-04-21',
+            'date' => 'May 27, 2025',
+            'changes' => [
+                'Complete French localization of the interface',
+                'Major Strava synchronization improvement with asynchronous processing',
+                'Real-time cross-page synchronization status notifications',
+            ]
+        ],
+        [
+            'date' => 'April 21, 2025',
             'changes' => [
                 'Added new changelog and roadmap page',
                 'Improved Strava integration stability',
@@ -25,21 +33,21 @@ return [
             ]
         ],
         [
-            'date' => '2025-04-15',
+            'date' => 'April 15, 2025',
             'changes' => [
                 'Added new terms and privacy pages',
                 'Collapse / expand days in the calendar view',
             ]
         ],
         [
-            'date' => '2025-04-01',
+            'date' => 'April 1, 2025',
             'changes' => [
                 'New calendar view for workout planning',
                 'Help page revamped with new content',
             ]
         ],
         [
-            'date' => '2025-03-30',
+            'date' => 'March 30, 2025',
             'changes' => [
                 'Deployment of the website',
             ]
@@ -47,8 +55,9 @@ return [
     ],
     
     'roadmap' => [
-        'Manual activity creation',                    
-        'Weekly training goals',
+        'Manual activity creation',
+        'Ability to set weekly / monthly / annual goals',
+        'Addition of charts in the dashboard',
         'Integration with Coros, Suunto, and Garmin',
     ]
 ];

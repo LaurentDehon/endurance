@@ -301,4 +301,17 @@
         }
     });
 </script>
+
+<script>
+    // Vérifier si un rafraîchissement du dashboard est nécessaire après sync
+    document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('dashboard_needs_refresh') === 'true') {
+            localStorage.removeItem('dashboard_needs_refresh');
+            // Petit délai pour éviter les problèmes de timing
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        }
+    });
+</script>
 @endsection

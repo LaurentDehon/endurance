@@ -1,4 +1,14 @@
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 activities-container">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 activities-container"
+     x-data="{}"
+     x-init="
+        // Vérifier si un rafraîchissement des activités est nécessaire après sync
+        localStorage.getItem('activities_needs_refresh') === 'true' && (() => {
+            setTimeout(() => {
+                $wire.dispatch('activities-sync-refresh');
+                localStorage.removeItem('activities_needs_refresh');
+            }, 500);
+        })();
+     ">
     <div class="flex justify-between items-start mb-6 gap-4">        
         <div class="flex gap-3 w-full ml-auto">
             <!-- Search -->

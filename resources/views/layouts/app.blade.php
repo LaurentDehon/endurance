@@ -150,14 +150,115 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                console.log('Timezone updated successfully');
+                                // Timezone updated silently
                             }
                         })
-                        .catch(error => console.error('Error updating timezone:', error));
+                        .catch(error => {
+                            // Silent error handling for timezone update
+                        });
                     }
                 } catch (error) {
-                    console.error('Error detecting timezone:', error);
+                    // Silent error handling for timezone detection
                 }
+            });
+
+            // Système de polling global pour la synchronisation Strava
+            document.addEventListener('DOMContentLoaded', function() {
+                let globalSyncPolling = null;
+                let lastSyncInProgress = false;
+
+                // Check for login sync started flag and show toast
+                @if(session('login_sync_started'))
+                    if (typeof Livewire !== 'undefined') {
+                        Livewire.dispatch('toast', ['{{ __('calendar.messages.login_sync_started') }}', 'info']);
+                    }
+                @endif
+
+                // Traductions pour les messages
+                const translations = {
+                    syncCompleted: '{{ __('calendar.messages.sync_completed', ['count' => 'COUNT_PLACEHOLDER']) }}',
+                    syncNoActivities: '{{ __('calendar.messages.sync_no_activities') }}',
+                };
+
+                function startGlobalSyncPolling() {
+                    if (globalSyncPolling) {
+                        clearInterval(globalSyncPolling);
+                    }
+
+                    globalSyncPolling = setInterval(function() {
+                        fetch('{{ route("sync.status") }}', {
+                            method: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Si une sync était en cours et qu'elle est maintenant terminée
+                            if (lastSyncInProgress && !data.sync_in_progress && data.sync_completed) {
+                                // Dispatch du toast via Livewire
+                                if (typeof Livewire !== 'undefined') {
+                                    if (data.result.success) {
+                                        if (data.result.count && data.result.count > 0) {
+                                            const message = translations.syncCompleted.replace('COUNT_PLACEHOLDER', data.result.count);
+                                            Livewire.dispatch('toast', [message, 'success']);
+                                        } else {
+                                            Livewire.dispatch('toast', [translations.syncNoActivities, 'info']);
+                                        }
+                                    } else {
+                                        Livewire.dispatch('toast', [data.result.message, 'error']);
+                                    }
+                                    
+                                    // Si un rafraîchissement est nécessaire
+                                    if (data.needs_refresh) {
+                                        // Marquer les composants qui ont besoin d'être rafraîchis
+                                        if (data.needs_refresh.calendar) {
+                                            localStorage.setItem('calendar_needs_refresh', 'true');
+                                        }
+                                        if (data.needs_refresh.activities) {
+                                            localStorage.setItem('activities_needs_refresh', 'true');
+                                        }
+                                        if (data.needs_refresh.dashboard) {
+                                            localStorage.setItem('dashboard_needs_refresh', 'true');
+                                        }
+                                        
+                                        // Rafraîchir immédiatement les composants si on est sur leur page
+                                        if (window.location.pathname.includes('/calendar') && data.needs_refresh.calendar) {
+                                            Livewire.dispatch('sync-completed-refresh');
+                                            localStorage.removeItem('calendar_needs_refresh');
+                                        }
+                                        
+                                        if (window.location.pathname.includes('/activities') && data.needs_refresh.activities) {
+                                            Livewire.dispatch('activities-sync-refresh');
+                                            localStorage.removeItem('activities_needs_refresh');
+                                        }
+                                        
+                                        if ((window.location.pathname === '/' || window.location.pathname.includes('/dashboard')) && data.needs_refresh.dashboard) {
+                                            Livewire.dispatch('dashboard-sync-refresh');
+                                            localStorage.removeItem('dashboard_needs_refresh');
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            lastSyncInProgress = data.sync_in_progress;
+                        })
+                        .catch(error => {
+                            // Silent error handling for polling
+                        });
+                    }, 5000); // Vérifier toutes les 5 secondes
+                }
+
+                // Démarrer le polling global
+                startGlobalSyncPolling();
+
+                // Arrêter le polling quand l'utilisateur quitte la page
+                window.addEventListener('beforeunload', function() {
+                    if (globalSyncPolling) {
+                        clearInterval(globalSyncPolling);
+                    }
+                });
             });
         </script>
         @endauth

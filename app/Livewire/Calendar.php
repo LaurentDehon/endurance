@@ -49,6 +49,7 @@ class Calendar extends Component
         'confirmDeleteAll',
         'confirmDeleteMonth',
         'confirmDeleteWeek',
+        'sync-completed-refresh' => 'handleSyncCompletedRefresh',
         'setWeekType',
         'workout-saved' => 'updateWeekStatsForDate', // Ajout du listener pour maj semaine
     ];
@@ -132,6 +133,20 @@ class Calendar extends Component
     ];
 
     /**
+     * Indique si une synchronisation Strava est en cours
+     * 
+     * @var bool
+     */
+    public bool $syncInProgress = false;
+
+    /**
+     * Indique si une action Livewire est en cours
+     * 
+     * @var bool
+     */
+    public bool $loading = false;
+
+    /**
      * Initialize the component with the given year.
      *
      * @param int|null $year The year to display, defaults to current year
@@ -140,6 +155,9 @@ class Calendar extends Component
     public function mount($year = null)
     {
         $this->year = $year ?: now()->year;
+        
+        // Initialize sync status
+        $this->syncInProgress = $this->isSyncInProgress();
         
         // Make sure the year model exists for this user
         $this->initializeYearModel();
@@ -662,7 +680,6 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_WORKOUTS . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $yearCacheKeySuffix);
-                \Illuminate\Support\Facades\Log::info("Cache workout invalidé");
                 break;
                 
             case 'activity':
@@ -670,12 +687,10 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_ACTIVITIES . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $yearCacheKeySuffix);
-                \Illuminate\Support\Facades\Log::info("Cache activity invalidé");
                 break;
                 
             case 'week':
                 // Pas besoin d'invalider les semaines car elles sont maintenant stockées en DB
-                \Illuminate\Support\Facades\Log::info("Week stats seront mis à jour directement");
                 break;
                 
             case 'all':
@@ -685,9 +700,25 @@ class Calendar extends Component
                 Cache::forget(self::CACHE_KEY_WORKOUTS . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_MONTH_STATS . $yearCacheKeySuffix);
                 Cache::forget(self::CACHE_KEY_YEAR_STATS . $yearCacheKeySuffix);
-                \Illuminate\Support\Facades\Log::info("Tous les caches invalidés");
                 break;
         }
+    }
+    
+    /**
+     * Invalide tous les caches du calendrier pour l'année courante
+     * Utilisé lors du rafraîchissement après synchronisation
+     */
+    private function invalidateAllCache()
+    {
+        $userId = Auth::id();
+        $yearCacheKeySuffix = "{$userId}-{$this->year}";
+        
+        // Invalider tous les caches liés à l'année courante
+        Cache::forget(self::CACHE_KEY_ACTIVITIES . $yearCacheKeySuffix);
+        Cache::forget(self::CACHE_KEY_WORKOUTS . $yearCacheKeySuffix);
+        Cache::forget(self::CACHE_KEY_MONTH_STATS . $yearCacheKeySuffix);
+        Cache::forget(self::CACHE_KEY_YEAR_STATS . $yearCacheKeySuffix);
+        Cache::forget(self::CACHE_KEY_WEEKS . $yearCacheKeySuffix);
     }
 
     /**
@@ -823,16 +854,12 @@ class Calendar extends Component
             $year = $date->year;
             $userId = Auth::id();
             
-            // Log debug information
-            \Illuminate\Support\Facades\Log::info("Updating stats for week {$weekNumber} of {$year}");
-            
             $week = Week::where('user_id', $userId)
                          ->where('year', $year)
                          ->where('week_number', $weekNumber)
                          ->first();
                          
             if (!$week) {
-                \Illuminate\Support\Facades\Log::warning("Week not found for week {$weekNumber} of {$year}");
                 return;
             }
             
@@ -841,9 +868,6 @@ class Calendar extends Component
             
             // Get all day IDs for this week
             $dayIds = $week->days->pluck('id')->toArray();
-            
-            // Log the found days
-            \Illuminate\Support\Facades\Log::info("Found " . count($dayIds) . " days for week {$weekNumber}");
             
             // Recalculate stats for this week only using direct queries on workout and activity tables
             $dayIds = $week->days->pluck('id')->toArray();
@@ -867,13 +891,8 @@ class Calendar extends Component
             // Save the week to persist any database-stored attributes
             $week->save();
             
-            // Log success
-            \Illuminate\Support\Facades\Log::info("Week stats updated: actual_distance={$week->actual_stats['distance']}, planned_distance={$week->planned_stats['distance']}");
-            
             return $week;
         } catch (\Exception $e) {
-            // Log any errors
-            \Illuminate\Support\Facades\Log::error("Error in updateWeekStats: " . $e->getMessage());
             return null;
         }
     }
@@ -1031,17 +1050,19 @@ class Calendar extends Component
     }
     
     /**
-     * Synchronizes activities from Strava.
+     * Synchronizes activities from Strava using a background job.
      *
-     * @param StravaSyncService $syncService The Strava synchronization service
      * @return void
      */
-    public function startSync(StravaSyncService $syncService)
+    public function startSync()
     {
         try {
+            $this->loading = true;
+            
             $user = Auth::user();
             if (!$user || !($user instanceof \App\Models\User)) {
                 $this->dispatch('toast', __('calendar.messages.auth_required'), 'error');
+                $this->loading = false;
                 return;
             }
             
@@ -1050,36 +1071,112 @@ class Calendar extends Component
                 $this->initializeYearModel();
             }
             
-            try {
-                $result = $syncService->sync($user);
-                
-                if (isset($result['redirect']) && $result['redirect'] === true && isset($result['route'])) {
-                    // Rediriger directement vers strava.redirect au lieu d'utiliser redirectTo
-                    return redirect()->route('strava.redirect');
-                }
-                
-                if ($result['success']) {
-                    if ($result['count'] > 0) {
-                        $this->dispatch('toast', $result['message'], 'success');
-                        // Récupérer les activités mises à jour et mettre à jour les statistiques
-                        $this->activities = $this->getActivities();
-                        $this->refreshWeekStats();
-                        $this->dispatch('reload-tooltips');
-                    } else {
-                        $this->dispatch('toast', $result['message'], 'info');
-                    }
-                } else {
-                    $this->dispatch('toast', $result['message'], 'error');
-                }
-            } catch (\Exception $syncException) {
-                \Illuminate\Support\Facades\Log::error("Strava sync exception: " . $syncException->getMessage());
-                throw $syncException;
+            // Vérifier si une synchronisation n'est pas déjà en cours
+            if (cache()->has("strava_sync_in_progress_{$user->id}")) {
+                $this->dispatch('toast', __('calendar.messages.sync_already_in_progress'), 'info');
+                $this->loading = false;
+                return;
             }
-
+            
+            // Marquer la synchronisation comme en cours
+            cache()->put("strava_sync_in_progress_{$user->id}", true, now()->addMinutes(5));
+            $this->syncInProgress = true;
+            
+            // Supprimer tout ancien résultat de synchronisation
+            cache()->forget("strava_sync_result_{$user->id}");
+            
+            // Déclencher le job de synchronisation
+            \App\Jobs\StravaSyncJob::dispatch($user);
+            
+            $this->dispatch('toast', __('calendar.messages.sync_started'), 'info');
+            
+            $this->loading = false;
+            
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Strava sync error: " . $e->getMessage());
+            // Nettoyer le flag de synchronisation en cours en cas d'erreur
+            cache()->forget("strava_sync_in_progress_{$user->id}");
+            $this->loading = false;
+            
             $this->dispatch('toast', __('calendar.messages.sync_error', ['error' => $e->getMessage()]), 'error');
         }
+    }
+
+    /**
+     * Met à jour le statut de synchronisation local
+     * Utilisé uniquement pour maintenir la cohérence de l'état local
+     *
+     * @return void
+     */
+    public function checkSyncStatus()
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return;
+        }
+        
+        // Mettre à jour le statut local pour la cohérence de l'interface
+        $this->syncInProgress = cache()->has("strava_sync_in_progress_{$user->id}");
+    }
+    
+    /**
+     * Gère l'événement de fin de synchronisation depuis le polling global
+     *
+     * @return void
+     */
+    public function handleSyncCompletedRefresh()
+    {
+        // Mettre à jour le statut de synchronisation
+        $this->syncInProgress = $this->isSyncInProgress();
+        $this->loading = false;
+        
+        // Invalider tous les caches pour forcer le rechargement des données
+        $this->invalidateAllCache();
+        
+        // Recharger les données du calendrier
+        $this->refreshCalendarData();
+    }
+    
+    /**
+     * Recharge toutes les données du calendrier
+     *
+     * @return void
+     */
+    private function refreshCalendarData()
+    {
+        // Recharger les activités et workouts
+        $this->activities = $this->getActivities();
+        $this->workouts = $this->getWorkouts();
+        
+        // Recharger les semaines avec leurs statistiques
+        $this->refreshWeekStats();
+        
+        // Émettre l'événement pour recharger les tooltips
+        $this->dispatch('reload-tooltips');
+    }
+    
+    /**
+     * Vérifie si une synchronisation est en cours
+     *
+     * @return bool
+     */
+    public function isSyncInProgress(): bool
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return false;
+        }
+        
+        return cache()->has("strava_sync_in_progress_{$user->id}");
+    }
+
+    /**
+     * Computed property to get the current sync status
+     * 
+     * @return bool
+     */
+    public function getSyncInProgressProperty(): bool
+    {
+        return $this->isSyncInProgress();
     }
 
     /**
@@ -1356,9 +1453,6 @@ class Calendar extends Component
             // Parse the date if it's a string
             $carbonDate = $date instanceof \Carbon\Carbon ? $date : Carbon::parse($date);
             
-            // Log debugging information
-            \Illuminate\Support\Facades\Log::info("Updating week stats for date: " . $carbonDate->format('Y-m-d'));
-            
             // Get the week number for this date
             $weekNumber = $carbonDate->weekOfYear;
             $year = $carbonDate->year;
@@ -1371,7 +1465,6 @@ class Calendar extends Component
                          ->first();
             
             if (!$week) {
-                \Illuminate\Support\Facades\Log::warning("Week not found for date " . $carbonDate->format('Y-m-d'));
                 return;
             }
             
@@ -1380,11 +1473,6 @@ class Calendar extends Component
             
             // Calculate the stats using the Week model method
             $stats = $week->calculateStats();
-            
-            // Log the calculated stats
-            \Illuminate\Support\Facades\Log::info("Week {$weekNumber} stats: planned distance=" . 
-                                                $stats['planned_stats']['distance'] . 
-                                                ", actual distance=" . $stats['actual_stats']['distance']);
             
             // Update the week object with the calculated stats
             $week->actual_stats = $stats['actual_stats'];
@@ -1396,11 +1484,8 @@ class Calendar extends Component
             // Refresh the page to show updated stats
             $this->dispatch('refresh');
             
-            // Log success
-            \Illuminate\Support\Facades\Log::info("Week stats updated successfully");
         } catch (\Exception $e) {
-            // Log any errors
-            \Illuminate\Support\Facades\Log::error("Error updating week stats: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            // Log any errors for debugging purposes only
         }
     }
     
@@ -1465,7 +1550,7 @@ class Calendar extends Component
         // Initialiser la première semaine spécifiquement pour gérer les jours à cheval sur deux années
         $this->initializeFirstWeekOfYear($this->year);
         
-        // Générer toutes les semaines de l'année
+        // Générer toutes
         $this->weeks = $this->getWeeks();
         
         // Réassocier les workouts aux jours corrects (important pour les jours à cheval sur deux années)

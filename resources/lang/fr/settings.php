@@ -14,6 +14,7 @@ return [
         'disconnect' => 'Déconnecter',
         'connect' => 'Connecter',
         'auto_renew_token' => 'Renouveler automatiquement le jeton Strava lorsqu\'il expire',
+        'sync_on_login' => 'Synchroniser automatiquement lors de la connexion au site',
         'save_settings' => 'Enregistrer les paramètres Strava',
     ],
     
@@ -25,5 +26,10 @@ return [
         'language_label' => 'Langue',
         'language_help' => 'Choisissez votre langue préférée pour l\'interface de l\'application.',
         'save_settings' => 'Enregistrer les paramètres',
+    ],
+    
+    'messages' => [
+        'updated_successfully' => 'Paramètres mis à jour avec succès.',
+        'save_settings' => 'Enregistrer',
     ],
 ];
