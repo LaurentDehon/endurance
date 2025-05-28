@@ -14,8 +14,6 @@ class WorkoutType extends Model
         'name',
         'color',
         'icon',
-        'short',
-        'description'
     ];
     
     /**
@@ -30,5 +28,19 @@ class WorkoutType extends Model
         $key = Str::snake(Str::lower($this->name));
         
         return __("workout_types.{$key}", [], $locale);
+    }
+
+    /**
+     * Get the localized description of the workout type
+     *
+     * @param string|null $locale The locale to use (default: current app locale)
+     * @return string
+     */
+    public function getLocalizedDescription(?string $locale = null): string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $key = Str::snake(Str::lower($this->name));
+        
+        return __("workout_types.descriptions.{$key}", [], $locale);
     }
 }

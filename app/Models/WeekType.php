@@ -22,4 +22,18 @@ class WeekType extends Model
         
         return __("week_types.{$key}", [], $locale);
     }
+
+    /**
+     * Get the localized description of the week type
+     *
+     * @param string|null $locale The locale to use (default: current app locale)
+     * @return string
+     */
+    public function getLocalizedDescription(?string $locale = null): string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $key = Str::snake(Str::lower($this->name));
+        
+        return __("week_types.descriptions.{$key}", [], $locale);
+    }
 }

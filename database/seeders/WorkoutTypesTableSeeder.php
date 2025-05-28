@@ -15,15 +15,15 @@ class WorkoutTypesTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $types = [
-            ['name' => 'easy_run', 'color' => 'bg-blue-500', 'icon' => 'fas fa-running', 'short' => 'E'],
-            ['name' => 'long_run', 'color' => 'bg-green-500', 'icon' => 'fas fa-road', 'short' => 'L'],
-            ['name' => 'recovery_run', 'color' => 'bg-stone-500', 'icon' => 'fas fa-walking', 'short' => 'R'],
-            ['name' => 'fartlek', 'color' => 'bg-pink-500', 'icon' => 'fas fa-random', 'short' => 'F'],
-            ['name' => 'tempo_run', 'color' => 'bg-slate-800', 'icon' => 'fas fa-tachometer-alt', 'short' => 'T'],
-            ['name' => 'hill_repeats', 'color' => 'bg-purple-500', 'icon' => 'fas fa-mountain', 'short' => 'H'],
-            ['name' => 'intervals', 'color' => 'bg-red-500', 'icon' => 'fas fa-people-arrows',  'short' => 'I'],
-            ['name' => 'back_to_back', 'color' => 'bg-cyan-600', 'icon' => 'fas fa-bolt', 'short' => 'B'],
-            ['name' => 'race', 'color' => 'bg-red-700', 'icon' => 'fas fa-trophy', 'short' => 'R'],
+            ['name' => 'easy_run', 'color' => 'bg-blue-500', 'icon' => 'fas fa-walking'],
+            ['name' => 'long_run', 'color' => 'bg-green-500', 'icon' => 'fas fa-route'],
+            ['name' => 'recovery_run', 'color' => 'bg-stone-500', 'icon' => 'fas fa-heart-pulse'],
+            ['name' => 'fartlek', 'color' => 'bg-pink-500', 'icon' => 'fas fa-shuffle'],
+            ['name' => 'tempo_run', 'color' => 'bg-slate-800', 'icon' => 'fas fa-gauge-high'],
+            ['name' => 'hill_repeats', 'color' => 'bg-purple-500', 'icon' => 'fas fa-chart-line'],
+            ['name' => 'intervals', 'color' => 'bg-red-500', 'icon' => 'fas fa-stopwatch'],
+            ['name' => 'back_to_back', 'color' => 'bg-cyan-600', 'icon' => 'fas fa-arrows-rotate'],
+            ['name' => 'race', 'color' => 'bg-red-700', 'icon' => 'fas fa-flag-checkered'],
         ];
 
         foreach ($types as $type) {
