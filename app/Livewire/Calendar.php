@@ -1072,7 +1072,19 @@ class Calendar extends Component
             }
             
             // Vérifier si une synchronisation n'est pas déjà en cours
-            if (cache()->has("strava_sync_in_progress_{$user->id}")) {
+            if (cache()->has("strava_sync_in_progress_{$user->id}") || cache()->has("strava_sync_processing_{$user->id}")) {
+                $this->dispatch('toast', __('calendar.messages.sync_already_in_progress'), 'info');
+                $this->loading = false;
+                return;
+            }
+            
+            // Vérifier s'il y a déjà des jobs en attente pour cet utilisateur
+            $pendingJobs = \Illuminate\Support\Facades\DB::table('jobs')
+                ->where('queue', 'strava-sync')
+                ->where('payload', 'like', '%"id";i:' . $user->id . ';%')
+                ->count();
+                
+            if ($pendingJobs > 0) {
                 $this->dispatch('toast', __('calendar.messages.sync_already_in_progress'), 'info');
                 $this->loading = false;
                 return;

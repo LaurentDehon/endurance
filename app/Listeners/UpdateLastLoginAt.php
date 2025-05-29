@@ -31,6 +31,23 @@ class UpdateLastLoginAt
 
         // Check if auto sync on login is enabled and user has Strava connected
         if (isset($user->settings['sync_on_login']) && $user->settings['sync_on_login'] && $user->strava_token) {
+            // Check if a sync is already in progress or queued
+            if (cache()->has("strava_sync_in_progress_{$user->id}") || cache()->has("strava_sync_processing_{$user->id}")) {
+                Log::info("Skipping auto-sync for user {$user->id} - sync already in progress");
+                return;
+            }
+            
+            // Check if there are already pending sync jobs for this user
+            $pendingJobs = \Illuminate\Support\Facades\DB::table('jobs')
+                ->where('queue', 'strava-sync')
+                ->where('payload', 'like', '%"id";i:' . $user->id . ';%')
+                ->count();
+                
+            if ($pendingJobs > 0) {
+                Log::info("Skipping auto-sync for user {$user->id} - {$pendingJobs} jobs already queued");
+                return;
+            }
+            
             // Check if token is valid or can be renewed
             $shouldSync = false;
             
@@ -60,6 +77,8 @@ class UpdateLastLoginAt
                 
                 // Store a flag to show sync started toast on the next page load
                 session()->flash('login_sync_started', true);
+                
+                Log::info("Auto-sync initiated for user {$user->id} on login");
             }
         }
     }
