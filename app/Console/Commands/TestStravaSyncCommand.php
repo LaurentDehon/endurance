@@ -60,7 +60,7 @@ class TestStravaSyncCommand extends Command
         Cache::forget("strava_sync_result_{$user->id}");
         
         // Lancer le job
-        StravaSyncJob::dispatch($user);
+        StravaSyncJob::dispatch($user->id);
         
         $this->info('Strava sync job dispatched successfully!');
         $this->info('Monitor the queue worker logs and check cache for results');

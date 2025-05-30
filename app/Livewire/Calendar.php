@@ -1098,7 +1098,7 @@ class Calendar extends Component
             cache()->forget("strava_sync_result_{$user->id}");
             
             // Déclencher le job de synchronisation
-            \App\Jobs\StravaSyncJob::dispatch($user);
+            \App\Jobs\StravaSyncJob::dispatch($user->id);
             
             $this->dispatch('toast', __('calendar.messages.sync_started'), 'info');
             
