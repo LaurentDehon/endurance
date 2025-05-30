@@ -1079,7 +1079,7 @@ class Calendar extends Component
             }
             
             // Vérifier d'abord le token avant de lancer le job
-            if (!$user->strava_token || ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true))) {
+            if (!$user->strava_token) {
                 $this->loading = false;
                 
                 // Sauvegarder l'URL courante du calendrier pour y revenir après la connexion Strava

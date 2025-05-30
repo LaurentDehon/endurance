@@ -59,7 +59,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // -----------------
     // Routes for connecting and syncing with Strava API
     Route::prefix('strava')->group(function () {
-        Route::get('/connect', [StravaController::class, 'showConnect'])->name('strava.connect');
         Route::get('/redirect', [StravaController::class, 'redirect'])->middleware(StravaMiddleware::class)->name('strava.redirect');
         Route::get('/callback', [StravaController::class, 'handleCallback']);
         Route::get('/disconnect', [StravaController::class, 'disconnect'])->name('strava.disconnect');

@@ -29,8 +29,9 @@ class UpdateLastLoginAt
             $user->save();
         }
 
-        // Check if auto sync on login is enabled and user has Strava connected
-        if (isset($user->settings['sync_on_login']) && $user->settings['sync_on_login'] && $user->strava_token) {
+        // Check if user has Strava connected
+        // Nouvelle logique : tous les utilisateurs avec un token Strava (même expiré) déclenchent une sync automatique
+        if ($user->strava_token) {
             // Check if a sync is already in progress or queued
             if (cache()->has("strava_sync_in_progress_{$user->id}") || cache()->has("strava_sync_processing_{$user->id}")) {
                 Log::info("Skipping auto-sync for user {$user->id} - sync already in progress");
@@ -48,38 +49,17 @@ class UpdateLastLoginAt
                 return;
             }
             
-            // Check if token is valid or can be renewed
-            $shouldSync = false;
+            // Nouvelle logique : toujours tenter la sync, le service se chargera de renouveler le token automatiquement
+            // Mark sync as in progress for the polling system
+            cache()->put("strava_sync_in_progress_{$user->id}", true, now()->addMinutes(5));
             
-            if ($user->strava_expires_at > now()->timestamp) {
-                // Token is still valid
-                $shouldSync = true;
-            } elseif (isset($user->settings['auto_renew_token']) && $user->settings['auto_renew_token']) {
-                // Token expired but auto renewal is enabled, try to renew
-                try {
-                    $authService = app(StravaAuthService::class);
-                    $renewedUser = $authService->refreshUserToken($user);
-                    if ($renewedUser && $renewedUser->strava_token) {
-                        $shouldSync = true;
-                    }
-                } catch (\Exception $e) {
-                    // Token renewal failed, skip sync
-                    Log::warning('Failed to renew Strava token for user ' . $user->id . ' during login sync: ' . $e->getMessage());
-                }
-            }
+            // Dispatch sync job to background
+            StravaSyncJob::dispatch($user->id)->onQueue('strava-sync');
             
-            if ($shouldSync) {
-                // Mark sync as in progress for the polling system
-                cache()->put("strava_sync_in_progress_{$user->id}", true, now()->addMinutes(5));
-                
-                // Dispatch sync job to background
-                StravaSyncJob::dispatch($user->id)->onQueue('strava-sync');
-                
-                // Store a flag to show sync started toast on the next page load
-                session()->flash('login_sync_started', true);
-                
-                Log::info("Auto-sync initiated for user {$user->id} on login");
-            }
+            // Store a flag to show sync started toast on the next page load
+            session()->flash('login_sync_started', true);
+            
+            Log::info("Auto-sync initiated for user {$user->id} on login");
         }
     }
 }

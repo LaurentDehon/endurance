@@ -25,18 +25,10 @@ class SettingsController extends Controller
             'notification_app' => ['boolean', 'nullable'],
             'theme' => ['string', 'in:light,dark,system', 'nullable'],
             'language' => ['string', 'in:fr,en', 'nullable'],
-            'auto_sync_activities' => ['boolean', 'nullable'],
-            'auto_renew_token' => ['boolean', 'nullable'],
-            'sync_on_login' => ['boolean', 'nullable'],
             'timezone' => ['string', 'nullable'],
         ]);
 
         $user = $request->user();
-        
-        // Process checkbox values
-        $validated['auto_sync_activities'] = isset($validated['auto_sync_activities']);
-        $validated['auto_renew_token'] = isset($validated['auto_renew_token']);
-        $validated['sync_on_login'] = isset($validated['sync_on_login']);
         
         // Enregistrer la langue actuelle
         $oldLanguage = $user->settings['language'] ?? config('app.locale');

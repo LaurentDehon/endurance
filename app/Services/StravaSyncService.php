@@ -15,36 +15,45 @@ class StravaSyncService
 
     public function sync(User $user): array
     {
-        // Vérifier si l'utilisateur a un token Strava
-        if (!$user->strava_token) {
-            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
+        // S'assurer que la locale de l'utilisateur est définie pour les traductions
+        $originalLocale = app()->getLocale();
+        $userLocale = $user->settings['language'] ?? config('app.locale');
+        app()->setLocale($userLocale);
+
+        try {
+            // Vérifier si l'utilisateur a un token Strava - si null, il doit être redirigé pour la première connexion
+            if (!$user->strava_token) {
+                return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
+            }
+
+            // Renouveler automatiquement le token pour tous les utilisateurs
+            $refreshedUser = $this->authService->refreshUserToken($user);
+            if (!$refreshedUser || !$refreshedUser->strava_token) {
+                // Si le renouvellement échoue, rediriger vers Strava pour une nouvelle autorisation
+                return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
+            }
+
+            // Utiliser le token actualisé
+            $token = $refreshedUser->strava_token;
+
+            // Utiliser une transaction pour s'assurer que toutes les activités sont ajoutées d'un coup
+            return DB::transaction(function () use ($refreshedUser, $token, $userLocale) {
+                // S'assurer que la locale utilisateur est maintenue dans la transaction
+                app()->setLocale($userLocale);
+                
+                $activities = $this->fetchNewActivities($refreshedUser, $token);
+                $this->saveActivities($refreshedUser, $activities);
+
+                return [
+                    'success' => true,
+                    'message' => $this->buildResultMessage(count($activities)),
+                    'count' => count($activities)
+                ];
+            });
+        } finally {
+            // Restaurer la locale originale
+            app()->setLocale($originalLocale);
         }
-
-        // Si le token est expiré et que le renouvellement automatique n'est pas activé, rediriger
-        if ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true)) {
-            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
-        }
-
-        // Essayer de rafraîchir le token (ça va le renouveler automatiquement s'il est expiré et que auto_renew_token est activé)
-        $refreshedUser = $this->authService->refreshUserToken($user);
-        if (!$refreshedUser || !$refreshedUser->strava_token) {
-            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
-        }
-
-        // Utiliser le token actualisé
-        $token = $refreshedUser->strava_token;
-
-        // Utiliser une transaction pour s'assurer que toutes les activités sont ajoutées d'un coup
-        return DB::transaction(function () use ($refreshedUser, $token) {
-            $activities = $this->fetchNewActivities($refreshedUser, $token);
-            $this->saveActivities($refreshedUser, $activities);
-
-            return [
-                'success' => true,
-                'message' => $this->buildResultMessage(count($activities)),
-                'count' => count($activities)
-            ];
-        });
     }
 
     private function fetchNewActivities(User $user, string $token): array

@@ -30,7 +30,6 @@ class TestLoginSyncCommand extends Command
         $this->info("Strava token: " . ($user->strava_token ? 'Present' : 'Missing'));
         $this->info("Token expires at: " . $user->strava_expires_at);
         $this->info("Current timestamp: " . now()->timestamp);
-        $this->info("Auto sync on login: " . (isset($user->settings['sync_on_login']) && $user->settings['sync_on_login'] ? 'Enabled' : 'Disabled'));
         
         // Vérifier l'état actuel
         $syncInProgress = Cache::has("strava_sync_in_progress_{$user->id}");
@@ -46,11 +45,6 @@ class TestLoginSyncCommand extends Command
         
         if (!$user->strava_token) {
             $this->warn("User doesn't have Strava connected - sync will be skipped");
-            return 0;
-        }
-        
-        if (!isset($user->settings['sync_on_login']) || !$user->settings['sync_on_login']) {
-            $this->warn("Auto sync on login is disabled - sync will be skipped");
             return 0;
         }
         

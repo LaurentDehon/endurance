@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -36,6 +37,11 @@ class StravaSyncJob implements ShouldQueue
             Log::error("User {$this->userId} introuvable lors de la sync Strava.");
             return;
         }
+
+        // Définir la locale de l'utilisateur pour les traductions
+        $userLocale = $user->settings['language'] ?? config('app.locale');
+        app()->setLocale($userLocale);
+        Log::info("Locale set to '{$userLocale}' for user {$this->userId}");
 
         try {
             Log::info("Starting Strava sync job for user {$user->id}");
@@ -78,7 +84,7 @@ class StravaSyncJob implements ShouldQueue
                 } else {
                     Cache::put("strava_sync_result_{$user->id}", [
                         'success' => false,
-                        'message' => $result['message'] ?? 'Sync failed'
+                        'message' => $result['message'] ?? __('strava.sync.failed')
                     ], now()->addMinutes(10));
                 }
                 Log::info("Failure result cached for user {$user->id}");
@@ -91,7 +97,7 @@ class StravaSyncJob implements ShouldQueue
             // Stocker l'erreur dans le cache
             Cache::put("strava_sync_result_{$user->id}", [
                 'success' => false,
-                'message' => "Sync failed: " . $e->getMessage()
+                'message' => __('strava.sync.failed_with_error', ['error' => $e->getMessage()])
             ], now()->addMinutes(10));
             
             throw $e; // Re-throw pour que Laravel gère les tentatives de retry
@@ -126,6 +132,13 @@ class StravaSyncJob implements ShouldQueue
         Log::error("Strava sync job permanently failed for user {$this->userId}: " . $exception->getMessage());
         Log::error("Exception trace: " . $exception->getTraceAsString());
         
+        // Obtenir l'utilisateur pour définir sa locale
+        $user = User::find($this->userId);
+        if ($user) {
+            $userLocale = $user->settings['language'] ?? config('app.locale');
+            app()->setLocale($userLocale);
+        }
+        
         // Nettoyer TOUS les flags de cache - utiliser $this->userId au lieu de $this->user
         Cache::forget("strava_sync_in_progress_{$this->userId}");
         Cache::forget("strava_sync_processing_{$this->userId}");
@@ -133,7 +146,7 @@ class StravaSyncJob implements ShouldQueue
         // Stocker l'échec permanent dans le cache
         Cache::put("strava_sync_result_{$this->userId}", [
             'success' => false,
-            'message' => 'Sync failed after multiple attempts: ' . $exception->getMessage()
+            'message' => __('strava.sync.failed_multiple_attempts', ['error' => $exception->getMessage()])
         ], now()->addMinutes(10));
         
         Log::info("Cache flags cleared for failed job - user {$this->userId}");
