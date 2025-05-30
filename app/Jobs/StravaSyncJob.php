@@ -18,15 +18,23 @@ class StravaSyncJob implements ShouldQueue
     public $tries = 3;
     public $timeout = 300; // 5 minutes timeout
     public $maxExceptions = 3; // Maximum d'exceptions avant échec
+    public $user;
     
     public function __construct(
-        protected User $user
+        protected int $userId
     ) {
         $this->onQueue('strava-sync');
     }
 
     public function handle(StravaSyncService $syncService): void
     {
+        $this->user = User::find($this->userId);
+
+            if (!$this->user) {
+                Log::error("User {$this->userId} introuvable lors de la sync Strava.");
+                return;
+            }
+
         try {
             Log::info("Starting Strava sync job for user {$this->user->id}");
             

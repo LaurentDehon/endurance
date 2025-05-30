@@ -73,7 +73,7 @@ class UpdateLastLoginAt
                 cache()->put("strava_sync_in_progress_{$user->id}", true, now()->addMinutes(5));
                 
                 // Dispatch sync job to background
-                StravaSyncJob::dispatch($user)->onQueue('strava-sync');
+                StravaSyncJob::dispatch($user->id)->onQueue('strava-sync');
                 
                 // Store a flag to show sync started toast on the next page load
                 session()->flash('login_sync_started', true);
