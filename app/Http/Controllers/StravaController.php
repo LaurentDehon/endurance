@@ -64,19 +64,17 @@ class StravaController extends Controller
             Session::forget('strava.auto_sync');
             
             if ($autoSync && Auth::check()) {
-                $syncResult = $this->syncService->sync(Auth::user());
+                // Marquer la synchronisation comme en cours pour que l'interface le sache
+                $userId = Auth::id();
+                cache()->put("strava_sync_in_progress_{$userId}", true, now()->addMinutes(5));
                 
-                if ($syncResult['success']) {
-                    session()->flash('toast', [
-                        'message' => $syncResult['message'],
-                        'type' => 'success'
-                    ]);
-                } else {
-                    session()->flash('toast', [
-                        'message' => $syncResult['message'] ?? 'Error during synchronization',
-                        'type' => 'error'
-                    ]);
-                }
+                // Utiliser le job de synchronisation au lieu de la synchronisation directe
+                \App\Jobs\StravaSyncJob::dispatch($userId);
+                
+                session()->flash('toast', [
+                    'message' => 'Strava connected successfully. Synchronization started in background.',
+                    'type' => 'success'
+                ]);
             } else {
                 session()->flash('toast', [
                     'message' => 'Strava connected successfully',
@@ -127,8 +125,8 @@ class StravaController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $user->strava_expires_at = now()->timestamp;
-        $user->strava_token = null;
-        $user->strava_refresh_token = null;
+        // $user->strava_token = null;
+        // $user->strava_refresh_token = null;
         $user->save();
         
         session()->flash('toast', [

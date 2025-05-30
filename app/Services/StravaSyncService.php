@@ -15,18 +15,29 @@ class StravaSyncService
 
     public function sync(User $user): array
     {
-        if (!$user->strava_token || ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true))) {
+        // Vérifier si l'utilisateur a un token Strava
+        if (!$user->strava_token) {
             return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
         }
 
-        if (!$token = $this->authService->refreshUserToken($user)?->strava_token) {
-            return ['success' => false, 'message' => __('strava.sync.reconnect_required')];
+        // Si le token est expiré et que le renouvellement automatique n'est pas activé, rediriger
+        if ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true)) {
+            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
         }
 
+        // Essayer de rafraîchir le token (ça va le renouveler automatiquement s'il est expiré et que auto_renew_token est activé)
+        $refreshedUser = $this->authService->refreshUserToken($user);
+        if (!$refreshedUser || !$refreshedUser->strava_token) {
+            return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
+        }
+
+        // Utiliser le token actualisé
+        $token = $refreshedUser->strava_token;
+
         // Utiliser une transaction pour s'assurer que toutes les activités sont ajoutées d'un coup
-        return DB::transaction(function () use ($user, $token) {
-            $activities = $this->fetchNewActivities($user, $token);
-            $this->saveActivities($user, $activities);
+        return DB::transaction(function () use ($refreshedUser, $token) {
+            $activities = $this->fetchNewActivities($refreshedUser, $token);
+            $this->saveActivities($refreshedUser, $activities);
 
             return [
                 'success' => true,

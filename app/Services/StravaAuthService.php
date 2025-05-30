@@ -52,16 +52,24 @@ class StravaAuthService
 
     public function refreshUserToken(User $user): ?User
     {
+        // Si le token est encore valide (avec une marge de 5 minutes), le retourner tel quel
+        if ($user->strava_token && $user->strava_expires_at > now()->addMinutes(5)->timestamp) {
+            return $user;
+        }
+
+        // Si pas de refresh token, impossible de renouveler
         if (!$user->strava_refresh_token) {
             return null;
         }
 
-        $tokens = $this->refreshToken($user->strava_refresh_token);
-        session()->flash('toast', [
-            'message' => __('strava.auth.connected_success'),
-            'type' => 'success'
-        ]);
-        return $this->updateOrCreateUser($tokens, $user);
+        try {
+            $tokens = $this->refreshToken($user->strava_refresh_token);
+            return $this->updateOrCreateUser($tokens, $user);
+        } catch (\Exception $e) {
+            // En cas d'erreur lors du renouvellement, retourner null
+            \Illuminate\Support\Facades\Log::warning("Failed to refresh Strava token for user {$user->id}: " . $e->getMessage());
+            return null;
+        }
     }
 
     private function refreshToken(string $refreshToken): array

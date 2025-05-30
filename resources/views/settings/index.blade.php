@@ -51,7 +51,7 @@
                                 @endif
                             </p>
                         </div>
-                        <div>
+                        {{-- <div>
                             @if($user->strava_token && $user->strava_expires_at > now()->timestamp)
                                 <a href="{{ route('strava.disconnect') }}" 
                                    class="flex items-center bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg transition-all">
@@ -65,7 +65,7 @@
                                     {{ __('settings.strava.connect') }}
                                 </a>
                             @endif
-                        </div>
+                        </div> --}}
                     </div>
                     
                     <!-- Strava Settings -->

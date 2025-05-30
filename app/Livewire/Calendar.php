@@ -167,6 +167,18 @@ class Calendar extends Component
     }
     
     /**
+     * Méthode appelée à chaque hydratation du composant Livewire
+     * Crucial pour détecter les changements de statut de sync après redirection Strava
+     *
+     * @return void
+     */
+    public function hydrate()
+    {
+        // Mettre à jour le statut de synchronisation à chaque hydratation
+        $this->syncInProgress = $this->isSyncInProgress();
+    }
+    
+    /**
      * Initializes or retrieves the Year model for the current user and year.
      *
      * @return void
@@ -1066,6 +1078,17 @@ class Calendar extends Component
                 return;
             }
             
+            // Vérifier d'abord le token avant de lancer le job
+            if (!$user->strava_token || ($user->strava_expires_at < now()->timestamp && !($user->settings['auto_renew_token'] ?? true))) {
+                $this->loading = false;
+                
+                // Sauvegarder l'URL courante du calendrier pour y revenir après la connexion Strava
+                session()->put('strava.referer', request()->url());
+                session()->put('strava.auto_sync', true); // Déclencher la sync automatiquement après connexion
+                
+                return $this->redirect(route('strava.redirect'));
+            }
+            
             // S'assurer que l'année est correctement initialisée
             if (!$this->yearModel) {
                 $this->initializeYearModel();
@@ -1124,6 +1147,30 @@ class Calendar extends Component
         $user = Auth::user();
         if (!$user) {
             return;
+        }
+        
+        // Vérifier s'il y a un résultat de synchronisation
+        $syncResult = cache()->get("strava_sync_result_{$user->id}");
+        
+        if ($syncResult) {
+            // Si une redirection est nécessaire, rediriger vers Strava
+            if (isset($syncResult['redirect']) && $syncResult['redirect'] === true) {
+                cache()->forget("strava_sync_result_{$user->id}");
+                
+                // Sauvegarder l'URL courante pour y revenir après la connexion
+                session()->put('strava.referer', request()->url());
+                session()->put('strava.auto_sync', true); // Déclencher la sync automatiquement après connexion
+                
+                $route = $syncResult['route'] ?? 'strava.redirect';
+                return $this->redirect(route($route));
+            }
+            
+            // Si c'est un message d'erreur ou de succès, l'afficher
+            if (isset($syncResult['message'])) {
+                $type = $syncResult['success'] ? 'success' : 'error';
+                $this->dispatch('toast', $syncResult['message'], $type);
+                cache()->forget("strava_sync_result_{$user->id}");
+            }
         }
         
         // Mettre à jour le statut local pour la cohérence de l'interface

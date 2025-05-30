@@ -233,15 +233,14 @@
                                         }, 500);
                                     }
                                     
-                                    // Vérifier le statut de sync au chargement de la page
-                                    setTimeout(() => {
-                                        $wire.call('checkSyncStatus').then(() => {
-                                            // Après avoir vérifié le statut, démarrer le polling si nécessaire
-                                            if (syncInProgress) {
-                                                startSyncPolling();
-                                            }
-                                        });
-                                    }, 100);
+                                    // Vérifier le statut de sync immédiatement au chargement de la page
+                                    // Ceci est crucial pour détecter si une sync a été démarrée par le StravaController
+                                    $wire.call('checkSyncStatus').then(() => {
+                                        // Après avoir vérifié le statut, démarrer le polling si nécessaire
+                                        if (syncInProgress) {
+                                            startSyncPolling();
+                                        }
+                                    });
                                     
                                     // Écouter les événements de changement de statut depuis le polling global
                                     $wire.on('sync-completed-refresh', function() {
