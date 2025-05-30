@@ -79,25 +79,35 @@ class Day extends Model
 
     /**
      * Find a Day by date, or create if it doesn't exist.
+     * 
+     * @param mixed $date The date to find or create
+     * @param int|null $userId The user ID (required for queue jobs where Auth::id() is null)
      */
-    public static function findByDateOrCreate($date)
+    public static function findByDateOrCreate($date, $userId = null)
     {
         $dateObj = $date instanceof Carbon ? $date : Carbon::parse($date);
         
         $day = self::where('date', $dateObj->format('Y-m-d'))->first();
         
-        if (!$day) {            
+        if (!$day) {
+            // Use provided userId or fallback to Auth::id() for web requests
+            $effectiveUserId = $userId ?? Auth::id();
+            
+            if (!$effectiveUserId) {
+                throw new \Exception('User ID is required to create Day, Week, and Year records');
+            }
+            
             // Find or create the year
             $yearObj = Year::firstOrCreate([
                 'year' => $dateObj->year,
-                'user_id' => Auth::id()
+                'user_id' => $effectiveUserId
             ]);
             
             // Find or create the week
             $weekObj = Week::firstOrCreate([
                 'year' => $dateObj->year,
                 'week_number' => $dateObj->weekOfYear,
-                'user_id' => Auth::id()
+                'user_id' => $effectiveUserId
             ], [
                 'year_id' => $yearObj->id
             ]);

@@ -116,7 +116,8 @@ class StravaSyncService
             $activityData['updated_at'] = $now;
             
             // Assigner le day_id manuellement car upsert ne déclenche pas les événements Eloquent
-            $day = \App\Models\Day::findByDateOrCreate($activityData['start_date']);
+            // Pass user ID to handle queue job context where Auth::id() returns null
+            $day = \App\Models\Day::findByDateOrCreate($activityData['start_date'], $user->id);
             $activityData['day_id'] = $day->id;
             
             $insertData[] = $activityData;

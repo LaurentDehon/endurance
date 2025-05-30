@@ -48,7 +48,8 @@ class Workout extends Model
     {
         static::saving(function ($workout) {
             if ($workout->date && !$workout->day_id) {
-                $day = Day::findByDateOrCreate($workout->date);
+                // Pass the workout's user_id to handle cases where Auth::id() might be null (like in queue jobs)
+                $day = Day::findByDateOrCreate($workout->date, $workout->user_id);
                 $workout->day_id = $day->id;
             }
         });

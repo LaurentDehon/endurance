@@ -56,7 +56,8 @@ class Activity extends Model
     {
         static::saving(function ($activity) {
             if ($activity->start_date && !$activity->day_id) {
-                $day = Day::findByDateOrCreate($activity->start_date);
+                // Pass the activity's user_id to handle cases where Auth::id() might be null (like in queue jobs)
+                $day = Day::findByDateOrCreate($activity->start_date, $activity->user_id);
                 $activity->day_id = $day->id;
             }
         });
