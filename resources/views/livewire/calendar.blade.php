@@ -713,13 +713,16 @@
             }
         })();
     </script>
+    
+    <!-- Chargement du système de tooltips optimisé -->
+    <script src="{{ asset('js/optimized-tooltips.js') }}"></script>
 </div>
 <script>
-// --- Drag & Drop & Tippy Module ---
+// --- Drag & Drop & Module d'interface optimisé ---
 document.addEventListener('DOMContentLoaded', function() {
-    // Make sure Livewire is available before creating the CalendarUI
+    // S'assurer que Livewire est disponible avant de créer le CalendarUI
     if (typeof Livewire === 'undefined') {
-        // Wait for Livewire to load
+        // Attendre le chargement de Livewire
         document.addEventListener('livewire:init', initCalendarUI);
     } else {
         initCalendarUI();

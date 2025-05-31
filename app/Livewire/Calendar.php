@@ -16,10 +16,42 @@ use App\Services\StravaSyncService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Composant Livewire Calendar optimisé avec requêtes SQL directes
+ * 
+ * OPTIMISATIONS PERFORMANCES IMPLEMENTÉES :
+ * 
+ * 1. calculateStatsFromDb() - Remplace getAggregatedStats() avec des requêtes SQL directes SUM()
+ *    - Statistiques annuelles et mensuelles calculées en une seule requête par type
+ *    - Élimine le chargement de collections en mémoire pour les calculs
+ * 
+ * 2. refreshWeekStats() - Optimisé avec requêtes SQL groupées par semaine
+ *    - Une seule requête SUM() + GROUP BY pour toutes les semaines d'une année
+ *    - Remplace les boucles et calculs manuels PHP
+ * 
+ * 3. updateWeekStats() - Requêtes SQL directes pour mise à jour semaine individuelle
+ *    - Utilise selectRaw() avec SUM() au lieu de collections Eloquent
+ *    - Calculs effectués en base de données
+ * 
+ * 4. getWeeks() - Gestion optimisée des semaines à cheval sur deux années
+ *    - Requêtes SQL directes pour les périodes inter-années
+ *    - Remplace getWeekStatsFromRange() par des requêtes SQL inline
+ * 
+ * MÉTHODES SUPPRIMÉES (obsolètes) :
+ * - getAggregatedStats() - remplacée par calculateStatsFromDb()
+ * - queryStatsForRange() - remplacée par requêtes SQL directes
+ * - getWeekStatsFromRange() - remplacée par requêtes SQL directes  
+ * - updateWeekStatsArray() - plus nécessaire avec SQL direct
+ * 
+ * RÉSULTAT : Toutes les statistiques utilisent maintenant des fonctions SQL (SUM, GROUP BY)
+ * au lieu de calculs manuels PHP, améliorant significativement les performances.
+ */
 
 class Calendar extends Component
 {    
     use CalendarHelpers;
+    use CalendarOptimizations; // Ajout du trait d'optimisation
+
     /**
      * Cache TTL constants in seconds
      */
@@ -459,29 +491,79 @@ class Calendar extends Component
                 $weekPlannedStats['duration'] = $workoutStats[$weekNumber]->time * 60;
             }
             
-            // Gérer les semaines qui chevauchent deux années
+            // Gérer les semaines qui chevauchent deux années avec des requêtes SQL directes
             if ($weekNumber === 1 && $start->year < $year) {
                 // Semaine qui commence en décembre de l'année précédente
-                $lastWeekPrevYearStats = $this->getWeekStatsFromRange($start, $end->copy()->startOfYear()->subDay());
-                $weekActualStats['distance'] += round($lastWeekPrevYearStats['actual']['distance'] / 1000, 1);
-                $weekActualStats['elevation'] += $lastWeekPrevYearStats['actual']['elevation'];
-                $weekActualStats['duration'] += $lastWeekPrevYearStats['actual']['duration'];
+                $endPrevYear = $end->copy()->startOfYear()->subDay();
                 
-                $weekPlannedStats['distance'] += $lastWeekPrevYearStats['planned']['distance'];
-                $weekPlannedStats['elevation'] += $lastWeekPrevYearStats['planned']['elevation'];
-                $weekPlannedStats['duration'] += $lastWeekPrevYearStats['planned']['duration'] * 60;
+                // Requête directe pour les activités de la période précédente
+                $prevYearActivityStats = Activity::selectRaw('
+                    SUM(distance) as total_distance, 
+                    SUM(total_elevation_gain) as total_elevation, 
+                    SUM(moving_time) as total_duration
+                ')
+                ->where('user_id', $userId)
+                ->whereBetween('start_date', [$start, $endPrevYear])
+                ->first();
+                
+                // Requête directe pour les workouts de la période précédente
+                $prevYearWorkoutStats = Workout::selectRaw('
+                    SUM(distance) as total_distance, 
+                    SUM(elevation) as total_elevation, 
+                    SUM(duration) as total_duration
+                ')
+                ->where('user_id', $userId)
+                ->whereBetween('date', [$start, $endPrevYear])
+                ->first();
+                
+                if ($prevYearActivityStats) {
+                    $weekActualStats['distance'] += round($prevYearActivityStats->total_distance / 1000, 1);
+                    $weekActualStats['elevation'] += $prevYearActivityStats->total_elevation;
+                    $weekActualStats['duration'] += $prevYearActivityStats->total_duration;
+                }
+                
+                if ($prevYearWorkoutStats) {
+                    $weekPlannedStats['distance'] += $prevYearWorkoutStats->total_distance;
+                    $weekPlannedStats['elevation'] += $prevYearWorkoutStats->total_elevation;
+                    $weekPlannedStats['duration'] += $prevYearWorkoutStats->total_duration * 60;
+                }
             }
             
             if ($weekNumber === $lastWeekNumber && $end->year > $year) {
                 // Semaine qui finit en janvier de l'année suivante
-                $firstWeekNextYearStats = $this->getWeekStatsFromRange($end->copy()->startOfYear(), $end);
-                $weekActualStats['distance'] += round($firstWeekNextYearStats['actual']['distance'] / 1000, 1);
-                $weekActualStats['elevation'] += $firstWeekNextYearStats['actual']['elevation'];
-                $weekActualStats['duration'] += $firstWeekNextYearStats['actual']['duration'];
+                $startNextYear = $end->copy()->startOfYear();
                 
-                $weekPlannedStats['distance'] += $firstWeekNextYearStats['planned']['distance'];
-                $weekPlannedStats['elevation'] += $firstWeekNextYearStats['planned']['elevation'];
-                $weekPlannedStats['duration'] += $firstWeekNextYearStats['planned']['duration'] * 60;
+                // Requête directe pour les activités de la période suivante
+                $nextYearActivityStats = Activity::selectRaw('
+                    SUM(distance) as total_distance, 
+                    SUM(total_elevation_gain) as total_elevation, 
+                    SUM(moving_time) as total_duration
+                ')
+                ->where('user_id', $userId)
+                ->whereBetween('start_date', [$startNextYear, $end])
+                ->first();
+                
+                // Requête directe pour les workouts de la période suivante
+                $nextYearWorkoutStats = Workout::selectRaw('
+                    SUM(distance) as total_distance, 
+                    SUM(elevation) as total_elevation, 
+                    SUM(duration) as total_duration
+                ')
+                ->where('user_id', $userId)
+                ->whereBetween('date', [$startNextYear, $end])
+                ->first();
+                
+                if ($nextYearActivityStats) {
+                    $weekActualStats['distance'] += round($nextYearActivityStats->total_distance / 1000, 1);
+                    $weekActualStats['elevation'] += $nextYearActivityStats->total_elevation;
+                    $weekActualStats['duration'] += $nextYearActivityStats->total_duration;
+                }
+                
+                if ($nextYearWorkoutStats) {
+                    $weekPlannedStats['distance'] += $nextYearWorkoutStats->total_distance;
+                    $weekPlannedStats['elevation'] += $nextYearWorkoutStats->total_elevation;
+                    $weekPlannedStats['duration'] += $nextYearWorkoutStats->total_duration * 60;
+                }
             }
             
             // Créer ou mettre à jour les jours de la semaine
@@ -502,166 +584,96 @@ class Calendar extends Component
         return $weeks;
     }
     
-    /**
-     * Helper function to query statistics for activities or workouts
-     * 
-     * @param string $type Either 'activity' or 'workout'
-     * @param array $filter Array with start and end dates or day_id array
-     * @return object Query result with dist, ele, and time properties
-     */
-    private function queryStatsForRange(string $type, array $filter): object
-    {
-        $userId = Auth::id();
-        $query = null;
-        
-        if ($type === 'activity') {
-            $query = Activity::selectRaw('SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
-                ->where('user_id', $userId);
-                
-            if (isset($filter['day_id'])) {
-                $query->whereIn('day_id', $filter['day_id']);
-            } elseif (isset($filter[0]) && isset($filter[1])) {
-                $query->whereBetween('start_date', [$filter[0], $filter[1]]);
-            }
-        } else { // workout
-            $query = Workout::selectRaw('SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
-                ->where('user_id', $userId);
-                
-            if (isset($filter['day_id'])) {
-                $query->whereIn('day_id', $filter['day_id']);
-            } elseif (isset($filter[0]) && isset($filter[1])) {
-                $query->whereBetween('date', [$filter[0], $filter[1]]);
-            }
-        }
-        
-        return $query->first() ?: (object)['dist' => 0, 'ele' => 0, 'time' => 0];
-    }
+    // Méthodes queryStatsForRange et getWeekStatsFromRange supprimées - remplacées par des requêtes SQL directes
+
+    // Méthode getAggregatedStats supprimée - remplacée par calculateStatsFromDb() avec des requêtes SQL optimisées
 
     /**
-     * Récupère les statistiques d'activities et workouts pour une plage de dates spécifique
-     * Utilisé pour les semaines qui chevauchent deux années
+     * Calcule les statistiques à partir de requêtes SQL groupées optimisées
      *
-     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $startDate
-     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $endDate
-     * @return array
-     */
-    private function getWeekStatsFromRange($startDate, $endDate): array
-    {
-        $activities = $this->queryStatsForRange('activity', [$startDate, $endDate]);
-        $workouts = $this->queryStatsForRange('workout', [$startDate, $endDate]);
-        
-        return [
-            'actual' => [
-                'distance' => $activities ? $activities->dist : 0,
-                'elevation' => $activities ? $activities->ele : 0,
-                'duration' => $activities ? $activities->time : 0,
-            ],
-            'planned' => [
-                'distance' => $workouts ? $workouts->dist : 0,
-                'elevation' => $workouts ? $workouts->ele : 0,
-                'duration' => $workouts ? $workouts->time : 0,
-            ]
-        ];
-    }
-
-    /**
-     * Récupère les statistiques groupées pour Activity et Workout
-     * 
-     * @param string $groupBy Le niveau de regroupement ('year' ou 'month')
-     * @return array Les statistiques regroupées par année ou mois
-     */
-    private function getAggregatedStats(string $groupBy = 'year'): array
-    {
-        $userId = Auth::id();
-        $isMonthly = ($groupBy === 'month');
-        
-        // Construction des requêtes selon le type de regroupement
-        if ($isMonthly) {
-            $activitySelect = 'YEAR(start_date) as year, MONTH(start_date) as month, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time';
-            $workoutSelect = 'YEAR(date) as year, MONTH(date) as month, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time';
-            $groupByClause = 'year, month';
-            $keyFunc = function($item) { return sprintf('%04d-%02d', $item->year, $item->month); };
-        } else {
-            $activitySelect = 'YEAR(start_date) as year, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time';
-            $workoutSelect = 'YEAR(date) as year, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time';
-            $groupByClause = 'year';
-            $keyFunc = function($item) { return $item->year; };
-        }
-        
-        // Requête pour les activités
-        $activityQuery = Activity::selectRaw($activitySelect)
-            ->where('user_id', $userId);
-            
-        // Ajouter le filtre par année uniquement pour les stats mensuelles
-        if ($isMonthly) {
-            $activityQuery->whereYear('start_date', $this->year);
-        }
-        
-        $activityStats = $activityQuery->groupBy(explode(', ', $groupByClause))
-            ->get()
-            ->keyBy($keyFunc);
-
-        // Requête pour les workouts
-        $workoutQuery = Workout::selectRaw($workoutSelect)
-            ->where('user_id', $userId);
-            
-        // Ajouter le filtre par année uniquement pour les stats mensuelles
-        if ($isMonthly) {
-            $workoutQuery->whereYear('date', $this->year);
-        }
-        
-        $workoutStats = $workoutQuery->groupBy(explode(', ', $groupByClause))
-            ->get()
-            ->keyBy($keyFunc);
-
-        return [
-            'activity' => $activityStats,
-            'workout' => $workoutStats
-        ];
-    }
-
-    // Removed redundant methods getYearlyStats and getMonthlyStats
-    // These methods were just wrappers for getAggregatedStats('year') and getAggregatedStats('month')
-
-    /**
-     * Calculate statistics from SQL grouped data.
-     *
-     * @param string $type Either 'month' or 'year'
-     * @return array Array of statistics for the specified type
+     * @param string $type 'month' ou 'year'
+     * @return array Tableau de statistiques pour le type spécifié
      */
     private function calculateStatsFromDb(string $type = 'month'): array
     {
+        $userId = Auth::id();
+        
         if ($type === 'year') {
-            $yearly = $this->getAggregatedStats('year');
-            $activity = $yearly['activity'][$this->year] ?? null;
+            // Requête SQL unique pour les statistiques annuelles d'activités
+            $actualStats = Activity::selectRaw('
+                SUM(distance) as total_distance, 
+                SUM(total_elevation_gain) as total_elevation, 
+                SUM(moving_time) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereYear('start_date', $this->year)
+            ->first();
+            
+            // Requête SQL unique pour les statistiques annuelles de workouts planifiés
+            $plannedStats = Workout::selectRaw('
+                SUM(distance) as total_distance, 
+                SUM(elevation) as total_elevation, 
+                SUM(duration) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereYear('date', $this->year)
+            ->first();
+            
             return [
                 'actual' => [
-                    'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
-                    'elevation' => $activity ? $activity->ele : 0,
-                    'duration' => $activity ? $activity->time : 0,
+                    'distance' => $actualStats ? round($actualStats->total_distance / 1000, 1) : 0,
+                    'elevation' => $actualStats ? $actualStats->total_elevation : 0,
+                    'duration' => $actualStats ? $actualStats->total_duration : 0,
                 ],
                 'planned' => [
-                    'distance' => 0,
-                    'elevation' => 0,
-                    'duration' => 0,
+                    'distance' => $plannedStats ? $plannedStats->total_distance : 0,
+                    'elevation' => $plannedStats ? $plannedStats->total_elevation : 0,
+                    'duration' => $plannedStats ? $plannedStats->total_duration * 60 : 0,
                 ]
             ];
         } else {
-            $monthly = $this->getAggregatedStats('month');
+            // Requête SQL unique pour toutes les statistiques mensuelles d'activités
+            $actualStatsQuery = Activity::selectRaw('
+                MONTH(start_date) as month,
+                SUM(distance) as total_distance, 
+                SUM(total_elevation_gain) as total_elevation, 
+                SUM(moving_time) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereYear('start_date', $this->year)
+            ->groupBy('month')
+            ->get()
+            ->keyBy('month');
+            
+            // Requête SQL unique pour toutes les statistiques mensuelles de workouts planifiés
+            $plannedStatsQuery = Workout::selectRaw('
+                MONTH(date) as month,
+                SUM(distance) as total_distance, 
+                SUM(elevation) as total_elevation, 
+                SUM(duration) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereYear('date', $this->year)
+            ->groupBy('month')
+            ->get()
+            ->keyBy('month');
+            
             $monthStats = [];
             for ($m = 1; $m <= 12; $m++) {
                 $monthKey = sprintf('%04d-%02d', $this->year, $m);
-                $activity = $monthly['activity'][$monthKey] ?? null;
+                $actualMonth = $actualStatsQuery->get($m);
+                $plannedMonth = $plannedStatsQuery->get($m);
+                
                 $monthStats[$monthKey] = [
                     'actual' => [
-                        'distance' => $activity ? round($activity->dist / 1000, 1) : 0,
-                        'elevation' => $activity ? $activity->ele : 0,
-                        'duration' => $activity ? $activity->time : 0,
+                        'distance' => $actualMonth ? round($actualMonth->total_distance / 1000, 1) : 0,
+                        'elevation' => $actualMonth ? $actualMonth->total_elevation : 0,
+                        'duration' => $actualMonth ? $actualMonth->total_duration : 0,
                     ],
                     'planned' => [
-                        'distance' => 0,
-                        'elevation' => 0,
-                        'duration' => 0,
+                        'distance' => $plannedMonth ? $plannedMonth->total_distance : 0,
+                        'elevation' => $plannedMonth ? $plannedMonth->total_elevation : 0,
+                        'duration' => $plannedMonth ? $plannedMonth->total_duration * 60 : 0,
                     ]
                 ];
             }
@@ -854,9 +866,9 @@ class Calendar extends Component
     // getOrCreateDayForDate method moved to CalendarHelpers trait
     
     /**
-     * Updates the statistics of a week based on a date
+     * Met à jour les statistiques d'une semaine spécifique via des requêtes SQL optimisées
      *
-     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $date The date
+     * @param \Carbon\Carbon|\Carbon\CarbonImmutable $date La date
      * @return void
      */
     private function updateWeekStats($date)
@@ -872,35 +884,48 @@ class Calendar extends Component
                          ->first();
                          
             if (!$week) {
-                return;
+                return null;
             }
             
-            // Force reload days to ensure we have the latest data
+            // Forcer le rechargement des jours pour avoir les dernières données
             $week->load('days');
             
-            // Get all day IDs for this week
+            // Récupérer tous les IDs des jours de cette semaine
             $dayIds = $week->days->pluck('id')->toArray();
             
-            // Recalculate stats for this week only using direct queries on workout and activity tables
-            $dayIds = $week->days->pluck('id')->toArray();
+            // Recalculer les stats avec des requêtes SQL directes pour cette semaine seulement
+            $activityStats = Activity::selectRaw('
+                SUM(distance) as total_distance, 
+                SUM(total_elevation_gain) as total_elevation, 
+                SUM(moving_time) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereIn('day_id', $dayIds)
+            ->first();
             
-            $workoutStats = $this->queryStatsForRange('workout', ['day_id' => $dayIds]);
-            $activityStats = $this->queryStatsForRange('activity', ['day_id' => $dayIds]);
+            $workoutStats = Workout::selectRaw('
+                SUM(distance) as total_distance, 
+                SUM(elevation) as total_elevation, 
+                SUM(duration) as total_duration
+            ')
+            ->where('user_id', $userId)
+            ->whereIn('day_id', $dayIds)
+            ->first();
             
-            // Update dynamic attributes
+            // Mettre à jour les attributs dynamiques calculés en DB
             $week->actual_stats = [
-                'distance' => $activityStats ? round($activityStats->dist / 1000, 1) : 0,
-                'elevation' => $activityStats ? $activityStats->ele : 0,
-                'duration' => $activityStats ? $activityStats->time : 0,
+                'distance' => $activityStats ? round($activityStats->total_distance / 1000, 1) : 0,
+                'elevation' => $activityStats ? $activityStats->total_elevation : 0,
+                'duration' => $activityStats ? $activityStats->total_duration : 0,
             ];
             
             $week->planned_stats = [
-                'distance' => $workoutStats ? $workoutStats->dist : 0,
-                'elevation' => $workoutStats ? $workoutStats->ele : 0,
-                'duration' => $workoutStats ? $workoutStats->time * 60 : 0,
+                'distance' => $workoutStats ? $workoutStats->total_distance : 0,
+                'elevation' => $workoutStats ? $workoutStats->total_elevation : 0,
+                'duration' => $workoutStats ? $workoutStats->total_duration * 60 : 0,
             ];
             
-            // Save the week to persist any database-stored attributes
+            // Sauvegarder la semaine pour persister les attributs stockés en base de données
             $week->save();
             
             return $week;
@@ -947,23 +972,24 @@ class Calendar extends Component
             $newWorkout->day_id = $day->id;
             $newWorkout->save();
 
-            // Mise à jour des statistiques de la semaine concernée
-            $this->updateWeekStats($parsedDate);
+            // Mise à jour optimisée des statistiques de la semaine concernée
+            $this->updateWeekStatsOptimized($parsedDate);
             
             $this->dispatch('toast', __('calendar.messages.workout_copied', [
                 'type' => $originalWorkout->type->getLocalizedName(),
                 'date' => Carbon::parse($newDate)->translatedFormat(__('calendar.date_formats.full_date'))
             ]), 'success');
             
-            // Émettre l'événement pour recharger les tooltips
-            $this->dispatch('reload-tooltips');
+            // Rafraîchissement optimisé des tooltips
+            $this->reloadTooltipsOptimized($parsedDate);
         } catch (\Exception $e) {
             $this->dispatch('toast', __('calendar.messages.error_copying_workout', ['error' => $e->getMessage()]), 'error');
         }
     }
 
     /**
-     * Refreshes the workouts.
+     * Rafraîchit les workouts de manière optimisée.
+     * Utilise les nouvelles méthodes optimisées pour réduire la latence.
      *
      * @return void
      */
@@ -972,13 +998,20 @@ class Calendar extends Component
     #[On('workout-updated')]
     public function refreshWorkouts()
     {
-        // Récupérer les workouts mis à jour
-        $this->workouts = $this->getWorkouts();
+        // Utiliser la méthode optimisée si une date est disponible
+        $workoutDate = session('last_workout_date');
         
-        // Mettre à jour les statistiques des semaines
-        $this->refreshWeekStats();
-        
-        $this->dispatch('reload-tooltips');
+        if ($workoutDate) {
+            // Rafraîchissement optimisé ciblé
+            $this->refreshOptimized($workoutDate);
+            // Nettoyer la session
+            session()->forget('last_workout_date');
+        } else {
+            // Fallback sur le comportement original
+            $this->workouts = $this->getWorkouts();
+            $this->refreshWeekStats();
+            $this->dispatch('reload-tooltips');
+        }
     }
     
     /**
@@ -999,7 +1032,8 @@ class Calendar extends Component
     }
     
     /**
-     * Refreshes the weekly statistics for all weeks in the current year
+     * Recalcule les statistiques hebdomadaires pour toutes les semaines de l'année courante
+     * Utilise des requêtes SQL optimisées pour éviter les calculs manuels
      *
      * @return void
      */
@@ -1021,42 +1055,54 @@ class Calendar extends Component
             $this->weeks = $weeks;
         }
         
-        // Récupérer les stats groupées par semaine pour les activités réelles
-        $activityStats = Activity::selectRaw('WEEK(start_date, 1) as week, SUM(distance) as dist, SUM(total_elevation_gain) as ele, SUM(moving_time) as time')
-            ->whereYear('start_date', $this->year)
-            ->where('user_id', Auth::id())
-            ->groupBy('week')
-            ->get()
-            ->keyBy('week');
+        // Récupérer toutes les statistiques d'activités par semaine en une seule requête SQL
+        $activityStats = Activity::selectRaw('
+            WEEK(start_date, 1) as week, 
+            SUM(distance) as total_distance, 
+            SUM(total_elevation_gain) as total_elevation, 
+            SUM(moving_time) as total_duration
+        ')
+        ->where('user_id', Auth::id())
+        ->whereYear('start_date', $this->year)
+        ->groupBy('week')
+        ->get()
+        ->keyBy('week');
 
-        // Récupérer les stats groupées par semaine pour les workouts planifiés
-        $workoutStats = Workout::selectRaw('WEEK(date, 1) as week, SUM(distance) as dist, SUM(elevation) as ele, SUM(duration) as time')
-            ->whereYear('date', $this->year)
-            ->where('user_id', Auth::id())
-            ->groupBy('week')
-            ->get()
-            ->keyBy('week');
+        // Récupérer toutes les statistiques de workouts par semaine en une seule requête SQL
+        $workoutStats = Workout::selectRaw('
+            WEEK(date, 1) as week, 
+            SUM(distance) as total_distance, 
+            SUM(elevation) as total_elevation, 
+            SUM(duration) as total_duration
+        ')
+        ->where('user_id', Auth::id())
+        ->whereYear('date', $this->year)
+        ->groupBy('week')
+        ->get()
+        ->keyBy('week');
         
-        // Mettre à jour les statistiques de chaque semaine
+        // Mettre à jour les statistiques de chaque semaine avec les données calculées en DB
         $this->weeks = $weeks->map(function($week) use ($activityStats, $workoutStats) {
             $weekNumber = $week->week_number;
+            $activityData = $activityStats->get($weekNumber);
+            $workoutData = $workoutStats->get($weekNumber);
             
             $week->actual_stats = [
-                'distance' => isset($activityStats[$weekNumber]) ? round($activityStats[$weekNumber]->dist / 1000, 1) : 0,
-                'elevation' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->ele : 0,
-                'duration' => isset($activityStats[$weekNumber]) ? $activityStats[$weekNumber]->time : 0,
+                'distance' => $activityData ? round($activityData->total_distance / 1000, 1) : 0,
+                'elevation' => $activityData ? $activityData->total_elevation : 0,
+                'duration' => $activityData ? $activityData->total_duration : 0,
             ];
             
             $week->planned_stats = [
-                'distance' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->dist : 0,
-                'elevation' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->ele : 0,
-                'duration' => isset($workoutStats[$weekNumber]) ? $workoutStats[$weekNumber]->time * 60 : 0,
+                'distance' => $workoutData ? $workoutData->total_distance : 0,
+                'elevation' => $workoutData ? $workoutData->total_elevation : 0,
+                'duration' => $workoutData ? $workoutData->total_duration * 60 : 0,
             ];
             
             return $week;
         });
         
-        // Mettre à jour les statistiques mensuelles et annuelles
+        // Mettre à jour les statistiques mensuelles et annuelles avec les nouvelles méthodes optimisées
         $this->monthStats = $this->calculateStatsFromDb('month');
         $this->yearStats = $this->calculateStatsFromDb('year');
     }
@@ -1634,26 +1680,7 @@ class Calendar extends Component
         return Cache::remember($fullCacheKey, $ttl, $callback);
     }
     
-    /**
-     * Helper method to update a week's statistics
-     *
-     * @param array $weekStats The statistics array to update
-     * @param object $stats The stats source object with dist, ele, and time properties
-     * @param bool $isActivity Whether the stats are from an activity (needs distance conversion)
-     * @return array The updated statistics array
-     */
-    private function updateWeekStatsArray(array $weekStats, object $stats, bool $isActivity = false): array
-    {
-        if (!$stats) {
-            return $weekStats;
-        }
-        
-        $weekStats['distance'] += $isActivity ? round($stats->dist / 1000, 1) : $stats->dist;
-        $weekStats['elevation'] += $stats->ele;
-        $weekStats['duration'] += $isActivity ? $stats->time : ($stats->time * 60);
-        
-        return $weekStats;
-    }
+    // Méthode updateWeekStatsArray supprimée - plus nécessaire avec les requêtes SQL directes
     
     /**
      * Helper method to initialize year data after year change

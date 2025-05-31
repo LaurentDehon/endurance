@@ -124,11 +124,17 @@ class WorkoutModal extends Component
                     $workout = Workout::where('user_id', Auth::id())->findOrFail($this->workoutId);
                     $workout->update($baseData);
                     $message = __('workouts.updated_success');
+                    
+                    // Stocker la date pour l'optimisation
+                    session(['last_workout_date' => $this->date]);
                     $this->dispatch('workout-updated');
                 } 
                 else {
                     Workout::create($baseData);
                     $message = __('workouts.created_success');
+                    
+                    // Stocker la date pour l'optimisation
+                    session(['last_workout_date' => $this->date]);
                     $this->dispatch('workout-created');
                 }
                 
@@ -160,6 +166,10 @@ class WorkoutModal extends Component
     {
         $workout = Workout::where('user_id', Auth::id())
             ->findOrFail($this->workoutId);
+        
+        // Stocker la date avant suppression pour l'optimisation
+        $workoutDate = $workout->date->format('Y-m-d');
+        session(['last_workout_date' => $workoutDate]);
             
         $workout->delete();
 

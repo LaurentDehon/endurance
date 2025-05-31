@@ -82,15 +82,19 @@ class DashboardController extends Controller
         $weekStart = Carbon::now()->startOfWeek();
         $weekEnd = Carbon::now()->endOfWeek();
         
-        // Get all activities for this week
-        $activities = Activity::where('user_id', $user->id)
-            ->whereBetween('start_date', [$weekStart, $weekEnd])
-            ->get();
+        // Calculer les statistiques avec une requête SQL directe optimisée
+        $weeklyStats = Activity::selectRaw('
+            SUM(distance) as total_distance, 
+            SUM(moving_time) as total_duration, 
+            SUM(total_elevation_gain) as total_elevation
+        ')
+        ->where('user_id', $user->id)
+        ->whereBetween('start_date', [$weekStart, $weekEnd])
+        ->first();
         
-        // Calculate total distance, duration and elevation from activities
-        $stats->distance = $activities->sum('distance') / 1000;
-        $stats->duration = $activities->sum('moving_time');
-        $stats->elevation = $activities->sum('total_elevation_gain');
+        $stats->distance = $weeklyStats ? $weeklyStats->total_distance / 1000 : 0;
+        $stats->duration = $weeklyStats ? $weeklyStats->total_duration : 0;
+        $stats->elevation = $weeklyStats ? $weeklyStats->total_elevation : 0;
         
         return $stats;
     }
@@ -99,17 +103,22 @@ class DashboardController extends Controller
     {
         $goals = new \stdClass();
         
-        // Calculate weekly goals based on planned workouts for the week
+        // Calculer les objectifs hebdomadaires avec une requête SQL directe optimisée
         $weekStart = Carbon::now()->startOfWeek();
         $weekEnd = Carbon::now()->endOfWeek();
         
-        $plannedWorkouts = Workout::where('user_id', $user->id)
-            ->whereBetween('date', [$weekStart, $weekEnd])
-            ->get();
+        $weeklyGoals = Workout::selectRaw('
+            SUM(distance) as total_distance, 
+            SUM(duration) as total_duration, 
+            SUM(elevation) as total_elevation
+        ')
+        ->where('user_id', $user->id)
+        ->whereBetween('date', [$weekStart, $weekEnd])
+        ->first();
             
-        $goals->distance = $plannedWorkouts->sum('distance');
-        $goals->duration = $plannedWorkouts->sum('duration') * 60;
-        $goals->elevation = $plannedWorkouts->sum('elevation');
+        $goals->distance = $weeklyGoals ? $weeklyGoals->total_distance : 0;
+        $goals->duration = $weeklyGoals ? $weeklyGoals->total_duration * 60 : 0;
+        $goals->elevation = $weeklyGoals ? $weeklyGoals->total_elevation : 0;
         
         return $goals;
     }
