@@ -38,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'last_sync_at' => 'datetime',
             'password' => 'hashed',
             'strava_expires_at' => 'integer',
@@ -98,5 +99,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new sendEmailVerificationNotification());
+    }
+
+    /**
+     * Retourne le fuseau horaire de l'utilisateur ou celui de l'application par défaut
+     * 
+     * @return string
+     */
+    public function getTimezone(): string
+    {
+        return $this->settings['timezone'] ?? config('app.timezone');
+    }
+
+    /**
+     * Retourne une date Carbon dans le fuseau horaire de l'utilisateur
+     * 
+     * @param string|null $time
+     * @return \Carbon\Carbon
+     */
+    public function nowInUserTimezone(?string $time = null): \Carbon\Carbon
+    {
+        return $time ? \Carbon\Carbon::parse($time, $this->getTimezone()) : \Carbon\Carbon::now($this->getTimezone());
     }
 }

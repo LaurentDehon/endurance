@@ -40,6 +40,11 @@
                 </div>
                 
                 <div class="flex flex-col sm:flex-row sm:gap-20 justify-start mt-6">
+                    {{-- Informations de connexion et synchronisation --}}
+                    {{-- 
+                        Les dates sont stockées dans le fuseau horaire personnel de l'utilisateur
+                        et affichées dans ce même fuseau pour garantir la cohérence
+                    --}}
                     <!-- Connection Information -->
                     <div class="mt-6">
                         <h3 class="text-lg font-semibold text-white mb-2">{{ __('admin.user_detail.connection_info') }}</h3>
@@ -59,8 +64,17 @@
                             <div class="inline-flex items-center py-1 rounded-lg">
                                 <span class="text-sm">{{ __('admin.user_detail.last_login') }} </span>
                                 <span class="ml-1 font-mono text-sm">
-                                    @if($user->last_login_at && $user->last_login_at != '')
-                                        {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
+                                    @if($user->last_login_at)
+                                        @php
+                                            $lastLogin = $user->last_login_at instanceof \Carbon\Carbon 
+                                                ? $user->last_login_at 
+                                                : \Carbon\Carbon::parse($user->last_login_at);
+                                            // Convertir vers le fuseau horaire de l'utilisateur pour l'affichage
+                                            $userTimezone = $user->settings['timezone'] ?? config('app.timezone');
+                                            $lastLogin = $lastLogin->setTimezone($userTimezone);
+                                        @endphp
+                                        {{ $lastLogin->format('d/m/Y H:i:s') }}
+                                        <span class="text-xs text-cyan-300 ml-1">({{ $lastLogin->diffForHumans() }})</span>
                                     @else
                                         {{ __('admin.user_detail.never') }}
                                     @endif
@@ -78,6 +92,9 @@
                                 <span class="ml-1 font-mono text-sm">
                                     @if($user->strava_token && $user->strava_expires_at && $user->strava_expires_at > time())
                                         {{ __('admin.user_detail.connected') }}
+                                        <span class="text-sm ml-2">
+                                            / {{ __('admin.user_detail.expires') }} {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->diffForHumans() }}
+                                        </span>
                                     @else
                                         {{ __('admin.user_detail.not_connected') }}
                                     @endif
@@ -85,12 +102,21 @@
                             </div>
                             
                             <div class="inline-flex items-center py-1 rounded-lg">
-                                <span class="text-sm">{{ __('admin.user_detail.expires') }} </span>
+                                <span class="text-sm">{{ __('admin.user_detail.last_sync') }} </span>
                                 <span class="ml-1 font-mono text-sm">
-                                    @if($user->strava_expires_at)
-                                        {{ \Carbon\Carbon::createFromTimestamp($user->strava_expires_at)->diffForHumans() }}
+                                    @if($user->last_sync_at)
+                                        @php
+                                            $lastSync = $user->last_sync_at instanceof \Carbon\Carbon 
+                                                ? $user->last_sync_at 
+                                                : \Carbon\Carbon::parse($user->last_sync_at);
+                                            // Convertir vers le fuseau horaire de l'utilisateur pour l'affichage
+                                            $userTimezone = $user->settings['timezone'] ?? config('app.timezone');
+                                            $lastSync = $lastSync->setTimezone($userTimezone);
+                                        @endphp
+                                        {{ $lastSync->format('d/m/Y H:i:s') }}
+                                        <span class="text-xs text-cyan-300 ml-1">({{ $lastSync->diffForHumans() }})</span>
                                     @else
-                                        N/A
+                                        {{ __('admin.user_detail.never') }}
                                     @endif
                                 </span>
                             </div>

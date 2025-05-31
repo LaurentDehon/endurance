@@ -47,6 +47,11 @@ class StravaSyncService
                 $activities = $this->fetchNewActivities($refreshedUser, $token);
                 $this->saveActivities($refreshedUser, $activities);
 
+                // Mettre à jour la date de dernière synchronisation avec le fuseau horaire de l'utilisateur
+                $refreshedUser->update([
+                    'last_sync_at' => $refreshedUser->nowInUserTimezone()
+                ]);
+
                 return [
                     'success' => true,
                     'message' => $this->buildResultMessage(count($activities)),
@@ -131,7 +136,7 @@ class StravaSyncService
 
         // Préparer les données pour l'insertion en lot
         $insertData = [];
-        $now = Carbon::now();
+        $now = $user->nowInUserTimezone();
         
         foreach ($activities as $activity) {
             $activityData = $this->mapActivityFields($user, $activity);
@@ -162,6 +167,9 @@ class StravaSyncService
 
     private function mapActivityFields(User $user, array $activity): array
     {
+        // Utiliser le fuseau horaire de l'utilisateur pour les horodatages
+        $userTimezone = $user->settings['timezone'] ?? config('app.timezone');
+        
         return [
             'name' => $activity['name'],
             'type' => $activity['type'],
@@ -178,7 +186,7 @@ class StravaSyncService
             'elev_low' => $activity['elev_low'] ?? 0,
             'user_id' => $user->id,
             'strava_id' => $activity['id'],
-            'sync_date' => Carbon::now(),
+            'sync_date' => Carbon::now($userTimezone),
             'kudos_count' => $activity['kudos_count'],
             'description' => $activity['description'] ?? '',
             'calories' => $activity['calories'] ?? 0,

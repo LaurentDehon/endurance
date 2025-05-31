@@ -2,15 +2,16 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use App\Models\User;
-use App\Services\StravaSyncService;
 use Illuminate\Bus\Queueable;
+use App\Services\StravaSyncService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class StravaSyncJob implements ShouldQueue
 {
@@ -56,10 +57,10 @@ class StravaSyncJob implements ShouldQueue
             if ($result['success']) {
                 Log::info("Synchronisation Strava réussie pour l'utilisateur {$user->id}: {$result['message']}");
                 
-                // Mettre à jour l'horodatage de dernière synchronisation
-                $user->last_sync_at = now();
+                // Mettre à jour l'horodatage de dernière synchronisation avec le fuseau horaire de l'utilisateur
+                $user->last_sync_at = $user->nowInUserTimezone();
                 $user->save();
-                Log::info("Timestamp last_sync_at mis à jour pour l'utilisateur {$user->id}");
+                Log::info("Timestamp last_sync_at mis à jour pour l'utilisateur {$user->id} avec timezone {$user->getTimezone()}");
                 
                 // Invalider le cache des statistiques si des activités ont été ajoutées
                 if (isset($result['count']) && $result['count'] > 0) {

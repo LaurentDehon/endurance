@@ -28,7 +28,9 @@ class HandleUserLogin
     public function handle(Login $event): void
     {
         $user = $event->user;
-        $user->last_login_at = now();
+        // Utiliser le fuseau horaire de l'utilisateur ou celui de l'application en fallback
+        $userTimezone = $user->settings['timezone'] ?? config('app.timezone');
+        $user->last_login_at = \Carbon\Carbon::now($userTimezone);
         
         // Enregistrer l'adresse IP si disponible
         if (request()->ip()) {
