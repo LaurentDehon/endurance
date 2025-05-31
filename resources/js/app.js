@@ -3,7 +3,8 @@ import Alpine from 'alpinejs';
 import '../css/app.css';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import './tooltips.js';  // Import du module tooltips centralisé
+// Import du système de tooltips optimisé au lieu de l'ancien
+import './optimized-tooltips.js';
 window.tippy = tippy;
 
 // Assurons-nous d'attendre que le DOM soit chargé
