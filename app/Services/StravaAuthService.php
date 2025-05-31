@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class StravaAuthService
@@ -67,7 +68,7 @@ class StravaAuthService
             return $this->updateOrCreateUser($tokens, $user);
         } catch (\Exception $e) {
             // En cas d'erreur lors du renouvellement, retourner null
-            \Illuminate\Support\Facades\Log::warning("Failed to refresh Strava token for user {$user->id}: " . $e->getMessage());
+            Log::warning("Échec du renouvellement du token Strava pour l'utilisateur {$user->id}: " . $e->getMessage());
             return null;
         }
     }

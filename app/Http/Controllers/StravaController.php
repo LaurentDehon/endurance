@@ -47,8 +47,7 @@ class StravaController extends Controller
                 Auth::loginUsingId(Session::get('auth_user_id'));
             }
             
-            // Nouvelle logique : toujours lancer une sync automatique après connexion Strava
-            // peu importe d'où vient la demande
+            // Toujours lancer une synchronisation automatique après connexion Strava peu importe d'où vient la demande
             if (Auth::check()) {
                 // Marquer la synchronisation comme en cours pour que l'interface le sache
                 $userId = Auth::id();
@@ -83,8 +82,8 @@ class StravaController extends Controller
             return redirect($referer);
         }
         
-        // Fallback à la page d'accueil si aucune référence n'est disponible
-        return redirect(route('dashboard'));
+        // Redirection par défaut vers le tableau de bord si aucune référence n'est disponible
+        return redirect(route('home'));
     }
 
     /**

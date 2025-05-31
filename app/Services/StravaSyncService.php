@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\{User, Activity};
 use Carbon\Carbon;
-use GuzzleHttp\Client as GuzzleClient;
+use App\Models\Day;
+use App\Models\{User, Activity};
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\RequestException;
 
 class StravaSyncService
 {
@@ -21,7 +24,7 @@ class StravaSyncService
         app()->setLocale($userLocale);
 
         try {
-            // Vérifier si l'utilisateur a un token Strava - si null, il doit être redirigé pour la première connexion
+            // Vérifier si l'utilisateur a un token Strava - s'il est null, rediriger pour la première connexion
             if (!$user->strava_token) {
                 return ['success' => false, 'redirect' => true, 'route' => 'strava.redirect'];
             }
@@ -73,7 +76,7 @@ class StravaSyncService
                 if (empty($fetched)) {
                     $consecutiveEmptyPages++;
                 } else {
-                    $consecutiveEmptyPages = 0; // Reset si on trouve des données
+                    $consecutiveEmptyPages = 0; // Remettre à zéro si on trouve des données
                 }
                 
                 $filtered = $this->filterNewRuns($fetched, $existingIds);
@@ -86,7 +89,7 @@ class StravaSyncService
                 }
                 
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::warning("Error fetching Strava activities page {$page}: " . $e->getMessage());
+                Log::warning("Erreur lors de la récupération de la page {$page} des activités Strava: " . $e->getMessage());
                 break; // Sortir en cas d'erreur HTTP
             }
             
@@ -107,8 +110,8 @@ class StravaSyncService
             $data = json_decode($response->getBody()->getContents(), true);
             return is_array($data) ? $data : [];
             
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            \Illuminate\Support\Facades\Log::error("Strava API request failed for page {$page}: " . $e->getMessage());
+        } catch (RequestException $e) {
+            Log::error("Échec de la requête API Strava pour la page {$page}: " . $e->getMessage());
             return []; // Retourner un tableau vide en cas d'erreur
         }
     }
@@ -128,7 +131,7 @@ class StravaSyncService
 
         // Préparer les données pour l'insertion en lot
         $insertData = [];
-        $now = \Carbon\Carbon::now();
+        $now = Carbon::now();
         
         foreach ($activities as $activity) {
             $activityData = $this->mapActivityFields($user, $activity);
@@ -136,8 +139,8 @@ class StravaSyncService
             $activityData['updated_at'] = $now;
             
             // Assigner le day_id manuellement car upsert ne déclenche pas les événements Eloquent
-            // Pass user ID to handle queue job context where Auth::id() returns null
-            $day = \App\Models\Day::findByDateOrCreate($activityData['start_date'], $user->id);
+            // Passer l'ID utilisateur pour gérer le contexte du job de queue où Auth::id() retourne null
+            $day = Day::findByDateOrCreate($activityData['start_date'], $user->id);
             $activityData['day_id'] = $day->id;
             
             $insertData[] = $activityData;

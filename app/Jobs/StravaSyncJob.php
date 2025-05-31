@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -18,8 +17,8 @@ class StravaSyncJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
-    public $timeout = 300; // 5 minutes timeout
-    public $maxExceptions = 3; // Maximum d'exceptions avant échec
+    public $timeout = 300; // Timeout de 5 minutes
+    public $maxExceptions = 3; // Nombre maximum d'exceptions avant échec définitif
     
     public function __construct(
         protected int $userId
@@ -44,35 +43,40 @@ class StravaSyncJob implements ShouldQueue
         Log::info("Locale set to '{$userLocale}' for user {$this->userId}");
 
         try {
-            Log::info("Starting Strava sync job for user {$user->id}");
+            Log::info("Début de la synchronisation Strava pour l'utilisateur {$user->id}");
             
-            // Marquer le début du traitement
+            // Marquer le début du traitement pour l'interface utilisateur
             Cache::put("strava_sync_processing_{$user->id}", true, now()->addMinutes(10));
-            Log::info("Cache processing flag set for user {$user->id}");
+            Log::info("Flag de traitement en cache défini pour l'utilisateur {$user->id}");
             
-            Log::info("About to call syncService->sync() for user {$user->id}");
+            Log::info("Appel du service de synchronisation pour l'utilisateur {$user->id}");
             $result = $syncService->sync($user);
-            Log::info("syncService->sync() completed for user {$user->id}. Result: " . json_encode($result));
+            Log::info("Synchronisation terminée pour l'utilisateur {$user->id}. Résultat: " . json_encode($result));
             
             if ($result['success']) {
-                Log::info("Strava sync completed successfully for user {$user->id}: {$result['message']}");
+                Log::info("Synchronisation Strava réussie pour l'utilisateur {$user->id}: {$result['message']}");
+                
+                // Mettre à jour l'horodatage de dernière synchronisation
+                $user->last_sync_at = now();
+                $user->save();
+                Log::info("Timestamp last_sync_at mis à jour pour l'utilisateur {$user->id}");
                 
                 // Invalider le cache des statistiques si des activités ont été ajoutées
                 if (isset($result['count']) && $result['count'] > 0) {
-                    Log::info("Invalidating cache for user {$user->id} - {$result['count']} activities added");
+                    Log::info("Invalidation du cache pour l'utilisateur {$user->id} - {$result['count']} activités ajoutées");
                     $this->invalidateStatsCache($user);
                 }
                 
-                // Stocker le résultat dans le cache pour l'interface utilisateur
+                // Stocker le résultat de succès dans le cache pour l'interface utilisateur
                 Cache::put("strava_sync_result_{$user->id}", [
                     'success' => true,
                     'message' => $result['message'],
                     'count' => $result['count']
                 ], now()->addMinutes(10));
-                Log::info("Success result cached for user {$user->id}");
+                Log::info("Résultat de succès mis en cache pour l'utilisateur {$user->id}");
                 
             } else {
-                Log::warning("Strava sync failed for user {$user->id}: " . ($result['message'] ?? 'Unknown error'));
+                Log::warning("Échec de la synchronisation Strava pour l'utilisateur {$user->id}: " . ($result['message'] ?? 'Erreur inconnue'));
                 
                 // Si une redirection est nécessaire, la stocker dans le cache
                 if (isset($result['redirect']) && $result['redirect'] === true) {
@@ -87,12 +91,12 @@ class StravaSyncJob implements ShouldQueue
                         'message' => $result['message'] ?? __('strava.sync.failed')
                     ], now()->addMinutes(10));
                 }
-                Log::info("Failure result cached for user {$user->id}");
+                Log::info("Résultat d'échec mis en cache pour l'utilisateur {$user->id}");
             }
             
         } catch (\Exception $e) {
-            Log::error("Strava sync job failed for user {$user->id}: " . $e->getMessage());
-            Log::error("Exception trace: " . $e->getTraceAsString());
+            Log::error("Échec du job de synchronisation Strava pour l'utilisateur {$user->id}: " . $e->getMessage());
+            Log::error("Trace de l'exception: " . $e->getTraceAsString());
             
             // Stocker l'erreur dans le cache
             Cache::put("strava_sync_result_{$user->id}", [
@@ -100,11 +104,11 @@ class StravaSyncJob implements ShouldQueue
                 'message' => __('strava.sync.failed_with_error', ['error' => $e->getMessage()])
             ], now()->addMinutes(10));
             
-            throw $e; // Re-throw pour que Laravel gère les tentatives de retry
+            throw $e; // Relancer l'exception pour que Laravel gère les tentatives de retry
             
         } finally {
             // Nettoyer les flags de traitement dans tous les cas
-            Log::info("Cleaning up cache flags for user {$user->id}");
+            Log::info("Nettoyage des flags de cache pour l'utilisateur {$user->id}");
             Cache::forget("strava_sync_in_progress_{$user->id}");
             Cache::forget("strava_sync_processing_{$user->id}");
             Log::info("=== FIN JOB SYNC USER {$user->id} ===");
@@ -124,13 +128,13 @@ class StravaSyncJob implements ShouldQueue
         Cache::forget("calendar-month-stats-{$userId}-{$currentYear}");
         Cache::forget("calendar-year-stats-{$userId}-{$currentYear}");
         
-        Log::info("Cache invalidated for user {$userId} stats for year {$currentYear}");
+        Log::info("Cache des statistiques invalidé pour l'utilisateur {$userId} pour l'année {$currentYear}");
     }
 
     public function failed(\Throwable $exception): void
     {
-        Log::error("Strava sync job permanently failed for user {$this->userId}: " . $exception->getMessage());
-        Log::error("Exception trace: " . $exception->getTraceAsString());
+        Log::error("Échec définitif du job de synchronisation Strava pour l'utilisateur {$this->userId}: " . $exception->getMessage());
+        Log::error("Trace de l'exception: " . $exception->getTraceAsString());
         
         // Obtenir l'utilisateur pour définir sa locale
         $user = User::find($this->userId);
@@ -139,7 +143,7 @@ class StravaSyncJob implements ShouldQueue
             app()->setLocale($userLocale);
         }
         
-        // Nettoyer TOUS les flags de cache - utiliser $this->userId au lieu de $this->user
+        // Nettoyer tous les flags de cache
         Cache::forget("strava_sync_in_progress_{$this->userId}");
         Cache::forget("strava_sync_processing_{$this->userId}");
         
@@ -149,6 +153,6 @@ class StravaSyncJob implements ShouldQueue
             'message' => __('strava.sync.failed_multiple_attempts', ['error' => $exception->getMessage()])
         ], now()->addMinutes(10));
         
-        Log::info("Cache flags cleared for failed job - user {$this->userId}");
+        Log::info("Flags de cache nettoyés pour le job échoué - utilisateur {$this->userId}");
     }
 }

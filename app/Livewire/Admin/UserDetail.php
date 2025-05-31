@@ -14,7 +14,7 @@ class UserDetail extends Component
     public $email = [];
     public $showEmailForm = false;
     
-    protected $listeners = ['confirmDeleteUser', 'confirmSendEmail', 'confirmResetStrava', 'confirmBanIp'];
+    protected $listeners = ['confirmDeleteUser', 'confirmSendEmail', 'confirmResetStrava', 'confirmDisconnectStrava', 'confirmBanIp'];
     
     protected $rules = [
         'email.subject' => 'required|string|max:255',
@@ -96,8 +96,35 @@ class UserDetail extends Component
     
     public function confirmResetStrava()
     {
+        // Faire expirer le token pour forcer une reconnexion
         $this->user->update(['strava_expires_at' => now()->timestamp]);
         $this->dispatch('toast', __('admin.user_detail.messages.strava_reset', ['name' => $this->user->name]), 'success');
+    }
+    
+    public function disconnectStrava()
+    {
+        $this->dispatch('openConfirmModal', [
+            'title' => __('admin.user_detail.confirm.disconnect_strava'),
+            'message' => __('admin.user_detail.confirm.disconnect_strava_message', ['name' => $this->user->name]),
+            'confirmButtonText' => __('admin.user_detail.confirm.disconnect_connection'),
+            'cancelButtonText' => __('admin.user_detail.confirm.cancel'),
+            'confirmAction' => 'confirmDisconnectStrava',
+            'params' => [],
+            'icon' => 'times-circle',
+            'iconColor' => 'red'
+        ]);
+    }
+    
+    public function confirmDisconnectStrava()
+    {
+        // Supprimer complètement la connexion Strava
+        $this->user->update([
+            'strava_token' => null,
+            'strava_refresh_token' => null,
+            'strava_expires_at' => null,
+            'last_sync_at' => null
+        ]);
+        $this->dispatch('toast', __('admin.user_detail.messages.strava_disconnected', ['name' => $this->user->name]), 'success');
     }
     
     public function deleteUser()

@@ -1137,8 +1137,8 @@ class Calendar extends Component
     }
 
     /**
-     * Met à jour le statut de synchronisation local
-     * Utilisé uniquement pour maintenir la cohérence de l'état local
+     * Met à jour uniquement le statut de synchronisation sans déclencher de re-rendu complet
+     * Optimisé pour éviter les repositionnements de menus contextuels
      *
      * @return void
      */
@@ -1148,6 +1148,9 @@ class Calendar extends Component
         if (!$user) {
             return;
         }
+        
+        // Obtenir le statut actuel sans déclencher de re-rendu
+        $currentSyncStatus = cache()->has("strava_sync_in_progress_{$user->id}");
         
         // Vérifier s'il y a un résultat de synchronisation
         $syncResult = cache()->get("strava_sync_result_{$user->id}");
@@ -1170,15 +1173,24 @@ class Calendar extends Component
                 $type = $syncResult['success'] ? 'success' : 'error';
                 $this->dispatch('toast', $syncResult['message'], $type);
                 cache()->forget("strava_sync_result_{$user->id}");
+                
+                // Si la sync est terminée avec succès, déclencher un refresh complet
+                if ($syncResult['success']) {
+                    $this->handleSyncCompletedRefresh();
+                    return; // Le refresh complet mettra à jour syncInProgress
+                }
             }
         }
         
-        // Mettre à jour le statut local pour la cohérence de l'interface
-        $this->syncInProgress = cache()->has("strava_sync_in_progress_{$user->id}");
+        // Mettre à jour seulement le statut de sync si nécessaire (évite les re-rendus inutiles)
+        if ($this->syncInProgress !== $currentSyncStatus) {
+            $this->syncInProgress = $currentSyncStatus;
+        }
     }
     
     /**
      * Gère l'événement de fin de synchronisation depuis le polling global
+     * Optimisé pour éviter les re-rendus inutiles pendant la sync
      *
      * @return void
      */
@@ -1188,31 +1200,78 @@ class Calendar extends Component
         $this->syncInProgress = $this->isSyncInProgress();
         $this->loading = false;
         
-        // Invalider tous les caches pour forcer le rechargement des données
-        $this->invalidateAllCache();
-        
-        // Recharger les données du calendrier
-        $this->refreshCalendarData();
+        // Seulement faire un refresh complet si la sync est vraiment terminée
+        if (!$this->syncInProgress) {
+            // Invalider tous les caches pour forcer le rechargement des données
+            $this->invalidateAllCache();
+            
+            // Recharger les données du calendrier
+            $this->refreshCalendarData();
+        }
     }
     
     /**
      * Recharge toutes les données du calendrier
+     * Optimisé pour éviter les rechargements inutiles
      *
      * @return void
      */
     private function refreshCalendarData()
     {
-        // Recharger les activités et workouts
-        $this->activities = $this->getActivities();
-        $this->workouts = $this->getWorkouts();
-        
-        // Recharger les semaines avec leurs statistiques
-        $this->refreshWeekStats();
-        
-        // Émettre l'événement pour recharger les tooltips
-        $this->dispatch('reload-tooltips');
+        // Seulement recharger si on n'est pas en cours de sync
+        if (!$this->syncInProgress) {
+            // Recharger les activités et workouts
+            $this->activities = $this->getActivities();
+            $this->workouts = $this->getWorkouts();
+            
+            // Recharger les semaines avec leurs statistiques
+            $this->refreshWeekStats();
+            
+            // Émettre l'événement pour recharger les tooltips
+            $this->dispatch('reload-tooltips');
+        }
+    }
+
+    /**
+     * Optimise la vérification de cache pour éviter les re-rendus fréquents
+     *
+     * @return bool True si les données ont changé et nécessitent un re-rendu
+     */
+    private function hasDataChanged(): bool
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return false;
+        }
+
+        // Vérifier si le cache des activités a été invalidé récemment
+        $cacheKey = self::CACHE_KEY_ACTIVITIES . $user->id . '-' . $this->year;
+        return !cache()->has($cacheKey);
     }
     
+    /**
+     * Vérifie uniquement le statut de sync de façon optimisée (pour le polling)
+     * Cette méthode ne déclenche aucun re-rendu et est conçue pour être appelée fréquemment
+     *
+     * @return array Statut de synchronisation
+     */
+    public function quickSyncStatusCheck()
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return ['sync_in_progress' => false, 'has_result' => false];
+        }
+        
+        $syncInProgress = cache()->has("strava_sync_in_progress_{$user->id}");
+        $hasResult = cache()->has("strava_sync_result_{$user->id}");
+        
+        return [
+            'sync_in_progress' => $syncInProgress,
+            'has_result' => $hasResult,
+            'changed' => $this->syncInProgress !== $syncInProgress
+        ];
+    }
+
     /**
      * Vérifie si une synchronisation est en cours
      *

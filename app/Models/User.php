@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin',        
         'last_login_at',
         'last_ip_address',
+        'last_sync_at',
         'strava_token',
         'strava_refresh_token',
         'strava_expires_at',
@@ -37,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_sync_at' => 'datetime',
             'password' => 'hashed',
             'strava_expires_at' => 'integer',
             'settings' => 'array',
@@ -62,11 +64,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function years()
     {
         return $this->hasMany(Year::class);
-    }
-    
-    public function months()
-    {
-        return $this->hasManyThrough(Month::class, Year::class);
     }
 
     public function weeks()

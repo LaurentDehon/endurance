@@ -1,5 +1,5 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         
         <!-- User info card -->
         <div class="backdrop-blur-lg rounded-xl shadow-lg overflow-hidden mb-8">
@@ -100,85 +100,128 @@
             </div>
         </div>
         
-        <!-- Action Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-8">
-            <!-- Admin toggle -->
-            <button 
-                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
-                class="flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'text-white bg-cyan-600 hover:bg-cyan-500 transition-colors' }}"
-                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
-            >
-                @if($user->is_admin)
-                    {{-- <i class="fas fa-user-minus {{ ($user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i> --}}
-                    <span>{{ ($user->name === 'admin') ? __('admin.user_detail.buttons.cannot_revoke') : __('admin.user_detail.buttons.revoke_admin') }}</span>
-                @else
-                    {{-- <i class="fas fa-user-plus text-blue-500 mr-3"></i> --}}
-                    <span>{{ __('admin.user_detail.buttons.make_admin') }}</span>
-                @endif
-            </button>
+        <!-- Actions administratives -->
+        <div class="space-y-6 mb-8">
             
-            <!-- Resend verification -->
-            <button wire:click="resendVerificationEmail" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-                {{-- <i class="fas fa-envelope text-yellow-500 mr-3"></i> --}}
-                <span>{{ __('admin.user_detail.buttons.resend_verification') }}</span>
-            </button>
-            
-            <!-- Password reset -->
-            <button wire:click="sendResetPassword" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-                {{-- <i class="fas fa-key text-purple-500 mr-3"></i> --}}
-                <span>{{ __('admin.user_detail.buttons.send_reset') }}</span>
-            </button>
-                        
-            <!-- Email verification -->
-            <button wire:click="verifyEmail" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-                @if($user->email_verified_at)
-                    {{-- <i class="fas fa-times-circle text-red-500 mr-3"></i> --}}
-                    <span>{{ __('admin.user_detail.buttons.unverify_email') }}</span>
-                @else
-                    {{-- <i class="fas fa-check-circle text-green-500 mr-3"></i> --}}
-                    <span>{{ __('admin.user_detail.buttons.verify_email') }}</span>
-                @endif
-            </button>
-            
-            <!-- Reset Strava -->
-            <button wire:click="resetStravaConnection" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-                {{-- <i class="fas fa-running text-orange-500 mr-3"></i> --}}
-                <span>{{ __('admin.user_detail.buttons.reset_strava') }}</span>
-            </button>
-            
-            <!-- Send email -->
-            <button wire:click="toggleEmailForm" class="flex items-center justify-center p-4 rounded-lg shadow-md text-white bg-cyan-600 hover:bg-cyan-500 transition-colors">
-                {{-- <i class="fas fa-paper-plane text-blue-500 mr-3"></i> --}}
-                <span>{{ __('admin.user_detail.buttons.send_email') }}</span>
-            </button>
-            
-            <!-- Delete user - Full width -->
-            <button 
-                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
-                class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-red-100 text-red-800 hover:bg-red-200 transition-colors' }}"
-                {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
-            >
-                {{-- <i class="fas fa-trash {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-red-500' }} mr-3"></i> --}}
-                <span>{{ ($user->is_admin && $user->name === 'admin') ? __('admin.user_detail.buttons.cannot_delete') : __('admin.user_detail.buttons.delete_user') }}</span>
-            </button>            
-            
-            <!-- Ban IP Address - Full width -->
-            <button 
-                wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : ($user->last_ip_address ? 'banIpAddress' : '') }}" 
-                class="col-span-1 md:col-span-3 flex items-center justify-center p-4 rounded-lg shadow-md {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : ($user->last_ip_address ? 'text-white bg-red-600 hover:bg-red-500' : 'bg-gray-200 text-gray-500 cursor-not-allowed') }} transition-colors"
-                {{ ($user->is_admin && $user->name === 'admin') || !$user->last_ip_address ? 'disabled' : '' }}
-            >
-                {{-- <i class="fas fa-ban {{ ($user->is_admin && $user->name === 'admin') ? 'text-gray-400' : 'text-white' }} mr-3"></i> --}}
-                <span>
-                    @if($user->is_admin && $user->name === 'admin')
-                        {{ __('admin.user_detail.buttons.cannot_ban') }}
-                    @elseif($user->last_ip_address)
-                        {{ __('admin.user_detail.buttons.ban_ip') }}
-                    @else
-                        {{ __('admin.user_detail.buttons.no_ip') }}
-                    @endif
-                </span>
-            </button>
+            <!-- Section: Gestion du compte -->
+            <div class="backdrop-blur-lg rounded-xl bg-white bg-opacity-10 border border-white border-opacity-20 p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                    <i class="fas fa-user-cog mr-3 text-cyan-400"></i>
+                    Gestion du compte
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Admin toggle -->
+                    <button 
+                        wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
+                        class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : ($user->is_admin ? 'bg-gray-700 hover:bg-gray-600 text-white shadow-md hover:shadow-lg' : 'bg-slate-700 hover:bg-slate-600 text-white shadow-md hover:shadow-lg') }}"
+                        {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
+                    >
+                        <i class="fas {{ $user->is_admin ? 'fa-user-minus' : 'fa-user-plus' }} mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">
+                            @if($user->is_admin)
+                                {{ ($user->name === 'admin') ? __('admin.user_detail.buttons.cannot_revoke') : __('admin.user_detail.buttons.revoke_admin') }}
+                            @else
+                                {{ __('admin.user_detail.buttons.make_admin') }}
+                            @endif
+                        </span>
+                    </button>
+                    
+                    <!-- Email verification -->
+                    <button wire:click="verifyEmail" class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ $user->email_verified_at ? 'bg-red-700 hover:bg-red-600 text-white shadow-md hover:shadow-lg' : 'bg-green-700 hover:bg-green-600 text-white shadow-md hover:shadow-lg' }}">
+                        <i class="fas {{ $user->email_verified_at ? 'fa-times-circle' : 'fa-check-circle' }} mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">
+                            {{ $user->email_verified_at ? __('admin.user_detail.buttons.unverify_email') : __('admin.user_detail.buttons.verify_email') }}
+                        </span>
+                    </button>
+                    
+                    <!-- Send email -->
+                    <button wire:click="toggleEmailForm" class="group flex items-center justify-center p-4 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                        <i class="fas fa-paper-plane mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">{{ __('admin.user_detail.buttons.send_email') }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section: Authentification -->
+            <div class="backdrop-blur-lg rounded-xl bg-white bg-opacity-10 border border-white border-opacity-20 p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                    <i class="fas fa-key mr-3 text-yellow-400"></i>
+                    Authentification
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Password reset -->
+                    <button wire:click="sendResetPassword" class="group flex items-center justify-center p-4 rounded-lg bg-amber-700 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                        <i class="fas fa-key mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">{{ __('admin.user_detail.buttons.send_reset') }}</span>
+                    </button>
+                    
+                    <!-- Resend verification -->
+                    <button wire:click="resendVerificationEmail" class="group flex items-center justify-center p-4 rounded-lg bg-teal-700 hover:bg-teal-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                        <i class="fas fa-envelope mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">{{ __('admin.user_detail.buttons.resend_verification') }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section: Connexion Strava -->
+            @if($user->strava_token || $user->strava_refresh_token)
+            <div class="backdrop-blur-lg rounded-xl bg-white bg-opacity-10 border border-white border-opacity-20 p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                    <i class="fab fa-strava mr-3 text-orange-400"></i>
+                    Connexion Strava
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Reset Strava -->
+                    <button wire:click="resetStravaConnection" class="group flex items-center justify-center p-4 rounded-lg bg-orange-700 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                        <i class="fas fa-sync-alt mr-3 group-hover:rotate-180 transition-transform duration-300"></i>
+                        <span class="font-medium">{{ __('admin.user_detail.buttons.reset_strava') }}</span>
+                    </button>
+                    
+                    <!-- Disconnect Strava -->
+                    <button wire:click="disconnectStrava" class="group flex items-center justify-center p-4 rounded-lg bg-red-700 hover:bg-red-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                        <i class="fas fa-unlink mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">{{ __('admin.user_detail.buttons.disconnect_strava') }}</span>
+                    </button>
+                </div>
+            </div>
+            @endif
+
+            <!-- Section: Actions dangereuses -->
+            <div class="backdrop-blur-lg rounded-xl bg-red-900 bg-opacity-20 border border-red-500 border-opacity-30 p-6">
+                <h3 class="text-lg font-semibold text-red-200 mb-4 flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-3 text-red-400"></i>
+                    Zone de danger
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Ban IP Address -->
+                    <button 
+                        wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : ($user->last_ip_address ? 'banIpAddress' : '') }}" 
+                        class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : ($user->last_ip_address ? 'bg-red-800 hover:bg-red-700 text-white shadow-md hover:shadow-lg' : 'bg-gray-500 text-gray-300 cursor-not-allowed') }}"
+                        {{ ($user->is_admin && $user->name === 'admin') || !$user->last_ip_address ? 'disabled' : '' }}
+                    >
+                        <i class="fas fa-ban mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">
+                            @if($user->is_admin && $user->name === 'admin')
+                                {{ __('admin.user_detail.buttons.cannot_ban') }}
+                            @elseif($user->last_ip_address)
+                                {{ __('admin.user_detail.buttons.ban_ip') }}
+                            @else
+                                {{ __('admin.user_detail.buttons.no_ip') }}
+                            @endif
+                        </span>
+                    </button>
+                    
+                    <!-- Delete user -->
+                    <button 
+                        wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'deleteUser' }}" 
+                        class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : 'bg-red-800 hover:bg-red-700 text-white shadow-md hover:shadow-lg' }}"
+                        {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
+                    >
+                        <i class="fas fa-trash mr-3 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">{{ ($user->is_admin && $user->name === 'admin') ? __('admin.user_detail.buttons.cannot_delete') : __('admin.user_detail.buttons.delete_user') }}</span>
+                    </button>
+                </div>
+            </div>
         </div>        
     </div>
 </div>

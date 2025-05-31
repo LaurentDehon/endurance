@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Listeners\UpdateLastLoginAt;
+use App\Listeners\HandleUserLogin;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -51,7 +51,7 @@ class TestLoginSyncCommand extends Command
         // Simuler l'événement de connexion
         $this->info("Simulating login event...");
         
-        $listener = new UpdateLastLoginAt();
+        $listener = new HandleUserLogin();
         $event = new Login('web', $user, false);
         
         $listener->handle($event);
