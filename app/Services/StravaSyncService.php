@@ -197,7 +197,6 @@ class StravaSyncService
 
     private function buildResultMessage(int $count): string
     {
-        // S'assurer que la locale est bien définie pour les traductions
         $currentLocale = app()->getLocale();
         Log::info("Génération du message de résultat avec locale: {$currentLocale}");
         
