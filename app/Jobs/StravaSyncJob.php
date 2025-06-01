@@ -42,6 +42,9 @@ class StravaSyncJob implements ShouldQueue
         $userLocale = $user->settings['language'] ?? config('app.locale');
         app()->setLocale($userLocale);
         Log::info("Locale set to '{$userLocale}' for user {$this->userId}");
+        
+        // Forcer aussi le setLocale dans Carbon pour les dates
+        \Carbon\Carbon::setLocale($userLocale);
 
         try {
             Log::info("Début de la synchronisation Strava pour l'utilisateur {$user->id}");

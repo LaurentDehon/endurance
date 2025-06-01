@@ -22,6 +22,7 @@ class StravaSyncService
         $originalLocale = app()->getLocale();
         $userLocale = $user->settings['language'] ?? config('app.locale');
         app()->setLocale($userLocale);
+        Log::info("Locale définie pour sync: {$userLocale} (originale: {$originalLocale})");
 
         try {
             // Vérifier si l'utilisateur a un token Strava - s'il est null, rediriger pour la première connexion
@@ -196,12 +197,19 @@ class StravaSyncService
 
     private function buildResultMessage(int $count): string
     {
+        // S'assurer que la locale est bien définie pour les traductions
+        $currentLocale = app()->getLocale();
+        Log::info("Génération du message de résultat avec locale: {$currentLocale}");
+        
         if ($count > 0) {
-            return $count == 1 
+            $message = $count == 1 
                 ? __('strava.sync.one_activity_imported')
                 : __('strava.sync.multiple_activities_imported', ['count' => $count]);
         } else {
-            return __('strava.sync.no_new_activities');
+            $message = __('strava.sync.no_new_activities');
         }
+        
+        Log::info("Message généré: {$message}");
+        return $message;
     }
 }
