@@ -455,31 +455,6 @@
                                                 @foreach(['distance', 'duration', 'elevation'] as $stat)
                                                 <!-- Structure for all stat displays with consistent height regardless of content -->
                                                     <div class="flex flex-col w-32">
-                                                        <!-- Stat increase display -->
-                                                        <div class="flex justify-center h-5">
-                                                            @if($stat === 'distance' || $stat === 'duration')
-                                                                @php
-                                                                    $progressData = $this->calculateDevelopmentWeekProgress($week);
-                                                                    $statProgressData = $progressData[$stat] ?? null;
-                                                                @endphp
-                                                                
-                                                                @if($statProgressData && isset($statProgressData['value']))
-                                                                    @php
-                                                                        $increase = $statProgressData['value'];
-                                                                    @endphp
-                                                                    @if($increase > 10)
-                                                                        <span class="text-red-400 text-xs font-semibold">
-                                                                            <i class="fas fa-exclamation-triangle text-2xs mr-1"></i>{{ $increase }}%
-                                                                        </span>
-                                                                    @elseif($increase != 0)
-                                                                        <span class="text-emerald-400 text-xs font-semibold">
-                                                                            <i class="fas fa-circle-check text-2xs mr-1"></i>{{ $increase }}%
-                                                                        </span>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
-                                                        </div>
-
                                                         <!-- Stat value display -->
                                                         <div class="flex items-center justify-center gap-2 px-1 md:px-2">
                                                             <p class="text-xs flex items-center">
