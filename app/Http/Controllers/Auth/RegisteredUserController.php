@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\RecaptchaRule;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,18 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validationRules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+        
+        // Ajouter la validation reCAPTCHA si configuré
+        if (config('services.recaptcha.site_key')) {
+            $validationRules['recaptcha_token'] = ['required', new RecaptchaRule('register')];
+        }
+        
+        $request->validate($validationRules);
 
         $user = User::create([
             'name' => $request->name,

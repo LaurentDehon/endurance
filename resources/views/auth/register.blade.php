@@ -1,4 +1,11 @@
 @extends('layouts.guest')
+
+@push('head')
+    @if(config('services.recaptcha.site_key'))
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    @endif
+@endpush
+
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-lg bg-white bg-opacity-10 border-white border-opacity-20 border">
@@ -11,8 +18,11 @@
             </p>
         </div>
 
-        <form class="mt-8 space-y-6" method="POST" action="{{ route('register') }}">
+        <form class="mt-8 space-y-6" method="POST" action="{{ route('register') }}" id="register-form">
             @csrf
+            @if(config('services.recaptcha.site_key'))
+                <input type="hidden" name="recaptcha_token" id="recaptcha_token">
+            @endif
             <div class="space-y-5">
                 <!-- Name -->
                 <div>
@@ -85,7 +95,7 @@
                 </div>
             </div>
 
-            <button type="submit" 
+            <button type="submit" id="submit-btn"
                 class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg 
                     text-white bg-cyan-600 hover:bg-cyan-500 font-medium shadow-sm transition-all duration-200">
                 {{ __('auth.register.create_account') }}
@@ -101,4 +111,49 @@
         </form>
     </div>
 </div>
+
+@if(config('services.recaptcha.site_key'))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('register-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const recaptchaToken = document.getElementById('recaptcha_token');
+    
+    if (!form || !submitBtn || !recaptchaToken) return;
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Désactiver le bouton pendant la vérification
+        submitBtn.disabled = true;
+        submitBtn.textContent = '{{ __("auth.register.verifying") }}...';
+        
+        grecaptcha.ready(function() {
+            grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', {
+                action: 'register'
+            }).then(function(token) {
+                recaptchaToken.value = token;
+                
+                // Réactiver le bouton et soumettre le formulaire
+                submitBtn.disabled = false;
+                submitBtn.textContent = '{{ __("auth.register.create_account") }}';
+                
+                // Soumettre le formulaire
+                form.submit();
+            }).catch(function(error) {
+                console.error('reCAPTCHA error:', error);
+                
+                // Réactiver le bouton en cas d'erreur
+                submitBtn.disabled = false;
+                submitBtn.textContent = '{{ __("auth.register.create_account") }}';
+                
+                // Afficher une erreur à l'utilisateur
+                alert('{{ __("auth.register.recaptcha_error") }}');
+            });
+        });
+    });
+});
+</script>
+@endif
+
 @endsection

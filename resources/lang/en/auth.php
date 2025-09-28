@@ -20,6 +20,9 @@ return [
         'password_confirmation' => 'Confirm password',
         'already_registered' => 'Already registered?',
         'create_account' => 'Create Account',
+        'verifying' => 'Verifying',
+        'recaptcha_failed' => 'Security verification failed. Please try again.',
+        'recaptcha_error' => 'Security verification error. Please refresh the page and try again.',
     ],
     'forgot_password' => [
         'title' => 'Forgot your password?',

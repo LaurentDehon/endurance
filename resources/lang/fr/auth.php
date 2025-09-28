@@ -20,6 +20,9 @@ return [
         'password_confirmation' => 'Confirmer le mot de passe',
         'already_registered' => 'Déjà inscrit ?',
         'create_account' => 'Créer un compte',
+        'verifying' => 'Vérification en cours',
+        'recaptcha_failed' => 'La vérification de sécurité a échoué. Veuillez réessayer.',
+        'recaptcha_error' => 'Erreur de vérification de sécurité. Veuillez actualiser la page et réessayer.',
     ],
     'forgot_password' => [
         'title' => 'Mot de passe oublié ?',
