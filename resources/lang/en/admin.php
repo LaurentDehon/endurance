@@ -38,6 +38,15 @@ return [
             'of' => 'of',
             'results' => 'results',
         ],
+        'messages' => [
+            'users_deleted' => 'Deleted :count unverified user(s).',
+        ],
+        'confirm' => [
+            'delete_unverified_title' => 'Delete Unverified Users',
+            'delete_unverified_message' => 'Are you sure you want to delete :count unverified user(s) created more than 5 days ago? This action is irreversible.',
+            'delete_button' => 'Delete Users',
+            'cancel' => 'Cancel',
+        ],
     ],
     'visits' => [
         'search' => 'Search IP or country...',

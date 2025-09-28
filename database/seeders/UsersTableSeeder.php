@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'laurent',
                 'email' => 'laurent.dehon@gmail.com',
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
                 'password' => Hash::make('3301'),
                 'is_admin' => false,
                 'created_at' => now(),

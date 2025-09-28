@@ -38,6 +38,15 @@ return [
             'of' => 'sur',
             'results' => 'résultats',
         ],
+        'messages' => [
+            'users_deleted' => 'Supprimé :count utilisateur(s) non vérifié(s).',
+        ],
+        'confirm' => [
+            'delete_unverified_title' => 'Supprimer les utilisateurs non vérifiés',
+            'delete_unverified_message' => 'Êtes-vous sûr de vouloir supprimer :count utilisateur(s) non vérifié(s) créé(s) il y a plus de 5 jours ? Cette action est irréversible.',
+            'delete_button' => 'Supprimer les utilisateurs',
+            'cancel' => 'Annuler',
+        ],
     ],
     'visits' => [
         'search' => 'Rechercher IP ou pays...',

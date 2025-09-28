@@ -9,7 +9,23 @@
         </a>
     </div>
 
-    <div class="flex justify-between items-center mb-6 gap-4">        
+    <div class="flex justify-between items-center mb-6 gap-4">
+        <!-- Bouton de suppression des utilisateurs non vérifiés -->
+        @if($unverifiedOldUsersCount > 0)
+            <div class="flex-shrink-0">
+                <button 
+                    wire:click="deleteUnverifiedUsers" 
+                    class="px-4 py-2 rounded-lg {{ $unverifiedOldUsersCount > 10 ? 'bg-red-700 hover:bg-red-600 animate-pulse' : 'bg-red-600 hover:bg-red-500' }} text-white text-sm font-medium transition-colors flex items-center gap-2"
+                    title="Supprimer les utilisateurs non vérifiés créés il y a plus de 5 jours">
+                    <i class="fas fa-trash"></i>
+                    Supprimer {{ $unverifiedOldUsersCount }} utilisateur(s) non vérifié(s)
+                    @if($unverifiedOldUsersCount > 10)
+                        <span class="ml-1 px-2 py-1 bg-red-800 rounded-full text-xs">!</span>
+                    @endif
+                </button>
+            </div>
+        @endif
+        
         <div class="flex gap-4 w-full ml-auto">
             <!-- Search -->
             <div class="relative flex-1">
@@ -82,16 +98,16 @@
                             <!-- Name with tooltip for long names -->
                             <td class="px-4 py-4 max-w-[150px] sm:max-w-none truncate">
                                 <a href="{{ route('user.detail', $user->id) }}" class="text-sm font-medium hover:underline text-amber-300" title="{{ $user->name }}">
-                                    {{ $user->name }}
+                                    {{ Str::limit($user->name, 30) }}
                                 </a>
-                                <div class="text-xs text-cyan-200 sm:hidden truncate">
-                                    {{ $user->email }}
+                                <div class="text-xs text-cyan-200 sm:hidden truncate" title="{{ $user->email }}">
+                                    {{ Str::limit($user->email, 30) }}
                                 </div>
                             </td>
                             
                             <!-- Email -->
                             <td class="px-4 py-4 whitespace-nowrap text-sm hidden sm:table-cell">
-                                <div class="text-cyan-200">{{ $user->email }}</div>
+                                <div class="text-cyan-200" title="{{ $user->email }}">{{ Str::limit($user->email, 30) }}</div>
                             </td>
                             
                             <!-- Verified -->
