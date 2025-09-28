@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Middleware\CheckBannedIp;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Enregistrement du middleware LocaleMiddleware comme middleware global
         $middleware->web(LocaleMiddleware::class);
+        
+        // Enregistrement du middleware CheckBannedIp avec un alias
+        $middleware->alias([
+            'banned.ip' => CheckBannedIp::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
