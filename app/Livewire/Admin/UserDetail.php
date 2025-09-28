@@ -164,7 +164,7 @@ class UserDetail extends Component
         $this->user->delete();
         
         $this->dispatch('toast', __('admin.user_detail.messages.user_deleted', ['name' => $name]), 'success');
-        return redirect()->route('admin');
+        return redirect()->route('admin.users');
     }
 
     public function toggleAdmin()
