@@ -78,6 +78,11 @@
                             {{ __('admin.visits.table.last_visit') }}
                             @include('components.sort-icon', ['field' => 'last_visit'])
                         </th>
+                        
+                        <!-- Actions -->
+                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
+                            {{ __('admin.visits.table.actions') }}
+                        </th>
                     </tr>
                 </thead>
                 
@@ -86,7 +91,7 @@
                         <tr class="{{ $loop->even ? 'bg-white bg-opacity-10' : 'bg-slate-800 bg-opacity-30' }}">
                             <!-- IP Address -->
                             <td class="px-4 py-4 max-w-[150px] sm:max-w-none">
-                                <div class="text-sm font-medium text-amber-300">
+                                <div class="text-sm font-medium {{ in_array($visit->ip_address, $bannedIps) ? 'text-red-400' : 'text-amber-300' }}">
                                     {{ $visit->ip_address }}
                                 </div>
                             </td>
@@ -122,10 +127,29 @@
                                     @endif
                                 </span>
                             </td>
+                            
+                            <!-- Actions -->
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center">
+                                @if(in_array($visit->ip_address, $bannedIps))
+                                    <button 
+                                        wire:click="unbanIp('{{ $visit->ip_address }}')"
+                                        class="inline-flex items-center p-3 rounded-md bg-green-800 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+                                        title="{{ __('admin.visits.table.unban_ip') }}">
+                                        <i class="fas fa-check text-xs"></i>
+                                    </button>
+                                @else
+                                    <button 
+                                        wire:click="banIp('{{ $visit->ip_address }}')"
+                                        class="inline-flex items-center p-3 rounded-md bg-red-800 hover:bg-red-700 text-white text-xs font-medium transition-colors"
+                                        title="{{ __('admin.visits.table.ban_ip') }}">
+                                        <i class="fas fa-ban text-xs"></i>
+                                    </button>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-cyan-200">
+                        <td colspan="5" class="px-6 py-4 text-center text-cyan-200">
                            <div class="flex justify-center items-center py-6">
                                 <span class="font-medium">{{ __('admin.visits.table.no_results') }}</span>
                            </div>
@@ -218,4 +242,7 @@
             @apply inline-flex items-center justify-center w-8 h-8 rounded-md mx-1;
         }
     </style>
+
+    <!-- Confirmation Modal Component -->
+    <livewire:modal.confirmation-modal />
 </div>

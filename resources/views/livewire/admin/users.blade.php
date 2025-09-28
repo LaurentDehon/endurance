@@ -1,4 +1,4 @@
-<div class="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 admin-container">
+<div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 admin-container">
     <!-- Navigation tabs -->
     <div class="flex mb-6 gap-4 text-center">
         <a href="{{ route('admin.users') }}" class="flex-1 px-5 py-3 rounded-lg text-white bg-amber-600 hover:bg-amber-500 transition-colors">
@@ -89,6 +89,9 @@
                             {{ __('admin.users.table.last_login') }}
                             @include('components.sort-icon', ['field' => 'last_login_at'])
                         </th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-cyan-200 uppercase">
+                            {{ __('admin.users.table.actions') }}
+                        </th>
                     </tr>
                 </thead>
                 
@@ -171,10 +174,32 @@
                                 <div class="text-cyan-200">-</div>
                                 @endif
                             </td>
+                            
+                            <!-- Actions -->
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center">
+                                @if(!$user->is_admin && $user->id !== auth()->id())
+                                    <div class="flex justify-center space-x-2">
+                                        <button 
+                                            wire:click="deleteSingleUser({{ $user->id }})"
+                                            class="inline-flex items-center p-3 rounded-md bg-red-800 hover:bg-red-700 text-white text-xs font-medium transition-colors"
+                                            title="{{ __('admin.users.table.delete_user') }}">
+                                            <i class="fas fa-trash text-xs"></i>
+                                        </button>
+                                        <button 
+                                            wire:click="deleteUserAndBanIp({{ $user->id }})"
+                                            class="inline-flex items-center p-3 rounded-md bg-red-800 hover:bg-red-700 text-white text-xs font-medium transition-colors"
+                                            title="{{ __('admin.users.table.delete_and_ban_user') }}">
+                                            <i class="fas fa-ban text-xs"></i>
+                                        </button>
+                                    </div>
+                                @else
+                                    <span class="text-gray-500 text-xs">-</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-cyan-200">
+                        <td colspan="6" class="px-6 py-4 text-center text-cyan-200">
                            <div class="flex justify-center items-center py-6">
                                 <span class="font-medium">{{ __('admin.users.table.no_results') }}</span>
                            </div>

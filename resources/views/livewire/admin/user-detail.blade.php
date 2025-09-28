@@ -139,7 +139,7 @@
                     <!-- Admin toggle -->
                     <button 
                         wire:click="{{ ($user->is_admin && $user->name === 'admin') ? '' : 'toggleAdmin' }}" 
-                        class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : ($user->is_admin ? 'bg-gray-700 hover:bg-gray-600 text-white shadow-md hover:shadow-lg' : 'bg-slate-700 hover:bg-slate-600 text-white shadow-md hover:shadow-lg') }}"
+                        class="group flex items-center justify-center p-4 rounded-lg shadow-md transition-all duration-200 {{ ($user->is_admin && $user->name === 'admin') ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : 'bg-indigo-700 hover:bg-indigo-600 text-white shadow-md hover:shadow-lg' }}"
                         {{ ($user->is_admin && $user->name === 'admin') ? 'disabled' : '' }}
                     >
                         <i class="fas {{ $user->is_admin ? 'fa-user-minus' : 'fa-user-plus' }} mr-3 group-hover:scale-110 transition-transform"></i>
@@ -176,7 +176,7 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <!-- Password reset -->
-                    <button wire:click="sendResetPassword" class="group flex items-center justify-center p-4 rounded-lg bg-amber-700 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+                    <button wire:click="sendResetPassword" class="group flex items-center justify-center p-4 rounded-lg bg-teal-700 hover:bg-teal-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
                         <i class="fas fa-key mr-3 group-hover:scale-110 transition-transform"></i>
                         <span class="font-medium">{{ __('admin.user_detail.buttons.send_reset') }}</span>
                     </button>
