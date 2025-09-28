@@ -8,7 +8,7 @@
             </div>
             
             <div class="flex items-center gap-4 text-xs mt-3 sm:mt-0">
-                <a href="{{ route('changelog') }}" class="text-cyan-400 transition-colors">{{ __('footer.changelog') }}</a>
+                <!-- <a href="{{ route('changelog') }}" class="text-cyan-400 transition-colors">{{ __('footer.changelog') }}</a> -->
                 <a href="{{ route('terms') }}" class="text-cyan-400 transition-colors">{{ __('footer.terms') }}</a>
                 <a href="{{ route('privacy') }}" class="text-cyan-400 transition-colors">{{ __('footer.privacy') }}</a>
             </div>

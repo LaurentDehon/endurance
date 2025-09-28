@@ -110,6 +110,10 @@ class Users extends Component
         }
         
         $userName = $user->name;
+        
+        // Supprimer toutes les données liées avant de supprimer l'utilisateur
+        $this->deleteUserRelatedData($user);
+        
         $user->delete();
         
         $this->dispatch('toast', __('admin.user_detail.messages.user_deleted', ['name' => $userName]), 'success');
@@ -184,6 +188,9 @@ class Users extends Component
             ]);
         }
         
+        // Supprimer toutes les données liées avant de supprimer l'utilisateur
+        $this->deleteUserRelatedData($user);
+        
         // Supprimer l'utilisateur
         $user->delete();
         
@@ -194,6 +201,26 @@ class Users extends Component
         
         // Rafraîchir la pagination si nécessaire
         $this->resetPage();
+    }
+
+    /**
+     * Supprimer toutes les données liées à l'utilisateur pour éviter les erreurs de contrainte de clé étrangère
+     */
+    private function deleteUserRelatedData(User $user)
+    {
+        // Supprimer les activités
+        $user->activities()->delete();
+        
+        // Supprimer les entraînements
+        $user->workouts()->delete();
+        
+        // Supprimer les semaines
+        $user->weeks()->delete();
+        
+        // Supprimer les tokens d'accès personnel si ils existent
+        if (method_exists($user, 'tokens')) {
+            $user->tokens()->delete();
+        }
     }
 
     public function render()
