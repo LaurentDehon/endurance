@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'easy_run' => 'Course facile',
+    'easy_run' => 'Endurance fondamentale',
     'long_run' => 'Sortie longue',
-    'recovery_run' => 'Course de récupération',
+    'recovery_run' => 'Récupération',
     'fartlek' => 'Fartlek',
-    'tempo_run' => 'Course au tempo',
-    'hill_repeats' => 'Répétitions de côte',
+    'tempo_run' => 'Tempo',
+    'hill_repeats' => 'Côtes',
     'intervals' => 'Intervalles',
     'back_to_back' => 'Sorties enchaînées',
     'race' => 'Course',
